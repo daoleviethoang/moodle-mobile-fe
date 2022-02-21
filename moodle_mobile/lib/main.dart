@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 void main() {
   runApp(const MyApp());
@@ -142,9 +143,66 @@ class CalendarSubPage extends StatefulWidget {
 }
 
 class _CalendarSubPageState extends State<CalendarSubPage> {
+  DateTime _selectedDay = DateTime.now();
+  DateTime _focusedDay = DateTime.now();
+
+  Widget _calendar() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+        child: TableCalendar(
+          // Set range and current date
+          firstDay: DateTime.utc(2022, 1, 1),
+          lastDay: DateTime.utc(2099, 31, 12),
+          focusedDay: _focusedDay,
+
+          // Calendar style
+          sixWeekMonthsEnforced: true,
+          headerStyle: const HeaderStyle(
+            titleCentered: true,
+            formatButtonVisible: false,
+          ),
+          calendarStyle: CalendarStyle(
+            todayDecoration: BoxDecoration(
+              color: Theme.of(context).primaryColorLight,
+              shape: BoxShape.circle,
+            ),
+            todayTextStyle: const TextStyle(),
+            selectedDecoration: BoxDecoration(
+              color: Theme.of(context).primaryColor,
+              shape: BoxShape.circle,
+            ),
+          ),
+
+          // Selecting a date by tapping
+          selectedDayPredicate: (day) {
+            return isSameDay(_selectedDay, day);
+          },
+          onDaySelected: (selectedDay, focusedDay) {
+            setState(() {
+              _selectedDay = selectedDay;
+              _focusedDay = focusedDay;
+            });
+          },
+          onPageChanged: (focusedDay) {
+            _focusedDay = focusedDay;
+          },
+          pageJumpingEnabled: true,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return const Center(child: Text('Calendar'));
+    return Padding(
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        children: [
+          _calendar(),
+        ],
+      ),
+    );
   }
 }
 
