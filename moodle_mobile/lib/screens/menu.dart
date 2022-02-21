@@ -124,6 +124,76 @@ class MenuScreen extends StatelessWidget {
                   ),
                 ],
               ),
+            ),
+            SizedBox(height: 8),
+            Text('Account',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+            SizedBox(height: 8),
+            Container(
+              padding: EdgeInsets.only(left: 10, top: 10),
+              //color: Colors.grey,
+              decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.all(Radius.circular(8))),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.circle_notifications_outlined,
+                        size: 40,
+                        color: Colors.purple,
+                      ),
+                      SizedBox(
+                        width: 8,
+                      ),
+                      Text(
+                        'Change password',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.circle_notifications_outlined,
+                        color: Colors.orange,
+                        size: 40,
+                      ),
+                      SizedBox(
+                        width: 8,
+                      ),
+                      Text('Report a problem'),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.circle_notifications_outlined,
+                        color: Colors.green,
+                        size: 40,
+                      ),
+                      SizedBox(
+                        width: 8,
+                      ),
+                      Text('Contact help'),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.circle_notifications_outlined,
+                        color: Colors.blue,
+                        size: 40,
+                      ),
+                      SizedBox(
+                        width: 8,
+                      ),
+                      Text('Log out'),
+                    ],
+                  ),
+                ],
+              ),
             )
           ],
         ),
