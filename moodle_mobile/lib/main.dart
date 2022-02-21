@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -143,16 +145,28 @@ class CalendarSubPage extends StatefulWidget {
 }
 
 class _CalendarSubPageState extends State<CalendarSubPage> {
-  DateTime _selectedDay = DateTime.now();
-  DateTime _focusedDay = DateTime.now();
+  var _selectedDay = DateTime.now();
+  var _focusedDay = DateTime.now();
+  var _selectedEvents = <String>[];
+  final events = LinkedHashMap(
+    equals: isSameDay,
+  );
 
-  Widget _calendar() {
+  void _initEvents() {
+    events.addAll({
+      DateTime.utc(2022, 02, 18): ['Do stuffs', 'Do more stuffs'],
+      DateTime.utc(2022, 02, 16): ['Do things'],
+      DateTime.utc(2022, 02, 14): ['Do doings'],
+    });
+  }
+
+  Widget _monthView() {
     return Card(
       child: Padding(
         padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
         child: TableCalendar(
           // Set range and current date
-          firstDay: DateTime.utc(2022, 1, 1),
+          firstDay: DateTime.utc(2022, 01, 01),
           lastDay: DateTime.utc(2099, 31, 12),
           focusedDay: _focusedDay,
 
@@ -172,6 +186,10 @@ class _CalendarSubPageState extends State<CalendarSubPage> {
               color: Theme.of(context).primaryColor,
               shape: BoxShape.circle,
             ),
+            markerDecoration: BoxDecoration(
+              color: Theme.of(context).primaryColorDark,
+              shape: BoxShape.circle,
+            ),
           ),
 
           // Selecting a date by tapping
@@ -179,27 +197,60 @@ class _CalendarSubPageState extends State<CalendarSubPage> {
             return isSameDay(_selectedDay, day);
           },
           onDaySelected: (selectedDay, focusedDay) {
-            setState(() {
-              _selectedDay = selectedDay;
-              _focusedDay = focusedDay;
-            });
+            if (!isSameDay(_selectedDay, selectedDay)) {
+              setState(() {
+                _focusedDay = focusedDay;
+                _selectedDay = selectedDay;
+                _selectedEvents = _getEventsForDay(selectedDay);
+              });
+            }
           },
           onPageChanged: (focusedDay) {
             _focusedDay = focusedDay;
           },
           pageJumpingEnabled: true,
+
+          // Add events from HashMap
+          eventLoader: (day) => _getEventsForDay(day),
         ),
       ),
     );
   }
 
+  List<String> _getEventsForDay(DateTime day) {
+    return events[day] ?? [];
+  }
+  
+  Widget _dayView() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Events on ' + _selectedDay.toString().split('00:')[0],
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          )),
+        Text(_selectedEvents.toString()),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    _initEvents();
+
     return Padding(
       padding: const EdgeInsets.all(12),
       child: Column(
         children: [
-          _calendar(),
+          _monthView(),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 12, left: 12),
+              child: _dayView(),
+            ),
+          ),
         ],
       ),
     );
