@@ -20,6 +20,8 @@ class MyApp extends StatelessWidget {
   }
 }
 
+// region HOME PAGE
+
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
 
@@ -99,6 +101,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
+// endregion
+
+
+// region DASHBOARD
+
 class DashboardSubPage extends StatefulWidget {
   const DashboardSubPage({Key? key}) : super(key: key);
 
@@ -112,6 +119,11 @@ class _DashboardSubPageState extends State<DashboardSubPage> {
     return const Center(child: Text('Dashboard'));
   }
 }
+
+// endregion
+
+
+// region CALENDAR
 
 class CalendarSubPage extends StatefulWidget {
   const CalendarSubPage({Key? key}) : super(key: key);
@@ -127,6 +139,11 @@ class _CalendarSubPageState extends State<CalendarSubPage> {
   }
 }
 
+// endregion
+
+
+// region MESSENGER
+
 class MessengerSubPage extends StatefulWidget {
   const MessengerSubPage({Key? key}) : super(key: key);
 
@@ -140,6 +157,11 @@ class _MessengerSubPageState extends State<MessengerSubPage> {
     return const Center(child: Text('Messenger'));
   }
 }
+
+// endregion
+
+
+// region NOTIFICATION
 
 class NotificationSubPage extends StatefulWidget {
   const NotificationSubPage({Key? key}) : super(key: key);
@@ -155,6 +177,11 @@ class _NotificationSubPageState extends State<NotificationSubPage> {
   }
 }
 
+// endregion
+
+
+// region MENU
+
 class MenuSubPage extends StatefulWidget {
   const MenuSubPage({Key? key}) : super(key: key);
 
@@ -168,3 +195,5 @@ class _MenuSubPageState extends State<MenuSubPage> {
     return const Center(child: Text('Menu'));
   }
 }
+
+// endregion
