@@ -2,6 +2,8 @@ import 'dart:collection';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:moodle_mobile/components/menu_item.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 void main() {
@@ -71,17 +73,11 @@ class _MyHomePageState extends State<MyHomePage> {
       /// Navigation bar with 5 items
       bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
-          backgroundColor: Theme
-              .of(context)
-              .colorScheme
-              .surface,
+          backgroundColor: Theme.of(context).colorScheme.surface,
           currentIndex: _index,
           onTap: (value) => setState(() => _index = value),
-          selectedIconTheme:
-          IconThemeData(size: Theme
-              .of(context)
-              .iconTheme
-              .size ?? 24 * 1.25),
+          selectedIconTheme: IconThemeData(
+              size: Theme.of(context).iconTheme.size ?? 24 * 1.25),
           items: const [
             BottomNavigationBarItem(
               icon: Icon(CupertinoIcons.house),
@@ -115,7 +111,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
 // endregion
 
-
 // region DASHBOARD
 
 class DashboardSubPage extends StatefulWidget {
@@ -133,7 +128,6 @@ class _DashboardSubPageState extends State<DashboardSubPage> {
 }
 
 // endregion
-
 
 // region CALENDAR
 
@@ -220,17 +214,27 @@ class _CalendarSubPageState extends State<CalendarSubPage> {
   List<String> _getEventsForDay(DateTime day) {
     return events[day] ?? [];
   }
-  
+
   Widget _dayView() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Events on ' + _selectedDay.toString().split('00:')[0],
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-          )),
-        Text(_selectedEvents.toString()),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: Text('Events on ' + DateFormat('MMMM dd').format(_selectedDay),
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              )),
+        ),
+        for (var e in _selectedEvents) Padding(
+          padding: const EdgeInsets.only(left: 8),
+          child: MenuItem(
+            title: e,
+            subtitle: DateFormat('dd MMMM, yyyy').format(_selectedDay),
+            onPressed: null,
+          ),
+        ),
       ],
     );
   }
@@ -259,7 +263,6 @@ class _CalendarSubPageState extends State<CalendarSubPage> {
 
 // endregion
 
-
 // region MESSENGER
 
 class MessengerSubPage extends StatefulWidget {
@@ -278,7 +281,6 @@ class _MessengerSubPageState extends State<MessengerSubPage> {
 
 // endregion
 
-
 // region NOTIFICATION
 
 class NotificationSubPage extends StatefulWidget {
@@ -296,7 +298,6 @@ class _NotificationSubPageState extends State<NotificationSubPage> {
 }
 
 // endregion
-
 
 // region MENU
 
