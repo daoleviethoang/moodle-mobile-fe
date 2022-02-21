@@ -14,6 +14,7 @@ class MenuScreen extends StatelessWidget {
             right: MediaQuery.of(context).size.width * 0.05),
         width: MediaQuery.of(context).size.width * 0.9,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               //mainAxisAlignment: MainAxisAlignment.center,
@@ -44,13 +45,16 @@ class MenuScreen extends StatelessWidget {
             Divider(
               color: Colors.grey,
             ),
-            Text('Settings'),
+            SizedBox(height: 8),
+            Text('Settings',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+            SizedBox(height: 8),
             Container(
-              padding: EdgeInsets.only(left: 10),
+              padding: EdgeInsets.only(left: 10, top: 10),
               //color: Colors.grey,
               decoration: BoxDecoration(
-                  color: Colors.grey,
-                  borderRadius: BorderRadius.all(Radius.circular(10))),
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.all(Radius.circular(8))),
               child: Column(
                 children: [
                   Row(
@@ -58,23 +62,64 @@ class MenuScreen extends StatelessWidget {
                       Icon(
                         Icons.circle_notifications_outlined,
                         size: 40,
+                        color: Colors.purple,
                       ),
                       SizedBox(
                         width: 8,
                       ),
-                      Text('App theme'),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'App Theme',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(height: 5),
+                          Text(
+                            'Follow system',
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ],
+                      )
                     ],
                   ),
                   Row(
                     children: [
                       Icon(
                         Icons.circle_notifications_outlined,
+                        color: Colors.orange,
                         size: 40,
                       ),
                       SizedBox(
                         width: 8,
                       ),
-                      Text('App theme'),
+                      Text('Notifications & sounds'),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.circle_notifications_outlined,
+                        color: Colors.green,
+                        size: 40,
+                      ),
+                      SizedBox(
+                        width: 8,
+                      ),
+                      Text('Device permissions'),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.circle_notifications_outlined,
+                        color: Colors.blue,
+                        size: 40,
+                      ),
+                      SizedBox(
+                        width: 8,
+                      ),
+                      Text('Moodle settings'),
                     ],
                   ),
                 ],
