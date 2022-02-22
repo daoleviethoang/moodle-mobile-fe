@@ -240,9 +240,13 @@ class _CalendarSubPageState extends State<CalendarSubPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
     _initEvents();
+    super.initState();
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(12),
       child: Column(
