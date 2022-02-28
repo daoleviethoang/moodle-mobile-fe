@@ -4,6 +4,8 @@ import 'package:moodle_mobile/components/custom_text_field.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
 
+import 'home_design_course.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
@@ -105,6 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void onLoginPressed() {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => DesignCourseHomeScreen()));
     print("Login");
   }
 
