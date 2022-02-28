@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/components/custom_button.dart';
 import 'package:moodle_mobile/components/custom_text_field.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
+import 'package:moodle_mobile/store/user/user_store.dart';
 
 import 'home_design_course.dart';
 
@@ -15,6 +17,16 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool isCheck = false;
+
+  // Store
+  late UserStore _userStore;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _userStore = GetIt.instance<UserStore>();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -107,8 +119,8 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void onLoginPressed() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => DesignCourseHomeScreen()));
-    print("Login");
+    // Navigator.push(context, MaterialPageRoute(builder: (context) => DesignCourseHomeScreen()));
+    _userStore.login("18127053", "G103g103");
   }
 
   void forgotPass() {

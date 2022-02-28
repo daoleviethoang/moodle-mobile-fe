@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:moodle_mobile/constants/colors.dart';
+import 'package:moodle_mobile/di/service_locator.dart';
 import 'package:moodle_mobile/screens/login.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await setupLocator();
   runApp(const MyApp());
 }
 
