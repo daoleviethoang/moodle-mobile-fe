@@ -16,7 +16,12 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  // isCheck check that checkbox is check or uncheck
   bool isCheck = false;
+
+  // Create a text controler
+  final TextEditingController usernameControler = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   // Store
   late UserStore _userStore;
@@ -24,10 +29,14 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-
     _userStore = GetIt.instance<UserStore>();
+    //usernameControler.addListener(getLastestUsernameValue);
   }
 
+  // void getLastestUsernameValue()
+  // {
+  //   print('Username value: ${usernameControler.text}');
+  // }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,21 +55,24 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
 
             // Username text field
-            const Padding(
-                padding: EdgeInsets.only(
+            Padding(
+                padding: const EdgeInsets.only(
                     left: Dimens.login_padding_left,
                     right: Dimens.login_padding_right),
-                child: CustomTextFieldWidget(hintText: "Username")),
+                child: CustomTextFieldWidget(
+                    hintText: "Username", controller: usernameControler)),
 
             const SizedBox(height: Dimens.login_sizedbox_height),
 
             // Password text field
-            const Padding(
-              padding: EdgeInsets.only(
+            Padding(
+              padding: const EdgeInsets.only(
                   left: Dimens.login_padding_left,
                   right: Dimens.login_padding_right),
-              child:
-                  CustomTextFieldWidget(hintText: "Password", hidePass: true),
+              child: CustomTextFieldWidget(
+                  hintText: "Password",
+                  hidePass: true,
+                  controller: passwordController),
             ),
 
             const SizedBox(height: Dimens.login_sizedbox_height),
@@ -120,7 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void onLoginPressed() {
     // Navigator.push(context, MaterialPageRoute(builder: (context) => DesignCourseHomeScreen()));
-    _userStore.login("18127053", "G103g103");
+    _userStore.login(usernameControler.text, passwordController.text);
   }
 
   void forgotPass() {

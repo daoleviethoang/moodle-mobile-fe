@@ -18,10 +18,14 @@ class UserApi {
         'password': password,
         'service': service
       });
-      return res;
+
+      if (res['token'] == null) {
+        throw Exception('Wrong username or password, please try again!');
+      }
+
+      return res['token'];
     } catch (e) {
-      print(e.toString());
-      throw e;
+      rethrow;
     }
   }
 }

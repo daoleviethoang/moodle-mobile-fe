@@ -20,10 +20,12 @@ abstract class _UserStore with Store {
 
   @action
   Future login(String username, String password) async {
-    String res =
-        await _repository.login(username, password, 'moodle_mobile_app');
-
-    print(res);
+    try {
+      String res =
+          await _repository.login(username, password, 'moodle_mobile_app');
+    } catch (e) {
+      print("Login error: " + e.toString());
+    }
 
     isLogin = true;
   }
