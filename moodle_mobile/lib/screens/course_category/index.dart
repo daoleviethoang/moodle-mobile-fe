@@ -15,6 +15,7 @@ class CourseCategoryScreen extends StatefulWidget {
 
 class _CourseCategoryScreenState extends State<CourseCategoryScreen> {
   @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder(
@@ -23,11 +24,7 @@ class _CourseCategoryScreenState extends State<CourseCategoryScreen> {
             if (data.hasError) {
               return const Center(child: Text("Error"));
             }
-            List<CourseCategory> categorys = [];
-            if (data.hasData) {
-              categorys = data.data as List<CourseCategory>;
-            }
-
+            var categorys = data.data as List<CourseCategory>;
             return SingleChildScrollView(
                 child: Container(
                     child: ListView(

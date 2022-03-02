@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/screens/direct_page.dart';
+import 'package:moodle_mobile/screens/course_category/index.dart';
+import 'package:moodle_mobile/screens/login.dart';
 
 void main() {
   runApp(const MyApp());
