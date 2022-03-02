@@ -8,10 +8,6 @@ class MenuScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text('Learning Management System')),
       body: Container(
-        margin: EdgeInsets.only(
-            top: MediaQuery.of(context).size.height * 0.02,
-            left: MediaQuery.of(context).size.width * 0.05,
-            right: MediaQuery.of(context).size.width * 0.05),
         width: MediaQuery.of(context).size.width * 0.9,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
