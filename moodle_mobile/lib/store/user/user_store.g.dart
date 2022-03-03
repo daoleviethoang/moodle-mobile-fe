@@ -24,14 +24,40 @@ mixin _$UserStore on _UserStore, Store {
     });
   }
 
+  final _$isLoginFailedAtom = Atom(name: '_UserStore.isLoginFailed');
+
+  @override
+  bool get isLoginFailed {
+    _$isLoginFailedAtom.reportRead();
+    return super.isLoginFailed;
+  }
+
+  @override
+  set isLoginFailed(bool value) {
+    _$isLoginFailedAtom.reportWrite(value, super.isLoginFailed, () {
+      super.isLoginFailed = value;
+    });
+  }
+
   final _$loginAsyncAction = AsyncAction('_UserStore.login');
 
   @override
-  Future login(String username, String password) {
+  Future<dynamic> login(String username, String password) {
     return _$loginAsyncAction.run(() => super.login(username, password));
   }
 
   final _$_UserStoreActionController = ActionController(name: '_UserStore');
+
+  @override
+  void resetLoginFailed(bool value) {
+    final _$actionInfo = _$_UserStoreActionController.startAction(
+        name: '_UserStore.resetLoginFailed');
+    try {
+      return super.resetLoginFailed(value);
+    } finally {
+      _$_UserStoreActionController.endAction(_$actionInfo);
+    }
+  }
 
   @override
   void logout() {
@@ -47,7 +73,8 @@ mixin _$UserStore on _UserStore, Store {
   @override
   String toString() {
     return '''
-isLogin: ${isLogin}
+isLogin: ${isLogin},
+isLoginFailed: ${isLoginFailed}
     ''';
   }
 }

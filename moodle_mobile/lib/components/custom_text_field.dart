@@ -5,11 +5,13 @@ class CustomTextFieldWidget extends StatelessWidget {
   final String hintText;
   final bool hidePass;
   final TextEditingController controller;
+  final IconData? prefixIcon; // ? accept null value
 
   const CustomTextFieldWidget(
       {Key? key,
       required this.hintText,
       this.hidePass = false,
+      this.prefixIcon,
       required this.controller})
       : super(key: key);
 
@@ -19,6 +21,7 @@ class CustomTextFieldWidget extends StatelessWidget {
       controller: controller,
       obscureText: hidePass,
       decoration: InputDecoration(
+        prefixIcon: Icon(prefixIcon),
         hintText: hintText,
         hintStyle: const TextStyle(fontSize: 16),
         border: const OutlineInputBorder(

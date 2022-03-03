@@ -12,22 +12,38 @@ abstract class _UserStore with Store {
   // Repository
   final Repository _repository;
 
+  // Disposers
+  late ReactionDisposer _loginFailedDisposer;
+
   // Constructor
-  _UserStore(this._repository);
+  _UserStore(this._repository) {
+    _loginFailedDisposer =
+        reaction((_) => isLoginFailed, resetLoginFailed, delay: 2000);
+  }
 
   @observable
   bool isLogin = false;
+
+  @observable
+  bool isLoginFailed = false;
 
   @action
   Future login(String username, String password) async {
     try {
       String res =
           await _repository.login(username, password, 'moodle_mobile_app');
+
+      isLogin = true;
     } catch (e) {
       print("Login error: " + e.toString());
+      isLoginFailed = true;
+      isLogin = false;
     }
+  }
 
-    isLogin = true;
+  @action
+  void resetLoginFailed(bool value) {
+    isLoginFailed = false;
   }
 
   @action

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/components/custom_button.dart';
 import 'package:moodle_mobile/components/custom_text_field.dart';
@@ -29,14 +30,10 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
+
     _userStore = GetIt.instance<UserStore>();
-    //usernameControler.addListener(getLastestUsernameValue);
   }
 
-  // void getLastestUsernameValue()
-  // {
-  //   print('Username value: ${usernameControler.text}');
-  // }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,7 +57,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     left: Dimens.login_padding_left,
                     right: Dimens.login_padding_right),
                 child: CustomTextFieldWidget(
-                    hintText: "Username", controller: usernameControler)),
+                    hintText: "Username",
+                    controller: usernameControler,
+                    prefixIcon: Icons.people)),
 
             const SizedBox(height: Dimens.login_sizedbox_height),
 
@@ -72,7 +71,8 @@ class _LoginScreenState extends State<LoginScreen> {
               child: CustomTextFieldWidget(
                   hintText: "Password",
                   hidePass: true,
-                  controller: passwordController),
+                  controller: passwordController,
+                  prefixIcon: Icons.lock),
             ),
 
             const SizedBox(height: Dimens.login_sizedbox_height),
@@ -110,6 +110,36 @@ class _LoginScreenState extends State<LoginScreen> {
                     right: Dimens.login_padding_right),
                 child: CustomButtonWidget(
                     textButton: "Login", onPressed: onLoginPressed)),
+
+            const SizedBox(height: Dimens.login_sizedbox_height),
+
+            // Error message
+            Observer(builder: (_) {
+              return Visibility(
+                maintainAnimation: true,
+                maintainSize: true,
+                maintainState: true,
+                visible: _userStore.isLoginFailed,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      left: Dimens.login_padding_left,
+                      right: Dimens.login_padding_right),
+                  child: Container(
+                    padding: const EdgeInsets.all(10.0),
+                    width: double.infinity,
+                    // MediaQuery: get 1/4 of screen height
+                    child: const Text(
+                      "Invalid login, please try again",
+                      textAlign: TextAlign.center,
+                    ),
+                    decoration: const BoxDecoration(
+                        color: MoodleColors.red_error_message,
+                        borderRadius: BorderRadius.all(
+                            Radius.circular(Dimens.login_error_border_radius))),
+                  ),
+                ),
+              );
+            }),
 
             const SizedBox(height: Dimens.login_sizedbox_height),
 
