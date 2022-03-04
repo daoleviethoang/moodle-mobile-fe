@@ -63,8 +63,7 @@ class _CourseCategoryFolderScreenState
                   widget.data.child.isNotEmpty
                       ? Container(
                           child: Text("Danh muc khoa hoc"),
-                          margin: const EdgeInsets.only(
-                              top: 5.0, left: 15.0, bottom: 5),
+                          margin: const EdgeInsets.only(top: 5.0, left: 15.0),
                         )
                       : Container(),
                   Container(
@@ -80,8 +79,7 @@ class _CourseCategoryFolderScreenState
                   courses.isNotEmpty
                       ? Container(
                           child: Text("Khoa hoc"),
-                          margin: const EdgeInsets.only(
-                              top: 10.0, left: 15.0, bottom: 5),
+                          margin: const EdgeInsets.only(top: 5.0, left: 15.0),
                         )
                       : Container(),
                   Container(

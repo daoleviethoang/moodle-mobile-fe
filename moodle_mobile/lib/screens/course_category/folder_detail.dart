@@ -36,20 +36,21 @@ class _FolderTileState extends State<FolderTile> {
         ),
         child: InkWell(
           onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) =>
-                    CourseCategoryFolderScreen(data: widget.data),
-              ),
-            );
+            if (widget.data.child.isNotEmpty) {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) =>
+                      CourseCategoryFolderScreen(data: widget.data),
+                ),
+              );
+            }
           },
           child: Column(
             children: [
               Row(
                 children: [
                   SizedBox(width: 8),
-                  Icon(Icons.folder_open_outlined, color: Colors.black),
-                  SizedBox(width: 8),
+                  Icon(Icons.folder, color: Colors.black),
                   Text(widget.data.name),
                   Expanded(
                     child: Row(
