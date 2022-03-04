@@ -59,7 +59,8 @@ class _CourseCategoryListTitleState extends State<CourseCategoryListTitle> {
               Row(
                 children: [
                   SizedBox(width: 8),
-                  Icon(Icons.folder, color: Colors.black),
+                  Icon(Icons.folder_open_outlined, color: Colors.black),
+                  SizedBox(width: 8),
                   Text(widget.data.name,
                       style: TextStyle(
                           fontWeight: (widget.data.parent == 0)
