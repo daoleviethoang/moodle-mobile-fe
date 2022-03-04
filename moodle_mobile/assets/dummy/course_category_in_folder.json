@@ -1,0 +1,278 @@
+[
+    {
+        "id": 1173,
+        "fullname": "Nhập môn lập trình - 20CLC01",
+        "displayname": "Nhập môn lập trình - 20CLC01",
+        "shortname": "CLC_HK1_2021_CSC10001_20CLC01",
+        "categoryid": 78,
+        "categoryname": "CHƯƠNG TRÌNH CHẤT LƯỢNG CAO (CLC)",
+        "sortorder": 260080,
+        "summary": "",
+        "summaryformat": 1,
+        "summaryfiles": [],
+        "overviewfiles": [],
+        "showactivitydates": false,
+        "showcompletionconditions": true,
+        "contacts": [
+            {
+                "id": 1258,
+                "fullname": "Lê Hoàng Thái"
+            },
+            {
+                "id": 966,
+                "fullname": "Thái Hùng Văn"
+            },
+            {
+                "id": 965,
+                "fullname": "Võ Hoài Việt"
+            }
+        ],
+        "enrollmentmethods": [
+            "manual",
+            "self"
+        ]
+    },
+    {
+        "id": 1174,
+        "fullname": "Nhập môn lập trình - 20CLC02",
+        "displayname": "Nhập môn lập trình - 20CLC02",
+        "shortname": "CLC_HK1_2021_CSC10001_20CLC02",
+        "categoryid": 78,
+        "categoryname": "CHƯƠNG TRÌNH CHẤT LƯỢNG CAO (CLC)",
+        "sortorder": 260081,
+        "summary": "",
+        "summaryformat": 1,
+        "summaryfiles": [],
+        "overviewfiles": [],
+        "showactivitydates": false,
+        "showcompletionconditions": true,
+        "contacts": [
+            {
+                "id": 4,
+                "fullname": "Văn Chí Nam"
+            },
+            {
+                "id": 701,
+                "fullname": "Trần Thị Thảo Nhi"
+            },
+            {
+                "id": 1268,
+                "fullname": "Bùi Huy Thông"
+            },
+            {
+                "id": 2595,
+                "fullname": "Phan Thị Phương Uyên"
+            }
+        ],
+        "enrollmentmethods": [
+            "manual",
+            "self"
+        ]
+    },
+    {
+        "id": 1175,
+        "fullname": "Nhập môn lập trình - 20CLC03",
+        "displayname": "Nhập môn lập trình - 20CLC03",
+        "shortname": "CLC_HK1_2021_CSC10001_20CLC03",
+        "categoryid": 78,
+        "categoryname": "CHƯƠNG TRÌNH CHẤT LƯỢNG CAO (CLC)",
+        "sortorder": 260082,
+        "summary": "",
+        "summaryformat": 1,
+        "summaryfiles": [],
+        "overviewfiles": [],
+        "showactivitydates": false,
+        "showcompletionconditions": true,
+        "contacts": [
+            {
+                "id": 2594,
+                "fullname": "Trần Anh Duy"
+            },
+            {
+                "id": 700,
+                "fullname": "Nguyễn Minh Huy"
+            },
+            {
+                "id": 608,
+                "fullname": "Hồ Tuấn Thanh"
+            }
+        ],
+        "enrollmentmethods": [
+            "manual",
+            "self"
+        ]
+    },
+    {
+        "id": 1176,
+        "fullname": "Nhập môn lập trình - 20CLC04",
+        "displayname": "Nhập môn lập trình - 20CLC04",
+        "shortname": "CLC_HK1_2021_CSC10001_20CLC04",
+        "categoryid": 78,
+        "categoryname": "CHƯƠNG TRÌNH CHẤT LƯỢNG CAO (CLC)",
+        "sortorder": 260083,
+        "summary": "",
+        "summaryformat": 1,
+        "summaryfiles": [],
+        "overviewfiles": [],
+        "showactivitydates": false,
+        "showcompletionconditions": true,
+        "contacts": [
+            {
+                "id": 1963,
+                "fullname": "Đậu Ngọc Hà Dương"
+            },
+            {
+                "id": 2599,
+                "fullname": "Ngô Đình Hy"
+            },
+            {
+                "id": 605,
+                "fullname": "Cao Xuân Nam"
+            },
+            {
+                "id": 2700,
+                "fullname": "Lê Nguyễn Tường Nhi"
+            }
+        ],
+        "enrollmentmethods": [
+            "manual",
+            "self"
+        ]
+    },
+    {
+        "id": 1177,
+        "fullname": "Nhập môn lập trình - 20CLC05",
+        "displayname": "Nhập môn lập trình - 20CLC05",
+        "shortname": "CLC_HK1_2021_CSC10001_20CLC05",
+        "categoryid": 78,
+        "categoryname": "CHƯƠNG TRÌNH CHẤT LƯỢNG CAO (CLC)",
+        "sortorder": 260084,
+        "summary": "",
+        "summaryformat": 1,
+        "summaryfiles": [],
+        "overviewfiles": [],
+        "showactivitydates": false,
+        "showcompletionconditions": true,
+        "contacts": [
+            {
+                "id": 768,
+                "fullname": "Trần Huy Quang"
+            },
+            {
+                "id": 966,
+                "fullname": "Thái Hùng Văn"
+            }
+        ],
+        "enrollmentmethods": [
+            "manual",
+            "self"
+        ]
+    },
+    {
+        "id": 1178,
+        "fullname": "Nhập môn lập trình - 20CLC06",
+        "displayname": "Nhập môn lập trình - 20CLC06",
+        "shortname": "CLC_HK1_2021_CSC10001_20CLC06",
+        "categoryid": 78,
+        "categoryname": "CHƯƠNG TRÌNH CHẤT LƯỢNG CAO (CLC)",
+        "sortorder": 260085,
+        "summary": "",
+        "summaryformat": 1,
+        "summaryfiles": [],
+        "overviewfiles": [],
+        "showactivitydates": false,
+        "showcompletionconditions": true,
+        "contacts": [
+            {
+                "id": 1941,
+                "fullname": "Phạm Trọng Nghĩa"
+            },
+            {
+                "id": 2664,
+                "fullname": "Tạ Việt Phương"
+            },
+            {
+                "id": 779,
+                "fullname": "Lê Ngọc Thành"
+            },
+            {
+                "id": 600,
+                "fullname": "Nguyễn Ngọc Thảo"
+            }
+        ],
+        "enrollmentmethods": [
+            "manual",
+            "self"
+        ]
+    },
+    {
+        "id": 1179,
+        "fullname": "Nhập môn lập trình - 20CLC07",
+        "displayname": "Nhập môn lập trình - 20CLC07",
+        "shortname": "CLC_HK1_2021_CSC10001_20CLC07",
+        "categoryid": 78,
+        "categoryname": "CHƯƠNG TRÌNH CHẤT LƯỢNG CAO (CLC)",
+        "sortorder": 260086,
+        "summary": "",
+        "summaryformat": 1,
+        "summaryfiles": [],
+        "overviewfiles": [],
+        "showactivitydates": false,
+        "showcompletionconditions": true,
+        "contacts": [
+            {
+                "id": 608,
+                "fullname": "Hồ Tuấn Thanh"
+            },
+            {
+                "id": 1938,
+                "fullname": "Mai Anh Tuấn"
+            },
+            {
+                "id": 1948,
+                "fullname": "Phạm Minh Tuấn"
+            }
+        ],
+        "enrollmentmethods": [
+            "manual",
+            "self"
+        ]
+    },
+    {
+        "id": 1180,
+        "fullname": "Nhập môn lập trình - 20CLC08",
+        "displayname": "Nhập môn lập trình - 20CLC08",
+        "shortname": "CLC_HK1_2021_CSC10001_20CLC08",
+        "categoryid": 78,
+        "categoryname": "CHƯƠNG TRÌNH CHẤT LƯỢNG CAO (CLC)",
+        "sortorder": 260087,
+        "summary": "",
+        "summaryformat": 1,
+        "summaryfiles": [],
+        "overviewfiles": [],
+        "showactivitydates": false,
+        "showcompletionconditions": true,
+        "contacts": [
+            {
+                "id": 782,
+                "fullname": "Nguyễn Lê Hoàng Dũng"
+            },
+            {
+                "id": 608,
+                "fullname": "Hồ Tuấn Thanh"
+            },
+            {
+                "id": 762,
+                "fullname": "Trương Toàn Thịnh"
+            },
+            {
+                "id": 1938,
+                "fullname": "Mai Anh Tuấn"
+            }
+        ],
+        "enrollmentmethods": [
+            "manual",
+            "self"
+        ]
+    }
+]
