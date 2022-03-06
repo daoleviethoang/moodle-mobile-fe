@@ -39,6 +39,7 @@ dependencies:
   dio: ^4.0.4
   get_it: ^7.2.0
   shared_preferences: ^2.0.13
+  device_preview: ^1.0.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

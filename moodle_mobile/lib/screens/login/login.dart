@@ -5,9 +5,8 @@ import 'package:moodle_mobile/components/custom_button.dart';
 import 'package:moodle_mobile/components/custom_text_field.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
+import 'package:moodle_mobile/screens/message/message_screen.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
-
-import 'home_design_course.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -44,7 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
           children: <Widget>[
             // Logo image
             Container(
-              color: const Color(0xffF7F7F7),
+              color: MoodleColors.lightGray,
               width: double.infinity,
               // MediaQuery: get 1/4 of screen height
               height: MediaQuery.of(context).size.height * 1 / 4,
@@ -160,9 +159,13 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void onLoginPressed() {
-    // Navigator.push(context, MaterialPageRoute(builder: (context) => DesignCourseHomeScreen()));
-    _userStore.login(usernameControler.text, passwordController.text);
+  void onLoginPressed() async {
+    await _userStore.login(usernameControler.text, passwordController.text);
+
+    if (_userStore.isLogin == true) {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const MessageScreen()));
+    }
   }
 
   void forgotPass() {

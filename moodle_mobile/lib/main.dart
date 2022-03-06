@@ -1,12 +1,20 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/di/service_locator.dart';
-import 'package:moodle_mobile/screens/login.dart';
+import 'package:moodle_mobile/screens/login/login.dart';
+import 'package:moodle_mobile/screens/message/message_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await setupLocator();
-  runApp(const MyApp());
+
+  runApp(
+    DevicePreview(
+      enabled: false,
+      builder: (context) => const MyApp(), // Wrap your app
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -16,6 +24,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      useInheritedMediaQuery: true,
+      locale: DevicePreview.locale(context),
+      builder: DevicePreview.appBuilder,
       title: 'Moodle App',
       theme: ThemeData(
           colorScheme: const ColorScheme(
@@ -34,7 +45,7 @@ class MyApp extends StatelessWidget {
         onBackground: Colors.black,
         onError: Colors.black,
       )),
-      home: const LoginScreen(),
+      home: const MessageScreen(),
       debugShowCheckedModeBanner: false,
     );
   }
