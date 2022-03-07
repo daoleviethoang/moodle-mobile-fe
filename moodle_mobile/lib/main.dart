@@ -216,26 +216,29 @@ class _CalendarSubPageState extends State<CalendarSubPage> {
   }
 
   Widget _dayView() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 12),
-          child: Text('Events on ' + DateFormat('MMMM dd').format(_selectedDay),
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-              )),
-        ),
-        for (var e in _selectedEvents) Padding(
-          padding: const EdgeInsets.only(left: 8),
-          child: MenuItem(
-            title: e,
-            subtitle: DateFormat('dd MMMM, yyyy').format(_selectedDay),
-            onPressed: null,
+    return ConstrainedBox(
+      constraints: const BoxConstraints(minHeight: 640),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: Text('Events on ' + DateFormat('MMMM dd').format(_selectedDay),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                )),
           ),
-        ),
-      ],
+          for (var e in _selectedEvents) Padding(
+            padding: const EdgeInsets.only(left: 8),
+            child: MenuItem(
+              title: e,
+              subtitle: DateFormat('dd MMMM, yyyy').format(_selectedDay),
+              onPressed: null,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -247,19 +250,21 @@ class _CalendarSubPageState extends State<CalendarSubPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(12),
-      child: Column(
-        children: [
-          _monthView(),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 12, left: 12),
-              child: _dayView(),
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          children: [
+            _monthView(),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 12, left: 12),
+                child: _dayView(),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
