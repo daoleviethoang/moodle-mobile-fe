@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:moodle_mobile/components/custom_button_short.dart';
+import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
 
 class MessageScreen extends StatefulWidget {
@@ -32,25 +34,18 @@ class _MessageScreenState extends State<MessageScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width / 2.5,
-                  child: TextButton(
-                    onPressed: () {},
-                    child: const Text("Messenger"),
-                    style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(Colors.amber)),
-                  ),
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width / 2.5,
-                  child: TextButton(
-                      onPressed: () {},
-                      child: const Text("Contact"),
-                      style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.amber))),
-                ),
+                CustomButtonShort(
+                    text: "Message",
+                    textColor: MoodleColors.blue,
+                    bgColor: MoodleColors.brightGray,
+                    blurRadius: 10.0,
+                    onPressed: () {}),
+                CustomButtonShort(
+                    text: "Contact",
+                    textColor: Colors.black,
+                    bgColor: Colors.white,
+                    blurRadius: 4.0,
+                    onPressed: () {}),
               ],
             ),
           )

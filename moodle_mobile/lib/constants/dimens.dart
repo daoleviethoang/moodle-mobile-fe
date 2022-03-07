@@ -13,4 +13,7 @@ class Dimens {
   static const double login_checkbox_padding_left = 12.0;
   static const double login_sizedbox_height = 20.0;
   static const double login_error_border_radius = 4.0;
+
+  // For shadow button
+  static const double blur_radius = 4.0;
 }
