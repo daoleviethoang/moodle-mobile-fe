@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:moodle_mobile/components/content_item.dart';
 import 'package:moodle_mobile/components/image_view.dart';
 import 'package:moodle_mobile/components/menu_item.dart';
 
@@ -66,7 +67,7 @@ class _CourseDetailsPageState extends State<CourseDetailsPage> {
     ];
 
     // Generate widgets from participant list
-    final widgets = <Widget>[Container(width: 8)];
+    final widgets = <Widget>[];
     widgets
       ..addAll(List.generate(participants.length, (index) {
         return Padding(
@@ -129,15 +130,15 @@ class _CourseDetailsPageState extends State<CourseDetailsPage> {
     final eventKeys = events.keys.toList();
     final eventValues = events.values.toList();
     widgets.addAll(List.generate(events.length, (index) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: MenuItem(
-              title: eventKeys[index],
-              subtitle: DateFormat('dd MMMM, yyyy').format(eventValues[index]),
-              onPressed: () {},
-          ),
-        );
-      }));
+      return Padding(
+        padding: const EdgeInsets.only(left: 8, right: 24),
+        child: SubmissionItem(
+          title: eventKeys[index],
+          submissionId: '',
+          dueDate: eventValues[index],
+        ),
+      );
+    }));
 
     _upcomingList = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -161,7 +162,82 @@ class _CourseDetailsPageState extends State<CourseDetailsPage> {
   }
 
   void _initContentList() {
-    _contentList = Container();
+    _contentList = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.only(bottom: 8),
+          child: Text('Course contents',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              )),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ForumItem(title: 'Announcements', onPressed: () {}),
+              ForumItem(title: 'Discussion forums', onPressed: () {}),
+              const RichTextCard(
+                  text: "<div>"
+                      "<h1>Demo Page</h1>"
+                      "<p>This is a fantastic product that you should buy!</p>"
+                      "<h3>Features</h3>"
+                      "<ul>"
+                      "<li>It actually works</li>"
+                      "<li>It exists</li>"
+                      "<li>It doesn't cost much!</li>"
+                      "</ul>"
+                      "</div>"),
+              const LineItem(),
+              const HeaderItem(text: 'Topic 1'),
+              const DocumentItem(
+                title: 'Week 1 - Getting start',
+                documentUrl: '',
+              ),
+              const UrlItem(
+                title: 'Week 1 - Getting start',
+                url: 'https://docs.flutter.dev/',
+              ),
+              SubmissionItem(
+                title: 'Nộp Proposal',
+                submissionId: '',
+                dueDate: DateTime.utc(2022, 01, 20),
+              ),
+              const LineItem(),
+              const HeaderItem(text: 'Topic 2'),
+              const DocumentItem(
+                title: 'Week 2 - Overview React Native',
+                documentUrl: '',
+              ),
+              const DocumentItem(
+                title: 'Week 2 - Overview Flutter',
+                documentUrl: '',
+              ),
+              SubmissionItem(
+                title: 'Nộp báo cáo tuần 1',
+                submissionId: '',
+                dueDate: DateTime.utc(2022, 01, 27),
+              ),
+              QuizItem(
+                title: 'Quiz 1',
+                quizId: '',
+                openDate: DateTime.utc(2022, 01, 28),
+              ),
+              const LineItem(),
+              const HeaderItem(text: 'Topic 3'),
+              const DocumentItem(
+                title: 'Week 3 - Components and Layouts',
+                documentUrl: '',
+              ),
+            ],
+          ),
+        ),
+        Container(height: 16),
+      ],
+    );
   }
 
   @override
