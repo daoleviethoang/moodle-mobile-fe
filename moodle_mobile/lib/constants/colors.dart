@@ -10,4 +10,7 @@ class MoodleColors {
   // color for shadow button
   static const Color darkGrayShadow = Color(0xffacacac);
   static const Color brightGray = Color(0xffe8edf4);
+  //color for sub text
+  static const Color gray = Color(0xff808080);
+  static const Color purple = Color(0xff7B61FF);
 }

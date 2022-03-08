@@ -1,7 +1,11 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:moodle_mobile/components/custom_button_short.dart';
+import 'package:moodle_mobile/components/slidable_tile.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class MessageScreen extends StatefulWidget {
   const MessageScreen({Key? key}) : super(key: key);
@@ -30,7 +34,7 @@ class _MessageScreenState extends State<MessageScreen> {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: Dimens.default_padding),
+            padding: const EdgeInsets.only(top: 16.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -46,6 +50,56 @@ class _MessageScreenState extends State<MessageScreen> {
                     bgColor: Colors.white,
                     blurRadius: 4.0,
                     onPressed: () {}),
+              ],
+            ),
+          ),
+          Expanded(
+            child: ListView(
+              padding:
+                  const EdgeInsets.only(top: Dimens.default_padding_double),
+              children: [
+                SlidableTile(
+                  isNotification: false,
+                  nameInfo: "Nguyen Gia Hung",
+                  messContent: "Send you a message - 2/10/2021",
+                  onDeletePress: () {
+                    print("Delete chat of Nguyen Gia Hung");
+                  },
+                  onAlarmPress: () {
+                    print("Turn on/off alarm");
+                  },
+                  onMessDetailPress: () {
+                    print("Conversation Detail");
+                  },
+                ),
+                SlidableTile(
+                  isNotification: false,
+                  nameInfo: "Ngo Thi Thanh Thao",
+                  messContent: "Send you a message - 2/10/2021",
+                  onDeletePress: () {
+                    print("Delete chat of Ngo Thi Thanh Thao");
+                  },
+                  onAlarmPress: () {
+                    print("Turn on/off alarm");
+                  },
+                  onMessDetailPress: () {
+                    print("Conversation Detail");
+                  },
+                ),
+                SlidableTile(
+                  isNotification: false,
+                  nameInfo: "Le Thanh Binh",
+                  messContent: "Send you a message - 2/10/2021",
+                  onDeletePress: () {
+                    print("Delete chat of Le Thanh Binh");
+                  },
+                  onAlarmPress: () {
+                    print("Turn on/off alarm");
+                  },
+                  onMessDetailPress: () {
+                    print("Conversation Detail");
+                  },
+                ),
               ],
             ),
           )
