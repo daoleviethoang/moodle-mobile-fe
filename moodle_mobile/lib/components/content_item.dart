@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:intl/intl.dart';
 import 'package:moodle_mobile/components/menu_item.dart';
 
@@ -65,6 +66,7 @@ class UrlItem extends StatelessWidget {
       icon: const Icon(CupertinoIcons.link),
       color: Colors.deepPurple,
       title: title,
+      subtitle: url,
       onPressed: () {
         // TODO: Go to webpage in browser
       },
@@ -132,8 +134,76 @@ class QuizItem extends StatelessWidget {
 
 // region Cards
 
+class RichTextCard extends StatelessWidget {
+  final String text;
+
+  const RichTextCard({
+    Key? key,
+    required this.text,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Html(
+          data: text,
+          style: {
+            'h1': Style(fontSize: const FontSize(19)),
+            'h2': Style(fontSize: const FontSize(17.5)),
+            'h3': Style(fontSize: const FontSize(16)),
+          },
+        ),
+      ),
+    );
+  }
+}
+
 // endregion
 
 // region Text and others
+
+class HeaderItem extends StatelessWidget {
+  final String text;
+
+  const HeaderItem({
+    Key? key,
+    required this.text,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Text(
+        text,
+        style: TextStyle(
+          fontSize: 18,
+          color: Theme.of(context).primaryColor,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+}
+
+class LineItem extends StatelessWidget {
+  final double width;
+
+  const LineItem({Key? key, this.width = 1.5}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      child: Container(
+        color: Theme.of(context).hintColor.withOpacity(.25),
+        width: double.infinity,
+        height: width,
+      ),
+    );
+  }
+}
 
 // endregion
