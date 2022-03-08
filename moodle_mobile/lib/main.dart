@@ -6,6 +6,8 @@ import 'package:intl/intl.dart';
 import 'package:moodle_mobile/components/menu_item.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+import 'course_details.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -123,7 +125,21 @@ class DashboardSubPage extends StatefulWidget {
 class _DashboardSubPageState extends State<DashboardSubPage> {
   @override
   Widget build(BuildContext context) {
-    return const Center(child: Text('Dashboard'));
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text('Dashboard'),
+          ElevatedButton(
+            onPressed: () => Navigator.of(context).push(CupertinoPageRoute(
+              builder: (context) =>
+                  const CourseDetailsPage(courseId: "course-id-123"),
+            )),
+            child: const Text('Course Details'),
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -223,20 +239,22 @@ class _CalendarSubPageState extends State<CalendarSubPage> {
         children: [
           Padding(
             padding: const EdgeInsets.only(bottom: 12),
-            child: Text('Events on ' + DateFormat('MMMM dd').format(_selectedDay),
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                )),
+            child:
+                Text('Events on ' + DateFormat('MMMM dd').format(_selectedDay),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    )),
           ),
-          for (var e in _selectedEvents) Padding(
-            padding: const EdgeInsets.only(left: 8),
-            child: MenuItem(
-              title: e,
-              subtitle: DateFormat('dd MMMM, yyyy').format(_selectedDay),
-              onPressed: null,
+          for (var e in _selectedEvents)
+            Padding(
+              padding: const EdgeInsets.only(left: 8),
+              child: MenuItem(
+                title: e,
+                subtitle: DateFormat('dd MMMM, yyyy').format(_selectedDay),
+                onPressed: null,
+              ),
             ),
-          ),
         ],
       ),
     );
