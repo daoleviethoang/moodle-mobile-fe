@@ -15,16 +15,18 @@ import 'package:flutter/material.dart';
 ///   https://www.figma.com/file/PQEG0jYNYm9ob534tAOZiI/MOODLE-MOBILE-HCMUS?node-id=0%3A1
 ///   Link to Figma containing a prototype of this widget
 class MenuItem extends StatelessWidget {
-  final IconData icon;
-  final Color color;
+  final Widget? icon;
+  final Image? image;
+  final Color? color;
   final String title;
   final String? subtitle;
   final VoidCallback? onPressed;
 
   const MenuItem({
     Key? key,
-    this.icon = CupertinoIcons.doc,
-    this.color = Colors.blue,
+    this.icon,
+    this.image,
+    this.color,
     required this.title,
     this.subtitle,
     required this.onPressed,
@@ -32,6 +34,17 @@ class MenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Widget circleWidget;
+    if (icon != null) {
+      circleWidget = icon!;
+    } else if (image != null) {
+      circleWidget = ClipOval(child: image!);
+    } else {
+      circleWidget = Text(title.substring(0, 1),
+          style: const TextStyle(fontWeight: FontWeight.bold));
+    }
+    Color color = this.color ?? Theme.of(context).primaryColor;
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: TextButton.icon(
@@ -49,16 +62,8 @@ class MenuItem extends StatelessWidget {
           padding: const EdgeInsets.only(right: 4),
           child: CircleAvatar(
             backgroundColor: color.withOpacity(.25),
-            child: Text(String.fromCharCode(icon.codePoint),
-              style: TextStyle(
-                inherit: false,
-                color: color,
-                fontSize: 24,
-                fontWeight: FontWeight.w500,
-                fontFamily: icon.fontFamily,
-                package: icon.fontPackage,
-              ),
-            ),
+            foregroundColor: color,
+            child: circleWidget,
           ),
         ),
 
@@ -83,16 +88,16 @@ class MenuItem extends StatelessWidget {
                 if (subtitle!.isNotEmpty) {
                   return Padding(
                     padding: const EdgeInsets.only(top: 8),
-                    child: Opacity(
-                      opacity: .25,
-                      child: Text(
-                        subtitle!,
-                        maxLines: 1,
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.onSurface,
-                          fontSize: 14,
-                          height: 1,
-                        ),
+                    child: Text(
+                      subtitle!,
+                      maxLines: 1,
+                      style: TextStyle(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withAlpha(64),
+                        fontSize: 14,
+                        height: 1,
                       ),
                     ),
                   );
