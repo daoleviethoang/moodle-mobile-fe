@@ -23,6 +23,8 @@ class SlidableTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Slidable(
+      key: ValueKey(nameInfo),
+      groupTag: '0',
       endActionPane:
           ActionPane(extentRatio: 0.3, motion: const ScrollMotion(), children: [
         Material(
@@ -31,7 +33,7 @@ class SlidableTile extends StatelessWidget {
           child: InkWell(
             child: const SizedBox(
                 width: 56,
-                height: 56,
+                height: 76,
                 child: Icon(
                   Icons.delete,
                   color: Colors.white,
@@ -45,7 +47,7 @@ class SlidableTile extends StatelessWidget {
           child: InkWell(
             child: SizedBox(
                 width: 56,
-                height: 56,
+                height: 76,
                 child: Icon(
                   isNotification
                       ? Icons.notifications
@@ -57,24 +59,26 @@ class SlidableTile extends StatelessWidget {
         ),
       ]),
       child: ListTile(
-          onTap: onMessDetailPress,
-          leading: const CircleAvatar(
-            radius: 28.5,
-            backgroundColor: MoodleColors.blue,
-            child: Icon(
-              Icons.person,
-              size: Dimens.default_size_icon,
-              color: Colors.white,
-            ),
+        onTap: onMessDetailPress,
+        leading: const CircleAvatar(
+          radius: 28.5,
+          backgroundColor: MoodleColors.blue,
+          child: Icon(
+            Icons.person,
+            size: Dimens.default_size_icon,
+            color: Colors.white,
           ),
-          title: Text(
-            nameInfo,
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-          ),
-          subtitle: Text(
-            messContent,
-            style: TextStyle(fontSize: 12, color: MoodleColors.gray),
-          )),
+        ),
+        title: Text(
+          nameInfo,
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+        ),
+        subtitle: Text(
+          messContent,
+          style: TextStyle(fontSize: 12, color: MoodleColors.gray),
+        ),
+        trailing: Icon(isNotification ? null : Icons.notifications_off),
+      ),
     );
   }
 }

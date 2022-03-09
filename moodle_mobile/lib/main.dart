@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
         onBackground: Colors.black,
         onError: Colors.black,
       )),
-      home: const MessageScreen(),
+      home: const LoginScreen(),
       debugShowCheckedModeBanner: false,
     );
   }

@@ -1,5 +1,6 @@
 import 'package:mobx/mobx.dart';
 import 'package:moodle_mobile/data/repository.dart';
+import 'package:moodle_mobile/models/user.dart';
 
 // Include generated file
 part 'user_store.g.dart';
@@ -22,6 +23,10 @@ abstract class _UserStore with Store {
   }
 
   @observable
+  UserModel user =
+      UserModel(token: "", id: 0, username: "", fullname: "", email: "");
+
+  @observable
   bool isLogin = false;
 
   @observable
@@ -30,9 +35,9 @@ abstract class _UserStore with Store {
   @action
   Future login(String username, String password) async {
     try {
-      String res =
+      String token =
           await _repository.login(username, password, 'moodle_mobile_app');
-
+      user = await _repository.getUserInfo(token, username);
       isLogin = true;
     } catch (e) {
       print("Login error: " + e.toString());

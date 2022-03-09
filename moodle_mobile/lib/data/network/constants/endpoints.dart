@@ -13,4 +13,5 @@ class Endpoints {
   // Add more endpoints here when we need to call to different API
   // user endpoints
   static const String login = baseUrl + "/login/token.php";
+  static const String userInfo = baseUrl + "/webservice/rest/server.php";
 }

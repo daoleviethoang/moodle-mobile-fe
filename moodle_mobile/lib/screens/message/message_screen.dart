@@ -59,7 +59,7 @@ class _MessageScreenState extends State<MessageScreen> {
                   const EdgeInsets.only(top: Dimens.default_padding_double),
               children: [
                 SlidableTile(
-                  isNotification: false,
+                  isNotification: true,
                   nameInfo: "Nguyen Gia Hung",
                   messContent: "Send you a message - 2/10/2021",
                   onDeletePress: () {
