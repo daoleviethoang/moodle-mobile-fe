@@ -34,7 +34,8 @@ class UserApi {
   // Write a future return user info
   Future<UserModel> getUserInfo(String token, String username) async {
     try {
-      final res = await _dioClient.get(Endpoints.userInfo, queryParameters: {
+      final res =
+          await _dioClient.get(Endpoints.webserviceServer, queryParameters: {
         'wstoken': token,
         'wsfunction': 'core_user_get_users_by_field',
         'moodlewsrestformat': 'json',
