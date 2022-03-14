@@ -1,77 +1,53 @@
-class Category {
-  Category({
-    this.title = '',
-    this.imagePath = '',
-    this.lessonCount = 0,
-    this.money = 0,
-    this.rating = 0.0,
-  });
+class Course {
+  Course({this.title = '', this.teacher = const [], this.tag = ''});
 
   String title;
-  int lessonCount;
-  int money;
-  double rating;
-  String imagePath;
+  List<String> teacher;
+  String tag;
 
-  static List<Category> categoryList = <Category>[
-    Category(
-      imagePath: 'assets/design_course/interFace1.png',
-      title: 'User interface Design',
-      lessonCount: 24,
-      money: 25,
-      rating: 4.3,
+  static List<Course> categoryList = <Course>[
+    Course(
+      title: 'Quản trị cơ sở dữ liệu hiện đại',
+      teacher: ['Nguyen Van A', 'Nguyen Van A', 'Nguyen Van A'],
+      tag: '18HTTT',
     ),
-    Category(
-      imagePath: 'assets/design_course/interFace2.png',
-      title: 'User interface Design',
-      lessonCount: 22,
-      money: 18,
-      rating: 4.6,
+    Course(
+      title: 'Quản trị cơ sở dữ liệu hiện đại',
+      teacher: ['Nguyen Van A', 'Nguyen Van A', 'Nguyen Van A'],
+      tag: '18HTTT',
     ),
-    Category(
-      imagePath: 'assets/design_course/interFace1.png',
-      title: 'User interface Design',
-      lessonCount: 24,
-      money: 25,
-      rating: 4.3,
+    Course(
+      title: 'Quản trị cơ sở dữ liệu hiện đại',
+      teacher: ['Nguyen Van A', 'Nguyen Van A', 'Nguyen Van A'],
+      tag: '18HTTT',
     ),
-    Category(
-      imagePath: 'assets/design_course/interFace2.png',
-      title: 'User interface Design',
-      lessonCount: 22,
-      money: 18,
-      rating: 4.6,
+    Course(
+      title: 'Quản trị cơ sở dữ liệu hiện đại',
+      teacher: ['Nguyen Van A', 'Nguyen Van A', 'Nguyen Van A'],
+      tag: '18HTTT',
     ),
   ];
 
-  static List<Category> popularCourseList = <Category>[
-    Category(
-      imagePath: 'assets/design_course/interFace3.png',
-      title: 'App Design Course',
-      lessonCount: 12,
-      money: 25,
-      rating: 4.8,
+  static List<Course> popularCourseList = <Course>[
+    Course(
+      title: 'Quản trị cơ sở dữ liệu hiện đại',
+      teacher: ['Nguyen Van A', 'Nguyen Van A', 'Nguyen Van A'],
+      tag: '18HTTT',
     ),
-    Category(
-      imagePath: 'assets/design_course/interFace4.png',
-      title: 'Web Design Course',
-      lessonCount: 28,
-      money: 208,
-      rating: 4.9,
+    Course(
+      title: 'Quản trị cơ sở dữ liệu hiện đại',
+      teacher: ['Nguyen Van A', 'Nguyen Van A', 'Nguyen Van A'],
+      tag: '18HTTT',
     ),
-    Category(
-      imagePath: 'assets/design_course/interFace3.png',
-      title: 'App Design Course',
-      lessonCount: 12,
-      money: 25,
-      rating: 4.8,
+    Course(
+      title: 'Quản trị cơ sở dữ liệu hiện đại',
+      teacher: ['Nguyen Van A', 'Nguyen Van A', 'Nguyen Van A'],
+      tag: '18HTTT',
     ),
-    Category(
-      imagePath: 'assets/design_course/interFace4.png',
-      title: 'Web Design Course',
-      lessonCount: 28,
-      money: 208,
-      rating: 4.9,
+    Course(
+      title: 'Quản trị cơ sở dữ liệu hiện đại',
+      teacher: ['Nguyen Van A', 'Nguyen Van A', 'Nguyen Van A'],
+      tag: '18HTTT',
     ),
   ];
 }

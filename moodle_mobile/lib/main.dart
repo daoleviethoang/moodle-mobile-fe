@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:moodle_mobile/constants/colors.dart';
+import 'package:moodle_mobile/screens/direct_page.dart';
+import 'package:moodle_mobile/screens/home/home.dart';
 import 'package:moodle_mobile/screens/login.dart';
 
 void main() {
@@ -31,7 +33,8 @@ class MyApp extends StatelessWidget {
         onBackground: Colors.black,
         onError: Colors.black,
       )),
-      home: const LoginScreen(),
+      //home: const LoginScreen(),
+      home: DirectScreen(),
       debugShowCheckedModeBanner: false,
     );
   }
