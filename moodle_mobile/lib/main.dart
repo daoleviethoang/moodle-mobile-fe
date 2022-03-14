@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:moodle_mobile/constants/colors.dart';
-import 'package:moodle_mobile/di/service_locator.dart';
+import 'package:moodle_mobile/screens/direct_page.dart';
+import 'package:moodle_mobile/screens/home/home.dart';
 import 'package:moodle_mobile/screens/login.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await setupLocator();
+void main() {
   runApp(const MyApp());
 }
 
