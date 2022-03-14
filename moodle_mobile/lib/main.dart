@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
         onBackground: Colors.black,
         onError: Colors.black,
       )),
-      home: const LoginScreen(),
+      home: const DirectScreen(),
       debugShowCheckedModeBanner: false,
     );
   }
