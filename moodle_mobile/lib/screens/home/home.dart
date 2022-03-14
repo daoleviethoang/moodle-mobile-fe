@@ -20,9 +20,8 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: Colors.transparent,
       body: Column(
         children: <Widget>[
-          //getAppBarUI(),
           getCategoryUI(),
-          getMyCoursesUI(),
+          getScreenTabUI(categoryType),
         ],
       ),
     );
@@ -53,13 +52,30 @@ class _HomeScreenState extends State<HomeScreen> {
           Flexible(
             child: PopularCourseListView(
               callBack: () {
-                moveTo();
+                moveToCourseDetail();
               },
             ),
           )
         ],
       ),
     );
+  }
+
+  Widget getScreenTabUI(CategoryType categoryTypeData) {
+    if (CategoryType.my == categoryTypeData) {
+      return getMyCoursesUI();
+    } else if (CategoryType.all == categoryTypeData) {
+      return const Text(
+        'All courses Screeen',
+        textAlign: TextAlign.left,
+        style: TextStyle(
+          fontWeight: FontWeight.w600,
+          fontSize: 16,
+          letterSpacing: 0.27,
+        ),
+      );
+    }
+    return getMyCoursesUI();
   }
 
   Widget getMyCoursesUI() {
@@ -82,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void moveTo() {
+  void moveToCourseDetail() {
     // Navigator.push<dynamic>(
     //   context,
     //   MaterialPageRoute<dynamic>(
