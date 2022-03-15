@@ -66,4 +66,23 @@ class ConversationApi {
       rethrow;
     }
   }
+
+  Future<List> muteOneConversation(
+      String token, int userId, int conversationId) async {
+    try {
+      final res =
+          await _dioClient.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': 'core_message_mute_conversations',
+        'moodlewsrestformat': 'json',
+        'conversationids[0]': conversationId,
+        'userid': userId,
+      });
+
+      return res;
+    } catch (e) {
+      print("API error: " + e.toString());
+      rethrow;
+    }
+  }
 }

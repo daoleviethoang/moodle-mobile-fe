@@ -94,18 +94,26 @@ class _MessageScreenState extends State<MessageScreen> {
                           return Padding(
                             padding: const EdgeInsets.only(
                                 top: Dimens.default_padding),
-                            child: SlidableTile(
-                                isNotification: _conversationStore
-                                    .listConversation[index].isMuted,
-                                nameInfo: _conversationStore
-                                    .listConversation[index]
-                                    .members[0]
-                                    .fullname,
-                                message: _conversationStore
-                                    .listConversation[index].message,
-                                onDeletePress: () {},
-                                onAlarmPress: () {},
-                                onMessDetailPress: () {}),
+                            child: Observer(builder: (_) {
+                              return SlidableTile(
+                                  isNotification: !_conversationStore
+                                      .listConversation[index].isMuted,
+                                  nameInfo: _conversationStore
+                                      .listConversation[index]
+                                      .members[0]
+                                      .fullname,
+                                  message: _conversationStore
+                                      .listConversation[index].message,
+                                  onDeletePress: () {},
+                                  onAlarmPress: () {
+                                    _conversationStore.muteOneConversation(
+                                        _userStore.user.token,
+                                        _userStore.user.id,
+                                        _conversationStore
+                                            .listConversation[index].id);
+                                  },
+                                  onMessDetailPress: () {});
+                            }),
                           );
                         }));
           })

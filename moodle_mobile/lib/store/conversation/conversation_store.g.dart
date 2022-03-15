@@ -13,13 +13,13 @@ mixin _$ConversationStore on _ConversationStore, Store {
       Atom(name: '_ConversationStore.listConversation');
 
   @override
-  List<ConversationModel> get listConversation {
+  ObservableList<ConversationModel> get listConversation {
     _$listConversationAtom.reportRead();
     return super.listConversation;
   }
 
   @override
-  set listConversation(List<ConversationModel> value) {
+  set listConversation(ObservableList<ConversationModel> value) {
     _$listConversationAtom.reportWrite(value, super.listConversation, () {
       super.listConversation = value;
     });
@@ -47,6 +47,16 @@ mixin _$ConversationStore on _ConversationStore, Store {
   Future<dynamic> getListConversation(String token, int userId) {
     return _$getListConversationAsyncAction
         .run(() => super.getListConversation(token, userId));
+  }
+
+  final _$muteOneConversationAsyncAction =
+      AsyncAction('_ConversationStore.muteOneConversation');
+
+  @override
+  Future<dynamic> muteOneConversation(
+      String token, int userId, int conversationId) {
+    return _$muteOneConversationAsyncAction
+        .run(() => super.muteOneConversation(token, userId, conversationId));
   }
 
   @override

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:moodle_mobile/data/repository.dart';
 import 'package:moodle_mobile/models/conversation/conversation.dart';
@@ -32,7 +33,7 @@ abstract class _ConversationStore with Store {
   // Khi khoi tao 1 bien observable can gan gia tri mac
   // dinh cho no nen ta gan = []
   @observable
-  List<ConversationModel> listConversation = [];
+  ObservableList<ConversationModel> listConversation = ObservableList();
 
   @observable
   bool isLoading = false;
@@ -46,24 +47,44 @@ abstract class _ConversationStore with Store {
   Future getListConversation(String token, int userId) async {
     try {
       isLoading = true;
+
       // Goi ham lay danh sach conversation tu repository
       // Ham tra ve List<ConversationModel> se giong kieu
       // du lieu cua bien listConversation ==> ta gan du lieu
       // vao bien listConversation
-      listConversation = await _repository.getConversationInfo(token, userId);
+      listConversation = ObservableList.of(
+          await _repository.getConversationInfo(token, userId));
 
-      // Nhu vay la da goi du lieu tu backend ve va gan vao
-      // bien ma ta dang can quan sat thanh cong
-      // Bay gio ta chi can goi action tu cac view
-      // Vay da lay du lieu thanh cong.
-      print(listConversation.length);
-
-      // Xem ky lai flow nay, sau khi da hieu het thi chi
-      // can lay data tu day ma render ra UI thoi
       isLoading = false;
     } catch (e) {
       // In loi neu trong qua trinh xu ly co loi xay ra
       print("Get conversations error: " + e.toString());
+    }
+  }
+
+  @action
+  Future muteOneConversation(
+      String token, int userId, int conversationId) async {
+    try {
+      List mute =
+          await _repository.muteOneConversation(token, userId, conversationId);
+
+      // If mute.isEmpty is if mute success
+      if (mute.isEmpty) {
+        // listConversation la 1 cai list, moi phan tu la 1 object
+        // observer chi quan sat duoc su thay doi cua list (them 1 phan tu, xoa 1 phan tu)
+        // thay the 1 phan tu
+        // observer khong the quan sat duoc su thay doi cua 1 property thuoc 1 phan tu
+        listConversation = ObservableList.of(List.from(listConversation));
+        for (int i = 0; i < listConversation.length; i++) {
+          if (listConversation[i].id == conversationId) {
+            listConversation[i].isMuted = true;
+            return;
+          }
+        }
+      }
+    } catch (e) {
+      print("Mute conversation error: " + e.toString());
     }
   }
 }

@@ -20,4 +20,8 @@ class Repository {
   Future<List<ConversationModel>> getConversationInfo(
           String token, int userid) =>
       _conversationApi.getConversationInfo(token, userid);
+
+  Future<List> muteOneConversation(
+          String token, int userId, int conversationId) =>
+      _conversationApi.muteOneConversation(token, userId, conversationId);
 }
