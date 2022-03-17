@@ -83,19 +83,23 @@ class _DirectScreenState extends State<DirectScreen> {
     return BottomNavigationBar(
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
-          icon: Icon(Icons.home_rounded),
+          icon: Icon(Icons.home_outlined),
+          activeIcon: Icon(Icons.home_rounded),
           label: 'Dashboard',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.calendar_month_outlined),
+          activeIcon: Icon(Icons.calendar_month),
           label: 'Calendar',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.messenger_outline_rounded),
+          activeIcon: Icon(Icons.messenger_rounded),
           label: 'Messenger',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.notifications_outlined),
+          activeIcon: Icon(Icons.notifications),
           label: 'Notification',
         ),
         BottomNavigationBarItem(
