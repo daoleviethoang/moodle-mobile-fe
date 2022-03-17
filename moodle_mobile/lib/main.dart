@@ -2,6 +2,8 @@ import 'dart:collection';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:moodle_mobile/constants/colors.dart';
+import 'package:moodle_mobile/screens/direct_page.dart';
 import 'package:intl/intl.dart';
 import 'package:moodle_mobile/components/menu_item.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -15,24 +17,52 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Moodle App',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        colorScheme: const ColorScheme(
+        brightness: Brightness.light,
+        primary: MoodleColors.blue,
+        secondary: MoodleColors.blue,
+        background: Colors.white,
+        // Need to consider again
+        primaryVariant: Colors.black,
+        secondaryVariant: Colors.black,
+        surface: Colors.black,
+        error: Colors.black,
+        onPrimary: Colors.black,
+        onSecondary: Colors.black,
+        onSurface: Colors.black,
+        onBackground: Colors.black,
+        onError: Colors.black,
 
-        /// Theme for all cards in this app
-        cardTheme: CardTheme(
-          color: Theme.of(context).colorScheme.surface,
-          elevation: 8,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(12)),
-          ),
-        ),
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+          /// Theme for all cards in this app
+          cardTheme: CardTheme(
+            color: Theme.of(context).colorScheme.surface,
+            elevation: 8,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(12)),
+            ),
+          )),
+      )),
+      home: const DirectScreen(),
+      debugShowCheckedModeBanner: false,
     );
+  }
+}
+
+class HexColor extends Color {
+  HexColor(final String hexColor) : super(_getColorFromHex(hexColor));
+
+  static int _getColorFromHex(String hexColor) {
+    hexColor = hexColor.toUpperCase().replaceAll('#', '');
+    if (hexColor.length == 6) {
+      hexColor = 'FF' + hexColor;
+    }
+    return int.parse(hexColor, radix: 16);
   }
 }
 
@@ -133,7 +163,7 @@ class _DashboardSubPageState extends State<DashboardSubPage> {
           ElevatedButton(
             onPressed: () => Navigator.of(context).push(CupertinoPageRoute(
               builder: (context) =>
-                  const CourseDetailsPage(courseId: "course-id-123"),
+              const CourseDetailsPage(courseId: "course-id-123"),
             )),
             child: const Text('Course Details'),
           ),
@@ -240,11 +270,11 @@ class _CalendarSubPageState extends State<CalendarSubPage> {
           Padding(
             padding: const EdgeInsets.only(bottom: 12),
             child:
-                Text('Events on ' + DateFormat('MMMM dd').format(_selectedDay),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    )),
+            Text('Events on ' + DateFormat('MMMM dd').format(_selectedDay),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                )),
           ),
           for (var e in _selectedEvents)
             Padding(
