@@ -4,6 +4,8 @@ class MoodleColors {
   MoodleColors._();
 
   static const Color blue = Color(0xff17478E);
+  static const Color blueDark = Color(0xff11356a);
+  static const Color blueLight = Color(0x8017478E);
   static const Color red_error_message = Color(0xffF8D7DA);
   static const Color white = Color(0xffFFFFFF);
   static const Color black = Color(0xff000000);

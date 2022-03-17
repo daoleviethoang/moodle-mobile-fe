@@ -2,13 +2,13 @@ import 'dart:collection';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:moodle_mobile/screens/common/menu_item.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/screens/direct_page.dart';
-import 'package:intl/intl.dart';
-import 'package:moodle_mobile/components/menu_item.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import 'course_details.dart';
+import 'screens/course_details.dart';
 
 void main() {
   runApp(const MyApp());
@@ -23,31 +23,47 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Moodle App',
       theme: ThemeData(
+        primarySwatch: MaterialColor(
+          MoodleColors.blue.value,
+          const <int, Color>{
+            50: MoodleColors.blueLight,
+            100: MoodleColors.blueLight,
+            200: MoodleColors.blueLight,
+            300: MoodleColors.blue,
+            400: MoodleColors.blue,
+            500: MoodleColors.blue,
+            600: MoodleColors.blue,
+            700: MoodleColors.blueDark,
+            800: MoodleColors.blueDark,
+            900: MoodleColors.blueDark,
+          },
+        ),
         colorScheme: const ColorScheme(
-        brightness: Brightness.light,
-        primary: MoodleColors.blue,
-        secondary: MoodleColors.blue,
-        background: Colors.white,
-        // Need to consider again
-        primaryVariant: Colors.black,
-        secondaryVariant: Colors.black,
-        surface: Colors.black,
-        error: Colors.black,
-        onPrimary: Colors.black,
-        onSecondary: Colors.black,
-        onSurface: Colors.black,
-        onBackground: Colors.black,
-        onError: Colors.black,
+          brightness: Brightness.light,
+          primary: MoodleColors.blue,
+          secondary: MoodleColors.blue,
+          background: Colors.white,
+          // Need to consider again
+          primaryVariant: Colors.black,
+          secondaryVariant: Colors.black,
+          surface: Colors.black,
+          error: Colors.black,
+          onPrimary: Colors.black,
+          onSecondary: Colors.black,
+          onSurface: Colors.black,
+          onBackground: Colors.black,
+          onError: Colors.black,
+        ),
 
-          /// Theme for all cards in this app
-          cardTheme: CardTheme(
-            color: Theme.of(context).colorScheme.surface,
-            elevation: 8,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(12)),
-            ),
-          )),
-      )),
+        /// Theme for all cards in this app
+        cardTheme: CardTheme(
+          color: Theme.of(context).colorScheme.surface,
+          elevation: 8,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(12)),
+          ),
+        ),
+      ),
       home: const DirectScreen(),
       debugShowCheckedModeBanner: false,
     );
@@ -65,311 +81,3 @@ class HexColor extends Color {
     return int.parse(hexColor, radix: 16);
   }
 }
-
-// region HOME PAGE
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _index = 0;
-  late List<Widget> _body;
-
-  /// List of widgets to show on navigation bar item pressed
-  void _initBody() {
-    _body = [
-      const DashboardSubPage(),
-      const CalendarSubPage(),
-      const MessengerSubPage(),
-      const NotificationSubPage(),
-      const MenuSubPage(),
-    ];
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    _initBody();
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: _body[_index],
-
-      /// Navigation bar with 5 items
-      bottomNavigationBar: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          backgroundColor: Theme.of(context).colorScheme.surface,
-          currentIndex: _index,
-          onTap: (value) => setState(() => _index = value),
-          selectedIconTheme: IconThemeData(
-              size: Theme.of(context).iconTheme.size ?? 24 * 1.25),
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.house),
-              activeIcon: Icon(CupertinoIcons.house_fill),
-              label: 'Dashboard',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.calendar),
-              activeIcon: Icon(CupertinoIcons.calendar_today),
-              label: 'Calendar',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.chat_bubble),
-              activeIcon: Icon(CupertinoIcons.chat_bubble_fill),
-              label: 'Messenger',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.bell),
-              activeIcon: Icon(CupertinoIcons.bell_solid),
-              label: 'Notification',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.ellipsis),
-              activeIcon: Icon(CupertinoIcons.ellipsis),
-              label: 'Menu',
-            ),
-          ]),
-    );
-  }
-}
-
-// endregion
-
-// region DASHBOARD
-
-class DashboardSubPage extends StatefulWidget {
-  const DashboardSubPage({Key? key}) : super(key: key);
-
-  @override
-  State<DashboardSubPage> createState() => _DashboardSubPageState();
-}
-
-class _DashboardSubPageState extends State<DashboardSubPage> {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Text('Dashboard'),
-          ElevatedButton(
-            onPressed: () => Navigator.of(context).push(CupertinoPageRoute(
-              builder: (context) =>
-              const CourseDetailsPage(courseId: "course-id-123"),
-            )),
-            child: const Text('Course Details'),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// endregion
-
-// region CALENDAR
-
-class CalendarSubPage extends StatefulWidget {
-  const CalendarSubPage({Key? key}) : super(key: key);
-
-  @override
-  State<CalendarSubPage> createState() => _CalendarSubPageState();
-}
-
-class _CalendarSubPageState extends State<CalendarSubPage> {
-  var _selectedDay = DateTime.now();
-  var _focusedDay = DateTime.now();
-  var _selectedEvents = <String>[];
-  final events = LinkedHashMap(
-    equals: isSameDay,
-  );
-
-  void _initEvents() {
-    events.addAll({
-      DateTime.utc(2022, 02, 18): ['Do stuffs', 'Do more stuffs'],
-      DateTime.utc(2022, 02, 16): ['Do things'],
-      DateTime.utc(2022, 02, 14): ['Do doings'],
-    });
-  }
-
-  Widget _monthView() {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-        child: TableCalendar(
-          // Set range and current date
-          firstDay: DateTime.utc(2022, 01, 01),
-          lastDay: DateTime.utc(2099, 31, 12),
-          focusedDay: _focusedDay,
-
-          // Calendar style
-          sixWeekMonthsEnforced: true,
-          headerStyle: const HeaderStyle(
-            titleCentered: true,
-            formatButtonVisible: false,
-          ),
-          calendarStyle: CalendarStyle(
-            todayDecoration: BoxDecoration(
-              color: Theme.of(context).primaryColorLight,
-              shape: BoxShape.circle,
-            ),
-            todayTextStyle: const TextStyle(),
-            selectedDecoration: BoxDecoration(
-              color: Theme.of(context).primaryColor,
-              shape: BoxShape.circle,
-            ),
-            markerDecoration: BoxDecoration(
-              color: Theme.of(context).primaryColorDark,
-              shape: BoxShape.circle,
-            ),
-          ),
-
-          // Selecting a date by tapping
-          selectedDayPredicate: (day) {
-            return isSameDay(_selectedDay, day);
-          },
-          onDaySelected: (selectedDay, focusedDay) {
-            if (!isSameDay(_selectedDay, selectedDay)) {
-              setState(() {
-                _focusedDay = focusedDay;
-                _selectedDay = selectedDay;
-                _selectedEvents = _getEventsForDay(selectedDay);
-              });
-            }
-          },
-          onPageChanged: (focusedDay) {
-            _focusedDay = focusedDay;
-          },
-          pageJumpingEnabled: true,
-
-          // Add events from HashMap
-          eventLoader: (day) => _getEventsForDay(day),
-        ),
-      ),
-    );
-  }
-
-  List<String> _getEventsForDay(DateTime day) {
-    return events[day] ?? [];
-  }
-
-  Widget _dayView() {
-    return ConstrainedBox(
-      constraints: const BoxConstraints(minHeight: 640),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child:
-            Text('Events on ' + DateFormat('MMMM dd').format(_selectedDay),
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                )),
-          ),
-          for (var e in _selectedEvents)
-            Padding(
-              padding: const EdgeInsets.only(left: 8),
-              child: MenuItem(
-                title: e,
-                subtitle: DateFormat('dd MMMM, yyyy').format(_selectedDay),
-                onPressed: null,
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-
-  @override
-  void initState() {
-    _initEvents();
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          children: [
-            _monthView(),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 12, left: 12),
-                child: _dayView(),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// endregion
-
-// region MESSENGER
-
-class MessengerSubPage extends StatefulWidget {
-  const MessengerSubPage({Key? key}) : super(key: key);
-
-  @override
-  State<MessengerSubPage> createState() => _MessengerSubPageState();
-}
-
-class _MessengerSubPageState extends State<MessengerSubPage> {
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text('Messenger'));
-  }
-}
-
-// endregion
-
-// region NOTIFICATION
-
-class NotificationSubPage extends StatefulWidget {
-  const NotificationSubPage({Key? key}) : super(key: key);
-
-  @override
-  State<NotificationSubPage> createState() => _NotificationSubPageState();
-}
-
-class _NotificationSubPageState extends State<NotificationSubPage> {
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text('Notification'));
-  }
-}
-
-// endregion
-
-// region MENU
-
-class MenuSubPage extends StatefulWidget {
-  const MenuSubPage({Key? key}) : super(key: key);
-
-  @override
-  State<MenuSubPage> createState() => _MenuSubPageState();
-}
-
-class _MenuSubPageState extends State<MenuSubPage> {
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text('Menu'));
-  }
-}
-
-// endregion

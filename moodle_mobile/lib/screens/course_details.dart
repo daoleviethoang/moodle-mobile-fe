@@ -1,20 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:moodle_mobile/components/content_item.dart';
-import 'package:moodle_mobile/components/image_view.dart';
-import 'package:moodle_mobile/components/menu_item.dart';
+import 'package:moodle_mobile/screens/common/content_item.dart';
+import 'package:moodle_mobile/screens/common/image_view.dart';
+import 'package:moodle_mobile/screens/common/menu_item.dart';
 
-class CourseDetailsPage extends StatefulWidget {
+class CourseDetailsScreen extends StatefulWidget {
   final String courseId;
 
-  const CourseDetailsPage({Key? key, required this.courseId}) : super(key: key);
+  const CourseDetailsScreen({Key? key, required this.courseId}) : super(key: key);
 
   @override
-  _CourseDetailsPageState createState() => _CourseDetailsPageState();
+  _CourseDetailsScreenState createState() => _CourseDetailsScreenState();
 }
 
-class _CourseDetailsPageState extends State<CourseDetailsPage> {
+class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
   late Widget _body;
   late Widget _peopleList;
   late Widget _upcomingList;

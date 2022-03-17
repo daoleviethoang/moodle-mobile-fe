@@ -1,5 +1,6 @@
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:moodle_mobile/screens/home/calendar.dart';
 import 'package:moodle_mobile/screens/home/home.dart';
 
 class DirectScreen extends StatefulWidget {
@@ -15,10 +16,7 @@ class _DirectScreenState extends State<DirectScreen> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
-    Text(
-      'Calendar Page',
-      style: optionStyle,
-    ),
+    CalendarScreen(),
     Text(
       'Messenger Page',
       style: optionStyle,

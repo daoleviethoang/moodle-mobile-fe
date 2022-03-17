@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:intl/intl.dart';
-import 'package:moodle_mobile/components/menu_item.dart';
+import 'package:moodle_mobile/screens/common/menu_item.dart';
 
 // region Icon and text
 
