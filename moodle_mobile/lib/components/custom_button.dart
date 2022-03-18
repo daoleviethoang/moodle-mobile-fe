@@ -16,7 +16,7 @@ class CustomButtonWidget extends StatelessWidget {
       onPressed: onPressed,
       child: Text(
         textButton,
-        style: const TextStyle(fontSize: 16),
+        style: TextStyle(fontSize: 16),
       ),
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all(MoodleColors.blue),
