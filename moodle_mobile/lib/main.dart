@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:moodle_mobile/screens/common/menu_item.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/screens/direct_page.dart';
+import 'package:moodle_mobile/screens/menu/profile/profile.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import 'screens/course_details.dart';
@@ -65,6 +66,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       home: const DirectScreen(),
+      //home: const ProfileScreen(),
       debugShowCheckedModeBanner: false,
     );
   }

@@ -12,4 +12,6 @@ class MoodleColors {
   static const Color blueButton = Color(0xffE8EDF4);
   static const Color tagColor = Color(0xffD1DAE8);
   static const Color grey = Color(0xffA3A3A3);
+  static const Color email = Color(0xff0B5FFF);
+  static const Color iconGrey = Color(0xff65676B);
 }

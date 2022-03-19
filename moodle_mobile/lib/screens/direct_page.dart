@@ -58,7 +58,6 @@ class _DirectScreenState extends State<DirectScreen> {
           textAlign: TextAlign.left,
           style: TextStyle(
               fontWeight: FontWeight.bold,
-              fontFamily: 'Open Sans',
               fontSize: 18,
               letterSpacing: 1,
               color: MoodleColors.white)),
