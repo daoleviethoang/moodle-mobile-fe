@@ -3,6 +3,7 @@ import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/screens/direct_page.dart';
 import 'package:moodle_mobile/screens/home/home.dart';
 import 'package:moodle_mobile/screens/login.dart';
+import 'package:moodle_mobile/screens/menu/profile/profile.dart';
 
 void main() {
   runApp(const MyApp());
@@ -33,7 +34,9 @@ class MyApp extends StatelessWidget {
         onBackground: Colors.black,
         onError: Colors.black,
       )),
-      home: const DirectScreen(),
+      //home: const DirectScreen(),
+      //home: const LoginScreen(),
+      home: const ProfileScreen(),
       debugShowCheckedModeBanner: false,
     );
   }
