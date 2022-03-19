@@ -90,7 +90,19 @@ class CategoryView extends StatelessWidget {
           const EdgeInsets.only(left: 0.0, top: 0.0, right: 0.0, bottom: 10.0),
       child: Container(
         height: 166,
-        decoration: new BoxDecoration(
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 5,
+              blurRadius: 5,
+              offset: const Offset(0, 3), // changes position of shadow
+            ),
+          ],
+          gradient: const LinearGradient(
+              begin: Alignment.topRight,
+              stops: [0.1, 0.02],
+              colors: [MoodleColors.blue, Colors.white]),
           borderRadius: const BorderRadius.all(const Radius.circular(8.0)),
         ),
         child: Container(
