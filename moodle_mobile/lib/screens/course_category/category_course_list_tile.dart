@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/models/course_category/course_category.dart';
 import 'package:moodle_mobile/screens/course_category/category_folder_detail.dart';
 
-class CourseCategoryListTitle extends StatefulWidget {
-  const CourseCategoryListTitle({Key? key, required this.data, this.margin})
+class CourseCategoryListTile extends StatefulWidget {
+  const CourseCategoryListTile({Key? key, required this.data, this.margin})
       : super(key: key);
   final CourseCategory data;
   final EdgeInsetsGeometry? margin;
   @override
-  _CourseCategoryListTitleState createState() =>
-      _CourseCategoryListTitleState();
+  _CourseCategoryListTileState createState() => _CourseCategoryListTileState();
 
   toList() {}
 }
 
-class _CourseCategoryListTitleState extends State<CourseCategoryListTitle> {
+class _CourseCategoryListTileState extends State<CourseCategoryListTile> {
   bool showChild = false;
   List<CourseCategory> listChild = [];
 
@@ -28,7 +28,7 @@ class _CourseCategoryListTitleState extends State<CourseCategoryListTitle> {
     return Container(
         margin: widget.margin,
         decoration: BoxDecoration(
-          color: Color.fromARGB(255, 199, 195, 195),
+          color: MoodleColors.grey,
           border: Border.all(
             width: 5,
             color: Colors.transparent,
@@ -84,7 +84,7 @@ class _CourseCategoryListTitleState extends State<CourseCategoryListTitle> {
               Column(
                 mainAxisSize: MainAxisSize.min,
                 children: listChild
-                    .map((e) => CourseCategoryListTitle(data: e, margin: null))
+                    .map((e) => CourseCategoryListTile(data: e, margin: null))
                     .toList(),
               ),
             ],

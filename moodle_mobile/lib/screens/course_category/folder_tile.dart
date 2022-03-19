@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:moodle_mobile/models/course_category/course_category_course.dart';
+import 'package:moodle_mobile/constants/colors.dart';
+import 'package:moodle_mobile/models/course_category/course_category.dart';
 import 'package:moodle_mobile/screens/course_category/category_folder_detail.dart';
 
-class CourseTile extends StatefulWidget {
-  const CourseTile({Key? key, required this.data, this.margin})
+class FolderTile extends StatefulWidget {
+  const FolderTile({Key? key, required this.data, this.margin})
       : super(key: key);
-  final CourseCategoryCourse data;
+  final CourseCategory data;
   final EdgeInsetsGeometry? margin;
   @override
-  _CourseTileState createState() => _CourseTileState();
+  _FolderTileState createState() => _FolderTileState();
 
   toList() {}
 }
 
-class _CourseTileState extends State<CourseTile> {
+class _FolderTileState extends State<FolderTile> {
   bool showChild = false;
-  List<CourseCategoryCourse> listChild = [];
+  List<CourseCategory> listChild = [];
 
   @override
   void initState() {
@@ -27,7 +28,7 @@ class _CourseTileState extends State<CourseTile> {
     return Container(
         margin: widget.margin,
         decoration: BoxDecoration(
-          color: Color.fromARGB(255, 199, 195, 195),
+          color: MoodleColors.grey,
           border: Border.all(
             width: 5,
             color: Colors.transparent,
@@ -35,17 +36,26 @@ class _CourseTileState extends State<CourseTile> {
           borderRadius: BorderRadius.circular(30),
         ),
         child: InkWell(
-          onTap: () {},
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) =>
+                    CourseCategoryFolderScreen(data: widget.data),
+              ),
+            );
+          },
           child: Column(
             children: [
               Row(
                 children: [
                   SizedBox(width: 8),
-                  Icon(Icons.class_, color: Colors.black),
-                  Text(widget.data.displayname),
+                  Icon(Icons.folder_open_outlined, color: Colors.black),
+                  SizedBox(width: 8),
+                  Text(widget.data.name),
                   Expanded(
                     child: Row(
                       children: [
+                        Text(widget.data.coursecount.toString()),
                         Icon(
                           Icons.arrow_right,
                           color: Colors.black,

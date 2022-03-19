@@ -34,7 +34,7 @@ class _CourseCategoryScreenState extends State<CourseCategoryScreen> {
               primary: false,
               shrinkWrap: true,
               children: categorys
-                  .map((e) => CourseCategoryListTitle(
+                  .map((e) => CourseCategoryListTile(
                         data: e,
                         margin: EdgeInsets.only(
                             top: MediaQuery.of(context).size.height * 0.02,

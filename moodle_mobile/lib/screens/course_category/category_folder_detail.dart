@@ -6,8 +6,8 @@ import 'package:flutter/services.dart' as rootBundle;
 import 'package:moodle_mobile/models/course_category/course_category.dart';
 import 'package:moodle_mobile/models/course_category/course_category_course.dart';
 import 'package:moodle_mobile/screens/course_category/category_course_list_tile.dart';
-import 'package:moodle_mobile/screens/course_category/course_detail.dart';
-import 'package:moodle_mobile/screens/course_category/folder_detail.dart';
+import 'package:moodle_mobile/screens/course_category/course_tile.dart';
+import 'package:moodle_mobile/screens/course_category/folder_tile.dart';
 
 class CourseCategoryFolderScreen extends StatefulWidget {
   final CourseCategory data;
@@ -73,8 +73,12 @@ class _CourseCategoryFolderScreenState
                     shrinkWrap: true,
                     children: widget.data.child
                         .map((e) => FolderTile(
-                              data: e,
-                            ))
+                            data: e,
+                            margin: EdgeInsets.only(
+                              top: 5,
+                              left: 10,
+                              right: 10,
+                            )))
                         .toList(),
                   )),
                   courses.isNotEmpty
@@ -90,8 +94,12 @@ class _CourseCategoryFolderScreenState
                     shrinkWrap: true,
                     children: courses
                         .map((e) => CourseTile(
-                              data: e,
-                            ))
+                            data: e,
+                            margin: EdgeInsets.only(
+                              top: 5,
+                              left: 10,
+                              right: 10,
+                            )))
                         .toList(),
                   ))
                 ]));
