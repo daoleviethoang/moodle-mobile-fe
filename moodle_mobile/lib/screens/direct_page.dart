@@ -1,5 +1,6 @@
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:moodle_mobile/screens/home/calendar.dart';
 import 'package:moodle_mobile/screens/home/home.dart';
 
 class DirectScreen extends StatefulWidget {
@@ -15,10 +16,7 @@ class _DirectScreenState extends State<DirectScreen> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
-    Text(
-      'Calendar Page',
-      style: optionStyle,
-    ),
+    CalendarScreen(),
     Text(
       'Messenger Page',
       style: optionStyle,
@@ -60,7 +58,6 @@ class _DirectScreenState extends State<DirectScreen> {
           textAlign: TextAlign.left,
           style: TextStyle(
               fontWeight: FontWeight.bold,
-              fontFamily: 'Open Sans',
               fontSize: 18,
               letterSpacing: 1,
               color: MoodleColors.white)),
@@ -83,19 +80,23 @@ class _DirectScreenState extends State<DirectScreen> {
     return BottomNavigationBar(
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
-          icon: Icon(Icons.home_rounded),
+          icon: Icon(Icons.home_outlined),
+          activeIcon: Icon(Icons.home_rounded),
           label: 'Dashboard',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.calendar_month_outlined),
+          activeIcon: Icon(Icons.calendar_month),
           label: 'Calendar',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.messenger_outline_rounded),
+          activeIcon: Icon(Icons.messenger_rounded),
           label: 'Messenger',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.notifications_outlined),
+          activeIcon: Icon(Icons.notifications),
           label: 'Notification',
         ),
         BottomNavigationBarItem(

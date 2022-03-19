@@ -1,7 +1,9 @@
-import 'package:moodle_mobile/constants/colors.dart';
-import 'package:moodle_mobile/screens/home/courses_view.dart';
 import 'package:flutter/material.dart';
+import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/screens/common/dropdown.dart';
+import 'package:moodle_mobile/screens/course_details.dart';
+import 'package:moodle_mobile/screens/home/courses_view.dart';
+
 import '../../models/status.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -51,9 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
           getDropdownStatus(),
           Flexible(
             child: PopularCourseListView(
-              callBack: () {
-                moveToCourseDetail();
-              },
+              callBack: () => moveToCourseDetail(),
             ),
           )
         ],
@@ -66,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
       return getMyCoursesUI();
     } else if (CategoryType.all == categoryTypeData) {
       return const Text(
-        'All courses Screeen',
+        'All courses Screen',
         textAlign: TextAlign.left,
         style: TextStyle(
           fontWeight: FontWeight.w600,
@@ -99,13 +99,13 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void moveToCourseDetail() {
-    // Navigator.push<dynamic>(
-    //   context,
-    //   MaterialPageRoute<dynamic>(
-    //     builder: (BuildContext context) => CourseInfoScreen(),
-    //   ),
-    // );
-    //TODO: move to course info
+    Navigator.push<dynamic>(
+      context,
+      MaterialPageRoute<dynamic>(
+        builder: (BuildContext context) =>
+            const CourseDetailsScreen(courseId: 'course-id'),
+      ),
+    );
   }
 
   Widget getButtonUI(CategoryType categoryTypeData, bool isSelected) {
