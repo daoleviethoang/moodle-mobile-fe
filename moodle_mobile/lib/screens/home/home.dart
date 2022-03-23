@@ -3,6 +3,7 @@ import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/screens/common/dropdown.dart';
 import 'package:moodle_mobile/screens/course_details.dart';
 import 'package:moodle_mobile/screens/home/courses_view.dart';
+import 'package:moodle_mobile/screens/course_category/index.dart';
 
 import '../../models/status.dart';
 
@@ -65,15 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (CategoryType.my == categoryTypeData) {
       return getMyCoursesUI();
     } else if (CategoryType.all == categoryTypeData) {
-      return const Text(
-        'All courses Screen',
-        textAlign: TextAlign.left,
-        style: TextStyle(
-          fontWeight: FontWeight.w600,
-          fontSize: 16,
-          letterSpacing: 0.27,
-        ),
-      );
+      return getAllCoursesUI();
     }
     return getMyCoursesUI();
   }
@@ -89,6 +82,26 @@ class _HomeScreenState extends State<HomeScreen> {
               children: <Widget>[
                 Flexible(
                   child: getListCoursesUI(),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget getAllCoursesUI() {
+    return Expanded(
+      child: SingleChildScrollView(
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 0, left: 5, right: 5),
+            child: Column(
+              children: <Widget>[
+                Flexible(
+                  child: CourseCategoryScreen(),
                 )
               ],
             ),
