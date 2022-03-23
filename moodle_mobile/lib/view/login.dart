@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
+import 'package:moodle_mobile/view/common/custom_button.dart';
+import 'package:moodle_mobile/view/common/custom_text_field.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
-import 'package:moodle_mobile/screens/common/custom_button.dart';
-import 'package:moodle_mobile/screens/common/custom_text_field.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -159,7 +159,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void onLoginPressed() {
-    // Navigator.push(context, MaterialPageRoute(builder: (context) => DirectScreen()));
+    // Navigator.push(context, MaterialPageRoute(builder: (context) => DesignCourseHomeScreen()));
     _userStore.login(usernameControler.text, passwordController.text);
   }
 

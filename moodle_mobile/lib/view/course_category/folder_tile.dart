@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/models/course_category/course_category.dart';
-import 'package:moodle_mobile/screens/course_category/category_folder_detail.dart';
+import 'package:moodle_mobile/view/course_category/category_folder_detail.dart';
 
-class CourseCategoryListTile extends StatefulWidget {
-  const CourseCategoryListTile({Key? key, required this.data, this.margin})
+class FolderTile extends StatefulWidget {
+  const FolderTile({Key? key, required this.data, this.margin})
       : super(key: key);
   final CourseCategory data;
   final EdgeInsetsGeometry? margin;
   @override
-  _CourseCategoryListTileState createState() => _CourseCategoryListTileState();
+  _FolderTileState createState() => _FolderTileState();
 
   toList() {}
 }
 
-class _CourseCategoryListTileState extends State<CourseCategoryListTile> {
+class _FolderTileState extends State<FolderTile> {
   bool showChild = false;
   List<CourseCategory> listChild = [];
 
@@ -37,22 +37,12 @@ class _CourseCategoryListTileState extends State<CourseCategoryListTile> {
         ),
         child: InkWell(
           onTap: () {
-            setState(() {
-              showChild = !showChild;
-              if (showChild) {
-                if (widget.data.coursecount > 0) {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          CourseCategoryFolderScreen(data: widget.data),
-                    ),
-                  );
-                  showChild = !showChild;
-                } else
-                  listChild.addAll(widget.data.child);
-              } else
-                listChild.clear();
-            });
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) =>
+                    CourseCategoryFolderScreen(data: widget.data),
+              ),
+            );
           },
           child: Column(
             children: [
@@ -61,11 +51,7 @@ class _CourseCategoryListTileState extends State<CourseCategoryListTile> {
                   SizedBox(width: 8),
                   Icon(Icons.folder_open_outlined, color: Colors.black),
                   SizedBox(width: 8),
-                  Text(widget.data.name,
-                      style: TextStyle(
-                          fontWeight: (widget.data.parent == 0)
-                              ? FontWeight.w900
-                              : FontWeight.normal)),
+                  Text(widget.data.name),
                   Expanded(
                     child: Row(
                       children: [
@@ -79,13 +65,6 @@ class _CourseCategoryListTileState extends State<CourseCategoryListTile> {
                     ),
                   ),
                 ],
-              ),
-              showChild ? Divider() : Container(),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: listChild
-                    .map((e) => CourseCategoryListTile(data: e, margin: null))
-                    .toList(),
               ),
             ],
           ),

@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' as rootBundle;
 import 'package:moodle_mobile/models/course_category/course_category.dart';
 import 'package:moodle_mobile/models/course_category/course_category_course.dart';
-import 'package:moodle_mobile/screens/course_category/category_course_list_tile.dart';
-import 'package:moodle_mobile/screens/course_category/course_tile.dart';
-import 'package:moodle_mobile/screens/course_category/folder_tile.dart';
+import 'package:moodle_mobile/view/course_category/category_course_list_tile.dart';
+import 'package:moodle_mobile/view/course_category/course_tile.dart';
+import 'package:moodle_mobile/view/course_category/folder_tile.dart';
 
 class CourseCategoryFolderScreen extends StatefulWidget {
   final CourseCategory data;

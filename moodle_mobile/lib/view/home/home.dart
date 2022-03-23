@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:moodle_mobile/constants/colors.dart';
-import 'package:moodle_mobile/screens/common/dropdown.dart';
-import 'package:moodle_mobile/screens/course_details.dart';
-import 'package:moodle_mobile/screens/home/courses_view.dart';
-import 'package:moodle_mobile/screens/course_category/index.dart';
+import 'package:moodle_mobile/view/common/dropdown.dart';
+import 'package:moodle_mobile/view/course_details.dart';
+import 'package:moodle_mobile/view/home/courses_view.dart';
+import 'package:moodle_mobile/view/course_category/index.dart';
 
 import '../../models/status.dart';
 

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/models/course_category/course_category_course.dart';
-import 'package:moodle_mobile/screens/course_category/category_folder_detail.dart';
 
 class CourseTile extends StatefulWidget {
   const CourseTile({Key? key, required this.data, this.margin})

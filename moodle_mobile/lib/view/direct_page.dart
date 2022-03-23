@@ -1,7 +1,9 @@
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:moodle_mobile/screens/home/calendar.dart';
-import 'package:moodle_mobile/screens/home/home.dart';
+import 'package:moodle_mobile/view/home/calendar.dart';
+import 'package:moodle_mobile/view/home/home.dart';
+import 'package:moodle_mobile/view/home/menu.dart';
+import 'package:moodle_mobile/view/home/notification_screen.dart';
 
 class DirectScreen extends StatefulWidget {
   const DirectScreen({Key? key}) : super(key: key);
@@ -21,14 +23,8 @@ class _DirectScreenState extends State<DirectScreen> {
       'Messenger Page',
       style: optionStyle,
     ),
-    Text(
-      'Notification Page',
-      style: optionStyle,
-    ),
-    Text(
-      'Menu Page',
-      style: optionStyle,
-    ),
+    NotificationScreen(),
+    MenuScreen(),
   ];
 
   void _onItemTapped(int index) {
