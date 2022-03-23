@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:moodle_mobile/constants/colors.dart';
-import 'package:moodle_mobile/screens/direct_page.dart';
-import 'package:moodle_mobile/screens/course_category/index.dart';
-import 'package:moodle_mobile/screens/login.dart';
+import 'package:moodle_mobile/view/direct_page.dart';
+import 'package:moodle_mobile/view/course_category/index.dart';
+import 'package:moodle_mobile/view/login.dart';
 
 void main() {
   runApp(const MyApp());
@@ -58,6 +58,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
+      //home: const LoginScreen(),
       home: const DirectScreen(),
       debugShowCheckedModeBanner: false,
     );

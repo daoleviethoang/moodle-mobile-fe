@@ -1,14 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:moodle_mobile/screens/common/content_item.dart';
-import 'package:moodle_mobile/screens/common/image_view.dart';
-import 'package:moodle_mobile/screens/common/menu_item.dart';
+import 'package:moodle_mobile/view/common/content_item.dart';
+import 'package:moodle_mobile/view/common/image_view.dart';
 
 class CourseDetailsScreen extends StatefulWidget {
   final String courseId;
 
-  const CourseDetailsScreen({Key? key, required this.courseId}) : super(key: key);
+  const CourseDetailsScreen({Key? key, required this.courseId})
+      : super(key: key);
 
   @override
   _CourseDetailsScreenState createState() => _CourseDetailsScreenState();

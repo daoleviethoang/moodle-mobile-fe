@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/models/course_category/course_category.dart';
-import 'package:moodle_mobile/screens/course_category/category_folder_detail.dart';
+import 'package:moodle_mobile/view/course_category/category_folder_detail.dart';
 
-class FolderTile extends StatefulWidget {
-  const FolderTile({Key? key, required this.data, this.margin})
+class CourseCategoryListTile extends StatefulWidget {
+  const CourseCategoryListTile({Key? key, required this.data, this.margin})
       : super(key: key);
   final CourseCategory data;
   final EdgeInsetsGeometry? margin;
   @override
-  _FolderTileState createState() => _FolderTileState();
+  _CourseCategoryListTileState createState() => _CourseCategoryListTileState();
 
   toList() {}
 }
 
-class _FolderTileState extends State<FolderTile> {
+class _CourseCategoryListTileState extends State<CourseCategoryListTile> {
   bool showChild = false;
   List<CourseCategory> listChild = [];
 
@@ -37,12 +37,22 @@ class _FolderTileState extends State<FolderTile> {
         ),
         child: InkWell(
           onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) =>
-                    CourseCategoryFolderScreen(data: widget.data),
-              ),
-            );
+            setState(() {
+              showChild = !showChild;
+              if (showChild) {
+                if (widget.data.coursecount > 0) {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          CourseCategoryFolderScreen(data: widget.data),
+                    ),
+                  );
+                  showChild = !showChild;
+                } else
+                  listChild.addAll(widget.data.child);
+              } else
+                listChild.clear();
+            });
           },
           child: Column(
             children: [
@@ -51,7 +61,11 @@ class _FolderTileState extends State<FolderTile> {
                   SizedBox(width: 8),
                   Icon(Icons.folder_open_outlined, color: Colors.black),
                   SizedBox(width: 8),
-                  Text(widget.data.name),
+                  Text(widget.data.name,
+                      style: TextStyle(
+                          fontWeight: (widget.data.parent == 0)
+                              ? FontWeight.w900
+                              : FontWeight.normal)),
                   Expanded(
                     child: Row(
                       children: [
@@ -65,6 +79,13 @@ class _FolderTileState extends State<FolderTile> {
                     ),
                   ),
                 ],
+              ),
+              showChild ? Divider() : Container(),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: listChild
+                    .map((e) => CourseCategoryListTile(data: e, margin: null))
+                    .toList(),
               ),
             ],
           ),
