@@ -9,8 +9,11 @@ part of 'course_category_course.dart';
 CourseCategoryCourse _$CourseCategoryCourseFromJson(
         Map<String, dynamic> json) =>
     CourseCategoryCourse(
-      json['id'] as int,
-      json['displayname'] as String,
+      id: json['id'] as int? ?? 0,
+      displayname: json['displayname'] as String? ?? "",
+      contacts: (json['contacts'] as List<dynamic>?)
+          ?.map((e) => Contact.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$CourseCategoryCourseToJson(
@@ -18,4 +21,5 @@ Map<String, dynamic> _$CourseCategoryCourseToJson(
     <String, dynamic>{
       'id': instance.id,
       'displayname': instance.displayname,
+      'contacts': instance.contacts,
     };

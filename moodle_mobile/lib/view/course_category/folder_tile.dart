@@ -28,12 +28,12 @@ class _FolderTileState extends State<FolderTile> {
     return Container(
         margin: widget.margin,
         decoration: BoxDecoration(
-          color: MoodleColors.grey,
+          color: MoodleColors.grey_soft,
           border: Border.all(
             width: 5,
             color: Colors.transparent,
           ),
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: BorderRadius.circular(10),
         ),
         child: InkWell(
           onTap: () {

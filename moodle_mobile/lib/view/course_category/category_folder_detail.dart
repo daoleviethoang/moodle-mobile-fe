@@ -3,10 +3,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' as rootBundle;
+import 'package:moodle_mobile/models/category.dart';
 import 'package:moodle_mobile/models/course_category/course_category.dart';
 import 'package:moodle_mobile/models/course_category/course_category_course.dart';
 import 'package:moodle_mobile/view/course_category/category_course_list_tile.dart';
-import 'package:moodle_mobile/view/course_category/course_tile.dart';
+import 'package:moodle_mobile/view/course_category/courses_view.dart';
 import 'package:moodle_mobile/view/course_category/folder_tile.dart';
 
 class CourseCategoryFolderScreen extends StatefulWidget {
@@ -50,9 +51,17 @@ class _CourseCategoryFolderScreenState
             if (data.hasError) {
               return const Center(child: Text("Error"));
             }
-            List<CourseCategoryCourse> courses = [];
+            List<Course> courses = [];
             if (data.hasData) {
-              courses = data.data as List<CourseCategoryCourse>;
+              List<CourseCategoryCourse> _courses =
+                  data.data as List<CourseCategoryCourse>;
+              courses = _courses
+                  .map((e) => Course(
+                      id: e.id,
+                      title: e.displayname,
+                      tag: "18HTTT",
+                      teacher: e.contacts!.map((f) => f.fullname).toList()))
+                  .toList();
             }
 
             return SingleChildScrollView(
@@ -62,7 +71,7 @@ class _CourseCategoryFolderScreenState
                     children: [
                   widget.data.child.isNotEmpty
                       ? Container(
-                          child: Text("Danh muc khoa hoc"),
+                          child: Text("Danh mục khóa học"),
                           margin: const EdgeInsets.only(
                               top: 5.0, left: 15.0, bottom: 5),
                         )
@@ -82,26 +91,19 @@ class _CourseCategoryFolderScreenState
                         .toList(),
                   )),
                   courses.isNotEmpty
-                      ? Container(
-                          child: Text("Khoa hoc"),
-                          margin: const EdgeInsets.only(
-                              top: 10.0, left: 15.0, bottom: 5),
+                      ? Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              child: Text("Khóa học"),
+                              margin: const EdgeInsets.only(
+                                  top: 10.0, left: 15.0, bottom: 5),
+                            ),
+                            CategoryCourseListView(courses: courses)
+                          ],
                         )
                       : Container(),
-                  Container(
-                      child: ListView(
-                    primary: false,
-                    shrinkWrap: true,
-                    children: courses
-                        .map((e) => CourseTile(
-                            data: e,
-                            margin: EdgeInsets.only(
-                              top: 5,
-                              left: 10,
-                              right: 10,
-                            )))
-                        .toList(),
-                  ))
                 ]));
           }),
     ));
