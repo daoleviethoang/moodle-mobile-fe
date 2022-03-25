@@ -39,6 +39,21 @@ mixin _$UserStore on _UserStore, Store {
     });
   }
 
+  final _$isLoadingAtom = Atom(name: '_UserStore.isLoading');
+
+  @override
+  bool get isLoading {
+    _$isLoadingAtom.reportRead();
+    return super.isLoading;
+  }
+
+  @override
+  set isLoading(bool value) {
+    _$isLoadingAtom.reportWrite(value, super.isLoading, () {
+      super.isLoading = value;
+    });
+  }
+
   final _$isLoginFailedAtom = Atom(name: '_UserStore.isLoginFailed');
 
   @override
@@ -90,6 +105,7 @@ mixin _$UserStore on _UserStore, Store {
     return '''
 user: ${user},
 isLogin: ${isLogin},
+isLoading: ${isLoading},
 isLoginFailed: ${isLoginFailed}
     ''';
   }

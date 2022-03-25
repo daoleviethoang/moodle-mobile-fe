@@ -85,4 +85,96 @@ class ConversationApi {
       rethrow;
     }
   }
+
+  Future<List> unmuteOneConversation(
+      String token, int userId, int conversationId) async {
+    try {
+      final res =
+          await _dioClient.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': 'core_message_unmute_conversations',
+        'moodlewsrestformat': 'json',
+        'conversationids[0]': conversationId,
+        'userid': userId,
+      });
+
+      return res;
+    } catch (e) {
+      print("API error: " + e.toString());
+      rethrow;
+    }
+  }
+
+  Future<List> deleteConversation(
+      String token, int userId, int conversationId) async {
+    try {
+      final res =
+          await _dioClient.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': 'core_message_delete_conversations_by_id',
+        'moodlewsrestformat': 'json',
+        'conversationids[0]': conversationId,
+        'userid': userId,
+      });
+
+      return res;
+    } catch (e) {
+      print("API error: " + e.toString());
+      rethrow;
+    }
+  }
+
+  Future<List<ConversationMessageModel>> detailConversation(String token,
+      int userId, int conversationId, int newest, int limit) async {
+    try {
+      final res =
+          await _dioClient.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': 'core_message_get_conversation_messages',
+        'moodlewsrestformat': 'json',
+        'currentuserid': userId,
+        'convid': conversationId,
+        'newest': newest,
+        'limitnum': limit
+      });
+
+      List<ConversationMessageModel> listMessageDetail = [];
+      for (int i = 0; i < res['messages'].length; i++) {
+        listMessageDetail.add(ConversationMessageModel(
+            id: res['messages'][i]['id'],
+            userIdFrom: res['messages'][i]['useridfrom'],
+            text: res['messages'][i]['text'],
+            timeCreated: res['messages'][i]['timecreated']));
+      }
+
+      return listMessageDetail;
+    } catch (e) {
+      print("API error: " + e.toString());
+      rethrow;
+    }
+  }
+
+  Future<ConversationMessageModel> sentMessage(
+      String token, int conversationId, String text) async {
+    try {
+      final res =
+          await _dioClient.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': 'core_message_send_messages_to_conversation',
+        'moodlewsrestformat': 'json',
+        'messages[0][text]': text,
+        'conversationid': conversationId,
+        'messages[0][textformat]': 0
+      });
+
+      return ConversationMessageModel(
+          id: res[0]['id'],
+          userIdFrom: res[0]['useridfrom'],
+          text: text,
+          timeCreated: res[0]['timecreated']);
+    } catch (e) {
+      print("Sent message Api error" + e.toString());
+      rethrow;
+    }
+  }
 }

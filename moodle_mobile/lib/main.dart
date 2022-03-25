@@ -4,6 +4,7 @@ import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/di/service_locator.dart';
 import 'package:moodle_mobile/screens/login/login.dart';
 import 'package:moodle_mobile/screens/message/message_screen.dart';
+import 'package:moodle_mobile/screens/splash/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,7 +46,7 @@ class MyApp extends StatelessWidget {
         onBackground: Colors.black,
         onError: Colors.black,
       )),
-      home: const LoginScreen(),
+      home: const SplashScreen(),
       debugShowCheckedModeBanner: false,
     );
   }

@@ -5,6 +5,7 @@ class CustomTextFieldWidget extends StatelessWidget {
   final String hintText;
   final bool hidePass;
   final TextEditingController controller;
+  final double borderRadius;
   final IconData? prefixIcon; // ? accept null value
 
   const CustomTextFieldWidget(
@@ -12,7 +13,8 @@ class CustomTextFieldWidget extends StatelessWidget {
       required this.hintText,
       this.hidePass = false,
       this.prefixIcon,
-      required this.controller})
+      required this.controller,
+      required this.borderRadius})
       : super(key: key);
 
   @override
@@ -21,12 +23,12 @@ class CustomTextFieldWidget extends StatelessWidget {
       controller: controller,
       obscureText: hidePass,
       decoration: InputDecoration(
-        prefixIcon: Icon(prefixIcon),
+        contentPadding: EdgeInsets.all(Dimens.default_padding_double),
+        prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
         hintText: hintText,
         hintStyle: const TextStyle(fontSize: 16),
-        border: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(
-                Radius.circular(Dimens.default_border_radius))),
+        border: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(borderRadius))),
       ),
     );
   }

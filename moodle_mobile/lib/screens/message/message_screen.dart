@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -7,8 +5,10 @@ import 'package:moodle_mobile/components/custom_button_short.dart';
 import 'package:moodle_mobile/components/slidable_tile.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:moodle_mobile/data/repository.dart';
+import 'package:moodle_mobile/screens/message/message_detail_screen.dart';
 import 'package:moodle_mobile/store/conversation/conversation_store.dart';
+import 'package:moodle_mobile/store/conversation_detail/conversation_detail_store.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 
 class MessageScreen extends StatefulWidget {
@@ -22,6 +22,8 @@ class _MessageScreenState extends State<MessageScreen> {
   // Tai day khai bao cac store ma ta se su dung
   late ConversationStore _conversationStore;
   late UserStore _userStore;
+  late ConversationDetailStore _conversationDetailStore;
+
   @override
   void initState() {
     super.initState();
@@ -31,9 +33,9 @@ class _MessageScreenState extends State<MessageScreen> {
     // Ta chi goi store trong cac ham initState hoac didChangeDependenices
     // Cach thu goi store nhu sau
     _conversationStore = GetIt.instance<ConversationStore>();
-    // UserStore cung da duoc khoi tao trong service_locator
-    // nen ta chi can goi no ra
     _userStore = GetIt.instance<UserStore>();
+    _conversationDetailStore =
+        ConversationDetailStore(GetIt.instance<Repository>());
 
     // Sau khi goi store thanh cong, ta se thu goi
     // action get list conversation info va xem ket qua
@@ -104,15 +106,46 @@ class _MessageScreenState extends State<MessageScreen> {
                                       .fullname,
                                   message: _conversationStore
                                       .listConversation[index].message,
-                                  onDeletePress: () {},
-                                  onAlarmPress: () {
-                                    _conversationStore.muteOneConversation(
+                                  onDeletePress: () {
+                                    _conversationStore.deleteConversation(
                                         _userStore.user.token,
                                         _userStore.user.id,
                                         _conversationStore
                                             .listConversation[index].id);
                                   },
-                                  onMessDetailPress: () {});
+                                  onAlarmPress: () {
+                                    _conversationStore
+                                            .listConversation[index].isMuted
+                                        ? _conversationStore
+                                            .unmuteOneConversation(
+                                                _userStore.user.token,
+                                                _userStore.user.id,
+                                                _conversationStore
+                                                    .listConversation[index].id)
+                                        : _conversationStore
+                                            .muteOneConversation(
+                                                _userStore.user.token,
+                                                _userStore.user.id,
+                                                _conversationStore
+                                                    .listConversation[index]
+                                                    .id);
+                                  },
+                                  onMessDetailPress: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            MessageDetailScreen(
+                                          conversationId: _conversationStore
+                                              .listConversation[index].id,
+                                          userFrom: _conversationStore
+                                              .listConversation[index]
+                                              .members[0]
+                                              .fullname,
+                                        ),
+                                      ),
+                                    );
+                                  });
                             }),
                           );
                         }));

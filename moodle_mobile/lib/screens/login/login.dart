@@ -56,9 +56,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     left: Dimens.login_padding_left,
                     right: Dimens.login_padding_right),
                 child: CustomTextFieldWidget(
-                    hintText: "Username",
-                    controller: usernameControler,
-                    prefixIcon: Icons.people)),
+                  hintText: "Username",
+                  controller: usernameControler,
+                  prefixIcon: Icons.people,
+                  borderRadius: Dimens.default_border_radius,
+                )),
 
             const SizedBox(height: Dimens.login_sizedbox_height),
 
@@ -68,10 +70,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   left: Dimens.login_padding_left,
                   right: Dimens.login_padding_right),
               child: CustomTextFieldWidget(
-                  hintText: "Password",
-                  hidePass: true,
-                  controller: passwordController,
-                  prefixIcon: Icons.lock),
+                hintText: "Password",
+                hidePass: true,
+                controller: passwordController,
+                prefixIcon: Icons.lock,
+                borderRadius: Dimens.default_border_radius,
+              ),
             ),
 
             const SizedBox(height: Dimens.login_sizedbox_height),

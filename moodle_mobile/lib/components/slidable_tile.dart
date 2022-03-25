@@ -94,6 +94,7 @@ class SlidableTile extends StatelessWidget {
                     flex: 1,
                     child: Text(
                       messageContent,
+                      maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                           fontSize: 12, color: MoodleColors.gray),

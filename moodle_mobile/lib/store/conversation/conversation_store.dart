@@ -87,4 +87,40 @@ abstract class _ConversationStore with Store {
       print("Mute conversation error: " + e.toString());
     }
   }
+
+  @action
+  Future unmuteOneConversation(
+      String token, int userId, int conversationId) async {
+    try {
+      List mute = await _repository.unmuteOneConversation(
+          token, userId, conversationId);
+
+      if (mute.isEmpty) {
+        listConversation = ObservableList.of(List.from(listConversation));
+        for (int i = 0; i < listConversation.length; i++) {
+          if (listConversation[i].id == conversationId) {
+            listConversation[i].isMuted = false;
+            return;
+          }
+        }
+      }
+    } catch (e) {
+      print("Mute conversation error: " + e.toString());
+    }
+  }
+
+  @action
+  Future deleteConversation(
+      String token, int userId, int conversationId) async {
+    try {
+      List deleteConversation =
+          await _repository.deleteConversation(token, userId, conversationId);
+
+      if (deleteConversation.isEmpty) {
+        listConversation.removeWhere((element) => element.id == conversationId);
+      }
+    } catch (e) {
+      print("Delete conversation error: " + e.toString());
+    }
+  }
 }

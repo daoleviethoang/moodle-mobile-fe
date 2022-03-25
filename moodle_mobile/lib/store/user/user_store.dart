@@ -30,6 +30,9 @@ abstract class _UserStore with Store {
   bool isLogin = false;
 
   @observable
+  bool isLoading = false;
+
+  @observable
   bool isLoginFailed = false;
 
   @action
@@ -38,11 +41,38 @@ abstract class _UserStore with Store {
       String token =
           await _repository.login(username, password, 'moodle_mobile_app');
       user = await _repository.getUserInfo(token, username);
+
+      // Save to shared references
+      _repository.saveAuthToken(token);
+      _repository.saveUsername(username);
+
       isLogin = true;
     } catch (e) {
       print("Login error: " + e.toString());
       isLoginFailed = true;
       isLogin = false;
+    }
+  }
+
+  Future checkIsLogin() async {
+    try {
+      isLoading = true;
+
+      String? token = _repository.authToken;
+      String? username = _repository.username;
+
+      if (token == null || username == null) {
+        isLogin = false;
+      }
+
+      user = await _repository.getUserInfo(token!, username!);
+
+      isLogin = true;
+      isLoading = false;
+    } catch (e) {
+      print("Check is login error: " + e.toString());
+      isLogin = false;
+      isLoading = false;
     }
   }
 

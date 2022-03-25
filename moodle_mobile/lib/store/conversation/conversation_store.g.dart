@@ -59,6 +59,26 @@ mixin _$ConversationStore on _ConversationStore, Store {
         .run(() => super.muteOneConversation(token, userId, conversationId));
   }
 
+  final _$unmuteOneConversationAsyncAction =
+      AsyncAction('_ConversationStore.unmuteOneConversation');
+
+  @override
+  Future<dynamic> unmuteOneConversation(
+      String token, int userId, int conversationId) {
+    return _$unmuteOneConversationAsyncAction
+        .run(() => super.unmuteOneConversation(token, userId, conversationId));
+  }
+
+  final _$deleteConversationAsyncAction =
+      AsyncAction('_ConversationStore.deleteConversation');
+
+  @override
+  Future<dynamic> deleteConversation(
+      String token, int userId, int conversationId) {
+    return _$deleteConversationAsyncAction
+        .run(() => super.deleteConversation(token, userId, conversationId));
+  }
+
   @override
   String toString() {
     return '''
