@@ -2,8 +2,6 @@ import 'package:moodle_mobile/models/category.dart';
 import 'package:flutter/material.dart';
 import 'package:moodle_mobile/view/home/courses_view.dart';
 
-import '../../constants/colors.dart';
-
 class CategoryCourseListView extends StatefulWidget {
   List<Course> courses;
   CategoryCourseListView({Key? key, this.callBack, required this.courses})

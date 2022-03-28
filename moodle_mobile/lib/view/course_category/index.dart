@@ -26,6 +26,8 @@ class _CourseCategoryScreenState extends State<CourseCategoryScreen> {
             List<CourseCategory> categorys = [];
             if (data.hasData) {
               categorys = data.data as List<CourseCategory>;
+            } else {
+              return Center(child: CircularProgressIndicator());
             }
 
             return SingleChildScrollView(
