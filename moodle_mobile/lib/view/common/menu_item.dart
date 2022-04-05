@@ -16,7 +16,7 @@ import 'package:flutter/material.dart';
 ///   Link to Figma containing a prototype of this widget
 class MenuItem extends StatelessWidget {
   final Widget? icon;
-  final Image? image;
+  final Widget? image;
   final Color? color;
   final String title;
   final String? subtitle;
