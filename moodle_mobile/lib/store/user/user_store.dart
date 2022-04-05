@@ -1,5 +1,6 @@
 import 'package:mobx/mobx.dart';
 import 'package:moodle_mobile/data/repository.dart';
+import 'package:moodle_mobile/models/user.dart';
 
 // Include generated file
 part 'user_store.g.dart';
@@ -22,7 +23,14 @@ abstract class _UserStore with Store {
   }
 
   @observable
+  UserModel user =
+      UserModel(token: "", id: 0, username: "", fullname: "", email: "");
+
+  @observable
   bool isLogin = false;
+
+  @observable
+  bool isLoading = false;
 
   @observable
   bool isLoginFailed = false;
@@ -30,14 +38,41 @@ abstract class _UserStore with Store {
   @action
   Future login(String username, String password) async {
     try {
-      String res =
+      String token =
           await _repository.login(username, password, 'moodle_mobile_app');
+      user = await _repository.getUserInfo(token, username);
+
+      // Save to shared references
+      _repository.saveAuthToken(token);
+      _repository.saveUsername(username);
 
       isLogin = true;
     } catch (e) {
       print("Login error: " + e.toString());
       isLoginFailed = true;
       isLogin = false;
+    }
+  }
+
+  Future checkIsLogin() async {
+    try {
+      isLoading = true;
+
+      String? token = _repository.authToken;
+      String? username = _repository.username;
+
+      if (token == null || username == null) {
+        isLogin = false;
+      }
+
+      user = await _repository.getUserInfo(token!, username!);
+
+      isLogin = true;
+      isLoading = false;
+    } catch (e) {
+      print("Check is login error: " + e.toString());
+      isLogin = false;
+      isLoading = false;
     }
   }
 
