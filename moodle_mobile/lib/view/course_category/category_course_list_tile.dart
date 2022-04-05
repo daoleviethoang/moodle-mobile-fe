@@ -28,12 +28,12 @@ class _CourseCategoryListTileState extends State<CourseCategoryListTile> {
     return Container(
         margin: widget.margin,
         decoration: BoxDecoration(
-          color: MoodleColors.grey,
+          color: MoodleColors.grey_soft,
           border: Border.all(
             width: 5,
             color: Colors.transparent,
           ),
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: BorderRadius.circular(10),
         ),
         child: InkWell(
           onTap: () {
@@ -71,7 +71,7 @@ class _CourseCategoryListTileState extends State<CourseCategoryListTile> {
                       children: [
                         Text(widget.data.coursecount.toString()),
                         Icon(
-                          Icons.arrow_right,
+                          showChild ? Icons.arrow_drop_down : Icons.arrow_right,
                           color: Colors.black,
                         ),
                       ],

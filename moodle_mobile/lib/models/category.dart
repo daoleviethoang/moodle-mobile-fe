@@ -1,6 +1,8 @@
 class Course {
-  Course({this.title = '', this.teacher = const [], this.tag = ''});
+  Course(
+      {this.id = 0, this.title = '', this.teacher = const [], this.tag = ''});
 
+  int id;
   String title;
   List<String> teacher;
   String tag;

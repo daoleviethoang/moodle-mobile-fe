@@ -100,7 +100,6 @@ class CategoryView extends StatelessWidget {
                 padding: const EdgeInsets.only(
                     left: 0.0, top: 0.0, right: 0.0, bottom: 10.0),
                 child: Container(
-                  height: 166,
                   decoration: BoxDecoration(
                     boxShadow: [
                       BoxShadow(
@@ -180,36 +179,39 @@ class CategoryView extends StatelessWidget {
                           ),
                         ),
                         Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: List<Widget>.generate(
-                          category!.teacher.length,
-                          (int index) {
-                            final int count = Course.popularCourseList.length;
-                            final Animation<double> animation =
-                                Tween<double>(begin: 0.0, end: 1.0).animate(
-                              CurvedAnimation(
-                                parent: animationController!,
-                                curve: Interval((1 / count) * index, 1.0,
-                                    curve: Curves.fastOutSlowIn),
-                              ),
-                            );
-                            animationController?.forward();
-                            return Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 0.0,
-                                    top: 0.0,
-                                    right: 0.0,
-                                    bottom: 5.0),
-                                child: Text(
-                                  'Teacher: ' + category!.teacher[index],
-                                  textAlign: TextAlign.left,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.normal,
-                                      fontSize: 11,
-                                      letterSpacing: 0.27,
-                                      color: MoodleColors.black),
-                                ));
-                          },
-                        ))
+                              category!.teacher.length,
+                              (int index) {
+                                final int count =
+                                    Course.popularCourseList.length;
+                                final Animation<double> animation =
+                                    Tween<double>(begin: 0.0, end: 1.0).animate(
+                                  CurvedAnimation(
+                                    parent: animationController!,
+                                    curve: Interval((1 / count) * index, 1.0,
+                                        curve: Curves.fastOutSlowIn),
+                                  ),
+                                );
+                                animationController?.forward();
+                                return Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 0.0,
+                                        top: 0.0,
+                                        right: 0.0,
+                                        bottom: 5.0),
+                                    child: Text(
+                                      'Teacher: ' + category!.teacher[index],
+                                      textAlign: TextAlign.left,
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.normal,
+                                          fontSize: 11,
+                                          letterSpacing: 0.27,
+                                          color: MoodleColors.black),
+                                    ));
+                              },
+                            ))
                       ],
                     ),
                   ),
