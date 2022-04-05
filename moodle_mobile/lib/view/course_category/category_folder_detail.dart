@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' as rootBundle;
-import 'package:moodle_mobile/models/category.dart';
 import 'package:moodle_mobile/models/course_category/course_category.dart';
 import 'package:moodle_mobile/models/course_category/course_category_course.dart';
+import 'package:moodle_mobile/models/courses.dart';
 import 'package:moodle_mobile/view/course_category/courses_view.dart';
 import 'package:moodle_mobile/view/course_category/folder_tile.dart';
 

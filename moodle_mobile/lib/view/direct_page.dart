@@ -4,6 +4,7 @@ import 'package:moodle_mobile/view/home/calendar.dart';
 import 'package:moodle_mobile/view/home/home.dart';
 import 'package:moodle_mobile/view/home/menu.dart';
 import 'package:moodle_mobile/view/home/notification_screen.dart';
+import 'package:moodle_mobile/view/message/message_screen.dart';
 
 class DirectScreen extends StatefulWidget {
   const DirectScreen({Key? key}) : super(key: key);
@@ -19,10 +20,7 @@ class _DirectScreenState extends State<DirectScreen> {
   static const List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
     CalendarScreen(),
-    Text(
-      'Messenger Page',
-      style: optionStyle,
-    ),
+    MessageScreen(),
     NotificationScreen(),
     MenuScreen(),
   ];
