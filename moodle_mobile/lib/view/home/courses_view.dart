@@ -119,7 +119,7 @@ class CategoryView extends StatelessWidget {
                   ),
                   child: Container(
                     margin: const EdgeInsets.only(
-                        left: 26.0, top: 13.0, right: 10.0, bottom: 0.0),
+                        left: 26.0, top: 13.0, right: 10.0, bottom: 15.0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -200,13 +200,13 @@ class CategoryView extends StatelessWidget {
                                         left: 0.0,
                                         top: 0.0,
                                         right: 0.0,
-                                        bottom: 5.0),
+                                        bottom: 8.0),
                                     child: Text(
                                       'Teacher: ' + category!.teacher[index],
                                       textAlign: TextAlign.left,
                                       style: const TextStyle(
                                           fontWeight: FontWeight.normal,
-                                          fontSize: 11,
+                                          fontSize: 13,
                                           letterSpacing: 0.27,
                                           color: MoodleColors.black),
                                     ));
