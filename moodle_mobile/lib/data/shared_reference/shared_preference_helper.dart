@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:moodle_mobile/data/shared_reference/constants/preferences.dart';
+import 'package:moodle_mobile/data/sharedpref/constant/preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferenceHelper {
@@ -11,7 +11,7 @@ class SharedPreferenceHelper {
   SharedPreferenceHelper(this._sharedPreference);
 
   // General Methods: ----------------------------------------------------------
-  Future<String?> get authToken async {
+  String? get authToken {
     return _sharedPreference.getString(Preferences.auth_token);
   }
 
@@ -21,5 +21,13 @@ class SharedPreferenceHelper {
 
   Future<bool> removeAuthToken() async {
     return _sharedPreference.remove(Preferences.auth_token);
+  }
+
+  String? get username {
+    return _sharedPreference.getString(Preferences.username);
+  }
+
+  Future<bool> saveUsername(String username) async {
+    return _sharedPreference.setString(Preferences.username, username);
   }
 }

@@ -45,6 +45,8 @@ dependencies:
 
   # create encode and decode json
   json_annotation: ^4.4.0
+  flutter_slidable: ^1.2.0
+  device_preview: ^1.0.0
 
 dev_dependencies:
   flutter_test:
