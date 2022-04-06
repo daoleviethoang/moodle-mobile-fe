@@ -86,8 +86,8 @@ class _DirectScreenState extends State<DirectScreen> {
           label: 'Dashboard',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.calendar_view_month_outlined),
-          activeIcon: Icon(Icons.calendar_view_month),
+          icon: Icon(Icons.event_outlined),
+          activeIcon: Icon(Icons.event_rounded),
           label: 'Calendar',
         ),
         BottomNavigationBarItem(
