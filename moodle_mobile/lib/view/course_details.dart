@@ -75,67 +75,82 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     _homeTab = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Course contents', style: MoodleStyles.courseHeaderStyle),
-        Container(height: 16),
-        const RichTextCard(
-            text: "<div>"
-                "<h1>Demo Page</h1>"
-                "<p>This is a fantastic product that you should buy!</p>"
-                "<h3>Features</h3>"
-                "<ul>"
-                "<li>It actually works</li>"
-                "<li>It exists</li>"
-                "<li>It doesn't cost much!</li>"
-                "</ul>"
-                "</div>"),
-        ForumItem(
-          title: 'Q&A',
-          onPressed: () => {},
+        SectionItem(
+          header: const HeaderItem(text: 'General'),
+          body: [
+            const RichTextCard(
+                text: "<div>"
+                    "<h1>Demo Page</h1>"
+                    "<p>This is a fantastic product that you should buy!</p>"
+                    "<h3>Features</h3>"
+                    "<ul>"
+                    "<li>It actually works</li>"
+                    "<li>It exists</li>"
+                    "<li>It doesn't cost much!</li>"
+                    "</ul>"
+                    "</div>"),
+            ForumItem(
+              title: 'Q&A',
+              onPressed: () => {},
+            ),
+          ],
+          hasSeparator: true,
         ),
-        const LineItem(),
-        const HeaderItem(text: 'Topic 1'),
-        const DocumentItem(
-          title: 'Week 1 - Getting start',
-          documentUrl: 'https://www.ets.org/Media/Tests/GRE/pdf/gre_research_validity_data.pdf',
+        SectionItem(
+          header: const HeaderItem(text: 'Topic 1'),
+          body: [
+            const DocumentItem(
+              title: 'Week 1 - Getting start',
+              documentUrl: 'https://www.ets.org/Media/Tests/GRE/pdf/gre_research_validity_data.pdf',
+            ),
+            const UrlItem(
+              title: 'Week 1 - Getting start',
+              url: 'https://docs.flutter.dev/',
+            ),
+            const VideoItem(
+              title: 'Week 1 video',
+              videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+            ),
+            SubmissionItem(
+              title: 'Nộp Proposal',
+              submissionId: '',
+              dueDate: DateTime.utc(2022, 01, 20),
+            ),
+          ],
+          hasSeparator: true,
         ),
-        const UrlItem(
-          title: 'Week 1 - Getting start',
-          url: 'https://docs.flutter.dev/',
+        SectionItem(
+          header: const HeaderItem(text: 'Topic 2'),
+          body: [
+            const DocumentItem(
+              title: 'Week 2 - Overview React Native',
+              documentUrl: '',
+            ),
+            const DocumentItem(
+              title: 'Week 2 - Overview Flutter',
+              documentUrl: '',
+            ),
+            SubmissionItem(
+              title: 'Nộp báo cáo tuần 1',
+              submissionId: '',
+              dueDate: DateTime.utc(2022, 01, 27),
+            ),
+            QuizItem(
+              title: 'Quiz 1',
+              quizId: '',
+              openDate: DateTime.utc(2022, 01, 28),
+            ),
+          ],
+          hasSeparator: true,
         ),
-        const VideoItem(
-          title: 'Week 1 video',
-          videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-        ),
-        SubmissionItem(
-          title: 'Nộp Proposal',
-          submissionId: '',
-          dueDate: DateTime.utc(2022, 01, 20),
-        ),
-        const LineItem(),
-        const HeaderItem(text: 'Topic 2'),
-        const DocumentItem(
-          title: 'Week 2 - Overview React Native',
-          documentUrl: '',
-        ),
-        const DocumentItem(
-          title: 'Week 2 - Overview Flutter',
-          documentUrl: '',
-        ),
-        SubmissionItem(
-          title: 'Nộp báo cáo tuần 1',
-          submissionId: '',
-          dueDate: DateTime.utc(2022, 01, 27),
-        ),
-        QuizItem(
-          title: 'Quiz 1',
-          quizId: '',
-          openDate: DateTime.utc(2022, 01, 28),
-        ),
-        const LineItem(),
-        const HeaderItem(text: 'Topic 3'),
-        const DocumentItem(
-          title: 'Week 3 - Components and Layouts',
-          documentUrl: '',
+        const SectionItem(
+          header: HeaderItem(text: 'Topic 3'),
+          body: [
+            DocumentItem(
+              title: 'Week 3 - Components and Layouts',
+              documentUrl: '',
+            ),
+          ],
         ),
       ],
     );

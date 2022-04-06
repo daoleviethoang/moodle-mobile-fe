@@ -255,3 +255,74 @@ class LineItem extends StatelessWidget {
 }
 
 // endregion
+
+// region Section
+
+class SectionItem extends StatefulWidget {
+  final Widget header;
+  final List<Widget>? body;
+  final bool hasSeparator;
+
+  const SectionItem({
+    Key? key,
+    required this.header,
+    this.body,
+    this.hasSeparator = false,
+  }) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => _SectionItemState();
+}
+
+class _SectionItemState extends State<SectionItem> {
+  var _expanded = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        GestureDetector(
+          onTap: () => setState(() => _expanded = !_expanded),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4),
+                child: widget.header,
+              ),
+              SizedBox(
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    primary: Theme.of(context).colorScheme.onSurface,
+                    padding: EdgeInsets.zero,
+                    shape: const CircleBorder(),
+                    fixedSize: const Size.fromHeight(16),
+                  ),
+                  child: AnimatedRotation(
+                    turns: _expanded ? 0 : .5,
+                    duration: const Duration(milliseconds: 400),
+                    child: const Icon(CupertinoIcons.chevron_down),
+                  ),
+                  onPressed: () => setState(() => _expanded = !_expanded),
+                ),
+              ),
+            ],
+          ),
+        ),
+        AnimatedSize(
+          curve: Curves.easeInOut,
+          alignment: Alignment.centerLeft,
+          duration: const Duration(milliseconds: 400),
+          child: Column(
+            children: [...(_expanded ? (widget.body ?? []) : [])],
+          ),
+        ),
+        widget.hasSeparator ? const LineItem() : Container(),
+      ],
+    );
+  }
+}
+
+// endregion
