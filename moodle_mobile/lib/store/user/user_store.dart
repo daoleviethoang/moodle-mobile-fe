@@ -41,6 +41,7 @@ abstract class _UserStore with Store {
       String token =
           await _repository.login(username, password, 'moodle_mobile_app');
       user = await _repository.getUserInfo(token, username);
+      print("here userstore");
 
       // Save to shared references
       _repository.saveAuthToken(token);
@@ -63,10 +64,11 @@ abstract class _UserStore with Store {
 
       if (token == null || username == null) {
         isLogin = false;
+        isLoading = false;
+        return;
       }
 
-      user = await _repository.getUserInfo(token!, username!);
-
+      user = await _repository.getUserInfo(token, username);
       isLogin = true;
       isLoading = false;
     } catch (e) {
