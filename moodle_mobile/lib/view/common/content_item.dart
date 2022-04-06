@@ -259,7 +259,7 @@ class LineItem extends StatelessWidget {
 // region Section
 
 class SectionItem extends StatefulWidget {
-  final Widget header;
+  final Widget? header;
   final List<Widget>? body;
   final bool hasSeparator;
 
@@ -282,7 +282,7 @@ class _SectionItemState extends State<SectionItem> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        GestureDetector(
+        if (widget.header != null) ...[GestureDetector(
           onTap: () => setState(() => _expanded = !_expanded),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -310,7 +310,7 @@ class _SectionItemState extends State<SectionItem> {
               ),
             ],
           ),
-        ),
+        )],
         AnimatedSize(
           curve: Curves.easeInOut,
           alignment: Alignment.centerLeft,
