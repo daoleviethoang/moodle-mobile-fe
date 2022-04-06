@@ -45,8 +45,14 @@ class DocumentItem extends StatelessWidget {
       icon: const Icon(CupertinoIcons.book),
       color: Colors.pink,
       title: title,
-      onPressed: () {
-        // TODO: Download this document from link
+      onPressed: () async {
+        // Download this document from link
+        var ableLaunch = await canLaunch(documentUrl);
+        if (ableLaunch) {
+          await launch(documentUrl);
+        } else {
+          print("URL can't be launched.");
+        }
       },
     );
   }
@@ -93,7 +99,7 @@ class UrlItem extends StatelessWidget {
       title: title,
       subtitle: url,
       onPressed: () async {
-        // TODO: Go to webpage in browser
+        // Go to webpage in browser
         var ableLaunch = await canLaunch(url);
         if (ableLaunch) {
           await launch(url);
