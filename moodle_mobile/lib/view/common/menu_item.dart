@@ -20,6 +20,7 @@ class MenuItem extends StatelessWidget {
   final Color? color;
   final String title;
   final String? subtitle;
+  final bool? fullWidth;
   final VoidCallback? onPressed;
 
   const MenuItem({
@@ -29,6 +30,7 @@ class MenuItem extends StatelessWidget {
     this.color,
     required this.title,
     this.subtitle,
+    this.fullWidth,
     required this.onPressed,
   }) : super(key: key);
 
@@ -51,6 +53,8 @@ class MenuItem extends StatelessWidget {
         style: TextButton.styleFrom(
           primary: Theme.of(context).colorScheme.surface,
           padding: const EdgeInsets.symmetric(vertical: 8),
+          minimumSize: Size((fullWidth ?? false) ? double.infinity : 0, 0),
+          alignment: Alignment.centerLeft,
         ),
         onPressed: onPressed,
 

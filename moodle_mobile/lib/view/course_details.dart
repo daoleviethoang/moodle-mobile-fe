@@ -96,7 +96,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
         const HeaderItem(text: 'Topic 1'),
         const DocumentItem(
           title: 'Week 1 - Getting start',
-          documentUrl: '',
+          documentUrl: 'https://www.ets.org/Media/Tests/GRE/pdf/gre_research_validity_data.pdf',
         ),
         const UrlItem(
           title: 'Week 1 - Getting start',

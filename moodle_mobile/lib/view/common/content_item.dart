@@ -24,6 +24,7 @@ class ForumItem extends StatelessWidget {
       icon: const Icon(CupertinoIcons.chat_bubble_2),
       color: Colors.amber,
       title: title,
+      fullWidth: true,
       onPressed: onPressed,
     );
   }
@@ -45,6 +46,7 @@ class DocumentItem extends StatelessWidget {
       icon: const Icon(CupertinoIcons.book),
       color: Colors.pink,
       title: title,
+      fullWidth: true,
       onPressed: () async {
         // Download this document from link
         var ableLaunch = await canLaunch(documentUrl);
@@ -74,6 +76,7 @@ class VideoItem extends StatelessWidget {
       icon: const Icon(CupertinoIcons.video_camera),
       color: Colors.green,
       title: title,
+      fullWidth: true,
       onPressed: () {
         // TODO: Watch this video in a fullscreen view
       },
@@ -98,6 +101,7 @@ class UrlItem extends StatelessWidget {
       color: Colors.deepPurple,
       title: title,
       subtitle: url,
+      fullWidth: true,
       onPressed: () async {
         // Go to webpage in browser
         var ableLaunch = await canLaunch(url);
@@ -132,6 +136,7 @@ class SubmissionItem extends StatelessWidget {
       subtitle: (dueDate == null)
           ? null
           : DateFormat('dd MMMM, yyyy').format(dueDate!),
+      fullWidth: true,
       onPressed: () {
         // TODO: Go to submission page using submissionId
       },
@@ -160,6 +165,7 @@ class QuizItem extends StatelessWidget {
       subtitle: (openDate == null)
           ? null
           : DateFormat('dd MMMM, yyyy').format(openDate!),
+      fullWidth: true,
       onPressed: () {
         // TODO: Go to quiz page using quizId
       },
