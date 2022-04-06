@@ -34,6 +34,15 @@ mixin _$ConversationDetailStore on _ConversationDetailStore, Store {
         .run(() => super.getListMessage(token, userId, conversationId));
   }
 
+  final _$sentMessageAsyncAction =
+      AsyncAction('_ConversationDetailStore.sentMessage');
+
+  @override
+  Future<dynamic> sentMessage(String token, int conversationId, String text) {
+    return _$sentMessageAsyncAction
+        .run(() => super.sentMessage(token, conversationId, text));
+  }
+
   @override
   String toString() {
     return '''
