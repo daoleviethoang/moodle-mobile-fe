@@ -22,12 +22,13 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
   @override
   void initState() {
     super.initState();
-    //getAssignmentDetail();
+    getAssignmentDetail();
   }
 
   void getAssignmentDetail() async {
     isLoading = true;
     Assignment temp = await ReadJsonData(widget.assignId);
+    print(DateTime.fromMillisecondsSinceEpoch(temp.duedate!).toString());
     setState(() {
       assignment = temp;
       isLoading = false;
@@ -47,13 +48,13 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     DateAssignmentTile(
-                      date: assignment.allowsubmissionsfromdate,
+                      date: assignment.allowsubmissionsfromdate ?? 0,
                       title: "Opened",
                       iconColor: Colors.grey,
                       backgroundIconColor: Color.fromARGB(255, 217, 217, 217),
                     ),
                     DateAssignmentTile(
-                      date: assignment.duedate,
+                      date: assignment.duedate ?? 0,
                       title: "Due",
                       iconColor: Colors.green,
                       backgroundIconColor: Colors.greenAccent,
@@ -83,18 +84,17 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
 Future<Assignment> ReadJsonData(int id) async {
   final jsonData = await rootBundle.rootBundle
       .loadString('assets/dummy/all_assignment_course.json');
-  final list = json.decode(jsonData)['courses']['assignments'] as List<dynamic>;
-
-  print(list);
+  final list =
+      json.decode(jsonData)['courses'][0]['assignments'] as List<dynamic>;
 
   List<Assignment> assigns = list.map((e) => Assignment.fromJson(e)).toList();
-  Assignment assign = Assignment();
+  // Assignment assign = Assignment();
 
-  for (var item in assigns) {
-    if (item.cmid == id) {
-      assign = item;
-    }
-  }
+  // for (var item in assigns) {
+  //   if (item.cmid == id) {
+  //     assign = item;
+  //   }
+  // }
 
-  return assign;
+  return assigns[0];
 }

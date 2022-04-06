@@ -28,13 +28,13 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               DateAssignmentTile(
-                date: assignment.allowsubmissionsfromdate,
+                date: 0,
                 title: "Opened",
                 iconColor: Colors.grey,
                 backgroundIconColor: Color.fromARGB(255, 217, 217, 217),
               ),
               DateAssignmentTile(
-                date: assignment.duedate,
+                date: 0,
                 title: "Due",
                 iconColor: Colors.green,
                 backgroundIconColor: Colors.greenAccent,
