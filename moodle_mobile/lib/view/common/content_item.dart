@@ -4,6 +4,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:intl/intl.dart';
 import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/view/common/menu_item.dart';
+import 'package:moodle_mobile/view/video_viewer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // region Icon and text
@@ -78,7 +79,12 @@ class VideoItem extends StatelessWidget {
       title: title,
       fullWidth: true,
       onPressed: () {
-        // TODO: Watch this video in a fullscreen view
+        // Watch this video in a fullscreen view
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (_) => VideoViewer(
+                  title: title,
+                  url: videoUrl,
+                )));
       },
     );
   }
