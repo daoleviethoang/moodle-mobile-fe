@@ -6,6 +6,7 @@ import 'package:moodle_mobile/constants/dimens.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/custom_button.dart';
 import 'package:moodle_mobile/view/common/custom_text_field.dart';
+import 'package:moodle_mobile/view/direct_page.dart';
 import 'package:moodle_mobile/view/home/home.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -167,8 +168,8 @@ class _LoginScreenState extends State<LoginScreen> {
     await _userStore.login(usernameControler.text, passwordController.text);
 
     if (_userStore.isLogin == true) {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const DirectScreen()));
     }
   }
 
