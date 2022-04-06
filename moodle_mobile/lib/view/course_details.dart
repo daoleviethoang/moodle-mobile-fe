@@ -88,6 +88,10 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                 "<li>It doesn't cost much!</li>"
                 "</ul>"
                 "</div>"),
+        ForumItem(
+          title: 'Q&A',
+          onPressed: () => {},
+        ),
         const LineItem(),
         const HeaderItem(text: 'Topic 1'),
         const DocumentItem(
@@ -97,6 +101,10 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
         const UrlItem(
           title: 'Week 1 - Getting start',
           url: 'https://docs.flutter.dev/',
+        ),
+        const VideoItem(
+          title: 'Week 1 video',
+          videoUrl: 'https://docs.flutter.dev/',
         ),
         SubmissionItem(
           title: 'Nộp Proposal',

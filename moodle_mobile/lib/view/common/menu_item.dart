@@ -51,9 +51,6 @@ class MenuItem extends StatelessWidget {
         style: TextButton.styleFrom(
           primary: Theme.of(context).colorScheme.surface,
           padding: const EdgeInsets.symmetric(vertical: 8),
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(30)),
-          ),
         ),
         onPressed: onPressed,
 

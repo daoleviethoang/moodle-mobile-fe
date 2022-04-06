@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:intl/intl.dart';
+import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/view/common/menu_item.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 // region Icon and text
 
@@ -50,6 +52,29 @@ class DocumentItem extends StatelessWidget {
   }
 }
 
+class VideoItem extends StatelessWidget {
+  final String title;
+  final String videoUrl;
+
+  const VideoItem({
+    Key? key,
+    required this.title,
+    required this.videoUrl,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MenuItem(
+      icon: const Icon(CupertinoIcons.video_camera),
+      color: Colors.green,
+      title: title,
+      onPressed: () {
+        // TODO: Watch this video in a fullscreen view
+      },
+    );
+  }
+}
+
 class UrlItem extends StatelessWidget {
   final String title;
   final String url;
@@ -67,8 +92,14 @@ class UrlItem extends StatelessWidget {
       color: Colors.deepPurple,
       title: title,
       subtitle: url,
-      onPressed: () {
+      onPressed: () async {
         // TODO: Go to webpage in browser
+        var ableLaunch = await canLaunch(url);
+        if (ableLaunch) {
+          await launch(url);
+        } else {
+          print("URL can't be launched.");
+        }
       },
     );
   }
@@ -144,16 +175,15 @@ class RichTextCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Html(
-          data: text,
-          style: {
-            'h1': Style(fontSize: const FontSize(19)),
-            'h2': Style(fontSize: const FontSize(17.5)),
-            'h3': Style(fontSize: const FontSize(16)),
-          },
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Html(
+            data: text,
+            style: MoodleStyles.htmlStyle,
+          ),
         ),
       ),
     );
