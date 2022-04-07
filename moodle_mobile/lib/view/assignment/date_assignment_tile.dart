@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class DateAssignmentTile extends StatefulWidget {
   final int date;
@@ -54,8 +55,8 @@ class _DateAssignmentTileState extends State<DateAssignmentTile> {
                           height: 6,
                         ),
                         Text(
-                          DateTime.fromMicrosecondsSinceEpoch(widget.date)
-                              .toString(),
+                          DateFormat("hh:mmaa, dd MMMM, yyyy").format(
+                              DateTime.fromMillisecondsSinceEpoch(widget.date)),
                           style: const TextStyle(
                               fontSize: 11, fontWeight: FontWeight.normal),
                         ),

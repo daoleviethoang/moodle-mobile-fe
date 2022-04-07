@@ -1,6 +1,4 @@
-// ignore_for_file: unnecessary_this
-
-import 'package:moodle_mobile/models/assignment/file_assignment.dart';
+import 'package:moodle_mobile/models/assignment/files_assignment.dart';
 
 class Fileareas {
   String? area;
