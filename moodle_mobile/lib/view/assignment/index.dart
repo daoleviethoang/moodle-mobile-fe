@@ -4,12 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' as rootBundle;
 import 'package:flutter_html/flutter_html.dart';
 import 'package:moodle_mobile/models/assignment/assignment.dart';
+import 'package:moodle_mobile/models/assignment/attemp_assignment.dart';
 import 'package:moodle_mobile/view/assignment/date_assignment_tile.dart';
+import 'package:moodle_mobile/view/assignment/files_assignment.dart';
 import 'package:moodle_mobile/view/common/custom_button.dart';
 
 class AssignmentScreen extends StatefulWidget {
   final int assignId;
-  const AssignmentScreen({Key? key, required this.assignId}) : super(key: key);
+  final int courseId;
+  const AssignmentScreen(
+      {Key? key, required this.assignId, required this.courseId})
+      : super(key: key);
 
   @override
   _AssignmentScreenState createState() => _AssignmentScreenState();
@@ -17,21 +22,36 @@ class AssignmentScreen extends StatefulWidget {
 
 class _AssignmentScreenState extends State<AssignmentScreen> {
   Assignment assignment = Assignment();
+  AttemptAssignment attempt = AttemptAssignment();
   bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    getAssignmentDetail();
+    isLoading = true;
+    loadAssignment();
+    setState(() {
+      isLoading = false;
+    });
   }
 
-  void getAssignmentDetail() async {
+  void loadAssignment() async {
     isLoading = true;
-    Assignment temp = await ReadJsonData(widget.assignId);
-    print(DateTime.fromMillisecondsSinceEpoch(temp.duedate!).toString());
+    Assignment temp = await ReadJsonData(widget.assignId, widget.courseId);
+    AttemptAssignment temp2 =
+        await ReadJsonData2(widget.assignId, widget.courseId);
     setState(() {
       assignment = temp;
+      attempt = temp2;
       isLoading = false;
+    });
+  }
+
+  void loadAssignmentAttempt() async {
+    AttemptAssignment temp2 =
+        await ReadJsonData2(widget.assignId, widget.courseId);
+    setState(() {
+      attempt = temp2;
     });
   }
 
@@ -72,7 +92,38 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                       height: 5,
                     ),
                     CustomButtonWidget(
-                        textButton: "View file submission", onPressed: () {}),
+                      textButton: "View file submission",
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) {
+                              return FilesAssignmentScreen(
+                                maxByteSize: int.parse(
+                                    assignment.configs != null
+                                        ? assignment.configs!
+                                            .where((element) =>
+                                                element.name ==
+                                                "maxsubmissionsizebytes")
+                                            .first
+                                            .value
+                                        : "0"),
+                                maxFileCount: int.parse(
+                                    assignment.configs != null
+                                        ? assignment.configs!
+                                            .where((element) =>
+                                                element.name ==
+                                                "maxfilesubmissions")
+                                            .first
+                                            .value
+                                        : "0"),
+                                attempt: attempt,
+                                reload: loadAssignmentAttempt,
+                              );
+                            },
+                          ),
+                        );
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -81,7 +132,7 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
   }
 }
 
-Future<Assignment> ReadJsonData(int id) async {
+Future<Assignment> ReadJsonData(int cmdId, int courseId) async {
   final jsonData = await rootBundle.rootBundle
       .loadString('assets/dummy/all_assignment_course.json');
   final list =
@@ -97,4 +148,13 @@ Future<Assignment> ReadJsonData(int id) async {
   // }
 
   return assigns[0];
+}
+
+Future<AttemptAssignment> ReadJsonData2(int cmdId, int courseId) async {
+  final jsonData = await rootBundle.rootBundle
+      .loadString('assets/dummy/one_assignment_course.json');
+  final data = json.decode(jsonData)['lastattempt'] as Map<String, dynamic>;
+
+  AttemptAssignment attempt = AttemptAssignment.fromJson(data);
+  return attempt;
 }
