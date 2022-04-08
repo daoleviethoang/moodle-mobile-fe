@@ -39,6 +39,59 @@ class _FilesAssignmentScreenState extends State<FilesAssignmentScreen> {
     return sum;
   }
 
+  int caculateByteSize() {
+    int sum = 0;
+    for (var item in files) {
+      sum += item.filesize;
+    }
+    return sum;
+  }
+
+  bool checkOverwrite(PlatformFile file) {
+    int index = -1;
+    for (var i = 0; i < files.length; i++) {
+      if (files[i].filename == file.name) {
+        index = i;
+        break;
+      }
+    }
+    if (index != -1) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Overwrite same name file!'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text("Cancel"),
+              ),
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    files[index] = FileAssignment(
+                        filename: file.name,
+                        filepath: file.path ?? "",
+                        timeModified: DateTime.now(),
+                        filesize: file.size);
+                  });
+
+                  // break dialog
+                  Navigator.pop(context);
+                },
+                child: Text("Ok"),
+              ),
+            ],
+          );
+        },
+      );
+      return true;
+    }
+    return false;
+  }
+
   @override
   void initState() {
     for (Files item
@@ -199,6 +252,22 @@ class _FilesAssignmentScreenState extends State<FilesAssignmentScreen> {
           FilePickerResult? result = await FilePicker.platform.pickFiles();
           if (result != null) {
             PlatformFile file = result.files.first;
+            // check size more than condition
+            if (file.size + caculateByteSize() > widget.maxByteSize) {
+              const snackBar = SnackBar(content: Text("File's size is bigger"));
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              return;
+            }
+            // check number file more than condition
+            if (files.length == widget.maxFileCount) {
+              const snackBar = SnackBar(content: Text("Number file is full"));
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              return;
+            }
+            // check file same name
+            bool check = checkOverwrite(file);
+            if (check == true) return;
+            // add file
             files.add(FileAssignment(
                 filename: file.name,
                 filepath: file.path ?? "",

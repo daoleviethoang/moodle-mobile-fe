@@ -4,7 +4,6 @@ import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/di/service_locator.dart';
 import 'package:moodle_mobile/view/direct_page.dart';
 import 'package:moodle_mobile/view/splash/splash_screen.dart';
-import 'package:moodle_mobile/view/assignment/index.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -54,7 +53,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: AssignmentScreen(assignId: 1, courseId: 1),
+      home: const SplashScreen(),
       debugShowCheckedModeBanner: false,
     );
   }
