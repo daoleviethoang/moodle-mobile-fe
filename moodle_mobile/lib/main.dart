@@ -52,6 +52,9 @@ class MyApp extends StatelessWidget {
             borderRadius: BorderRadius.all(Radius.circular(12)),
           ),
         ),
+        appBarTheme: Theme.of(context).appBarTheme.copyWith(
+              foregroundColor: Colors.white,
+            ),
       ),
       home: const SplashScreen(),
       debugShowCheckedModeBanner: false,
