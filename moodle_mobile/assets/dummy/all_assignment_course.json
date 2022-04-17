@@ -1,0 +1,1027 @@
+{
+    "courses": [
+        {
+            "id": 1873,
+            "fullname": "Mẫu thiết kế hướng đối tượng và ứng dụng - 18KTPM1",
+            "shortname": "CLC_HK1_2122_CSC13107_18KTPM1",
+            "timemodified": 1632493236,
+            "assignments": [
+                {
+                    "id": 9705,
+                    "cmid": 41606,
+                    "course": 1873,
+                    "name": "Week 2 - Exercise 1: Open-Closed Principle",
+                    "nosubmissions": 0,
+                    "submissiondrafts": 0,
+                    "sendnotifications": 0,
+                    "sendlatenotifications": 0,
+                    "sendstudentnotifications": 0,
+                    "duedate": 1634285700,
+                    "allowsubmissionsfromdate": 1634230800,
+                    "grade": 100,
+                    "timemodified": 1634285545,
+                    "completionsubmit": 1,
+                    "cutoffdate": 1634285700,
+                    "gradingduedate": 0,
+                    "teamsubmission": 0,
+                    "requireallteammemberssubmit": 0,
+                    "teamsubmissiongroupingid": 0,
+                    "blindmarking": 0,
+                    "hidegrader": 0,
+                    "revealidentities": 0,
+                    "attemptreopenmethod": "manual",
+                    "maxattempts": -1,
+                    "markingworkflow": 0,
+                    "markingallocation": 0,
+                    "requiresubmissionstatement": 0,
+                    "preventsubmissionnotingroup": 0,
+                    "configs": [
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "enabled",
+                            "value": "1"
+                        },
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "maxfilesubmissions",
+                            "value": "20"
+                        },
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "maxsubmissionsizebytes",
+                            "value": "5242880"
+                        },
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "filetypeslist",
+                            "value": ""
+                        },
+                        {
+                            "plugin": "comments",
+                            "subtype": "assignsubmission",
+                            "name": "enabled",
+                            "value": "1"
+                        },
+                        {
+                            "plugin": "comments",
+                            "subtype": "assignfeedback",
+                            "name": "enabled",
+                            "value": "1"
+                        },
+                        {
+                            "plugin": "comments",
+                            "subtype": "assignfeedback",
+                            "name": "commentinline",
+                            "value": "0"
+                        }
+                    ],
+                    "intro": "<p dir=\"ltr\" style=\"text-align: left;\">* Contents: Practice 1 in slides 2 (Open-Closed Principle).</p><p dir=\"ltr\" style=\"text-align: left;\">* Submission rules:<br>- This is team exercise.<br>- Only ONE team member submits the ONE zip file for the team, filename: &lt;Week number&gt;-EX&lt;Exercise number&gt;-&lt;Student Id1&gt;-&lt;Student Id2&gt;-...ZIP, e.g Week 1, Exercise 1, a team will submit file: 1-EX1-201270001-20127002-20127003.ZIP.<br>- Submitted file contains JPG image or PDF document.<br>- Cheating in exercises receives FAILED grade.<br>- Deadline: 15:10, Friday, Oct-15-2021.<br></p>",
+                    "introformat": 1,
+                    "introfiles": [],
+                    "introattachments": []
+                },
+                {
+                    "id": 9713,
+                    "cmid": 41635,
+                    "course": 1873,
+                    "name": "Week 2 - Exercise 2: Single Responsibility Principle",
+                    "nosubmissions": 0,
+                    "submissiondrafts": 0,
+                    "sendnotifications": 0,
+                    "sendlatenotifications": 0,
+                    "sendstudentnotifications": 0,
+                    "duedate": 1634289000,
+                    "allowsubmissionsfromdate": 1634230800,
+                    "grade": 100,
+                    "timemodified": 1634287735,
+                    "completionsubmit": 1,
+                    "cutoffdate": 1634289000,
+                    "gradingduedate": 1635440400,
+                    "teamsubmission": 0,
+                    "requireallteammemberssubmit": 0,
+                    "teamsubmissiongroupingid": 0,
+                    "blindmarking": 0,
+                    "hidegrader": 0,
+                    "revealidentities": 0,
+                    "attemptreopenmethod": "manual",
+                    "maxattempts": -1,
+                    "markingworkflow": 0,
+                    "markingallocation": 0,
+                    "requiresubmissionstatement": 0,
+                    "preventsubmissionnotingroup": 0,
+                    "configs": [
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "enabled",
+                            "value": "1"
+                        },
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "maxfilesubmissions",
+                            "value": "20"
+                        },
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "maxsubmissionsizebytes",
+                            "value": "5242880"
+                        },
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "filetypeslist",
+                            "value": ""
+                        },
+                        {
+                            "plugin": "comments",
+                            "subtype": "assignsubmission",
+                            "name": "enabled",
+                            "value": "1"
+                        },
+                        {
+                            "plugin": "comments",
+                            "subtype": "assignfeedback",
+                            "name": "enabled",
+                            "value": "1"
+                        },
+                        {
+                            "plugin": "comments",
+                            "subtype": "assignfeedback",
+                            "name": "commentinline",
+                            "value": "0"
+                        }
+                    ],
+                    "intro": "<p dir=\"ltr\" style=\"text-align: left;\"></p><p dir=\"ltr\">* Contents: Practice 2 in slides 2 (Single Responsibility Principle).</p><p dir=\"ltr\">* Submission rules:<br>- This is team exercise.<br>-\r\n Only ONE team member submits the ONE zip file for the team, filename: \r\n&lt;Week number&gt;-EX&lt;Exercise number&gt;-&lt;Student \r\nId1&gt;-&lt;Student Id2&gt;-...ZIP, e.g Week 1, Exercise 1, a team will \r\nsubmit file: 1-EX1-201270001-20127002-20127003.ZIP.<br>- Submitted file contains JPG image or PDF document.<br>- Cheating in exercises receives FAILED grade.<br>- Deadline: 16:10, Friday, Oct-15-2021.</p><p></p>",
+                    "introformat": 1,
+                    "introfiles": [],
+                    "introattachments": []
+                },
+                {
+                    "id": 9715,
+                    "cmid": 41639,
+                    "course": 1873,
+                    "name": "Week 3 - Seminar Report",
+                    "nosubmissions": 0,
+                    "submissiondrafts": 0,
+                    "sendnotifications": 0,
+                    "sendlatenotifications": 0,
+                    "sendstudentnotifications": 0,
+                    "duedate": 1634832000,
+                    "allowsubmissionsfromdate": 1634230800,
+                    "grade": 100,
+                    "timemodified": 1634292510,
+                    "completionsubmit": 1,
+                    "cutoffdate": 1634832000,
+                    "gradingduedate": 0,
+                    "teamsubmission": 0,
+                    "requireallteammemberssubmit": 0,
+                    "teamsubmissiongroupingid": 0,
+                    "blindmarking": 0,
+                    "hidegrader": 0,
+                    "revealidentities": 0,
+                    "attemptreopenmethod": "manual",
+                    "maxattempts": -1,
+                    "markingworkflow": 0,
+                    "markingallocation": 0,
+                    "requiresubmissionstatement": 0,
+                    "preventsubmissionnotingroup": 0,
+                    "configs": [
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "enabled",
+                            "value": "1"
+                        },
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "maxfilesubmissions",
+                            "value": "20"
+                        },
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "maxsubmissionsizebytes",
+                            "value": "10485760"
+                        },
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "filetypeslist",
+                            "value": ""
+                        },
+                        {
+                            "plugin": "comments",
+                            "subtype": "assignsubmission",
+                            "name": "enabled",
+                            "value": "1"
+                        },
+                        {
+                            "plugin": "comments",
+                            "subtype": "assignfeedback",
+                            "name": "enabled",
+                            "value": "1"
+                        },
+                        {
+                            "plugin": "comments",
+                            "subtype": "assignfeedback",
+                            "name": "commentinline",
+                            "value": "0"
+                        }
+                    ],
+                    "intro": "<p dir=\"ltr\" style=\"text-align: left;\"></p><p dir=\"ltr\">* Contents: seminar report for the assigned design pattern.</p><p dir=\"ltr\">* Submission rules:<br>- This is team assignment.<br>-\r\n Only ONE team member submits the ONE zip file for the team, filename: Seminar-&lt;Student \r\nId1&gt;-&lt;Student Id2&gt;-...ZIP, e.g a team will \r\nsubmit file: Seminar-201270001-20127002-20127003.ZIP.<br>- Submitted file contains PDF document.<br>- Cheating receives FAILED grade.<br>- Deadline: 23:00, Thursday, Oct-21-2021.</p><br><p></p>",
+                    "introformat": 1,
+                    "introfiles": [],
+                    "introattachments": []
+                },
+                {
+                    "id": 9891,
+                    "cmid": 42369,
+                    "course": 1873,
+                    "name": "Week 3 - Exercise 4: Dependency Inversion Principle",
+                    "nosubmissions": 0,
+                    "submissiondrafts": 0,
+                    "sendnotifications": 0,
+                    "sendlatenotifications": 0,
+                    "sendstudentnotifications": 0,
+                    "duedate": 1634888400,
+                    "allowsubmissionsfromdate": 1634835600,
+                    "grade": 100,
+                    "timemodified": 1634889971,
+                    "completionsubmit": 1,
+                    "cutoffdate": 1634888400,
+                    "gradingduedate": 0,
+                    "teamsubmission": 0,
+                    "requireallteammemberssubmit": 0,
+                    "teamsubmissiongroupingid": 0,
+                    "blindmarking": 0,
+                    "hidegrader": 0,
+                    "revealidentities": 0,
+                    "attemptreopenmethod": "manual",
+                    "maxattempts": -1,
+                    "markingworkflow": 0,
+                    "markingallocation": 0,
+                    "requiresubmissionstatement": 0,
+                    "preventsubmissionnotingroup": 0,
+                    "configs": [
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "enabled",
+                            "value": "1"
+                        },
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "maxfilesubmissions",
+                            "value": "20"
+                        },
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "maxsubmissionsizebytes",
+                            "value": "5242880"
+                        },
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "filetypeslist",
+                            "value": ""
+                        },
+                        {
+                            "plugin": "comments",
+                            "subtype": "assignsubmission",
+                            "name": "enabled",
+                            "value": "1"
+                        },
+                        {
+                            "plugin": "comments",
+                            "subtype": "assignfeedback",
+                            "name": "enabled",
+                            "value": "1"
+                        },
+                        {
+                            "plugin": "comments",
+                            "subtype": "assignfeedback",
+                            "name": "commentinline",
+                            "value": "0"
+                        }
+                    ],
+                    "intro": "<p dir=\"ltr\" style=\"text-align: left;\"></p><p dir=\"ltr\">* Contents: Practice 4 in slides 3 (Dependency Inversion Principle).</p><p dir=\"ltr\">* Submission rules:<br>- This is team exercise.<br>-\r\n Only ONE team member submits the ONE zip file for the team, filename: \r\n&lt;Week number&gt;-EX&lt;Exercise number&gt;-&lt;Student \r\nId1&gt;-&lt;Student Id2&gt;-...ZIP, e.g Week 1, Exercise 1, a team will \r\nsubmit file: 1-EX1-201270001-20127002-20127003.ZIP.<br>- Submitted file contains JPG image or PDF document.<br>- Cheating in exercises receives FAILED grade.<br>- Deadline: 14:40, Friday, Oct-22-2021</p><p></p>",
+                    "introformat": 1,
+                    "introfiles": [],
+                    "introattachments": []
+                },
+                {
+                    "id": 9892,
+                    "cmid": 42370,
+                    "course": 1873,
+                    "name": "Week 3 - Exercise 5: Dependency Inversion Principle",
+                    "nosubmissions": 0,
+                    "submissiondrafts": 0,
+                    "sendnotifications": 0,
+                    "sendlatenotifications": 0,
+                    "sendstudentnotifications": 0,
+                    "duedate": 1634891700,
+                    "allowsubmissionsfromdate": 1634835600,
+                    "grade": 100,
+                    "timemodified": 1634889925,
+                    "completionsubmit": 1,
+                    "cutoffdate": 1634891700,
+                    "gradingduedate": 0,
+                    "teamsubmission": 0,
+                    "requireallteammemberssubmit": 0,
+                    "teamsubmissiongroupingid": 0,
+                    "blindmarking": 0,
+                    "hidegrader": 0,
+                    "revealidentities": 0,
+                    "attemptreopenmethod": "manual",
+                    "maxattempts": -1,
+                    "markingworkflow": 0,
+                    "markingallocation": 0,
+                    "requiresubmissionstatement": 0,
+                    "preventsubmissionnotingroup": 0,
+                    "configs": [
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "enabled",
+                            "value": "1"
+                        },
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "maxfilesubmissions",
+                            "value": "20"
+                        },
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "maxsubmissionsizebytes",
+                            "value": "5242880"
+                        },
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "filetypeslist",
+                            "value": ""
+                        },
+                        {
+                            "plugin": "comments",
+                            "subtype": "assignsubmission",
+                            "name": "enabled",
+                            "value": "1"
+                        },
+                        {
+                            "plugin": "comments",
+                            "subtype": "assignfeedback",
+                            "name": "enabled",
+                            "value": "1"
+                        },
+                        {
+                            "plugin": "comments",
+                            "subtype": "assignfeedback",
+                            "name": "commentinline",
+                            "value": "0"
+                        }
+                    ],
+                    "intro": "<p dir=\"ltr\" style=\"text-align: left;\"></p><p dir=\"ltr\"></p><p dir=\"ltr\">* Contents: Practice 5 in slides 3 (Dependency Inversion Principle).</p><p dir=\"ltr\">* Submission rules:<br>- This is team exercise.<br>-\r\n Only ONE team member submits the ONE zip file for the team, filename: \r\n&lt;Week number&gt;-EX&lt;Exercise number&gt;-&lt;Student \r\nId1&gt;-&lt;Student Id2&gt;-...ZIP, e.g Week 1, Exercise 1, a team will \r\nsubmit file: 1-EX1-201270001-20127002-20127003.ZIP.<br>- Submitted file contains JPG image or PDF document.<br>- Cheating in exercises receives FAILED grade.<br>- Deadline: 15:35, Friday, Oct-22-2021</p><p></p><br><p></p>",
+                    "introformat": 1,
+                    "introfiles": [],
+                    "introattachments": []
+                },
+                {
+                    "id": 10229,
+                    "cmid": 43363,
+                    "course": 1873,
+                    "name": "Seminar - Submit slides",
+                    "nosubmissions": 0,
+                    "submissiondrafts": 0,
+                    "sendnotifications": 0,
+                    "sendlatenotifications": 0,
+                    "sendstudentnotifications": 0,
+                    "duedate": 1637251200,
+                    "allowsubmissionsfromdate": 1636045200,
+                    "grade": 100,
+                    "timemodified": 1637025432,
+                    "completionsubmit": 1,
+                    "cutoffdate": 1637251200,
+                    "gradingduedate": 1637254800,
+                    "teamsubmission": 0,
+                    "requireallteammemberssubmit": 0,
+                    "teamsubmissiongroupingid": 0,
+                    "blindmarking": 0,
+                    "hidegrader": 0,
+                    "revealidentities": 0,
+                    "attemptreopenmethod": "manual",
+                    "maxattempts": -1,
+                    "markingworkflow": 0,
+                    "markingallocation": 0,
+                    "requiresubmissionstatement": 0,
+                    "preventsubmissionnotingroup": 0,
+                    "configs": [
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "enabled",
+                            "value": "1"
+                        },
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "maxfilesubmissions",
+                            "value": "20"
+                        },
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "maxsubmissionsizebytes",
+                            "value": "20971520"
+                        },
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "filetypeslist",
+                            "value": ""
+                        },
+                        {
+                            "plugin": "comments",
+                            "subtype": "assignsubmission",
+                            "name": "enabled",
+                            "value": "1"
+                        },
+                        {
+                            "plugin": "comments",
+                            "subtype": "assignfeedback",
+                            "name": "enabled",
+                            "value": "1"
+                        },
+                        {
+                            "plugin": "comments",
+                            "subtype": "assignfeedback",
+                            "name": "commentinline",
+                            "value": "0"
+                        }
+                    ],
+                    "intro": "<p dir=\"ltr\" style=\"text-align: left;\">* Contents:<br>- Each team submits ONE file.<br>- Submission contains ONE zip file, name Slides-&lt;Student Id1&gt;-&lt;Student Id2&gt;-...ZIP.<br>- Deadline: 23:00, Nov-18-2021.<br></p>",
+                    "introformat": 1,
+                    "introfiles": [],
+                    "introattachments": []
+                },
+                {
+                    "id": 10521,
+                    "cmid": 44288,
+                    "course": 1873,
+                    "name": "Week 7 - Design Patterns 1 - Exercises",
+                    "nosubmissions": 0,
+                    "submissiondrafts": 0,
+                    "sendnotifications": 0,
+                    "sendlatenotifications": 0,
+                    "sendstudentnotifications": 0,
+                    "duedate": 1637310900,
+                    "allowsubmissionsfromdate": 1637168400,
+                    "grade": 100,
+                    "timemodified": 1637310511,
+                    "completionsubmit": 1,
+                    "cutoffdate": 1637310900,
+                    "gradingduedate": 1638378000,
+                    "teamsubmission": 0,
+                    "requireallteammemberssubmit": 0,
+                    "teamsubmissiongroupingid": 0,
+                    "blindmarking": 0,
+                    "hidegrader": 0,
+                    "revealidentities": 0,
+                    "attemptreopenmethod": "manual",
+                    "maxattempts": -1,
+                    "markingworkflow": 0,
+                    "markingallocation": 0,
+                    "requiresubmissionstatement": 0,
+                    "preventsubmissionnotingroup": 0,
+                    "configs": [
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "enabled",
+                            "value": "1"
+                        },
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "maxfilesubmissions",
+                            "value": "20"
+                        },
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "maxsubmissionsizebytes",
+                            "value": "20971520"
+                        },
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "filetypeslist",
+                            "value": ""
+                        },
+                        {
+                            "plugin": "comments",
+                            "subtype": "assignsubmission",
+                            "name": "enabled",
+                            "value": "1"
+                        },
+                        {
+                            "plugin": "comments",
+                            "subtype": "assignfeedback",
+                            "name": "enabled",
+                            "value": "1"
+                        },
+                        {
+                            "plugin": "comments",
+                            "subtype": "assignfeedback",
+                            "name": "commentinline",
+                            "value": "0"
+                        }
+                    ],
+                    "intro": "<p dir=\"ltr\" style=\"text-align: left;\">* Submission rules:<br>- This is team exercise.<br>-\r\n Only ONE team member submits the ONE zip file for the team, filename: \r\n&lt;Week number&gt;-EX&lt;Exercise number&gt;-&lt;Student \r\nId1&gt;-&lt;Student Id2&gt;-...ZIP, e.g Week 1, Exercise 1, a team will \r\nsubmit file: 1-EX1-201270001-20127002-20127003.ZIP.<br>- Submitted file contains JPG images or PDF documents.<br>- Cheating in exercises receives FAILED grade.<br></p>",
+                    "introformat": 1,
+                    "introfiles": [],
+                    "introattachments": []
+                },
+                {
+                    "id": 10522,
+                    "cmid": 44289,
+                    "course": 1873,
+                    "name": "Week 8 - Design Patterns 2 - Exercises",
+                    "nosubmissions": 0,
+                    "submissiondrafts": 0,
+                    "sendnotifications": 0,
+                    "sendlatenotifications": 0,
+                    "sendstudentnotifications": 0,
+                    "duedate": 1637915400,
+                    "allowsubmissionsfromdate": 1637168400,
+                    "grade": 100,
+                    "timemodified": 1637221608,
+                    "completionsubmit": 1,
+                    "cutoffdate": 1637915400,
+                    "gradingduedate": 1638378000,
+                    "teamsubmission": 0,
+                    "requireallteammemberssubmit": 0,
+                    "teamsubmissiongroupingid": 0,
+                    "blindmarking": 0,
+                    "hidegrader": 0,
+                    "revealidentities": 0,
+                    "attemptreopenmethod": "manual",
+                    "maxattempts": -1,
+                    "markingworkflow": 0,
+                    "markingallocation": 0,
+                    "requiresubmissionstatement": 0,
+                    "preventsubmissionnotingroup": 0,
+                    "configs": [
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "enabled",
+                            "value": "1"
+                        },
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "maxfilesubmissions",
+                            "value": "20"
+                        },
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "maxsubmissionsizebytes",
+                            "value": "20971520"
+                        },
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "filetypeslist",
+                            "value": ""
+                        },
+                        {
+                            "plugin": "comments",
+                            "subtype": "assignsubmission",
+                            "name": "enabled",
+                            "value": "1"
+                        },
+                        {
+                            "plugin": "comments",
+                            "subtype": "assignfeedback",
+                            "name": "enabled",
+                            "value": "1"
+                        },
+                        {
+                            "plugin": "comments",
+                            "subtype": "assignfeedback",
+                            "name": "commentinline",
+                            "value": "0"
+                        }
+                    ],
+                    "intro": "<p dir=\"ltr\" style=\"text-align: left;\">* Submission rules:<br>- This is team exercise.<br>-\r\n Only ONE team member submits the ONE zip file for the team, filename: \r\n&lt;Week number&gt;-EX&lt;Exercise number&gt;-&lt;Student \r\nId1&gt;-&lt;Student Id2&gt;-...ZIP, e.g Week 1, Exercise 1, a team will \r\nsubmit file: 1-EX1-201270001-20127002-20127003.ZIP.<br>- Submitted file contains JPG images or PDF documents.<br>- Cheating in exercises receives FAILED grade.<br></p>",
+                    "introformat": 1,
+                    "introfiles": [],
+                    "introattachments": []
+                },
+                {
+                    "id": 10925,
+                    "cmid": 45455,
+                    "course": 1873,
+                    "name": "Week 10 - Expression - Exercise 1",
+                    "nosubmissions": 0,
+                    "submissiondrafts": 0,
+                    "sendnotifications": 0,
+                    "sendlatenotifications": 0,
+                    "sendstudentnotifications": 0,
+                    "duedate": 1639122420,
+                    "allowsubmissionsfromdate": 0,
+                    "grade": 100,
+                    "timemodified": 1639136135,
+                    "completionsubmit": 1,
+                    "cutoffdate": 1639122420,
+                    "gradingduedate": 0,
+                    "teamsubmission": 0,
+                    "requireallteammemberssubmit": 0,
+                    "teamsubmissiongroupingid": 0,
+                    "blindmarking": 0,
+                    "hidegrader": 0,
+                    "revealidentities": 0,
+                    "attemptreopenmethod": "manual",
+                    "maxattempts": -1,
+                    "markingworkflow": 0,
+                    "markingallocation": 0,
+                    "requiresubmissionstatement": 0,
+                    "preventsubmissionnotingroup": 0,
+                    "configs": [
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "enabled",
+                            "value": "1"
+                        },
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "maxfilesubmissions",
+                            "value": "20"
+                        },
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "maxsubmissionsizebytes",
+                            "value": "20971520"
+                        },
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "filetypeslist",
+                            "value": ""
+                        },
+                        {
+                            "plugin": "comments",
+                            "subtype": "assignsubmission",
+                            "name": "enabled",
+                            "value": "1"
+                        },
+                        {
+                            "plugin": "comments",
+                            "subtype": "assignfeedback",
+                            "name": "enabled",
+                            "value": "1"
+                        },
+                        {
+                            "plugin": "comments",
+                            "subtype": "assignfeedback",
+                            "name": "commentinline",
+                            "value": "0"
+                        }
+                    ],
+                    "intro": "<p dir=\"ltr\" style=\"text-align: left;\">* Submission rules:<br>- This is team exercise.<br>-\r\n Only ONE team member submits the ONE zip file for the team, filename: \r\n&lt;Week number&gt;-EX&lt;Exercise number&gt;-&lt;Student \r\nId1&gt;-&lt;Student Id2&gt;-...ZIP, e.g Week 1, Exercise 1, a team will \r\nsubmit file: 1-EX1-201270001-20127002-20127003.ZIP.<br>- Submitted file contains JPG images or PDF documents.<br>- Cheating in exercises receives FAILED grade.<br></p>",
+                    "introformat": 1,
+                    "introfiles": [],
+                    "introattachments": []
+                },
+                {
+                    "id": 10939,
+                    "cmid": 45514,
+                    "course": 1873,
+                    "name": "Week 10 - Expression - Exercise 2",
+                    "nosubmissions": 0,
+                    "submissiondrafts": 0,
+                    "sendnotifications": 0,
+                    "sendlatenotifications": 0,
+                    "sendstudentnotifications": 0,
+                    "duedate": 1639127040,
+                    "allowsubmissionsfromdate": 1639069200,
+                    "grade": 100,
+                    "timemodified": 1639126977,
+                    "completionsubmit": 1,
+                    "cutoffdate": 1639127040,
+                    "gradingduedate": 1640278800,
+                    "teamsubmission": 0,
+                    "requireallteammemberssubmit": 0,
+                    "teamsubmissiongroupingid": 0,
+                    "blindmarking": 0,
+                    "hidegrader": 0,
+                    "revealidentities": 0,
+                    "attemptreopenmethod": "manual",
+                    "maxattempts": -1,
+                    "markingworkflow": 0,
+                    "markingallocation": 0,
+                    "requiresubmissionstatement": 0,
+                    "preventsubmissionnotingroup": 0,
+                    "configs": [
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "enabled",
+                            "value": "1"
+                        },
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "maxfilesubmissions",
+                            "value": "20"
+                        },
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "maxsubmissionsizebytes",
+                            "value": "10485760"
+                        },
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "filetypeslist",
+                            "value": ""
+                        },
+                        {
+                            "plugin": "comments",
+                            "subtype": "assignsubmission",
+                            "name": "enabled",
+                            "value": "1"
+                        },
+                        {
+                            "plugin": "comments",
+                            "subtype": "assignfeedback",
+                            "name": "enabled",
+                            "value": "1"
+                        },
+                        {
+                            "plugin": "comments",
+                            "subtype": "assignfeedback",
+                            "name": "commentinline",
+                            "value": "0"
+                        }
+                    ],
+                    "intro": "<p dir=\"ltr\" style=\"text-align: left;\"></p><p dir=\"ltr\">* Submission rules:<br>- This is team exercise.<br>-\r\n Only ONE team member submits the ONE zip file for the team, filename: \r\n&lt;Week number&gt;-EX&lt;Exercise number&gt;-&lt;Student \r\nId1&gt;-&lt;Student Id2&gt;-...ZIP, e.g Week 1, Exercise 1, a team will \r\nsubmit file: 1-EX1-201270001-20127002-20127003.ZIP.<br>- Submitted file contains JPG images or PDF documents.<br>- Cheating in exercises receives FAILED grade.<br></p><br><p></p>",
+                    "introformat": 1,
+                    "introfiles": [],
+                    "introattachments": []
+                },
+                {
+                    "id": 11023,
+                    "cmid": 45746,
+                    "course": 1873,
+                    "name": "Week 12 - List - Exercise 1",
+                    "nosubmissions": 0,
+                    "submissiondrafts": 0,
+                    "sendnotifications": 0,
+                    "sendlatenotifications": 0,
+                    "sendstudentnotifications": 0,
+                    "duedate": 1639728000,
+                    "allowsubmissionsfromdate": 0,
+                    "grade": 100,
+                    "timemodified": 1639725819,
+                    "completionsubmit": 1,
+                    "cutoffdate": 1639728000,
+                    "gradingduedate": 0,
+                    "teamsubmission": 0,
+                    "requireallteammemberssubmit": 0,
+                    "teamsubmissiongroupingid": 0,
+                    "blindmarking": 0,
+                    "hidegrader": 0,
+                    "revealidentities": 0,
+                    "attemptreopenmethod": "manual",
+                    "maxattempts": -1,
+                    "markingworkflow": 0,
+                    "markingallocation": 0,
+                    "requiresubmissionstatement": 0,
+                    "preventsubmissionnotingroup": 0,
+                    "configs": [
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "enabled",
+                            "value": "1"
+                        },
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "maxfilesubmissions",
+                            "value": "20"
+                        },
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "maxsubmissionsizebytes",
+                            "value": "10485760"
+                        },
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "filetypeslist",
+                            "value": ""
+                        },
+                        {
+                            "plugin": "comments",
+                            "subtype": "assignsubmission",
+                            "name": "enabled",
+                            "value": "1"
+                        },
+                        {
+                            "plugin": "comments",
+                            "subtype": "assignfeedback",
+                            "name": "enabled",
+                            "value": "1"
+                        },
+                        {
+                            "plugin": "comments",
+                            "subtype": "assignfeedback",
+                            "name": "commentinline",
+                            "value": "0"
+                        }
+                    ],
+                    "intro": "<p dir=\"ltr\" style=\"text-align: left;\">* Submission rules:<br>- This is team exercise.<br>-\r\n Only ONE team member submits the ONE zip file for the team, filename: \r\n&lt;Week number&gt;-EX&lt;Exercise number&gt;-&lt;Student \r\nId1&gt;-&lt;Student Id2&gt;-...ZIP, e.g Week 1, Exercise 1, a team will \r\nsubmit file: 1-EX1-201270001-20127002-20127003.ZIP.<br>- Submitted file contains JPG images or PDF documents.<br>- Cheating in exercises receives FAILED grade.<br></p>",
+                    "introformat": 1,
+                    "introfiles": [],
+                    "introattachments": []
+                },
+                {
+                    "id": 11129,
+                    "cmid": 46124,
+                    "course": 1873,
+                    "name": "Project Submission - All Groups - GroupXX.zip - 22:00, 2022-01-22",
+                    "nosubmissions": 0,
+                    "submissiondrafts": 0,
+                    "sendnotifications": 0,
+                    "sendlatenotifications": 0,
+                    "sendstudentnotifications": 0,
+                    "duedate": 1642863600,
+                    "allowsubmissionsfromdate": 1640451600,
+                    "grade": 100,
+                    "timemodified": 1640531929,
+                    "completionsubmit": 1,
+                    "cutoffdate": 1642863600,
+                    "gradingduedate": 0,
+                    "teamsubmission": 0,
+                    "requireallteammemberssubmit": 0,
+                    "teamsubmissiongroupingid": 0,
+                    "blindmarking": 0,
+                    "hidegrader": 0,
+                    "revealidentities": 0,
+                    "attemptreopenmethod": "none",
+                    "maxattempts": -1,
+                    "markingworkflow": 0,
+                    "markingallocation": 0,
+                    "requiresubmissionstatement": 0,
+                    "preventsubmissionnotingroup": 0,
+                    "configs": [
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "enabled",
+                            "value": "1"
+                        },
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "maxfilesubmissions",
+                            "value": "20"
+                        },
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "maxsubmissionsizebytes",
+                            "value": "20971520"
+                        },
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "filetypeslist",
+                            "value": ""
+                        },
+                        {
+                            "plugin": "comments",
+                            "subtype": "assignsubmission",
+                            "name": "enabled",
+                            "value": "1"
+                        },
+                        {
+                            "plugin": "comments",
+                            "subtype": "assignfeedback",
+                            "name": "enabled",
+                            "value": "1"
+                        },
+                        {
+                            "plugin": "comments",
+                            "subtype": "assignfeedback",
+                            "name": "commentinline",
+                            "value": "0"
+                        }
+                    ],
+                    "intro": "",
+                    "introformat": 1,
+                    "introfiles": [],
+                    "introattachments": []
+                },
+                {
+                    "id": 11163,
+                    "cmid": 46212,
+                    "course": 1873,
+                    "name": "SUBMIT FINAL EXAM (DEADLINE 9:40, DEC-29-2021)",
+                    "nosubmissions": 0,
+                    "submissiondrafts": 0,
+                    "sendnotifications": 0,
+                    "sendlatenotifications": 0,
+                    "sendstudentnotifications": 0,
+                    "duedate": 1640745600,
+                    "allowsubmissionsfromdate": 1640624400,
+                    "grade": 100,
+                    "timemodified": 1640665603,
+                    "completionsubmit": 1,
+                    "cutoffdate": 1640745600,
+                    "gradingduedate": 1641834000,
+                    "teamsubmission": 0,
+                    "requireallteammemberssubmit": 0,
+                    "teamsubmissiongroupingid": 0,
+                    "blindmarking": 0,
+                    "hidegrader": 0,
+                    "revealidentities": 0,
+                    "attemptreopenmethod": "manual",
+                    "maxattempts": -1,
+                    "markingworkflow": 0,
+                    "markingallocation": 0,
+                    "requiresubmissionstatement": 0,
+                    "preventsubmissionnotingroup": 0,
+                    "configs": [
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "enabled",
+                            "value": "1"
+                        },
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "maxfilesubmissions",
+                            "value": "20"
+                        },
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "maxsubmissionsizebytes",
+                            "value": "20971520"
+                        },
+                        {
+                            "plugin": "file",
+                            "subtype": "assignsubmission",
+                            "name": "filetypeslist",
+                            "value": ""
+                        },
+                        {
+                            "plugin": "comments",
+                            "subtype": "assignsubmission",
+                            "name": "enabled",
+                            "value": "1"
+                        },
+                        {
+                            "plugin": "comments",
+                            "subtype": "assignfeedback",
+                            "name": "enabled",
+                            "value": "1"
+                        },
+                        {
+                            "plugin": "comments",
+                            "subtype": "assignfeedback",
+                            "name": "commentinline",
+                            "value": "0"
+                        }
+                    ],
+                    "intro": "<p dir=\"ltr\" style=\"text-align: left;\">SUBMISSION RULES:</p><p dir=\"ltr\" style=\"text-align: left;\">- Each student submits ONLY ONE ZIP FILE, name: FINAL-[STUDENT ID].ZIP, e.g student 18120001 submits file: FINAL-18120001.ZIP.<br></p><p dir=\"ltr\" style=\"text-align: left;\">- Submitted file name contains copies of student answer sheets in JPG or PDF files.</p><p dir=\"ltr\" style=\"text-align: left;\">- Violations of submission rules or late submissions receive PENALTY.</p>",
+                    "introformat": 1,
+                    "introfiles": [],
+                    "introattachments": []
+                }
+            ]
+        }
+    ],
+    "warnings": []
+}

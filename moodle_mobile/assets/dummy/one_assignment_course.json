@@ -1,0 +1,53 @@
+{
+    "lastattempt": {
+        "submission": {
+            "id": 401313,
+            "userid": 1499,
+            "attemptnumber": 0,
+            "timecreated": 1641875280,
+            "timemodified": 1642232712,
+            "status": "submitted",
+            "groupid": 0,
+            "assignment": 11129,
+            "latest": 1,
+            "plugins": [
+                {
+                    "type": "file",
+                    "name": "File submissions",
+                    "fileareas": [
+                        {
+                            "area": "submission_files",
+                            "files": [
+                                {
+                                    "filename": "Group04.zip",
+                                    "filepath": "/",
+                                    "filesize": 2260408,
+                                    "fileurl": "https://courses.ctda.hcmus.edu.vn/webservice/pluginfile.php/75745/assignsubmission_file/submission_files/401313/Group04.zip",
+                                    "timemodified": 1642232712,
+                                    "mimetype": "application/zip",
+                                    "isexternalfile": false
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "comments",
+                    "name": "Submission comments"
+                }
+            ]
+        },
+        "submissiongroupmemberswhoneedtosubmit": [],
+        "submissionsenabled": true,
+        "locked": false,
+        "graded": false,
+        "canedit": false,
+        "caneditowner": false,
+        "cansubmit": false,
+        "extensionduedate": null,
+        "blindmarking": false,
+        "gradingstatus": "notgraded",
+        "usergroups": []
+    },
+    "warnings": []
+}
