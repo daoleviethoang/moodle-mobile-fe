@@ -1,14 +1,20 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:moodle_mobile/constants/colors.dart';
-//mport 'package:moodle_mobile/screens/direct_page.dart';
-//import 'package:moodle_mobile/screens/course_category/index.dart';
-//import 'package:moodle_mobile/screens/login.dart';
-//import 'package:moodle_mobile/screens/menu_screen.dart';
-import 'package:moodle_mobile/view/forum/forum_detail_screen.dart';
-import 'package:moodle_mobile/view/forum/forum_screen.dart';
+import 'package:moodle_mobile/di/service_locator.dart';
+import 'package:moodle_mobile/view/direct_page.dart';
+import 'package:moodle_mobile/view/splash/splash_screen.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await setupLocator();
+
+  runApp(
+    DevicePreview(
+      enabled: true,
+      builder: (context) => const MyApp(), // Wrap your app
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -18,23 +24,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      useInheritedMediaQuery: true,
+      locale: DevicePreview.locale(context),
+      builder: DevicePreview.appBuilder,
       title: 'Moodle App',
       theme: ThemeData(
-        primarySwatch: MaterialColor(
-          MoodleColors.blue.value,
-          const <int, Color>{
-            50: MoodleColors.blueLight,
-            100: MoodleColors.blueLight,
-            200: MoodleColors.blueLight,
-            300: MoodleColors.blue,
-            400: MoodleColors.blue,
-            500: MoodleColors.blue,
-            600: MoodleColors.blue,
-            700: MoodleColors.blueDark,
-            800: MoodleColors.blueDark,
-            900: MoodleColors.blueDark,
-          },
-        ),
         colorScheme: const ColorScheme(
           brightness: Brightness.light,
           primary: MoodleColors.blue,
@@ -51,8 +45,6 @@ class MyApp extends StatelessWidget {
           onBackground: Colors.black,
           onError: Colors.black,
         ),
-
-        /// Theme for all cards in this app
         cardTheme: CardTheme(
           color: Theme.of(context).colorScheme.surface,
           elevation: 8,
@@ -61,7 +53,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: ForumScreen(),
+      home: const SplashScreen(),
       debugShowCheckedModeBanner: false,
     );
   }
