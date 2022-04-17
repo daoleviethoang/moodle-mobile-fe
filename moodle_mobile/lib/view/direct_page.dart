@@ -24,6 +24,13 @@ class _DirectScreenState extends State<DirectScreen> {
     NotificationScreen(),
     MenuScreen(),
   ];
+  static const List<String> _widgetAppBarTitle = <String>[
+    "Learning Management System",
+    "Calendar",
+    "Messenger",
+    "Notifications",
+    "Menu",
+  ];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -48,9 +55,9 @@ class _DirectScreenState extends State<DirectScreen> {
 
   AppBar getAppBarUI() {
     return AppBar(
-      title: const Text('Learning Management System',
+      title: Text(_widgetAppBarTitle.elementAt(_selectedIndex),
           textAlign: TextAlign.left,
-          style: TextStyle(
+          style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 18,
               letterSpacing: 1,
@@ -79,8 +86,8 @@ class _DirectScreenState extends State<DirectScreen> {
           label: 'Dashboard',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.calendar_month_outlined),
-          activeIcon: Icon(Icons.calendar_month),
+          icon: Icon(Icons.event_outlined),
+          activeIcon: Icon(Icons.event_rounded),
           label: 'Calendar',
         ),
         BottomNavigationBarItem(

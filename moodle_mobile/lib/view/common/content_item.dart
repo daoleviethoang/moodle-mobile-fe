@@ -2,7 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:intl/intl.dart';
+import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/view/common/menu_item.dart';
+import 'package:moodle_mobile/view/video_viewer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 // region Icon and text
 
@@ -22,6 +25,7 @@ class ForumItem extends StatelessWidget {
       icon: const Icon(CupertinoIcons.chat_bubble_2),
       color: Colors.amber,
       title: title,
+      fullWidth: true,
       onPressed: onPressed,
     );
   }
@@ -43,8 +47,44 @@ class DocumentItem extends StatelessWidget {
       icon: const Icon(CupertinoIcons.book),
       color: Colors.pink,
       title: title,
+      fullWidth: true,
+      onPressed: () async {
+        // Download this document from link
+        var ableLaunch = await canLaunch(documentUrl);
+        if (ableLaunch) {
+          await launch(documentUrl);
+        } else {
+          print("URL can't be launched.");
+        }
+      },
+    );
+  }
+}
+
+class VideoItem extends StatelessWidget {
+  final String title;
+  final String videoUrl;
+
+  const VideoItem({
+    Key? key,
+    required this.title,
+    required this.videoUrl,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MenuItem(
+      icon: const Icon(CupertinoIcons.video_camera),
+      color: Colors.green,
+      title: title,
+      fullWidth: true,
       onPressed: () {
-        // TODO: Download this document from link
+        // Watch this video in a fullscreen view
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (_) => VideoViewer(
+                  title: title,
+                  url: videoUrl,
+                )));
       },
     );
   }
@@ -67,8 +107,15 @@ class UrlItem extends StatelessWidget {
       color: Colors.deepPurple,
       title: title,
       subtitle: url,
-      onPressed: () {
-        // TODO: Go to webpage in browser
+      fullWidth: true,
+      onPressed: () async {
+        // Go to webpage in browser
+        var ableLaunch = await canLaunch(url);
+        if (ableLaunch) {
+          await launch(url);
+        } else {
+          print("URL can't be launched.");
+        }
       },
     );
   }
@@ -95,6 +142,7 @@ class SubmissionItem extends StatelessWidget {
       subtitle: (dueDate == null)
           ? null
           : DateFormat('dd MMMM, yyyy').format(dueDate!),
+      fullWidth: true,
       onPressed: () {
         // TODO: Go to submission page using submissionId
       },
@@ -123,8 +171,32 @@ class QuizItem extends StatelessWidget {
       subtitle: (openDate == null)
           ? null
           : DateFormat('dd MMMM, yyyy').format(openDate!),
+      fullWidth: true,
       onPressed: () {
         // TODO: Go to quiz page using quizId
+      },
+    );
+  }
+}
+
+class AttachmentItem extends StatelessWidget {
+  final String title;
+  final String attachmentUrl;
+
+  const AttachmentItem({
+    Key? key,
+    required this.title,
+    required this.attachmentUrl,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MenuItem(
+      icon: const Icon(CupertinoIcons.doc),
+      color: Colors.grey,
+      title: title,
+      onPressed: () {
+        // TODO: Download this document from link
       },
     );
   }
@@ -144,16 +216,15 @@ class RichTextCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Html(
-          data: text,
-          style: {
-            'h1': Style(fontSize: const FontSize(19)),
-            'h2': Style(fontSize: const FontSize(17.5)),
-            'h3': Style(fontSize: const FontSize(16)),
-          },
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Html(
+            data: text,
+            style: MoodleStyles.htmlStyle,
+          ),
         ),
       ),
     );
@@ -202,6 +273,77 @@ class LineItem extends StatelessWidget {
         width: double.infinity,
         height: width,
       ),
+    );
+  }
+}
+
+// endregion
+
+// region Section
+
+class SectionItem extends StatefulWidget {
+  final Widget? header;
+  final List<Widget>? body;
+  final bool hasSeparator;
+
+  const SectionItem({
+    Key? key,
+    required this.header,
+    this.body,
+    this.hasSeparator = false,
+  }) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => _SectionItemState();
+}
+
+class _SectionItemState extends State<SectionItem> {
+  var _expanded = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (widget.header != null) ...[GestureDetector(
+          onTap: () => setState(() => _expanded = !_expanded),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4),
+                child: widget.header,
+              ),
+              SizedBox(
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    primary: Theme.of(context).colorScheme.onSurface,
+                    padding: EdgeInsets.zero,
+                    shape: const CircleBorder(),
+                    fixedSize: const Size.fromHeight(16),
+                  ),
+                  child: AnimatedRotation(
+                    turns: _expanded ? 0 : .5,
+                    duration: const Duration(milliseconds: 400),
+                    child: const Icon(CupertinoIcons.chevron_down),
+                  ),
+                  onPressed: () => setState(() => _expanded = !_expanded),
+                ),
+              ),
+            ],
+          ),
+        )],
+        AnimatedSize(
+          curve: Curves.easeInOut,
+          alignment: Alignment.centerLeft,
+          duration: const Duration(milliseconds: 400),
+          child: Column(
+            children: [...(_expanded ? (widget.body ?? []) : [])],
+          ),
+        ),
+        widget.hasSeparator ? const LineItem() : Container(),
+      ],
     );
   }
 }

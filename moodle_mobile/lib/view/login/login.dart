@@ -6,7 +6,8 @@ import 'package:moodle_mobile/constants/dimens.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/custom_button.dart';
 import 'package:moodle_mobile/view/common/custom_text_field.dart';
-import 'package:moodle_mobile/view/message/message_screen.dart';
+import 'package:moodle_mobile/view/direct_page.dart';
+import 'package:moodle_mobile/view/home/home.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -168,7 +169,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (_userStore.isLogin == true) {
       Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const MessageScreen()));
+          MaterialPageRoute(builder: (context) => const DirectScreen()));
     }
   }
 

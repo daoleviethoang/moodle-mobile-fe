@@ -42,7 +42,7 @@ class UserApi {
         'field': 'username',
         'values[0]': username
       });
-
+      print("here user api");
       // Handle error
       if (res.runtimeType == [].runtimeType) {
         if (res.length == 0) {
@@ -59,6 +59,7 @@ class UserApi {
           fullname: res[0]['fullname'],
           email: res[0]['email']);
     } catch (e) {
+      print("Error here");
       rethrow;
     }
   }

@@ -36,8 +36,10 @@ class Repository {
   Future<String> login(String username, String password, String service) =>
       _userApi.login(username, password, service);
 
-  Future<UserModel> getUserInfo(String token, String username) =>
-      _userApi.getUserInfo(token, username);
+  Future<UserModel> getUserInfo(String token, String username) {
+    print("Here repository");
+    return _userApi.getUserInfo(token, username);
+  }
 
   Future<List<ConversationModel>> getConversationInfo(
           String token, int userid) =>
