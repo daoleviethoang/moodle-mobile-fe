@@ -4,6 +4,7 @@ import 'package:moodle_mobile/view/home/calendar.dart';
 import 'package:moodle_mobile/view/home/home.dart';
 import 'package:moodle_mobile/view/home/menu.dart';
 import 'package:moodle_mobile/view/home/notification_screen.dart';
+import 'package:moodle_mobile/view/message/message_screen.dart';
 
 class DirectScreen extends StatefulWidget {
   const DirectScreen({Key? key}) : super(key: key);
@@ -19,12 +20,16 @@ class _DirectScreenState extends State<DirectScreen> {
   static const List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
     CalendarScreen(),
-    Text(
-      'Messenger Page',
-      style: optionStyle,
-    ),
+    MessageScreen(),
     NotificationScreen(),
     MenuScreen(),
+  ];
+  static const List<String> _widgetAppBarTitle = <String>[
+    "Learning Management System",
+    "Calendar",
+    "Messenger",
+    "Notifications",
+    "Menu",
   ];
 
   void _onItemTapped(int index) {
@@ -50,9 +55,9 @@ class _DirectScreenState extends State<DirectScreen> {
 
   AppBar getAppBarUI() {
     return AppBar(
-      title: const Text('Learning Management System',
+      title: Text(_widgetAppBarTitle.elementAt(_selectedIndex),
           textAlign: TextAlign.left,
-          style: TextStyle(
+          style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 18,
               letterSpacing: 1,
@@ -81,8 +86,8 @@ class _DirectScreenState extends State<DirectScreen> {
           label: 'Dashboard',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.calendar_month_outlined),
-          activeIcon: Icon(Icons.calendar_month),
+          icon: Icon(Icons.event_outlined),
+          activeIcon: Icon(Icons.event_rounded),
           label: 'Calendar',
         ),
         BottomNavigationBarItem(

@@ -1,5 +1,5 @@
-import 'package:moodle_mobile/models/category.dart';
 import 'package:flutter/material.dart';
+import 'package:moodle_mobile/models/courses.dart';
 import 'package:moodle_mobile/view/home/courses_view.dart';
 
 class CategoryCourseListView extends StatefulWidget {
@@ -63,7 +63,7 @@ class _CategoryCourseListViewState extends State<CategoryCourseListView>
                   animationController?.forward();
                   return CategoryView(
                     callback: widget.callBack,
-                    category: widget.courses[index],
+                    course: widget.courses[index],
                     animation: animation,
                     animationController: animationController,
                   );

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
-import 'package:moodle_mobile/view/common/custom_button.dart';
-import 'package:moodle_mobile/view/common/custom_text_field.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
+import 'package:moodle_mobile/view/common/custom_button.dart';
+import 'package:moodle_mobile/view/common/custom_text_field.dart';
+import 'package:moodle_mobile/view/direct_page.dart';
+import 'package:moodle_mobile/view/home/home.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -42,7 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
           children: <Widget>[
             // Logo image
             Container(
-              color: const Color(0xffF7F7F7),
+              color: MoodleColors.lightGray,
               width: double.infinity,
               // MediaQuery: get 1/4 of screen height
               height: MediaQuery.of(context).size.height * 1 / 4,
@@ -55,9 +57,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     left: Dimens.login_padding_left,
                     right: Dimens.login_padding_right),
                 child: CustomTextFieldWidget(
-                    hintText: "Username",
-                    controller: usernameControler,
-                    prefixIcon: Icons.people)),
+                  hintText: "Username",
+                  controller: usernameControler,
+                  prefixIcon: Icons.people,
+                  borderRadius: Dimens.default_border_radius,
+                )),
 
             const SizedBox(height: Dimens.login_sizedbox_height),
 
@@ -67,10 +71,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   left: Dimens.login_padding_left,
                   right: Dimens.login_padding_right),
               child: CustomTextFieldWidget(
-                  hintText: "Password",
-                  hidePass: true,
-                  controller: passwordController,
-                  prefixIcon: Icons.lock),
+                hintText: "Password",
+                hidePass: true,
+                controller: passwordController,
+                prefixIcon: Icons.lock,
+                borderRadius: Dimens.default_border_radius,
+              ),
             ),
 
             const SizedBox(height: Dimens.login_sizedbox_height),
@@ -158,9 +164,13 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void onLoginPressed() {
-    // Navigator.push(context, MaterialPageRoute(builder: (context) => DesignCourseHomeScreen()));
-    _userStore.login(usernameControler.text, passwordController.text);
+  void onLoginPressed() async {
+    await _userStore.login(usernameControler.text, passwordController.text);
+
+    if (_userStore.isLogin == true) {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const DirectScreen()));
+    }
   }
 
   void forgotPass() {

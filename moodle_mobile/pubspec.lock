@@ -28,7 +28,7 @@ packages:
       name: async
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.8.2"
+    version: "2.8.1"
   boolean_selector:
     dependency: transitive
     description:
@@ -98,7 +98,7 @@ packages:
       name: characters
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.0"
+    version: "1.1.0"
   charcode:
     dependency: transitive
     description:
@@ -244,6 +244,11 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.4"
+  flutter_localizations:
+    dependency: transitive
+    description: flutter
+    source: sdk
+    version: "0.0.0"
   flutter_math_fork:
     dependency: transitive
     description:
@@ -258,6 +263,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.4"
+  flutter_slidable:
+    dependency: "direct main"
+    description:
+      name: flutter_slidable
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.2.0"
   flutter_svg:
     dependency: transitive
     description:
@@ -275,6 +287,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  freezed_annotation:
+    dependency: transitive
+    description:
+      name: freezed_annotation
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.0"
   frontend_server_client:
     dependency: transitive
     description:
@@ -379,14 +398,7 @@ packages:
       name: matcher
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.12.11"
-  material_color_utilities:
-    dependency: transitive
-    description:
-      name: material_color_utilities
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.3"
+    version: "0.12.10"
   meta:
     dependency: transitive
     description:
@@ -692,7 +704,7 @@ packages:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.8"
+    version: "0.4.2"
   timing:
     dependency: transitive
     description:
@@ -776,7 +788,7 @@ packages:
       name: vector_math
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.1"
+    version: "2.1.0"
   very_good_analysis:
     dependency: transitive
     description:
