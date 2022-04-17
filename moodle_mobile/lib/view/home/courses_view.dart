@@ -1,5 +1,5 @@
-import 'package:moodle_mobile/models/category.dart';
 import 'package:flutter/material.dart';
+import 'package:moodle_mobile/models/courses.dart';
 
 import '../../constants/colors.dart';
 
@@ -55,7 +55,7 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
                   animationController?.forward();
                   return CategoryView(
                     callback: widget.callBack,
-                    category: Course.popularCourseList[index],
+                    course: Course.popularCourseList[index],
                     animation: animation,
                     animationController: animationController,
                   );
@@ -72,14 +72,14 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
 class CategoryView extends StatelessWidget {
   const CategoryView(
       {Key? key,
-      this.category,
+      this.course,
       this.animationController,
       this.animation,
       this.callback})
       : super(key: key);
 
   final VoidCallback? callback;
-  final Course? category;
+  final Course? course;
   final AnimationController? animationController;
   final Animation<double>? animation;
 
@@ -147,7 +147,7 @@ class CategoryView extends StatelessWidget {
                               ),
                               child: Center(
                                 child: Text(
-                                  '${category!.tag}',
+                                  '${course!.tag}',
                                   textAlign: TextAlign.left,
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold,
@@ -169,7 +169,7 @@ class CategoryView extends StatelessWidget {
                           padding: const EdgeInsets.only(
                               left: 0.0, top: 4.0, right: 0.0, bottom: 15.0),
                           child: Text(
-                            '${category!.title}',
+                            '${course!.title}',
                             textAlign: TextAlign.left,
                             style: const TextStyle(
                                 fontWeight: FontWeight.bold,
@@ -182,7 +182,7 @@ class CategoryView extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: List<Widget>.generate(
-                              category!.teacher.length,
+                              course!.teacher.length,
                               (int index) {
                                 final int count =
                                     Course.popularCourseList.length;
@@ -202,7 +202,7 @@ class CategoryView extends StatelessWidget {
                                         right: 0.0,
                                         bottom: 8.0),
                                     child: Text(
-                                      'Teacher: ' + category!.teacher[index],
+                                      'Teacher: ' + course!.teacher[index],
                                       textAlign: TextAlign.left,
                                       style: const TextStyle(
                                           fontWeight: FontWeight.normal,

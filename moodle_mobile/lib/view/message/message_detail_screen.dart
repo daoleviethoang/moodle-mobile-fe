@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
+<<<<<<< HEAD
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
 import 'package:moodle_mobile/di/service_locator.dart';
@@ -12,6 +13,15 @@ import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/data/repository.dart';
 import 'package:moodle_mobile/view/common/custom_text_field.dart';
 import 'package:moodle_mobile/view/common/custom_text_field_message_detail.dart';
+=======
+import 'package:moodle_mobile/view/common/custom_text_field.dart';
+import 'package:moodle_mobile/view/common/custom_text_field_message_detail.dart';
+import 'package:moodle_mobile/constants/dimens.dart';
+import 'package:moodle_mobile/store/conversation/conversation_store.dart';
+import 'package:moodle_mobile/store/conversation_detail/conversation_detail_store.dart';
+import 'package:moodle_mobile/store/user/user_store.dart';
+import 'package:moodle_mobile/data/repository.dart';
+>>>>>>> 04b044a71a7cfdb4ef05559fd8c99249a4628722
 
 class MessageDetailScreen extends StatefulWidget {
   MessageDetailScreen(
