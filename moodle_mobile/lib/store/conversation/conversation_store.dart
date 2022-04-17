@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-import 'package:flutter/material.dart';
-=======
->>>>>>> 04b044a71a7cfdb4ef05559fd8c99249a4628722
 import 'package:mobx/mobx.dart';
 import 'package:moodle_mobile/data/repository.dart';
 import 'package:moodle_mobile/models/conversation/conversation.dart';
