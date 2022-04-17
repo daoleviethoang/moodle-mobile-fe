@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
+import 'package:moodle_mobile/view/common/custom_button_short.dart';
+import 'package:moodle_mobile/view/common/slidable_tile.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
 import 'package:moodle_mobile/data/repository.dart';
-import 'package:moodle_mobile/store/conversation/conversation_store.dart';
-import 'package:moodle_mobile/store/conversation_detail.dart/conversation_detail_store.dart';
-import 'package:moodle_mobile/store/user/user_store.dart';
-import 'package:moodle_mobile/view/common/custom_button_short.dart';
-import 'package:moodle_mobile/view/common/slidable_tile.dart';
 import 'package:moodle_mobile/view/message/message_detail_screen.dart';
+import 'package:moodle_mobile/store/conversation/conversation_store.dart';
+import 'package:moodle_mobile/store/conversation_detail/conversation_detail_store.dart';
+import 'package:moodle_mobile/store/user/user_store.dart';
 
 class MessageScreen extends StatefulWidget {
   const MessageScreen({Key? key}) : super(key: key);
@@ -50,6 +50,19 @@ class _MessageScreenState extends State<MessageScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        // Change state of back button to false .... Remove back button
+        automaticallyImplyLeading: false,
+        title: const Text("Messenger", style: TextStyle(color: Colors.white)),
+        centerTitle: false,
+        actions: [
+          IconButton(
+            onPressed: onSearchContact,
+            icon: const Icon(Icons.search),
+            color: Colors.white,
+          )
+        ],
+      ),
       body: Column(
         children: [
           Padding(

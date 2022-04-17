@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:moodle_mobile/data/repository.dart';
 import 'package:moodle_mobile/models/conversation/conversation.dart';

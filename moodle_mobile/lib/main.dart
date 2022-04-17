@@ -2,6 +2,7 @@ import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/di/service_locator.dart';
+import 'package:moodle_mobile/view/direct_page.dart';
 import 'package:moodle_mobile/view/splash/splash_screen.dart';
 
 void main() async {
