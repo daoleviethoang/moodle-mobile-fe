@@ -1,8 +1,13 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/constants/colors.dart';
-import 'package:moodle_mobile/models/user/user_store.dart';
+import 'package:moodle_mobile/data/network/apis/forum/forum_api.dart';
+import 'package:moodle_mobile/models/assignment/file_assignment.dart';
+import 'package:moodle_mobile/models/forum/forum_course.dart';
+import 'package:moodle_mobile/store/user/user_store.dart';
+import 'package:moodle_mobile/view/common/chipTitle.dart';
 import 'package:moodle_mobile/view/common/custom_button_short.dart';
 
 class AddPostScreen extends StatefulWidget {
@@ -24,9 +29,28 @@ class _AddPostScreenState extends State<AddPostScreen> {
   TextEditingController subjectController = TextEditingController();
   TextEditingController contentController = TextEditingController();
   bool showAdvance = false;
+  late UserStore _userStore;
+  List<FileAssignment> files = [];
+
+  ForumCourse? forumCourse;
   @override
   void initState() {
     super.initState();
+    _userStore = GetIt.instance<UserStore>();
+    load();
+  }
+
+  int caculateByteSize() {
+    int sum = 0;
+    for (var item in files) {
+      sum += item.filesize;
+    }
+    return sum;
+  }
+
+  void load() async {
+    forumCourse = await ForumApi()
+        .getForums(_userStore.user.token, widget.courseId, widget.forumId);
   }
 
   @override
@@ -197,6 +221,28 @@ class _AddPostScreenState extends State<AddPostScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: SizedBox(
+                              height: 50,
+                              child: ListView.builder(
+                                physics: NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                scrollDirection: Axis.horizontal,
+                                itemCount: files.length,
+                                itemBuilder: (context, index) {
+                                  return ChipTile(
+                                      label: files[index].filename,
+                                      onDelete: () {
+                                        setState(() {
+                                          files.removeAt(index);
+                                        });
+                                      },
+                                      backgroundColor: Colors.blue);
+                                },
+                              ),
+                            ),
+                          ),
                           SizedBox(
                             height: 20,
                           ),
@@ -205,12 +251,50 @@ class _AddPostScreenState extends State<AddPostScreen> {
                               textColor: Colors.white,
                               bgColor: MoodleColors.blue,
                               blurRadius: 1,
-                              onPressed: () {}),
+                              onPressed: () async {
+                                FilePickerResult? result =
+                                    await FilePicker.platform.pickFiles();
+                                if (result != null) {
+                                  PlatformFile file = result.files.first;
+                                  // check size more than condition
+                                  if (file.size + caculateByteSize() >
+                                      (forumCourse?.maxbytes ?? 0)) {
+                                    const snackBar = SnackBar(
+                                        content: Text("File's size is bigger"));
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+                                    return;
+                                  }
+                                  // check number file more than condition
+                                  if (files.length ==
+                                      (forumCourse?.maxattachments ?? 0)) {
+                                    const snackBar = SnackBar(
+                                        content: Text("Number file is full"));
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+                                    return;
+                                  }
+                                  // check file same name
+                                  // bool check = checkOverwrite(file);
+                                  // if (check == true) return;
+
+                                  // add file
+                                  files.add(FileAssignment(
+                                      filename: file.name,
+                                      filepath: file.path ?? "",
+                                      timeModified: DateTime.now(),
+                                      filesize: file.size));
+                                  setState(() {
+                                    files.sort(((a, b) =>
+                                        a.filename.compareTo(b.filename)));
+                                  });
+                                }
+                              }),
                           SizedBox(
                             height: 10,
                           ),
                           Text(
-                            "Kích cỡ tối đa đối với các tập tin mới : 2 MB, mặc đinh tối đa :9",
+                            "Kích cỡ tối đa đối với các tập tin mới : ${(forumCourse?.maxbytes ?? 0) / 1024 / 1024} MB, mặc đinh tối đa :${forumCourse?.maxattachments ?? 0}",
                             maxLines: 3,
                           ),
                         ],
