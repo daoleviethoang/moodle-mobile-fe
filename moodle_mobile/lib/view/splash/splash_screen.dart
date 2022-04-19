@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/direct_page.dart';
-import 'package:moodle_mobile/view/forum/add_post/add_post_screen.dart';
 import 'package:moodle_mobile/view/home/home.dart';
 import 'package:moodle_mobile/view/login/login.dart';
 
@@ -35,10 +34,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     if (_userStore.isLogin) {
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) {
-        return const AddPostScreen(
-          courseId: 1876,
-          forumId: 2971,
-        );
+        return const DirectScreen();
       }));
     } else {
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) {
