@@ -3,8 +3,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' as rootBundle;
+import 'package:get_it/get_it.dart';
+import 'package:moodle_mobile/data/network/apis/course_category/course_category_api.dart';
 import 'package:moodle_mobile/models/course_category/course_category.dart';
 import 'package:moodle_mobile/view/course_category/category_course_list_tile.dart';
+import 'package:moodle_mobile/store/user/user_store.dart';
 
 class CourseCategoryScreen extends StatefulWidget {
   const CourseCategoryScreen({Key? key}) : super(key: key);
@@ -14,11 +17,63 @@ class CourseCategoryScreen extends StatefulWidget {
 }
 
 class _CourseCategoryScreenState extends State<CourseCategoryScreen> {
+  late UserStore _userStore;
+  Future<List<CourseCategory>> readData() async {
+    // read json file
+    List<CourseCategory> categories = [];
+    try {
+      categories =
+          await CourseCategoryApi().getCourseCategory(_userStore.user.token);
+    } catch (e) {
+      const snackBar = SnackBar(
+          content:
+              Text("Loading course category fail, please try again later"));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
+
+    if (categories.isNotEmpty) {
+      // group by parent id
+      final Map<int, CourseCategory> categoryMap = HashMap();
+
+      // get max depth
+      int maxDepth = 0;
+      categories.forEach((element) {
+        if (element.depth > maxDepth) {
+          maxDepth = element.depth;
+        }
+      });
+
+      // group folder
+      for (var i = maxDepth - 1; i >= 0; i--) {
+        categories.forEach((element) {
+          if (element.depth >= i && element.depth <= i + 1) {
+            if (categoryMap.containsKey(element.parent)) {
+              categoryMap[element.parent]!.addChild(element);
+              categoryMap.removeWhere((key, value) => key == element.id);
+            } else {
+              final iter = <int, CourseCategory>{element.id: element};
+              categoryMap.addEntries(iter.entries);
+            }
+          }
+        });
+      }
+
+      return categoryMap.values.toList();
+    }
+    return categories;
+  }
+
+  @override
+  void initState() {
+    _userStore = GetIt.instance<UserStore>();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder(
-          future: ReadJsonData(),
+          future: readData(),
           builder: (context, data) {
             if (data.hasError) {
               return const Center(child: Text("Error"));
@@ -40,50 +95,12 @@ class _CourseCategoryScreenState extends State<CourseCategoryScreen> {
                         data: e,
                         margin: EdgeInsets.only(
                             top: MediaQuery.of(context).size.height * 0.02,
-                            left: MediaQuery.of(context).size.width * 0.05,
-                            right: MediaQuery.of(context).size.width * 0.05),
+                            left: MediaQuery.of(context).size.width * 0.02,
+                            right: MediaQuery.of(context).size.width * 0.02),
                       ))
                   .toList(),
             )));
           }),
     );
   }
-}
-
-Future<List<CourseCategory>> ReadJsonData() async {
-  // read json file
-  final jsonData = await rootBundle.rootBundle
-      .loadString('assets/dummy/course_category.json');
-  final list = json.decode(jsonData) as List<dynamic>;
-
-  List<CourseCategory> categories =
-      list.map((e) => CourseCategory.fromJson(e)).toList();
-
-  // group by parent id
-  final Map<int, CourseCategory> categoryMap = HashMap();
-
-  // get max depth
-  int maxDepth = 0;
-  categories.forEach((element) {
-    if (element.depth > maxDepth) {
-      maxDepth = element.depth;
-    }
-  });
-
-  // group folder
-  for (var i = maxDepth - 1; i >= 0; i--) {
-    categories.forEach((element) {
-      if (element.depth >= i && element.depth <= i + 1) {
-        if (categoryMap.containsKey(element.parent)) {
-          categoryMap[element.parent]!.addChild(element);
-          categoryMap.removeWhere((key, value) => key == element.id);
-        } else {
-          final iter = <int, CourseCategory>{element.id: element};
-          categoryMap.addEntries(iter.entries);
-        }
-      }
-    });
-  }
-
-  return categoryMap.values.toList();
 }
