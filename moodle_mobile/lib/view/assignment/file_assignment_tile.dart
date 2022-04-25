@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
+import 'package:moodle_mobile/data/network/apis/file/file_api.dart';
 import 'package:moodle_mobile/models/assignment/file_assignment.dart';
+import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/assignment/rename_dialog.dart';
 
 typedef Int2VoidFunc = void Function(int);
@@ -24,6 +27,8 @@ class FileAssignmentTile extends StatefulWidget {
 }
 
 class _FileAssignmentTileState extends State<FileAssignmentTile> {
+  late UserStore _userStore;
+  List<String> action = ['Rename...', 'Download', 'Delete...'];
   _showReNameDialog() {
     final RenameFileTiles _setListTiles = RenameFileTiles(
       filename: widget.file.filename,
@@ -64,17 +69,28 @@ class _FileAssignmentTileState extends State<FileAssignmentTile> {
     );
   }
 
+  downloadFile() async {
+    await FileApi().downloadFile(_userStore.user.token, widget.file.fileUrl);
+  }
+
   void handleClick(String value) {
     switch (value) {
       case 'Rename...':
         _showReNameDialog();
         break;
       case 'Download':
+        downloadFile();
         break;
       case 'Delete...':
         widget.delete(widget.index);
         break;
     }
+  }
+
+  @override
+  void initState() {
+    _userStore = GetIt.instance<UserStore>();
+    super.initState();
   }
 
   @override
@@ -125,8 +141,10 @@ class _FileAssignmentTileState extends State<FileAssignmentTile> {
                 PopupMenuButton<String>(
                   onSelected: handleClick,
                   itemBuilder: (BuildContext context) {
-                    return {'Rename...', 'Download', 'Delete...'}
-                        .map((String choice) {
+                    if (widget.file.fileUrl == "") {
+                      action.remove('Download');
+                    }
+                    return action.map((String choice) {
                       return PopupMenuItem<String>(
                         value: choice,
                         child: Text(choice),
