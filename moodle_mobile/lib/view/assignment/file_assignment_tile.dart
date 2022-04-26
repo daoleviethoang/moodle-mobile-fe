@@ -1,4 +1,8 @@
+import 'dart:isolate';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:flutter_html/shims/dart_ui_real.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:moodle_mobile/data/network/apis/file/file_api.dart';
@@ -28,6 +32,7 @@ class FileAssignmentTile extends StatefulWidget {
 
 class _FileAssignmentTileState extends State<FileAssignmentTile> {
   late UserStore _userStore;
+  ReceivePort _port = ReceivePort();
   List<String> action = ['Rename...', 'Download', 'Delete...'];
   _showReNameDialog() {
     final RenameFileTiles _setListTiles = RenameFileTiles(
@@ -70,7 +75,8 @@ class _FileAssignmentTileState extends State<FileAssignmentTile> {
   }
 
   downloadFile() async {
-    await FileApi().downloadFile(_userStore.user.token, widget.file.fileUrl);
+    await FileApi().downloadFile(
+        _userStore.user.token, widget.file.fileUrl, widget.file.filename);
   }
 
   void handleClick(String value) {
@@ -87,10 +93,41 @@ class _FileAssignmentTileState extends State<FileAssignmentTile> {
     }
   }
 
+  void _bindBackgroundIsolate() {
+    bool isSuccess = IsolateNameServer.registerPortWithName(
+        _port.sendPort, 'downloader_send_port');
+    if (!isSuccess) {
+      _unbindBackgroundIsolate();
+      _bindBackgroundIsolate();
+      return;
+    }
+  }
+
+  void _unbindBackgroundIsolate() {
+    IsolateNameServer.removePortNameMapping('downloader_send_port');
+  }
+
+  static void downloadCallback(
+      String id, DownloadTaskStatus status, int progress) {
+    final SendPort send =
+        IsolateNameServer.lookupPortByName('downloader_send_port')!;
+    send.send([id, status, progress]);
+  }
+
   @override
   void initState() {
     _userStore = GetIt.instance<UserStore>();
     super.initState();
+
+    _bindBackgroundIsolate();
+
+    FlutterDownloader.registerCallback(downloadCallback);
+  }
+
+  @override
+  void dispose() {
+    _unbindBackgroundIsolate();
+    super.dispose();
   }
 
   @override

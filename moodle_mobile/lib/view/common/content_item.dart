@@ -150,8 +150,8 @@ class SubmissionItem extends StatelessWidget {
             MaterialPageRoute(
                 builder: (context) => AssignmentScreen(
                       title: title,
-                      assignInstanceId: 11999,
-                      courseId: 2063,
+                      assignInstanceId: 2,
+                      courseId: 2,
                     )));
       },
     );

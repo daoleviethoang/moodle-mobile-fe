@@ -23,7 +23,7 @@ class AssignmentApi {
       }
       return;
     } catch (e) {
-      throw "Upload file fail";
+      throw "Save asignment fail";
     }
   }
 

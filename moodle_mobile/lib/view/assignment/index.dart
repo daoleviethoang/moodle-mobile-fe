@@ -70,6 +70,10 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
     try {
       AttemptAssignment assign = await AssignmentApi()
           .getAssignment(_userStore.user.token, assignInstanceId);
+      if (assign.submission == null) {
+        assign = await AssignmentApi()
+            .getAssignment(_userStore.user.token, assignInstanceId);
+      }
       return assign;
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -130,30 +134,30 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : NestedScrollView(
-              headerSliverBuilder: (context, innerBoxIsScrolled) => [
-                SliverAppBar(
-                  floating: true,
-                  snap: true,
-                  title: Text(
-                    widget.title,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                    ),
-                  ),
-                  leading: TextButton(
-                    style: TextButton.styleFrom(
-                      primary: Colors.white,
-                    ),
-                    child: const Icon(CupertinoIcons.back),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                ),
-              ],
-              body: SingleChildScrollView(
+      body: NestedScrollView(
+        headerSliverBuilder: (context, innerBoxIsScrolled) => [
+          SliverAppBar(
+            floating: true,
+            snap: true,
+            title: Text(
+              widget.title,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+              ),
+            ),
+            leading: TextButton(
+              style: TextButton.styleFrom(
+                primary: Colors.white,
+              ),
+              child: const Icon(CupertinoIcons.back),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ),
+        ],
+        body: isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : SingleChildScrollView(
                 child: Container(
                   margin: const EdgeInsets.only(left: 10, right: 10, top: 20),
                   child: Column(
@@ -265,7 +269,7 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                   ),
                 ),
               ),
-            ),
+      ),
     );
   }
 }
