@@ -9,8 +9,4 @@ class Http {
   Http() {
     client = Dio(baseOptions);
   }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> e487a2d27d20b795ccd9571d22ba3b9418d1ddc5
