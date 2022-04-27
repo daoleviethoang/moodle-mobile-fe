@@ -25,16 +25,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: MoodleColors.white,
+      appBar: AppBar(
         backgroundColor: MoodleColors.white,
-        appBar: AppBar(
-          backgroundColor: MoodleColors.white,
-          elevation: 0,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.of(context).pop(),
         ),
-        body: Padding(
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -42,10 +43,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               PublicInfomationCommonView(
                 imageUrl:
                     'https://meta.vn/Data/image/2021/08/17/con-vit-vang-tren-fb-la-gi-trend-anh-avatar-con-vit-vang-la-gi-3.jpg',
-                name: "Nguyễn Gia Hưng",
+                name: "Tran Dinh Phat",
               ),
               UserDetailCommonView(
-                email: "18127101@student.hcmus.edu.vn",
+                email: "18127177@student.hcmus.edu.vn",
                 location: "Ho Chi Minh, Viet Nam",
               ),
               DescriptionCommonView(
@@ -54,6 +55,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

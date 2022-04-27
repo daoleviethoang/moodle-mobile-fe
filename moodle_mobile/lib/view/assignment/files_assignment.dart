@@ -128,6 +128,7 @@ class _FilesAssignmentScreenState extends State<FilesAssignmentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text('File submissions in Nộp Proposal')),
       body: SingleChildScrollView(
         child: Container(
           margin: const EdgeInsets.only(left: 10, right: 10, top: 30),

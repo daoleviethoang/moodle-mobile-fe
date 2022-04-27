@@ -77,7 +77,8 @@ class _UserDetailStudentScreen extends State<UserDetailStudentScreen> {
                 imageUrl: avatar,
                 name: name,
               ),
-              StatusCommonView(status: status),
+              StatusCommonView(
+                  status: status, color: MoodleColors.green_icon_status),
               CourseCommonView(
                 role: role,
                 course: course,

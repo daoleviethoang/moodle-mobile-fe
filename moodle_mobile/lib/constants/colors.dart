@@ -21,4 +21,5 @@ class MoodleColors {
   static const Color gray = Color(0xff808080);
   static const Color purple = Color(0xff7B61FF);
   static const Color grey_icon_status = Color(0xffC4C4C4);
+  static const Color green_icon_status = Color(0xff3CC13B);
 }

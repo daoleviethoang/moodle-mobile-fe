@@ -75,26 +75,29 @@ class _UserDetailsScreen extends State<UserDetailsScreen> {
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            PublicInfomationCommonView(
-              imageUrl: avatar,
-              name: name,
-            ),
-            StatusCommonView(status: status),
-            CourseCommonView(
-              role: role,
-              course: course,
-            ),
-            UserDetailCommonView(
-              email: email,
-              location: location,
-            ),
-          ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.only(left: 20, right: 20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              PublicInfomationCommonView(
+                imageUrl: avatar,
+                name: name,
+              ),
+              StatusCommonView(
+                  status: status, color: MoodleColors.grey_icon_status),
+              CourseCommonView(
+                role: role,
+                course: course,
+              ),
+              UserDetailCommonView(
+                email: email,
+                location: location,
+              ),
+            ],
+          ),
         ),
       ),
     );

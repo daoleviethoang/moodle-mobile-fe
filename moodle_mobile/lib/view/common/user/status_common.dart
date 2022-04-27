@@ -3,8 +3,10 @@ import 'package:moodle_mobile/constants/colors.dart';
 
 class StatusCommonView extends StatelessWidget {
   final String status;
+  final Color color;
 
-  const StatusCommonView({Key? key, required this.status}) : super(key: key);
+  const StatusCommonView({Key? key, required this.status, required this.color})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,9 +16,9 @@ class StatusCommonView extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          const Icon(
+          Icon(
             Icons.circle,
-            color: MoodleColors.grey_icon_status,
+            color: color,
             size: 10,
           ),
           Padding(
