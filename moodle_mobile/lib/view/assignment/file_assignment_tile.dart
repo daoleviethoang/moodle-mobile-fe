@@ -120,13 +120,13 @@ class _FileAssignmentTileState extends State<FileAssignmentTile> {
     super.initState();
 
     _bindBackgroundIsolate();
-
     FlutterDownloader.registerCallback(downloadCallback);
   }
 
   @override
   void dispose() {
     _unbindBackgroundIsolate();
+
     super.dispose();
   }
 
