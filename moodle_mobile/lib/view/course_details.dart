@@ -4,6 +4,9 @@ import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/view/common/content_item.dart';
 import 'package:moodle_mobile/view/common/image_view.dart';
 import 'package:moodle_mobile/view/common/menu_item.dart';
+import 'package:moodle_mobile/view/forum/forum_screen.dart';
+import 'package:moodle_mobile/view/user_detail/user_detail.dart';
+import 'package:moodle_mobile/view/user_detail/user_detail_student.dart';
 
 class CourseDetailsScreen extends StatefulWidget {
   final String courseId;
@@ -101,7 +104,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
           body: [
             const DocumentItem(
               title: 'Week 1 - Getting start',
-              documentUrl: 'https://www.ets.org/Media/Tests/GRE/pdf/gre_research_validity_data.pdf',
+              documentUrl:
+                  'https://www.ets.org/Media/Tests/GRE/pdf/gre_research_validity_data.pdf',
             ),
             const UrlItem(
               title: 'Week 1 - Getting start',
@@ -109,7 +113,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
             ),
             const VideoItem(
               title: 'Week 1 video',
-              videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+              videoUrl:
+                  'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
             ),
             SubmissionItem(
               title: 'Nộp Proposal',
@@ -161,7 +166,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   }
 
   void _initDiscussionsTab() {
-    _discussionsTab = const Center(child: Text('Discussions'));
+    _discussionsTab = const ForumScreen();
   }
 
   void _initUpcomingTab() {
@@ -229,7 +234,45 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                 ),
                 title: participants[index],
                 subtitle: 'Student',
-                onPressed: () => {},
+                onPressed: () => {
+                  if (index == 0)
+                    {
+                      Navigator.push<dynamic>(
+                        context,
+                        MaterialPageRoute<dynamic>(
+                          builder: (BuildContext context) => UserDetailsScreen(
+                            avatar:
+                                'https://meta.vn/Data/image/2021/08/17/con-vit-vang-tren-fb-la-gi-trend-anh-avatar-con-vit-vang-la-gi-3.jpg',
+                            role: 'Teacher',
+                            course: 'Đồ án tốt nghiệp',
+                            email: 'lqvu@fit.hcmus.edu.vn',
+                            location: 'TP.HCM, Vietnam',
+                            name: participants[index],
+                            status: 'Last online 22 hours ago',
+                          ),
+                        ),
+                      )
+                    }
+                  else
+                    {
+                      Navigator.push<dynamic>(
+                        context,
+                        MaterialPageRoute<dynamic>(
+                          builder: (BuildContext context) =>
+                              UserDetailStudentScreen(
+                            avatar:
+                                'https://meta.vn/Data/image/2021/08/17/con-vit-vang-tren-fb-la-gi-trend-anh-avatar-con-vit-vang-la-gi-3.jpg',
+                            role: 'Student',
+                            course: 'Đồ án tốt nghiệp',
+                            email: '18127044@student.hcmus.edu.vn',
+                            location: 'TP.HCM, Vietnam',
+                            name: participants[index],
+                            status: 'Online just now',
+                          ),
+                        ),
+                      )
+                    }
+                },
               ),
             );
           }),

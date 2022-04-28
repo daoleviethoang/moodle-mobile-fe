@@ -33,7 +33,7 @@ class CustomButtonShort extends StatelessWidget {
       width: MediaQuery.of(context).size.width / 2.3,
       height: 48,
       child: TextButton(
-        onPressed: () {},
+        onPressed: onPressed,
         child: Text(text,
             style: TextStyle(color: textColor, fontWeight: FontWeight.w700)),
         style: ButtonStyle(backgroundColor: MaterialStateProperty.all(bgColor)),
