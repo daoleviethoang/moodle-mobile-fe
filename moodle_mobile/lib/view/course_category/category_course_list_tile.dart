@@ -63,6 +63,7 @@ class _CourseCategoryListTileState extends State<CourseCategoryListTile> {
                   SizedBox(width: 8),
                   Text(widget.data.name,
                       style: TextStyle(
+                          fontSize: 10,
                           fontWeight: (widget.data.parent == 0)
                               ? FontWeight.w900
                               : FontWeight.normal)),

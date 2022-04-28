@@ -13,11 +13,13 @@ class MoodleColors {
   static const Color tagColor = Color(0xffD1DAE8);
   static const Color grey = Color(0xffA3A3A3);
   static const Color grey_soft = Color.fromARGB(255, 214, 213, 213);
-  static const Color email = Color(0xff0B5FFF);
+  static const Color text_blue = Color(0xff0B5FFF);
   static const Color iconGrey = Color(0xff65676B);
   static const Color lightGray = Color(0xffF7F7F7);
   static const Color darkGrayShadow = Color(0xffacacac);
   static const Color brightGray = Color(0xffe8edf4);
   static const Color gray = Color(0xff808080);
   static const Color purple = Color(0xff7B61FF);
+  static const Color grey_icon_status = Color(0xffC4C4C4);
+  static const Color green_icon_status = Color(0xff3CC13B);
 }

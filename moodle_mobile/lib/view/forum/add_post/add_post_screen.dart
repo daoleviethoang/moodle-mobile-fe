@@ -11,12 +11,12 @@ import 'package:moodle_mobile/view/common/chipTitle.dart';
 import 'package:moodle_mobile/view/common/custom_button_short.dart';
 
 class AddPostScreen extends StatefulWidget {
-  final int forumId;
+  final int forumInstanceId;
   final int courseId;
   final int? relyPostId;
   const AddPostScreen(
       {Key? key,
-      required this.forumId,
+      required this.forumInstanceId,
       this.relyPostId,
       required this.courseId})
       : super(key: key);
@@ -49,8 +49,53 @@ class _AddPostScreenState extends State<AddPostScreen> {
   }
 
   void load() async {
-    forumCourse = await ForumApi()
-        .getForums(_userStore.user.token, widget.courseId, widget.forumId);
+    forumCourse = await ForumApi().getForums(
+        _userStore.user.token, widget.courseId, widget.forumInstanceId);
+  }
+
+  bool checkOverwrite(PlatformFile file) {
+    int index = -1;
+    for (var i = 0; i < files.length; i++) {
+      if (files[i].filename == file.name) {
+        index = i;
+        break;
+      }
+    }
+    if (index != -1) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Overwrite same name file!'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text("Cancel"),
+              ),
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    files[index] = FileAssignment(
+                        filename: file.name,
+                        filepath: file.path ?? "",
+                        timeModified: DateTime.now(),
+                        filesize: file.size);
+                  });
+
+                  // break dialog
+                  Navigator.pop(context);
+                },
+                child: Text("Ok"),
+              ),
+            ],
+          );
+        },
+      );
+      return true;
+    }
+    return false;
   }
 
   @override
@@ -212,6 +257,35 @@ class _AddPostScreenState extends State<AddPostScreen> {
                   ),
                 ),
               ),
+              Container(
+                color: Colors.orange[50],
+                height: 10,
+              ),
+              showAdvance
+                  ? Container(
+                      margin: const EdgeInsets.only(left: 8, right: 8),
+                      color: Colors.orange[50],
+                      alignment: Alignment.centerLeft,
+                      child: Wrap(
+                        spacing: 2,
+                        children: files
+                            .map(
+                              (e) => Container(
+                                margin: EdgeInsets.only(top: 1, bottom: 1),
+                                child: ChipTile(
+                                    label: e.filename,
+                                    onDelete: () {
+                                      setState(() {
+                                        files.remove(e);
+                                      });
+                                    },
+                                    backgroundColor: Colors.blue),
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    )
+                  : Container(),
               showAdvance
                   ? Container(
                       width: MediaQuery.of(context).size.width,
@@ -221,31 +295,6 @@ class _AddPostScreenState extends State<AddPostScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: SizedBox(
-                              height: 50,
-                              child: ListView.builder(
-                                physics: NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                itemCount: files.length,
-                                itemBuilder: (context, index) {
-                                  return ChipTile(
-                                      label: files[index].filename,
-                                      onDelete: () {
-                                        setState(() {
-                                          files.removeAt(index);
-                                        });
-                                      },
-                                      backgroundColor: Colors.blue);
-                                },
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
                           CustomButtonShort(
                               text: "Add file",
                               textColor: Colors.white,
@@ -275,8 +324,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                     return;
                                   }
                                   // check file same name
-                                  // bool check = checkOverwrite(file);
-                                  // if (check == true) return;
+                                  bool check = checkOverwrite(file);
+                                  if (check == true) return;
 
                                   // add file
                                   files.add(FileAssignment(

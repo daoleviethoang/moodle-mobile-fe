@@ -2,9 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' as rootBundle;
+import 'package:get_it/get_it.dart';
+import 'package:moodle_mobile/data/network/apis/course_category/course_category_api.dart';
 import 'package:moodle_mobile/models/course_category/course_category.dart';
 import 'package:moodle_mobile/models/course_category/course_category_course.dart';
 import 'package:moodle_mobile/models/courses.dart';
+import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/course_category/courses_view.dart';
 import 'package:moodle_mobile/view/course_category/folder_tile.dart';
 
@@ -20,6 +23,29 @@ class CourseCategoryFolderScreen extends StatefulWidget {
 
 class _CourseCategoryFolderScreenState
     extends State<CourseCategoryFolderScreen> {
+  late UserStore _userStore;
+
+  Future<List<CourseCategoryCourse>> readData() async {
+    List<CourseCategoryCourse> course = [];
+    try {
+      course = await CourseCategoryApi()
+          .getCourseInFolder(_userStore.user.token, widget.data.id);
+    } catch (e) {
+      const snackBar = SnackBar(
+          content:
+              Text("Loading course category fail, please try again later"));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
+
+    return course;
+  }
+
+  @override
+  void initState() {
+    _userStore = GetIt.instance<UserStore>();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,11 +70,8 @@ class _CourseCategoryFolderScreenState
         ),
       ],
       body: FutureBuilder(
-          future: ReadJsonData(),
+          future: readData(),
           builder: (context, data) {
-            if (data.hasError) {
-              return const Center(child: Text("Error"));
-            }
             List<Course> courses = [];
             if (data.hasData) {
               List<CourseCategoryCourse> _courses =
@@ -108,16 +131,4 @@ class _CourseCategoryFolderScreenState
           }),
     ));
   }
-}
-
-Future<List<CourseCategoryCourse>> ReadJsonData() async {
-  // read json file
-  final jsonData = await rootBundle.rootBundle
-      .loadString('assets/dummy/course_category_in_folder.json');
-  final list = json.decode(jsonData) as List<dynamic>;
-
-  List<CourseCategoryCourse> course =
-      list.map((e) => CourseCategoryCourse.fromJson(e)).toList();
-
-  return course;
 }

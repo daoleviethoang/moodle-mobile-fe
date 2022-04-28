@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:intl/intl.dart';
 import 'package:moodle_mobile/constants/styles.dart';
+import 'package:moodle_mobile/view/assignment/index.dart';
 import 'package:moodle_mobile/view/common/menu_item.dart';
 import 'package:moodle_mobile/view/video_viewer.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -144,7 +145,14 @@ class SubmissionItem extends StatelessWidget {
           : DateFormat('dd MMMM, yyyy').format(dueDate!),
       fullWidth: true,
       onPressed: () {
-        // TODO: Go to submission page using submissionId
+        Navigator.push<dynamic>(
+          context,
+          MaterialPageRoute<dynamic>(
+              builder: (BuildContext context) => const AssignmentScreen(
+                    assignId: 1,
+                    courseId: 1,
+                  )),
+        );
       },
     );
   }
@@ -305,35 +313,37 @@ class _SectionItemState extends State<SectionItem> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (widget.header != null) ...[GestureDetector(
-          onTap: () => setState(() => _expanded = !_expanded),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 4),
-                child: widget.header,
-              ),
-              SizedBox(
-                child: TextButton(
-                  style: TextButton.styleFrom(
-                    primary: Theme.of(context).colorScheme.onSurface,
-                    padding: EdgeInsets.zero,
-                    shape: const CircleBorder(),
-                    fixedSize: const Size.fromHeight(16),
-                  ),
-                  child: AnimatedRotation(
-                    turns: _expanded ? 0 : .5,
-                    duration: const Duration(milliseconds: 400),
-                    child: const Icon(CupertinoIcons.chevron_down),
-                  ),
-                  onPressed: () => setState(() => _expanded = !_expanded),
+        if (widget.header != null) ...[
+          GestureDetector(
+            onTap: () => setState(() => _expanded = !_expanded),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 4),
+                  child: widget.header,
                 ),
-              ),
-            ],
-          ),
-        )],
+                SizedBox(
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      primary: Theme.of(context).colorScheme.onSurface,
+                      padding: EdgeInsets.zero,
+                      shape: const CircleBorder(),
+                      fixedSize: const Size.fromHeight(16),
+                    ),
+                    child: AnimatedRotation(
+                      turns: _expanded ? 0 : .5,
+                      duration: const Duration(milliseconds: 400),
+                      child: const Icon(CupertinoIcons.chevron_down),
+                    ),
+                    onPressed: () => setState(() => _expanded = !_expanded),
+                  ),
+                ),
+              ],
+            ),
+          )
+        ],
         AnimatedSize(
           curve: Curves.easeInOut,
           alignment: Alignment.centerLeft,

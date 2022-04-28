@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:moodle_mobile/view/forum/add_post/add_post_screen.dart';
 import 'package:moodle_mobile/view/forum/forum_detail_screen.dart';
 import 'package:moodle_mobile/view/forum/forum_header.dart';
 
@@ -19,44 +20,48 @@ class _ForumScreenState extends State<ForumScreen> {
   bool sortDesc = false;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-          child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 15),
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Text('Name'),
-                  sortDesc != true
-                      ? IconButton(
-                          icon: Icon(Icons.arrow_upward),
-                          onPressed: Sort,
-                        )
-                      : IconButton(
-                          icon: Icon(Icons.arrow_downward),
-                          onPressed: Sort,
-                        ),
-                  Spacer(),
-                  Icon(Icons.add)
-                ],
-              ),
-            ),
-            PostCard(
-              title: 'How to use widgets in flutter',
-              value: true,
-            ),
-            PostCard(
-              title: 'How to rm /* like a boss',
-              value: false,
-              relyNum: 0,
-            )
-          ],
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 15),
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Text('Name'),
+              sortDesc != true
+                  ? IconButton(
+                      icon: Icon(Icons.arrow_upward),
+                      onPressed: Sort,
+                    )
+                  : IconButton(
+                      icon: Icon(Icons.arrow_downward),
+                      onPressed: Sort,
+                    ),
+              Spacer(),
+              IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (builder) => const AddPostScreen(
+                                  forumInstanceId: 2965,
+                                  courseId: 1873,
+                                )));
+                  },
+                  icon: Icon(Icons.add)),
+            ],
+          ),
         ),
-      )),
+        PostCard(
+          title: 'How to use widgets in flutter',
+          value: true,
+        ),
+        PostCard(
+          title: 'How to rm /* like a boss',
+          value: false,
+          relyNum: 0,
+        )
+      ],
     );
   }
 }

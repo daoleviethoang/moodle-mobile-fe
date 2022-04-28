@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/di/service_locator.dart';
 import 'package:moodle_mobile/view/direct_page.dart';
+import 'package:moodle_mobile/view/forum/forum_screen.dart';
+import 'package:moodle_mobile/view/menu/profile/profile.dart';
 import 'package:moodle_mobile/view/splash/splash_screen.dart';
+import 'package:moodle_mobile/view/user_detail/user_detail.dart';
+import 'package:moodle_mobile/view/user_detail/user_detail_student.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -60,11 +60,13 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text('Nộp Proposal')),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               child: Container(
-                margin: const EdgeInsets.only(left: 10, right: 10, top: 20),
+                margin: const EdgeInsets.only(
+                    left: 10, right: 10, top: 20, bottom: 20),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
