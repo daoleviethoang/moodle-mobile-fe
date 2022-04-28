@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/view/assignment/index.dart';
 import 'package:moodle_mobile/view/common/menu_item.dart';
+import 'package:moodle_mobile/view/quiz/index.dart';
 import 'package:moodle_mobile/view/video_viewer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -181,7 +182,16 @@ class QuizItem extends StatelessWidget {
           : DateFormat('dd MMMM, yyyy').format(openDate!),
       fullWidth: true,
       onPressed: () {
-        // TODO: Go to quiz page using quizId
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => QuizScreen(
+              title: title,
+              quizInstanceId: 458,
+              courseId: 1250,
+            ),
+          ),
+        );
       },
     );
   }
