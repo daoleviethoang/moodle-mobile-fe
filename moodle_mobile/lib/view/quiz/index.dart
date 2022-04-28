@@ -207,6 +207,9 @@ class _QuizScreenState extends State<QuizScreen> {
                         ),
                       ),
                       const Divider(),
+                      const SizedBox(
+                        height: 5,
+                      ),
                       Container(
                         padding: const EdgeInsets.only(
                           left: 20,
@@ -222,7 +225,15 @@ class _QuizScreenState extends State<QuizScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.stretch,
                                     children: [
-                                      const Text("Finished"),
+                                      const Text(
+                                        "Finished",
+                                        style: TextStyle(
+                                            color: MoodleColors.blue,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      const SizedBox(
+                                        height: 5,
+                                      ),
                                       Text("Submitted " +
                                           dayOfWeek.format(DateTime
                                               .fromMillisecondsSinceEpoch(
@@ -240,10 +251,18 @@ class _QuizScreenState extends State<QuizScreen> {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.stretch,
-                                    children: [
-                                      const Text("Unfinished"),
-                                      const Text(""),
-                                      const Text(""),
+                                    children: const [
+                                      Text(
+                                        "Unfinished",
+                                        style: TextStyle(
+                                            color: MoodleColors.blue,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      const SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text(""),
+                                      Text(""),
                                     ],
                                   )),
                             Expanded(
