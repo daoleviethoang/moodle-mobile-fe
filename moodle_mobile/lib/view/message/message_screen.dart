@@ -50,19 +50,6 @@ class _MessageScreenState extends State<MessageScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        // Change state of back button to false .... Remove back button
-        automaticallyImplyLeading: false,
-        title: const Text("Messenger", style: TextStyle(color: Colors.white)),
-        centerTitle: false,
-        actions: [
-          IconButton(
-            onPressed: onSearchContact,
-            icon: const Icon(Icons.search),
-            color: Colors.white,
-          )
-        ],
-      ),
       body: Column(
         children: [
           Padding(
