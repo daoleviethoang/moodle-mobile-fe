@@ -44,8 +44,8 @@ class _ForumScreenState extends State<ForumScreen> {
                         context,
                         MaterialPageRoute(
                             builder: (builder) => const AddPostScreen(
-                                  forumInstanceId: 2965,
-                                  courseId: 1873,
+                                  forumInstanceId: 1872,
+                                  courseId: 1257,
                                 )));
                   },
                   icon: Icon(Icons.add)),

@@ -30,6 +30,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
   TextEditingController contentController = TextEditingController();
   bool showAdvance = false;
   late UserStore _userStore;
+  bool isLoading = false;
   List<FileAssignment> files = [];
 
   ForumCourse? forumCourse;
@@ -48,9 +49,47 @@ class _AddPostScreenState extends State<AddPostScreen> {
     return sum;
   }
 
+  postToForum() async {
+    try {
+      if (widget.relyPostId != null) {
+        await ForumApi().relyAPost(
+          _userStore.user.token,
+          widget.relyPostId!,
+          subjectController.text,
+          contentController.text,
+          files,
+        );
+        Navigator.pop(context);
+      } else {
+        await ForumApi().postAPost(
+          _userStore.user.token,
+          widget.forumInstanceId,
+          subjectController.text,
+          contentController.text,
+          files,
+        );
+        Navigator.pop(context);
+      }
+    } catch (e) {
+      var snackBar = SnackBar(content: Text(e.toString()));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
+  }
+
   void load() async {
-    forumCourse = await ForumApi().getForums(
+    setState(() {
+      isLoading = true;
+    });
+    var temp = await ForumApi().getForums(
         _userStore.user.token, widget.courseId, widget.forumInstanceId);
+    if (temp != null) {
+      setState(() {
+        forumCourse = temp;
+      });
+    }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   bool checkOverwrite(PlatformFile file) {
@@ -124,239 +163,252 @@ class _AddPostScreenState extends State<AddPostScreen> {
             ),
           ),
         ],
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                margin: const EdgeInsets.only(left: 8, right: 8),
+        body: isLoading
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : SingleChildScrollView(
                 child: Column(
                   children: [
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Card(
-                      elevation: 10,
+                    Container(
+                      margin: const EdgeInsets.only(left: 8, right: 8),
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
-                            margin: const EdgeInsets.only(
-                              left: 15,
-                              top: 20,
-                              right: 15,
-                            ),
-                            child: const Text(
-                              "Subject",
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Card(
+                            elevation: 10,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.only(
+                                    left: 15,
+                                    top: 20,
+                                    right: 15,
+                                  ),
+                                  child: const Text(
+                                    "Subject",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                Container(
+                                  margin: const EdgeInsets.only(
+                                    left: 15,
+                                    top: 10,
+                                    right: 15,
+                                    bottom: 10,
+                                  ),
+                                  child: TextField(
+                                    maxLines: 1,
+                                    controller: subjectController,
+                                    decoration: InputDecoration(
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              vertical: 1.0, horizontal: 10.0),
+                                      border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                        borderSide: BorderSide(width: 1),
+                                      ),
+                                      hintText: "Subject",
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          Container(
-                            margin: const EdgeInsets.only(
-                              left: 15,
-                              top: 10,
-                              right: 15,
-                              bottom: 10,
-                            ),
-                            child: TextField(
-                              maxLines: 1,
-                              controller: subjectController,
-                              decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.symmetric(
-                                    vertical: 1.0, horizontal: 10.0),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  borderSide: BorderSide(width: 1),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Card(
+                            elevation: 10,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.only(
+                                    left: 15,
+                                    top: 20,
+                                    right: 15,
+                                  ),
+                                  child: const Text(
+                                    "Content",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
                                 ),
-                                hintText: "Subject",
-                              ),
+                                Container(
+                                  margin: const EdgeInsets.only(
+                                    left: 15,
+                                    top: 10,
+                                    right: 15,
+                                    bottom: 10,
+                                  ),
+                                  child: TextField(
+                                    minLines: 6,
+                                    maxLines: 10,
+                                    controller: contentController,
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                        borderSide: BorderSide(width: 1),
+                                      ),
+                                      hintText: "Content",
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Card(
-                      elevation: 10,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.only(
-                              left: 15,
-                              top: 20,
-                              right: 15,
-                            ),
-                            child: const Text(
-                              "Content",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
+                    Container(
+                      margin: const EdgeInsets.only(top: 20),
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            showAdvance = !showAdvance;
+                          });
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.only(
+                            top: 3,
+                            bottom: 3,
                           ),
-                          Container(
-                            margin: const EdgeInsets.only(
-                              left: 15,
-                              top: 10,
-                              right: 15,
-                              bottom: 10,
-                            ),
-                            child: TextField(
-                              minLines: 6,
-                              maxLines: 10,
-                              controller: contentController,
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  borderSide: BorderSide(width: 1),
-                                ),
-                                hintText: "Content",
+                          color: Colors.orange[100],
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                width: 5,
                               ),
-                            ),
+                              Icon(showAdvance
+                                  ? Icons.arrow_drop_down_sharp
+                                  : Icons.arrow_right),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                "Advance",
+                                style: TextStyle(
+                                  fontSize: 15,
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
+                    Container(
+                      color: Colors.orange[50],
+                      height: 10,
+                    ),
+                    showAdvance
+                        ? Container(
+                            margin: const EdgeInsets.only(left: 8, right: 8),
+                            color: Colors.orange[50],
+                            alignment: Alignment.centerLeft,
+                            child: Wrap(
+                              spacing: 2,
+                              children: files
+                                  .map(
+                                    (e) => Container(
+                                      margin:
+                                          EdgeInsets.only(top: 1, bottom: 1),
+                                      child: ChipTile(
+                                          label: e.filename,
+                                          onDelete: () {
+                                            setState(() {
+                                              files.remove(e);
+                                            });
+                                          },
+                                          backgroundColor: Colors.blue),
+                                    ),
+                                  )
+                                  .toList(),
+                            ),
+                          )
+                        : Container(),
+                    showAdvance
+                        ? Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: 300,
+                            color: Colors.orange[50],
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                CustomButtonShort(
+                                    text: "Add file",
+                                    textColor: Colors.white,
+                                    bgColor: MoodleColors.blue,
+                                    blurRadius: 1,
+                                    onPressed: () async {
+                                      FilePickerResult? result =
+                                          await FilePicker.platform.pickFiles();
+                                      if (result != null) {
+                                        PlatformFile file = result.files.first;
+                                        // check size more than condition
+                                        if (file.size + caculateByteSize() >
+                                            (forumCourse?.maxbytes ?? 0)) {
+                                          const snackBar = SnackBar(
+                                              content: Text(
+                                                  "File's size is bigger"));
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(snackBar);
+                                          return;
+                                        }
+                                        // check number file more than condition
+                                        if (files.length ==
+                                            (forumCourse?.maxattachments ??
+                                                0)) {
+                                          const snackBar = SnackBar(
+                                              content:
+                                                  Text("Number file is full"));
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(snackBar);
+                                          return;
+                                        }
+                                        // check file same name
+                                        bool check = checkOverwrite(file);
+                                        if (check == true) return;
+
+                                        // add file
+                                        files.add(FileAssignment(
+                                            filename: file.name,
+                                            filepath: file.path ?? "",
+                                            timeModified: DateTime.now(),
+                                            filesize: file.size));
+                                        setState(() {
+                                          files.sort(((a, b) => a.filename
+                                              .compareTo(b.filename)));
+                                        });
+                                      }
+                                    }),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  "Kích cỡ tối đa đối với các tập tin mới : ${(forumCourse?.maxbytes ?? 0) / 1024 / 1024} MB, mặc đinh tối đa :${forumCourse?.maxattachments ?? 0}",
+                                  maxLines: 3,
+                                ),
+                              ],
+                            ),
+                          )
+                        : Container(),
                   ],
                 ),
               ),
-              Container(
-                margin: const EdgeInsets.only(top: 20),
-                child: InkWell(
-                  onTap: () {
-                    setState(() {
-                      showAdvance = !showAdvance;
-                    });
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.only(
-                      top: 3,
-                      bottom: 3,
-                    ),
-                    color: Colors.orange[100],
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Icon(showAdvance
-                            ? Icons.arrow_drop_down_sharp
-                            : Icons.arrow_right),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          "Advance",
-                          style: TextStyle(
-                            fontSize: 15,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Container(
-                color: Colors.orange[50],
-                height: 10,
-              ),
-              showAdvance
-                  ? Container(
-                      margin: const EdgeInsets.only(left: 8, right: 8),
-                      color: Colors.orange[50],
-                      alignment: Alignment.centerLeft,
-                      child: Wrap(
-                        spacing: 2,
-                        children: files
-                            .map(
-                              (e) => Container(
-                                margin: EdgeInsets.only(top: 1, bottom: 1),
-                                child: ChipTile(
-                                    label: e.filename,
-                                    onDelete: () {
-                                      setState(() {
-                                        files.remove(e);
-                                      });
-                                    },
-                                    backgroundColor: Colors.blue),
-                              ),
-                            )
-                            .toList(),
-                      ),
-                    )
-                  : Container(),
-              showAdvance
-                  ? Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: 300,
-                      color: Colors.orange[50],
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          CustomButtonShort(
-                              text: "Add file",
-                              textColor: Colors.white,
-                              bgColor: MoodleColors.blue,
-                              blurRadius: 1,
-                              onPressed: () async {
-                                FilePickerResult? result =
-                                    await FilePicker.platform.pickFiles();
-                                if (result != null) {
-                                  PlatformFile file = result.files.first;
-                                  // check size more than condition
-                                  if (file.size + caculateByteSize() >
-                                      (forumCourse?.maxbytes ?? 0)) {
-                                    const snackBar = SnackBar(
-                                        content: Text("File's size is bigger"));
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(snackBar);
-                                    return;
-                                  }
-                                  // check number file more than condition
-                                  if (files.length ==
-                                      (forumCourse?.maxattachments ?? 0)) {
-                                    const snackBar = SnackBar(
-                                        content: Text("Number file is full"));
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(snackBar);
-                                    return;
-                                  }
-                                  // check file same name
-                                  bool check = checkOverwrite(file);
-                                  if (check == true) return;
-
-                                  // add file
-                                  files.add(FileAssignment(
-                                      filename: file.name,
-                                      filepath: file.path ?? "",
-                                      timeModified: DateTime.now(),
-                                      filesize: file.size));
-                                  setState(() {
-                                    files.sort(((a, b) =>
-                                        a.filename.compareTo(b.filename)));
-                                  });
-                                }
-                              }),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            "Kích cỡ tối đa đối với các tập tin mới : ${(forumCourse?.maxbytes ?? 0) / 1024 / 1024} MB, mặc đinh tối đa :${forumCourse?.maxattachments ?? 0}",
-                            maxLines: 3,
-                          ),
-                        ],
-                      ),
-                    )
-                  : Container(),
-            ],
-          ),
-        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Add your onPressed code here!
+          postToForum();
         },
         backgroundColor: Theme.of(context).primaryColor,
         child: const Icon(
