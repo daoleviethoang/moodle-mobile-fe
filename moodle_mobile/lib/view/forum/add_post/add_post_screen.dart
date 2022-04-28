@@ -305,10 +305,12 @@ class _AddPostScreenState extends State<AddPostScreen> {
                         ),
                       ),
                     ),
-                    Container(
-                      color: Colors.orange[50],
-                      height: 10,
-                    ),
+                    showAdvance
+                        ? Container(
+                            color: Colors.orange[50],
+                            height: 10,
+                          )
+                        : Container(),
                     showAdvance
                         ? Container(
                             margin: const EdgeInsets.only(left: 8, right: 8),
@@ -395,8 +397,11 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                   height: 10,
                                 ),
                                 Text(
-                                  "Kích cỡ tối đa đối với các tập tin mới : ${(forumCourse?.maxbytes ?? 0) / 1024 / 1024} MB, mặc đinh tối đa :${forumCourse?.maxattachments ?? 0}",
+                                  "Kích cỡ tối đa đối với các tập tin mới : ${(forumCourse?.maxbytes ?? 0) / 1024 / 1024} MB.",
                                   maxLines: 3,
+                                ),
+                                Text(
+                                  "Mặc đinh tối đa :${forumCourse?.maxattachments ?? 0} file.",
                                 ),
                               ],
                             ),
