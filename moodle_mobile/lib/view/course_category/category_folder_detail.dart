@@ -101,6 +101,7 @@ class _CourseCategoryFolderScreenState
                       : Container(),
                   Container(
                       child: ListView(
+                    padding: EdgeInsets.only(top: 0),
                     primary: false,
                     shrinkWrap: true,
                     children: widget.data.child

@@ -49,6 +49,10 @@ class _CourseCategoryScreenState extends State<CourseCategoryScreen> {
           if (element.depth >= i && element.depth <= i + 1) {
             if (categoryMap.containsKey(element.parent)) {
               categoryMap[element.parent]!.addChild(element);
+              categoryMap[element.parent]!.sumCoursecount +=
+                  element.coursecount;
+              categoryMap[element.parent]!.sumCoursecount +=
+                  element.sumCoursecount;
               categoryMap.removeWhere((key, value) => key == element.id);
             } else {
               final iter = <int, CourseCategory>{element.id: element};

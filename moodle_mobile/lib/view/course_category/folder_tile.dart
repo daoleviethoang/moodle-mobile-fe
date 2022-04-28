@@ -55,7 +55,9 @@ class _FolderTileState extends State<FolderTile> {
                   Expanded(
                     child: Row(
                       children: [
-                        Text(widget.data.coursecount.toString()),
+                        Text((widget.data.sumCoursecount +
+                                widget.data.coursecount)
+                            .toString()),
                         Icon(
                           Icons.arrow_right,
                           color: Colors.black,

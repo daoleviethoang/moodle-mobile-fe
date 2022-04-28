@@ -13,6 +13,7 @@ class CourseCategory {
   final int coursecount;
   final int depth;
   final String path;
+  int sumCoursecount = 0;
 
   @JsonKey(ignore: true)
   List<CourseCategory> child = [];
@@ -21,8 +22,17 @@ class CourseCategory {
     child.add(courseCategory);
   }
 
-  CourseCategory(this.id, this.name, this.description, this.descriptionformat,
-      this.parent, this.sortorder, this.coursecount, this.depth, this.path);
+  CourseCategory(
+      this.id,
+      this.name,
+      this.description,
+      this.descriptionformat,
+      this.parent,
+      this.sortorder,
+      this.coursecount,
+      this.depth,
+      this.path,
+      this.sumCoursecount);
   factory CourseCategory.fromJson(Map<String, dynamic> json) =>
       _$CourseCategoryFromJson(json);
   Map<String, dynamic> toJson() => _$CourseCategoryToJson(this);
