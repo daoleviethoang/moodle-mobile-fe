@@ -99,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Padding(
             padding: const EdgeInsets.only(top: 0, left: 5, right: 5),
             child: Column(
-              children: <Widget>[
+              children: const <Widget>[
                 Flexible(
                   child: CourseCategoryScreen(),
                 )
