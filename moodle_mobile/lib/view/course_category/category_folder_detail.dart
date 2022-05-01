@@ -6,7 +6,8 @@ import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/data/network/apis/course_category/course_category_api.dart';
 import 'package:moodle_mobile/models/course_category/course_category.dart';
 import 'package:moodle_mobile/models/course_category/course_category_course.dart';
-import 'package:moodle_mobile/models/courses.dart';
+import 'package:moodle_mobile/models/course/courses.dart';
+import 'package:moodle_mobile/models/user/user_overview.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/course_category/courses_view.dart';
 import 'package:moodle_mobile/view/course_category/folder_tile.dart';
@@ -72,16 +73,13 @@ class _CourseCategoryFolderScreenState
       body: FutureBuilder(
           future: readData(),
           builder: (context, data) {
-            List<Course> courses = [];
+            List<CourseOverview> courses = [];
             if (data.hasData) {
               List<CourseCategoryCourse> _courses =
                   data.data as List<CourseCategoryCourse>;
               courses = _courses
-                  .map((e) => Course(
-                      id: e.id,
-                      title: e.displayname,
-                      tag: "18HTTT",
-                      teacher: e.contacts!.map((f) => f.fullname).toList()))
+                  .map((e) => CourseOverview(
+                      id: e.id, title: e.displayname, teacher: e.contacts!))
                   .toList();
             } else {
               return Center(child: CircularProgressIndicator());

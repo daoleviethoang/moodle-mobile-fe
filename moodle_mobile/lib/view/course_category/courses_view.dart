@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:moodle_mobile/models/courses.dart';
+import 'package:moodle_mobile/models/course/courses.dart';
 import 'package:moodle_mobile/view/course_details.dart';
 import 'package:moodle_mobile/view/home/courses_view.dart';
 
 class CategoryCourseListView extends StatefulWidget {
-  List<Course> courses;
+  List<CourseOverview> courses;
   CategoryCourseListView({Key? key, required this.courses}) : super(key: key);
 
   @override
