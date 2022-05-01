@@ -2,12 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:moodle_mobile/data/network/apis/file/file_api.dart';
 import 'package:moodle_mobile/data/network/constants/endpoints.dart';
-import 'package:moodle_mobile/data/network/dio_client.dart';
 import 'package:moodle_mobile/data/network/dio_http.dart';
 import 'package:moodle_mobile/models/assignment/file_assignment.dart';
 import 'package:moodle_mobile/models/forum/forum_course.dart';
-import 'package:moodle_mobile/models/user.dart';
 
 class ForumApi {
   // injecting dio instance
@@ -41,7 +40,7 @@ class ForumApi {
 
   // post 1 post in forum
   postAPost(String token, int forumId, String subject, String message,
-      List<FileAssignment> files) async {
+      List<FileUpload> files) async {
     try {
       Dio dio = Http().client;
 
@@ -54,7 +53,21 @@ class ForumApi {
         "message": message,
       };
 
-      if (files.isNotEmpty) {}
+      if (files.isNotEmpty) {
+        int? itemId = await FileApi().uploadMultipleFile(token, files);
+        if (itemId != null) {
+          query = {
+            'wstoken': token,
+            'wsfunction': "mod_forum_add_discussion",
+            'moodlewsrestformat': "json",
+            'forumid': forumId,
+            "subject": subject,
+            "message": message,
+            "options[0][name]": "attachmentsid",
+            "options[0][value]": itemId,
+          };
+        }
+      }
 
       final res =
           await dio.get(Endpoints.webserviceServer, queryParameters: query);
@@ -70,20 +83,34 @@ class ForumApi {
   }
 
   relyAPost(String token, int postId, String subject, String message,
-      List<FileAssignment> files) async {
+      List<FileUpload> files) async {
     try {
       Dio dio = Http().client;
 
       var query = {
         'wstoken': token,
-        'wsfunction': "mod_forum_add_discussion",
+        'wsfunction': "mod_forum_add_discussion_post",
         'moodlewsrestformat': "json",
         'postid': postId,
         "subject": subject,
         "message": message,
       };
 
-      if (files.isNotEmpty) {}
+      if (files.isNotEmpty) {
+        int? itemId = await FileApi().uploadMultipleFile(token, files);
+        if (itemId != null) {
+          query = {
+            'wstoken': token,
+            'wsfunction': "mod_forum_add_discussion_post",
+            'moodlewsrestformat': "json",
+            'postid': postId,
+            "subject": subject,
+            "message": message,
+            "options[0][name]": "attachmentsid",
+            "options[0][value]": itemId,
+          };
+        }
+      }
 
       final res =
           await dio.get(Endpoints.webserviceServer, queryParameters: query);

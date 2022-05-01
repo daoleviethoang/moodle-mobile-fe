@@ -1,10 +1,10 @@
-class FileAssignment {
+class FileUpload {
   String filename;
   String filepath;
   int filesize;
   String fileUrl;
   DateTime timeModified;
-  FileAssignment(
+  FileUpload(
       {required this.filename,
       required this.filepath,
       required this.filesize,
