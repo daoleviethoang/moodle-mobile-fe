@@ -51,7 +51,11 @@ class _FolderTileState extends State<FolderTile> {
                   SizedBox(width: 8),
                   Icon(Icons.folder_open_outlined, color: Colors.black),
                   SizedBox(width: 8),
-                  Text(widget.data.name),
+                  Text(widget.data.name,
+                      style: const TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w900,
+                      )),
                   Expanded(
                     child: Row(
                       children: [
