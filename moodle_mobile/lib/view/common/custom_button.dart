@@ -4,10 +4,9 @@ import 'package:moodle_mobile/constants/dimens.dart';
 
 class CustomButtonWidget extends StatelessWidget {
   final String textButton;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
-  const CustomButtonWidget(
-      {Key? key, required this.textButton, required this.onPressed})
+  const CustomButtonWidget({Key? key, required this.textButton, this.onPressed})
       : super(key: key);
 
   @override
@@ -19,7 +18,9 @@ class CustomButtonWidget extends StatelessWidget {
         style: const TextStyle(fontSize: 16),
       ),
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(MoodleColors.blue),
+        backgroundColor: onPressed == null
+            ? MaterialStateProperty.all(Colors.black54)
+            : MaterialStateProperty.all(MoodleColors.blue),
         foregroundColor: MaterialStateProperty.all(Colors.white),
         minimumSize: MaterialStateProperty.all(const Size.fromHeight(50.0)),
         shape: MaterialStateProperty.all(const RoundedRectangleBorder(

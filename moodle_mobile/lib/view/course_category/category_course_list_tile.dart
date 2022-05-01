@@ -70,7 +70,9 @@ class _CourseCategoryListTileState extends State<CourseCategoryListTile> {
                   Expanded(
                     child: Row(
                       children: [
-                        Text(widget.data.coursecount.toString()),
+                        Text((widget.data.sumCoursecount +
+                                widget.data.coursecount)
+                            .toString()),
                         Icon(
                           showChild ? Icons.arrow_drop_down : Icons.arrow_right,
                           color: Colors.black,

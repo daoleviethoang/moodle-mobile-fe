@@ -53,6 +53,15 @@ dependencies:
   device_preview: ^1.0.0
   file_picker: ^3.0.4
 
+  #cache
+  flutter_cache_manager: ^3.3.0
+
+  #download file
+  flutter_downloader: ^1.7.3
+
+  #permission
+  permission_handler: ^9.2.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

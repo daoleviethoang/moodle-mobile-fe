@@ -145,14 +145,14 @@ class SubmissionItem extends StatelessWidget {
           : DateFormat('dd MMMM, yyyy').format(dueDate!),
       fullWidth: true,
       onPressed: () {
-        Navigator.push<dynamic>(
-          context,
-          MaterialPageRoute<dynamic>(
-              builder: (BuildContext context) => const AssignmentScreen(
-                    assignId: 1,
-                    courseId: 1,
-                  )),
-        );
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => AssignmentScreen(
+                      title: title,
+                      assignInstanceId: 11129,
+                      courseId: 1873,
+                    )));
       },
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:moodle_mobile/view/forum/add_post/add_post_screen.dart';
 import 'package:moodle_mobile/view/forum/forum_detail_screen.dart';
 import 'package:moodle_mobile/view/forum/forum_header.dart';
 
@@ -37,7 +38,17 @@ class _ForumScreenState extends State<ForumScreen> {
                       onPressed: Sort,
                     ),
               Spacer(),
-              Icon(Icons.add)
+              IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (builder) => const AddPostScreen(
+                                  forumInstanceId: 1872,
+                                  courseId: 1257,
+                                )));
+                  },
+                  icon: Icon(Icons.add)),
             ],
           ),
         ),
