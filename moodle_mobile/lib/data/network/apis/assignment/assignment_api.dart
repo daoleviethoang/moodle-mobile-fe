@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:moodle_mobile/data/network/constants/endpoints.dart';
+import 'package:moodle_mobile/data/network/constants/wsfunction_constants.dart';
 import 'package:moodle_mobile/data/network/dio_http.dart';
 import 'package:moodle_mobile/models/assignment/assignment.dart';
 import 'package:moodle_mobile/models/assignment/attemp_assignment.dart';
@@ -13,7 +14,7 @@ class AssignmentApi {
       Dio dio = Http().client;
       final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
         'wstoken': token,
-        'wsfunction': "mod_assign_save_submission",
+        'wsfunction': Wsfunction.MOD_ASSIGNMENT_SAVE_SUBMISSION,
         "moodlewsrestformat": "json",
         'assignmentid': assignid,
         'plugindata[files_filemanager]': itemid,
@@ -33,7 +34,7 @@ class AssignmentApi {
       Dio dio = Http().client;
       final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
         'wstoken': token,
-        'wsfunction': "mod_assign_get_assignments",
+        'wsfunction': Wsfunction.MOD_ASSIGN_GET_ASSIGNMENTS,
         "moodlewsrestformat": "json",
         'courseids[]': courseId,
       });
@@ -58,7 +59,7 @@ class AssignmentApi {
       Dio dio = Http().client;
       final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
         'wstoken': token,
-        'wsfunction': "mod_assign_get_submission_status",
+        'wsfunction': Wsfunction.MOD_ASSIGN_GET_SUBMISSION_STATUS,
         "moodlewsrestformat": "json",
         'assignid': assignInstanceId,
       });
