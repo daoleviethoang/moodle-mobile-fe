@@ -8,16 +8,15 @@ part of 'course_category.dart';
 
 CourseCategory _$CourseCategoryFromJson(Map<String, dynamic> json) =>
     CourseCategory(
-      json['id'] as int,
-      json['name'] as String,
-      json['description'] as String,
-      json['descriptionformat'] as int,
-      json['parent'] as int,
-      json['sortorder'] as int,
-      json['coursecount'] as int,
-      json['depth'] as int,
-      json['path'] as String,
-      json['sumCoursecount'] as int,
+      json['id'] as int?,
+      json['name'] as String?,
+      json['description'] as String?,
+      json['descriptionformat'] as int?,
+      json['parent'] as int?,
+      json['sortorder'] as int?,
+      json['coursecount'] as int?,
+      json['depth'] as int?,
+      json['path'] as String?,
     );
 
 Map<String, dynamic> _$CourseCategoryToJson(CourseCategory instance) =>
@@ -31,5 +30,4 @@ Map<String, dynamic> _$CourseCategoryToJson(CourseCategory instance) =>
       'coursecount': instance.coursecount,
       'depth': instance.depth,
       'path': instance.path,
-      'sumCoursecount': instance.sumCoursecount,
     };

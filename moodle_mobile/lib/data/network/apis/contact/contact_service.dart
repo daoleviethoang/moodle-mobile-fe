@@ -13,12 +13,12 @@ class ContactService {
       Dio dio = Http().client;
       final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
         'wstoken': token,
-        'wsfunction': Wsfunction.GET_ENROLLED_USERS,
+        'wsfunction': Wsfunction.GET_COURSE_BY_FIELD,
         "moodlewsrestformat": "json",
-        'courseid': courseId,
+        'value': courseId,
+        'field': 'id',
       });
-
-      var list = res.data as List;
+      var list = res.data["courses"][0]["contacts"] as List;
       return list.map((e) => Contact.fromJson(e)).toList();
     } catch (e) {
       rethrow;

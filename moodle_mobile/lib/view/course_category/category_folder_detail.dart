@@ -30,7 +30,7 @@ class _CourseCategoryFolderScreenState
     List<CourseCategoryCourse> course = [];
     try {
       course = await CourseCategoryApi()
-          .getCourseInFolder(_userStore.user.token, widget.data.id);
+          .getCourseInFolder(_userStore.user.token, widget.data.id ?? 0);
     } catch (e) {
       const snackBar = SnackBar(
           content:
@@ -54,7 +54,7 @@ class _CourseCategoryFolderScreenState
       headerSliverBuilder: (context, innerBoxIsScrolled) => [
         SliverAppBar(
           title: Text(
-            widget.data.name,
+            widget.data.name ?? "",
             style: TextStyle(color: Colors.black),
           ),
           backgroundColor: Colors.white,

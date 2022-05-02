@@ -34,7 +34,6 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
   }
 
   Future<List<CourseOverview>> getData() async {
-    await Future<dynamic>.delayed(const Duration(milliseconds: 200));
     try {
       List<Course> courses = await CourseService()
           .getCourses(_userStore.user.token, _userStore.user.id);
@@ -42,17 +41,8 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
       for (var element in courses) {
         List<Contact> contacts = await ContactService()
             .getContacts(_userStore.user.token, element.id);
-        List<Contact> teachers = [];
-        for (var contact in contacts) {
-          if (contact.roles!
-              .where((element) => element.roleid == 3)
-              .toList()
-              .isNotEmpty) {
-            teachers.add(contact);
-          }
-        }
         coursesOverview.add(CourseOverview(
-            id: element.id, title: element.displayname, teacher: teachers));
+            id: element.id, title: element.displayname, teacher: contacts));
       }
       return coursesOverview;
     } catch (e) {
@@ -67,6 +57,12 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
     setState(() {
       coursesOverview = coursesTemp;
     });
+  }
+
+  @override
+  void dispose() {
+    animationController?.dispose();
+    super.dispose();
   }
 
   @override
