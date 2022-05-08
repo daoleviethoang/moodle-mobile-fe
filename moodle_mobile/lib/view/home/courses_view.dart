@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/data/network/apis/contact/contact_service.dart';
+import 'package:moodle_mobile/data/network/apis/course/course_detail_service.dart';
 import 'package:moodle_mobile/data/network/apis/course/course_service.dart';
 import 'package:moodle_mobile/models/contact/contact.dart';
 import 'package:moodle_mobile/models/course/course.dart';
+import 'package:moodle_mobile/models/course/course_detail.dart';
 import 'package:moodle_mobile/models/course/courses.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/course_details.dart';
@@ -29,7 +31,7 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
     animationController = AnimationController(
         duration: const Duration(milliseconds: 2000), vsync: this);
     _userStore = GetIt.instance<UserStore>();
-    loadCourse();
+    getData();
     setState(() {});
     super.initState();
   }
@@ -147,8 +149,7 @@ class CategoryView extends StatelessWidget {
                         begin: Alignment.topRight,
                         stops: [0.1, 0.02],
                         colors: [MoodleColors.blue, Colors.white]),
-                    borderRadius:
-                        const BorderRadius.all(const Radius.circular(8.0)),
+                    borderRadius: const BorderRadius.all(Radius.circular(8.0)),
                   ),
                   child: Container(
                     margin: const EdgeInsets.only(
@@ -157,26 +158,29 @@ class CategoryView extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Flexible(
-                              child: Text(
-                                '${course!.title}',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                    letterSpacing: 0.27,
-                                    color: MoodleColors.black),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 8, top: 5),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Flexible(
+                                child: Text(
+                                  '${course!.title}',
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                      letterSpacing: 0.27,
+                                      color: MoodleColors.black),
+                                ),
                               ),
-                            ),
-                            IconButton(
-                              iconSize: 30,
-                              icon: const Icon(Icons.more_vert),
-                              color: MoodleColors.black,
-                              onPressed: () {},
-                            ),
-                          ],
+                              IconButton(
+                                iconSize: 30,
+                                icon: const Icon(Icons.more_vert),
+                                color: MoodleColors.black,
+                                onPressed: () {},
+                              ),
+                            ],
+                          ),
                         ),
                         Column(
                             mainAxisAlignment: MainAxisAlignment.start,
