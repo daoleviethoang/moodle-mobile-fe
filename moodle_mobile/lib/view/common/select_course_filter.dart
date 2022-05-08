@@ -135,14 +135,14 @@ class _SelectCourseFilterState extends State<SelectCourseFilter>
           children: const <Widget>[
             Text(
               'Arrange by',
-              style: TextStyle(
-                color: MoodleColors.black,
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-                letterSpacing: 1,
-              ),
               textAlign: TextAlign.left,
-            )
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 16,
+                letterSpacing: 0.27,
+                color: MoodleColors.black,
+              ),
+            ),
           ],
         ),
       ),
@@ -164,23 +164,21 @@ class _SelectCourseFilterState extends State<SelectCourseFilter>
       padding:
           const EdgeInsets.only(left: 26.0, top: 5.0, bottom: 5.0, right: 26.0),
       child: GestureDetector(
-        child: Row(
+        child: Column(
           children: <Widget>[
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.only(top: 15),
-                decoration: BoxDecoration(
-                  border: Border(top: BorderSide(color: Colors.grey, width: 1)),
-                ),
-                child: Text(item.value,
-                    style: TextStyle(
-                        color: MoodleColors.black,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14),
-                    maxLines: 3,
-                    textAlign: TextAlign.start,
-                    overflow: TextOverflow.ellipsis),
+            Container(
+              padding: const EdgeInsets.only(top: 15),
+              decoration: BoxDecoration(
+                border: Border(top: BorderSide(color: Colors.grey, width: 1)),
               ),
+              child: Text(item.value,
+                  style: TextStyle(
+                      color: MoodleColors.black,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 14),
+                  maxLines: 3,
+                  textAlign: TextAlign.start,
+                  overflow: TextOverflow.ellipsis),
             ),
           ],
         ),
@@ -201,21 +199,19 @@ class _SelectCourseFilterState extends State<SelectCourseFilter>
       child: GestureDetector(
         child: Row(
           children: <Widget>[
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.only(top: 15),
-                decoration: BoxDecoration(
-                  border: Border(top: BorderSide(color: Colors.grey, width: 1)),
-                ),
-                child: Text(item.value,
-                    style: TextStyle(
-                        color: MoodleColors.black,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14),
-                    maxLines: 3,
-                    textAlign: TextAlign.start,
-                    overflow: TextOverflow.ellipsis),
+            Container(
+              padding: const EdgeInsets.only(top: 15),
+              decoration: BoxDecoration(
+                border: Border(top: BorderSide(color: Colors.grey, width: 1)),
               ),
+              child: Text(item.value,
+                  style: TextStyle(
+                      color: MoodleColors.black,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 14),
+                  maxLines: 3,
+                  textAlign: TextAlign.start,
+                  overflow: TextOverflow.ellipsis),
             ),
           ],
         ),
