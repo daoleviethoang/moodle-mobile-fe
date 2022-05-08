@@ -51,7 +51,7 @@ class _FolderTileState extends State<FolderTile> {
                   SizedBox(width: 8),
                   Icon(Icons.folder_open_outlined, color: Colors.black),
                   SizedBox(width: 8),
-                  Text(widget.data.name,
+                  Text(widget.data.name ?? "",
                       style: const TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.w900,
@@ -59,8 +59,8 @@ class _FolderTileState extends State<FolderTile> {
                   Expanded(
                     child: Row(
                       children: [
-                        Text((widget.data.sumCoursecount +
-                                widget.data.coursecount)
+                        Text(((widget.data.sumCoursecount) +
+                                (widget.data.coursecount ?? 0))
                             .toString()),
                         Icon(
                           Icons.arrow_right,

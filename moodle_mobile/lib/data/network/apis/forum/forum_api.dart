@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:moodle_mobile/data/network/apis/file/file_api.dart';
 import 'package:moodle_mobile/data/network/constants/endpoints.dart';
+import 'package:moodle_mobile/data/network/constants/wsfunction_constants.dart';
 import 'package:moodle_mobile/data/network/dio_http.dart';
 import 'package:moodle_mobile/models/assignment/file_assignment.dart';
 import 'package:moodle_mobile/models/forum/forum_course.dart';
@@ -20,7 +21,7 @@ class ForumApi {
 
       final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
         'wstoken': token,
-        'wsfunction': "mod_forum_get_forums_by_courses",
+        'wsfunction': Wsfunction.MOD_FORUM_GET_FORUMS_BY_COURSES,
         'moodlewsrestformat': "json",
         'courseids[]': [courseId],
       });
@@ -46,7 +47,7 @@ class ForumApi {
 
       var query = {
         'wstoken': token,
-        'wsfunction': "mod_forum_add_discussion",
+        'wsfunction': Wsfunction.MOD_FORUM_ADD_DISCUSSION,
         'moodlewsrestformat': "json",
         'forumid': forumId,
         "subject": subject,
@@ -58,7 +59,7 @@ class ForumApi {
         if (itemId != null) {
           query = {
             'wstoken': token,
-            'wsfunction': "mod_forum_add_discussion",
+            'wsfunction': Wsfunction.MOD_FORUM_ADD_DISCUSSION,
             'moodlewsrestformat': "json",
             'forumid': forumId,
             "subject": subject,
@@ -89,7 +90,7 @@ class ForumApi {
 
       var query = {
         'wstoken': token,
-        'wsfunction': "mod_forum_add_discussion_post",
+        'wsfunction': Wsfunction.MOD_FORUM_ADD_DISCUSSION_POST,
         'moodlewsrestformat': "json",
         'postid': postId,
         "subject": subject,
@@ -101,7 +102,7 @@ class ForumApi {
         if (itemId != null) {
           query = {
             'wstoken': token,
-            'wsfunction': "mod_forum_add_discussion_post",
+            'wsfunction': Wsfunction.MOD_FORUM_ADD_DISCUSSION_POST,
             'moodlewsrestformat': "json",
             'postid': postId,
             "subject": subject,

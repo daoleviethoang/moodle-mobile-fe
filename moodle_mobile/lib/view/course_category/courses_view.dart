@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:moodle_mobile/models/courses.dart';
+import 'package:moodle_mobile/models/course/courses.dart';
 import 'package:moodle_mobile/view/course_details.dart';
 import 'package:moodle_mobile/view/home/courses_view.dart';
 
 class CategoryCourseListView extends StatefulWidget {
-  List<Course> courses;
+  List<CourseOverview> courses;
   CategoryCourseListView({Key? key, required this.courses}) : super(key: key);
 
   @override
@@ -30,16 +30,6 @@ class _CategoryCourseListViewState extends State<CategoryCourseListView>
   dispose() {
     animationController!.dispose();
     super.dispose();
-  }
-
-  void moveToCourseDetail(String courseId) {
-    Navigator.push<dynamic>(
-      context,
-      MaterialPageRoute<dynamic>(
-        builder: (BuildContext context) =>
-            CourseDetailsScreen(courseId: courseId),
-      ),
-    );
   }
 
   @override
@@ -71,9 +61,6 @@ class _CategoryCourseListViewState extends State<CategoryCourseListView>
                   );
                   animationController?.forward();
                   return CategoryView(
-                    callback: () {
-                      moveToCourseDetail(widget.courses[index].id.toString());
-                    },
                     course: widget.courses[index],
                     animation: animation,
                     animationController: animationController,
