@@ -9,7 +9,7 @@ part of 'user_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$UserStore on _UserStore, Store {
-  final _$userAtom = Atom(name: '_UserStore.user');
+  late final _$userAtom = Atom(name: '_UserStore.user', context: context);
 
   @override
   UserModel get user {
@@ -24,7 +24,7 @@ mixin _$UserStore on _UserStore, Store {
     });
   }
 
-  final _$isLoginAtom = Atom(name: '_UserStore.isLogin');
+  late final _$isLoginAtom = Atom(name: '_UserStore.isLogin', context: context);
 
   @override
   bool get isLogin {
@@ -39,7 +39,8 @@ mixin _$UserStore on _UserStore, Store {
     });
   }
 
-  final _$isLoadingAtom = Atom(name: '_UserStore.isLoading');
+  late final _$isLoadingAtom =
+      Atom(name: '_UserStore.isLoading', context: context);
 
   @override
   bool get isLoading {
@@ -54,7 +55,8 @@ mixin _$UserStore on _UserStore, Store {
     });
   }
 
-  final _$isLoginFailedAtom = Atom(name: '_UserStore.isLoginFailed');
+  late final _$isLoginFailedAtom =
+      Atom(name: '_UserStore.isLoginFailed', context: context);
 
   @override
   bool get isLoginFailed {
@@ -69,14 +71,16 @@ mixin _$UserStore on _UserStore, Store {
     });
   }
 
-  final _$loginAsyncAction = AsyncAction('_UserStore.login');
+  late final _$loginAsyncAction =
+      AsyncAction('_UserStore.login', context: context);
 
   @override
   Future<dynamic> login(String username, String password) {
     return _$loginAsyncAction.run(() => super.login(username, password));
   }
 
-  final _$_UserStoreActionController = ActionController(name: '_UserStore');
+  late final _$_UserStoreActionController =
+      ActionController(name: '_UserStore', context: context);
 
   @override
   void resetLoginFailed(bool value) {
