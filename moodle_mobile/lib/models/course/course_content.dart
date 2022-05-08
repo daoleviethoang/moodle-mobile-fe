@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import 'module.dart';
+
 part 'course_content.g.dart';
 
 @JsonSerializable()
@@ -12,19 +14,7 @@ class CourseContent {
   final int section;
   final int hiddenbynumsections;
   final bool uservisible;
-  final List<dynamic> modules;
-
-  /*
-   "id": 10390,
-        "name": "General",
-        "visible": 1,
-        "summary": "",
-        "summaryformat": 1,
-        "section": 0,
-        "hiddenbynumsections": 0,
-        "uservisible": true,
-        "modules"
-   */
+  final List<Module> modules;
 
   CourseContent(
       this.id,
@@ -35,7 +25,8 @@ class CourseContent {
       this.section,
       this.hiddenbynumsections,
       this.uservisible,
-      this.modules);
+      this.modules,
+      );
 
   factory CourseContent.fromJson(Map<String, dynamic> json) =>
       _$CourseContentFromJson(json);

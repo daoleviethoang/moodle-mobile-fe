@@ -4,7 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/data/network/apis/course/course_api.dart';
 import 'package:moodle_mobile/models/course/course_content.dart';
-import 'package:moodle_mobile/models/user/user_store.dart';
+import 'package:moodle_mobile/models/course_category/course_category_course.dart';
 import 'package:moodle_mobile/view/common/content_item.dart';
 import 'package:moodle_mobile/view/common/data_card.dart';
 import 'package:moodle_mobile/view/common/image_view.dart';
@@ -14,6 +14,7 @@ import 'package:moodle_mobile/view/user_detail/user_detail.dart';
 import 'package:moodle_mobile/view/user_detail/user_detail_student.dart';
 
 import '../models/course/course.dart';
+import '../store/user/user_store.dart';
 
 class CourseDetailsScreen extends StatefulWidget {
   final int courseId;
@@ -294,15 +295,15 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
 
   // endregion
 
-  Future<Map<Course, List<CourseContent>>?> queryData() async {
+  Future<Map<CourseCategoryCourse, List<CourseContent>>?> queryData() async {
     var contents = <CourseContent>[];
-    Course course;
+    CourseCategoryCourse course;
     try {
-      contents = await CourseApi.getCourseContent(
+      contents = await CourseContentService.getCourseContent(
         _userStore.user.token,
         _courseId,
       );
-      course = await CourseApi.getCourseById(
+      course = await CourseContentService.getCourseById(
         _userStore.user.token,
         _courseId,
       );
@@ -326,7 +327,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                   ? ErrorCard(text: '${data.error}')
                   : const LoadingCard();
             }
-            final d = data.data as Map<Course, List<CourseContent>>;
+            final d = data.data as Map<CourseCategoryCourse, List<CourseContent>>;
             final course = d.keys.first;
             final content = d.values.first;
             return NestedScrollView(
@@ -348,7 +349,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                     ),
                     flexibleSpace: FlexibleSpaceBar(
                       background: Container(
-                        color: Theme.of(context).primaryColor,
+                        color: Theme.of(context).colorScheme.primary,
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 24, vertical: 64),
@@ -357,7 +358,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                             child: Align(
                               alignment: Alignment.bottomLeft,
                               child: Text(
-                                course.displayname,
+                                course.displayname ?? '',
                                 maxLines: 2,
                                 style: const TextStyle(
                                   color: Colors.white,
