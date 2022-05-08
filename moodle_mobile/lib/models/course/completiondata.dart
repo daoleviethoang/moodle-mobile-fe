@@ -6,7 +6,7 @@ part 'completiondata.g.dart';
 class Completiondata {
   int? state;
   int? timecompleted;
-  Null? overrideby;
+  dynamic overrideby;
   bool? valueused;
   bool? hascompletion;
   bool? isautomatic;

@@ -27,23 +27,4 @@ class CourseContentService {
       rethrow;
     }
   }
-
-  static Future<CourseCategoryCourse> getCourseById(String token, int id) async {
-    try {
-      Dio dio = Http().client;
-      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
-        'wstoken': token,
-        'wsfunction': Wsfunction.GET_COURSE_BY_FIELD,
-        'moodlewsrestformat': 'json',
-        'value': id,
-        'field': 'id',
-      });
-
-      var list = (res.data as Map)['courses'];
-
-      return CourseCategoryCourse.fromJson(list[0]);
-    } catch (e) {
-      rethrow;
-    }
-  }
 }

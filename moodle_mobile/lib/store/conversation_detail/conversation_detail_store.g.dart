@@ -9,8 +9,8 @@ part of 'conversation_detail_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$ConversationDetailStore on _ConversationDetailStore, Store {
-  final _$listMessagesAtom =
-      Atom(name: '_ConversationDetailStore.listMessages');
+  late final _$listMessagesAtom =
+      Atom(name: '_ConversationDetailStore.listMessages', context: context);
 
   @override
   ObservableList<ConversationMessageModel> get listMessages {
@@ -25,8 +25,8 @@ mixin _$ConversationDetailStore on _ConversationDetailStore, Store {
     });
   }
 
-  final _$getListMessageAsyncAction =
-      AsyncAction('_ConversationDetailStore.getListMessage');
+  late final _$getListMessageAsyncAction =
+      AsyncAction('_ConversationDetailStore.getListMessage', context: context);
 
   @override
   Future<dynamic> getListMessage(String token, int userId, int conversationId) {
@@ -34,8 +34,8 @@ mixin _$ConversationDetailStore on _ConversationDetailStore, Store {
         .run(() => super.getListMessage(token, userId, conversationId));
   }
 
-  final _$sentMessageAsyncAction =
-      AsyncAction('_ConversationDetailStore.sentMessage');
+  late final _$sentMessageAsyncAction =
+      AsyncAction('_ConversationDetailStore.sentMessage', context: context);
 
   @override
   Future<dynamic> sentMessage(String token, int conversationId, String text) {

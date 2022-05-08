@@ -19,7 +19,7 @@ class Module {
   String? modplural;
   int? indent;
   String? onclick;
-  Null? afterlink;
+  dynamic afterlink;
   String? customdata;
   bool? noviewlink;
   int? completion;

@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/data/network/apis/course/course_api.dart';
+import 'package:moodle_mobile/data/network/apis/course/course_detail_service.dart';
 import 'package:moodle_mobile/models/course/course_content.dart';
+import 'package:moodle_mobile/models/course/course_detail.dart';
 import 'package:moodle_mobile/models/course_category/course_category_course.dart';
 import 'package:moodle_mobile/view/common/content_item.dart';
 import 'package:moodle_mobile/view/common/data_card.dart';
@@ -295,18 +297,19 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
 
   // endregion
 
-  Future<Map<CourseCategoryCourse, List<CourseContent>>?> queryData() async {
+  Future<Map<CourseDetail, List<CourseContent>>?> queryData() async {
     var contents = <CourseContent>[];
-    CourseCategoryCourse course;
+    CourseDetail course;
     try {
       contents = await CourseContentService.getCourseContent(
         _userStore.user.token,
         _courseId,
       );
-      course = await CourseContentService.getCourseById(
+      course = await CourseDetailService.getCourseById(
         _userStore.user.token,
         _courseId,
       );
+      print(course.toJson());
       return {course: contents};
     } catch (e) {
       debugPrint(e.toString());
@@ -327,7 +330,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                   ? ErrorCard(text: '${data.error}')
                   : const LoadingCard();
             }
-            final d = data.data as Map<CourseCategoryCourse, List<CourseContent>>;
+            final d = data.data as Map<CourseDetail, List<CourseContent>>;
             final course = d.keys.first;
             final content = d.values.first;
             return NestedScrollView(
