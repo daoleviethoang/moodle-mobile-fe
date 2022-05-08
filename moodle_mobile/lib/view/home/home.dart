@@ -53,11 +53,8 @@ class _HomeScreenState extends State<HomeScreen> {
         children: <Widget>[
           getDropdownStatus(),
           Flexible(
-            child: PopularCourseListView(
-              callBack: () => moveToCourseDetail(),
-            ),
-          )
-        ],
+      child: PopularCourseListView(
+        callBack: () => moveToCourseDetail(),
       ),
     );
   }

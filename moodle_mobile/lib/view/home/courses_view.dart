@@ -116,14 +116,9 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
 
 class CategoryView extends StatelessWidget {
   const CategoryView(
-      {Key? key,
-      this.course,
-      this.animationController,
-      this.animation,
-      this.callback})
+      {Key? key, this.course, this.animationController, this.animation})
       : super(key: key);
 
-  final VoidCallback? callback;
   final CourseOverview? course;
   final AnimationController? animationController;
   final Animation<double>? animation;
