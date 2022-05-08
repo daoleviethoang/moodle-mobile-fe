@@ -1,15 +1,18 @@
-class Notification {
+class NotificationPopup {
   List<NotificationDetail>? notificationDetail;
   int? unreadcount;
-  Notification({this.notificationDetail, this.unreadcount});
+  NotificationPopup({this.notificationDetail, this.unreadcount});
 
-  Notification.fromJson(Map<String, dynamic> json) {
+  NotificationPopup.fromJson(Map<String, dynamic> json) {
     if (json['notifications'] != null) {
       notificationDetail = <NotificationDetail>[];
       for (var n in json['notifications']) {
-        notificationDetail!.add(NotificationDetail.fromJson(n));
+        if (n != null) {
+          notificationDetail!.add(NotificationDetail.fromJson(n));
+        }
       }
     }
+    // notificationDetail = json['notifications'];
     unreadcount = json['unreadcount'];
   }
 }
@@ -22,16 +25,16 @@ class NotificationDetail {
   String? shortendsubject;
   String? text;
   String? fullmessage;
-  String? fullmessageformat;
+  int? fullmessageformat;
   String? fullmessagehtml;
   String? smallmessage;
   String? contexturl;
   String? contexturlname;
-  String? timecreated;
+  int? timecreated;
   String? timecreatedpretty;
   int? timeread;
-  int? read;
-  int? deleted;
+  bool? read;
+  bool? deleted;
   String? iconurl;
   String? component;
   String? eventtype;
@@ -80,6 +83,6 @@ class NotificationDetail {
     iconurl = json['iconurl'];
     component = json['component'];
     eventtype = json['eventtype'];
-    customdata = json['customdata'];
+    //customdata = json['customdata'];
   }
 }

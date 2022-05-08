@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:intl/intl.dart';
 import 'package:moodle_mobile/data/network/apis/notification/notification_api.dart';
 import 'package:moodle_mobile/di/service_locator.dart';
-import 'package:moodle_mobile/models/user/user_store.dart';
+import 'package:moodle_mobile/models/notification/notification.dart';
+import 'package:moodle_mobile/store/user/user_store.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({Key? key}) : super(key: key);
@@ -12,22 +14,19 @@ class NotificationScreen extends StatefulWidget {
 }
 
 class _NotificationScreenState extends State<NotificationScreen> {
-  late Notification temp;
+  late NotificationPopup _notificationPopup;
   late UserStore _userStore;
 
   @override
   void initState() {
     // TODO: implement initState
-
+    _userStore = GetIt.instance<UserStore>();
     super.initState();
-    setState(() {
-      // _userStore = GetIt.instance<UserStore>();
+    NotificationApi.fetchPopup(_userStore.user.token).then((value) {
+      setState(() {
+        _notificationPopup = value as NotificationPopup;
+      });
     });
-    // NotificationApi.fetchPopup(_userStore.user.token).then((value) {
-    //   setState(() {
-    //     temp = value as Notification;
-    //   });
-    // });
   }
 
   @override
@@ -35,16 +34,51 @@ class _NotificationScreenState extends State<NotificationScreen> {
     return Scaffold(
       body: Column(
         children: [
-          NotificationPopup(),
-          NotificationPopup(),
+          ...List.generate(_notificationPopup.notificationDetail!.length,
+              (index) {
+            NotificationDetail temp =
+                _notificationPopup.notificationDetail![index];
+
+            //get subject
+            String subject = temp.subject!;
+            subject = subject.substring(0, subject.indexOf(':'));
+
+            //get article
+            String article = temp.smallmessage!;
+            article = article.substring(0, article.indexOf('posted'));
+
+            //get date
+            String date = DateFormat("dd-MM-yyyy")
+                .format(DateTime.fromMillisecondsSinceEpoch(
+                    temp.timecreated! * 1000))
+                .toString();
+            //DateTime now = new DateTime.now();
+            // int duraDay = int.parse(date.substring(0, date.indexOf('days')));
+            // print(duraDay);
+
+            return NotificationPopupContainer(
+                article: article,
+                subject: subject,
+                title: temp.contexturlname,
+                date: date);
+          })
         ],
       ),
     );
   }
 }
 
-class NotificationPopup extends StatelessWidget {
-  const NotificationPopup({
+class NotificationPopupContainer extends StatelessWidget {
+  final String? date;
+  final String? title;
+  final String? subject;
+  final String? article;
+
+  const NotificationPopupContainer({
+    this.subject,
+    this.title,
+    this.article,
+    this.date,
     Key? key,
   }) : super(key: key);
 
@@ -65,7 +99,7 @@ class NotificationPopup extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "CLC_HK1_2122_CSC12107_18HTTT",
+                    subject!,
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Card(
@@ -73,7 +107,7 @@ class NotificationPopup extends StatelessWidget {
                       color: Colors.blue[50],
                       child: Padding(
                         padding: const EdgeInsets.all(3),
-                        child: Text("18/03/2021"),
+                        child: Text(date!),
                       )),
                 ],
               ),
@@ -90,7 +124,7 @@ class NotificationPopup extends StatelessWidget {
                                   TextStyle(fontSize: 12, color: Colors.black),
                               children: [
                                 TextSpan(
-                                    text: 'Tiết Gia Hồng ',
+                                    text: article,
                                     style:
                                         TextStyle(fontWeight: FontWeight.bold)),
                                 TextSpan(
@@ -118,7 +152,7 @@ class NotificationPopup extends StatelessWidget {
                             text: 'hiện đại:',
                             style: TextStyle(fontWeight: FontWeight.bold)),
                         TextSpan(
-                          text: '[THÔNG BÁO KIỂM TRA ĐIỂM THỰC HÀNH CUỐI KỲ]',
+                          text: '[' + title! + ']',
                         ),
                       ]),
                 ),

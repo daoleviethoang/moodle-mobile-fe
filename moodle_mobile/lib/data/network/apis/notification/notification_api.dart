@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:dio/dio.dart';
@@ -6,7 +7,7 @@ import 'package:moodle_mobile/data/network/dio_http.dart';
 import 'package:moodle_mobile/models/notification/notification.dart';
 
 class NotificationApi {
-  static Future<Notification?> fetchPopup(String token,
+  static Future<NotificationPopup?> fetchPopup(String token,
       {String useridto = '0'}) async {
     try {
       Dio dio = Http().client;
@@ -16,10 +17,10 @@ class NotificationApi {
         'moodlewsrestformat': 'json',
         'useridto': useridto,
       });
-      var popup = Notification.fromJson(res.data);
+      var popup = NotificationPopup.fromJson(res.data);
+      print(true);
       return popup;
     } catch (e) {}
     return null;
-    ;
   }
 }
