@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:moodle_mobile/data/network/constants/endpoints.dart';
+import 'package:moodle_mobile/data/network/constants/wsfunction_constants.dart';
 import 'package:moodle_mobile/data/network/dio_client.dart';
 import 'package:moodle_mobile/models/conversation/conversation.dart';
 import 'package:moodle_mobile/models/conversation/conversation_member.dart';
@@ -18,7 +19,7 @@ class ConversationApi {
       Dio dio = Http().client;
       final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
         'wstoken': token,
-        'wsfunction': 'core_message_get_conversations',
+        'wsfunction': Wsfunction.CORE_MESSAGE_GET_CONVERSATIONS,
         'moodlewsrestformat': 'json',
         'userid': userid
       });
@@ -81,7 +82,7 @@ class ConversationApi {
       Dio dio = Http().client;
       final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
         'wstoken': token,
-        'wsfunction': 'core_message_mute_conversations',
+        'wsfunction': Wsfunction.CORE_MESSAGE_MUTE_CONVERSATIONS,
         'moodlewsrestformat': 'json',
         'conversationids[0]': conversationId,
         'userid': userId,
@@ -102,7 +103,7 @@ class ConversationApi {
       Dio dio = Http().client;
       final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
         'wstoken': token,
-        'wsfunction': 'core_message_unmute_conversations',
+        'wsfunction': Wsfunction.CORE_MESSAGE_UNMUTE_CONVERSATIONS,
         'moodlewsrestformat': 'json',
         'conversationids[0]': conversationId,
         'userid': userId,
@@ -121,7 +122,7 @@ class ConversationApi {
       Dio dio = Http().client;
       final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
         'wstoken': token,
-        'wsfunction': 'core_message_delete_conversations_by_id',
+        'wsfunction': Wsfunction.CORE_MESSAGE_DELETE_CONVERSATION_BY_ID,
         'moodlewsrestformat': 'json',
         'conversationids[0]': conversationId,
         'userid': userId,
@@ -140,7 +141,7 @@ class ConversationApi {
       Dio dio = Http().client;
       final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
         'wstoken': token,
-        'wsfunction': 'core_message_get_conversation_messages',
+        'wsfunction': Wsfunction.CORE_MESSAGE_GET_CONVERSATION_MESSAGES,
         'moodlewsrestformat': 'json',
         'currentuserid': userId,
         'convid': conversationId,
@@ -170,7 +171,7 @@ class ConversationApi {
       Dio dio = Http().client;
       final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
         'wstoken': token,
-        'wsfunction': 'core_message_send_messages_to_conversation',
+        'wsfunction': Wsfunction.CORE_MESSAGE_SEND_MESSAGES_TO_CONVERSATION,
         'moodlewsrestformat': 'json',
         'messages[0][text]': text,
         'conversationid': conversationId,

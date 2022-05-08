@@ -40,7 +40,7 @@ class _CourseCategoryListTileState extends State<CourseCategoryListTile> {
             setState(() {
               showChild = !showChild;
               if (showChild) {
-                if (widget.data.coursecount > 0) {
+                if ((widget.data.coursecount ?? 0) > 0) {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) =>
@@ -61,7 +61,7 @@ class _CourseCategoryListTileState extends State<CourseCategoryListTile> {
                   SizedBox(width: 8),
                   Icon(Icons.folder_open_outlined, color: Colors.black),
                   SizedBox(width: 8),
-                  Text(widget.data.name,
+                  Text(widget.data.name ?? "",
                       style: TextStyle(
                           fontSize: 10,
                           fontWeight: (widget.data.parent == 0)
@@ -71,7 +71,7 @@ class _CourseCategoryListTileState extends State<CourseCategoryListTile> {
                     child: Row(
                       children: [
                         Text((widget.data.sumCoursecount +
-                                widget.data.coursecount)
+                                (widget.data.coursecount ?? 0))
                             .toString()),
                         Icon(
                           showChild ? Icons.arrow_drop_down : Icons.arrow_right,

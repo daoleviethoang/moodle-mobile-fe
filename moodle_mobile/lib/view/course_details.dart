@@ -9,7 +9,7 @@ import 'package:moodle_mobile/view/user_detail/user_detail.dart';
 import 'package:moodle_mobile/view/user_detail/user_detail_student.dart';
 
 class CourseDetailsScreen extends StatefulWidget {
-  final String courseId;
+  final int courseId;
 
   const CourseDetailsScreen({Key? key, required this.courseId})
       : super(key: key);
@@ -31,7 +31,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   late Widget _gradesTab;
   late Widget _peopleTab;
 
-  late String _courseId;
+  late int _courseId;
 
   @override
   void initState() {
