@@ -9,8 +9,8 @@ part of 'conversation_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$ConversationStore on _ConversationStore, Store {
-  final _$listConversationAtom =
-      Atom(name: '_ConversationStore.listConversation');
+  late final _$listConversationAtom =
+      Atom(name: '_ConversationStore.listConversation', context: context);
 
   @override
   ObservableList<ConversationModel> get listConversation {
@@ -25,7 +25,8 @@ mixin _$ConversationStore on _ConversationStore, Store {
     });
   }
 
-  final _$isLoadingAtom = Atom(name: '_ConversationStore.isLoading');
+  late final _$isLoadingAtom =
+      Atom(name: '_ConversationStore.isLoading', context: context);
 
   @override
   bool get isLoading {
@@ -40,8 +41,8 @@ mixin _$ConversationStore on _ConversationStore, Store {
     });
   }
 
-  final _$getListConversationAsyncAction =
-      AsyncAction('_ConversationStore.getListConversation');
+  late final _$getListConversationAsyncAction =
+      AsyncAction('_ConversationStore.getListConversation', context: context);
 
   @override
   Future<dynamic> getListConversation(String token, int userId) {
@@ -49,8 +50,8 @@ mixin _$ConversationStore on _ConversationStore, Store {
         .run(() => super.getListConversation(token, userId));
   }
 
-  final _$muteOneConversationAsyncAction =
-      AsyncAction('_ConversationStore.muteOneConversation');
+  late final _$muteOneConversationAsyncAction =
+      AsyncAction('_ConversationStore.muteOneConversation', context: context);
 
   @override
   Future<dynamic> muteOneConversation(
@@ -59,8 +60,8 @@ mixin _$ConversationStore on _ConversationStore, Store {
         .run(() => super.muteOneConversation(token, userId, conversationId));
   }
 
-  final _$unmuteOneConversationAsyncAction =
-      AsyncAction('_ConversationStore.unmuteOneConversation');
+  late final _$unmuteOneConversationAsyncAction =
+      AsyncAction('_ConversationStore.unmuteOneConversation', context: context);
 
   @override
   Future<dynamic> unmuteOneConversation(
@@ -69,8 +70,8 @@ mixin _$ConversationStore on _ConversationStore, Store {
         .run(() => super.unmuteOneConversation(token, userId, conversationId));
   }
 
-  final _$deleteConversationAsyncAction =
-      AsyncAction('_ConversationStore.deleteConversation');
+  late final _$deleteConversationAsyncAction =
+      AsyncAction('_ConversationStore.deleteConversation', context: context);
 
   @override
   Future<dynamic> deleteConversation(

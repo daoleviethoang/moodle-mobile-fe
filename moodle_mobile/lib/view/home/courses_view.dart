@@ -21,6 +21,7 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
     with TickerProviderStateMixin {
   AnimationController? animationController;
   List<CourseOverview> coursesOverview = [];
+  bool isLoad = false;
   late UserStore _userStore;
 
   @override
@@ -33,30 +34,39 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
     super.initState();
   }
 
-  Future<List<CourseOverview>> getData() async {
+  getData() async {
+    setState(() {
+      isLoad = true;
+    });
+
     await Future<dynamic>.delayed(const Duration(milliseconds: 2));
     try {
       List<Course> courses = await CourseService()
           .getCourses(_userStore.user.token, _userStore.user.id);
 
+      setState(() {
+        coursesOverview = courses
+            .map((element) => CourseOverview(
+                id: element.id, title: element.displayname, teacher: []))
+            .toList();
+      });
+      setState(() {
+        isLoad = false;
+      });
       for (var element in courses) {
         List<Contact> contacts = await ContactService()
             .getContacts(_userStore.user.token, element.id);
-        coursesOverview.add(CourseOverview(
-            id: element.id, title: element.displayname, teacher: contacts));
+        setState(() {
+          coursesOverview.where((e) => element.id == e.id).first.teacher =
+              contacts;
+        });
       }
-      return coursesOverview;
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(e.toString()), backgroundColor: Colors.red));
     }
-    return [];
-  }
-
-  void loadCourse() async {
-    List<CourseOverview> coursesTemp = await getData();
     setState(() {
-      coursesOverview = coursesTemp;
+      isLoad = false;
     });
   }
 
@@ -64,19 +74,11 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 0, top: 20),
-      child: FutureBuilder<List<CourseOverview>>(
-        future: getData(),
-        builder: (context, data) {
-          List<CourseOverview> coursesOverview = [];
-          if (!data.hasData) {
-            return const Center(child: CircularProgressIndicator());
-          } else {
-            List<CourseOverview> _courses = data.data as List<CourseOverview>;
-            coursesOverview = _courses
-                .map((e) => CourseOverview(
-                    id: e.id, title: e.title, teacher: e.teacher))
-                .toList();
-            return ListView(
+      child: isLoad
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : ListView(
               padding: const EdgeInsets.all(8),
               physics: const BouncingScrollPhysics(),
               scrollDirection: Axis.vertical,
@@ -100,10 +102,7 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
                   );
                 },
               ),
-            );
-          }
-        },
-      ),
+            ),
     );
   }
 }
