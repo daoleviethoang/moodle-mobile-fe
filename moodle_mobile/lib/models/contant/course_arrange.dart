@@ -13,14 +13,4 @@ extension CourseStatusExtension on CourseArrange {
         return '';
     }
   }
-
-  List<ContantModel> get all {
-    List<ContantModel> list = [];
-    for (var value in CourseArrange.values) {
-      ContantModel courseStatusModel =
-          ContantModel(key: value, value: value.name);
-      list.add(courseStatusModel);
-    }
-    return list;
-  }
 }

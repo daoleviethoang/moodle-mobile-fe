@@ -32,16 +32,6 @@ class _CategoryCourseListViewState extends State<CategoryCourseListView>
     super.dispose();
   }
 
-  void moveToCourseDetail(String courseId) {
-    Navigator.push<dynamic>(
-      context,
-      MaterialPageRoute<dynamic>(
-        builder: (BuildContext context) =>
-            CourseDetailsScreen(courseId: courseId),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -71,9 +61,6 @@ class _CategoryCourseListViewState extends State<CategoryCourseListView>
                   );
                   animationController?.forward();
                   return CategoryView(
-                    callback: () {
-                      moveToCourseDetail(widget.courses[index].id.toString());
-                    },
                     course: widget.courses[index],
                     animation: animation,
                     animationController: animationController,

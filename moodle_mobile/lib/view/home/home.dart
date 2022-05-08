@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:moodle_mobile/constants/colors.dart';
-import 'package:moodle_mobile/view/common/dropdown.dart';
-import 'package:moodle_mobile/view/course_details.dart';
+import 'package:moodle_mobile/models/contant/contant_model.dart';
+import 'package:moodle_mobile/view/common/select_course_filter.dart';
 import 'package:moodle_mobile/view/home/courses_view.dart';
 import 'package:moodle_mobile/view/course_category/index.dart';
-
-import '../../models/status.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -33,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget getCategoryUI() {
     return Padding(
       padding:
-          const EdgeInsets.only(left: 6.0, right: 6.0, top: 10.0, bottom: 15.0),
+          const EdgeInsets.only(left: 6.0, right: 6.0, top: 10.0, bottom: 15),
       child: Center(
         child: Row(
           children: <Widget>[
@@ -46,15 +44,17 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget getListCoursesUI() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      child: Stack(
         children: <Widget>[
+          Container(
+            margin: const EdgeInsets.only(top: 30),
+            child: const PopularCourseListView(),
+          ),
           getDropdownStatus(),
-          Flexible(
-      child: PopularCourseListView(
-        callBack: () => moveToCourseDetail(),
+        ],
       ),
     );
   }
@@ -75,13 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
           height: MediaQuery.of(context).size.height,
           child: Padding(
             padding: const EdgeInsets.only(top: 0, left: 5, right: 5),
-            child: Column(
-              children: <Widget>[
-                Flexible(
-                  child: getListCoursesUI(),
-                )
-              ],
-            ),
+            child: getListCoursesUI(),
           ),
         ),
       ),
@@ -93,27 +87,11 @@ class _HomeScreenState extends State<HomeScreen> {
       child: SingleChildScrollView(
         child: SizedBox(
           height: MediaQuery.of(context).size.height,
-          child: Padding(
-            padding: const EdgeInsets.only(top: 0, left: 5, right: 5),
-            child: Column(
-              children: const <Widget>[
-                Flexible(
-                  child: CourseCategoryScreen(),
-                )
-              ],
-            ),
+          child: const Padding(
+            padding: EdgeInsets.only(top: 0, left: 5, right: 5),
+            child: CourseCategoryScreen(),
           ),
         ),
-      ),
-    );
-  }
-
-  void moveToCourseDetail() {
-    Navigator.push<dynamic>(
-      context,
-      MaterialPageRoute<dynamic>(
-        builder: (BuildContext context) =>
-            const CourseDetailsScreen(courseId: 'course-id'),
       ),
     );
   }
@@ -170,11 +148,12 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget getDropdownStatus() {
-    return SelectDropList(
-      OptionItem.optionItemSelected,
-      DropListModel.dropListModel,
-      (optionItem) {
-        optionItem;
+    return SelectCourseFilter(
+      ContantExtension.CourseArrangeSelected,
+      ContantExtension.CourseStatusSelected,
+      (optionItem1, optionItem2) {
+        optionItem1;
+        optionItem2;
         setState(() {});
       },
     );

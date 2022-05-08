@@ -6,13 +6,13 @@ import 'package:moodle_mobile/models/contact/contact.dart';
 import 'package:moodle_mobile/models/course/course.dart';
 import 'package:moodle_mobile/models/course/courses.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
+import 'package:moodle_mobile/view/course_details.dart';
 
 import '../../constants/colors.dart';
 
 class PopularCourseListView extends StatefulWidget {
-  const PopularCourseListView({Key? key, this.callBack}) : super(key: key);
+  const PopularCourseListView({Key? key}) : super(key: key);
 
-  final Function()? callBack;
   @override
   _PopularCourseListViewState createState() => _PopularCourseListViewState();
 }
@@ -28,12 +28,13 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
     animationController = AnimationController(
         duration: const Duration(milliseconds: 2000), vsync: this);
     _userStore = GetIt.instance<UserStore>();
-    super.initState();
     loadCourse();
     setState(() {});
+    super.initState();
   }
 
   Future<List<CourseOverview>> getData() async {
+    await Future<dynamic>.delayed(const Duration(milliseconds: 2));
     try {
       List<Course> courses = await CourseService()
           .getCourses(_userStore.user.token, _userStore.user.id);
@@ -60,15 +61,9 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
   }
 
   @override
-  void dispose() {
-    animationController?.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 0),
+      padding: const EdgeInsets.only(left: 0, top: 20),
       child: FutureBuilder<List<CourseOverview>>(
         future: getData(),
         builder: (context, data) {
@@ -99,7 +94,6 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
                   );
                   animationController?.forward();
                   return CategoryView(
-                    callback: widget.callBack,
                     course: coursesOverview[index],
                     animation: animation,
                     animationController: animationController,
@@ -135,7 +129,7 @@ class CategoryView extends StatelessWidget {
                 0.0, 50 * (1.0 - animation!.value), 0.0),
             child: InkWell(
               splashColor: Colors.transparent,
-              onTap: callback,
+              onTap: () => moveToCourseDetail(context, course!.id),
               child: Padding(
                 padding: const EdgeInsets.only(
                     left: 0.0, top: 0.0, right: 0.0, bottom: 10.0),
@@ -229,6 +223,15 @@ class CategoryView extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  void moveToCourseDetail(BuildContext context, int id) {
+    Navigator.push<dynamic>(
+      context,
+      MaterialPageRoute<dynamic>(
+        builder: (BuildContext context) => CourseDetailsScreen(courseId: id),
+      ),
     );
   }
 }
