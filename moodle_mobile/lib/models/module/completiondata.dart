@@ -27,4 +27,9 @@ class Completiondata {
   factory Completiondata.fromJson(Map<String, dynamic> json) =>
       _$CompletiondataFromJson(json);
   Map<String, dynamic> toJson() => _$CompletiondataToJson(this);
+
+  @override
+  String toString() {
+    return toJson().toString();
+  }
 }
