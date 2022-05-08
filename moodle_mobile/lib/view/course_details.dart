@@ -5,6 +5,7 @@ import 'package:moodle_mobile/view/common/content_item.dart';
 import 'package:moodle_mobile/view/common/image_view.dart';
 import 'package:moodle_mobile/view/common/menu_item.dart';
 import 'package:moodle_mobile/view/forum/forum_screen.dart';
+import 'package:moodle_mobile/view/grade_in_one_course.dart';
 import 'package:moodle_mobile/view/user_detail/user_detail.dart';
 import 'package:moodle_mobile/view/user_detail/user_detail_student.dart';
 
@@ -202,7 +203,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   }
 
   void _initGradesTab() {
-    _gradesTab = const Center(child: Text('Grades'));
+    _gradesTab = const GradeInOneCourse();
   }
 
   void _initPeopleTab() {
@@ -210,7 +211,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     final participants = [
       'Lâm Quang Vũ',
       'Nguyễn Gia Hưng',
-      'Ngô Thị Thanh Thảo',
+      'Ngô Thị Thanh Theo',
       'Hà Thế Hiển',
       'Đào Lê Việt Hoàng',
       'Trần Đình Phát',
