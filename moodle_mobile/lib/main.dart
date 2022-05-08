@@ -10,7 +10,7 @@ void main() async {
   try {
     await FlutterDownloader.initialize(
         debug: true // optional: set false to disable printing logs to console
-        );
+    );
   } catch (e) {}
 
   await setupLocator();
@@ -59,8 +59,8 @@ class MyApp extends StatelessWidget {
           ),
         ),
         appBarTheme: Theme.of(context).appBarTheme.copyWith(
-              foregroundColor: Colors.white,
-            ),
+          foregroundColor: Colors.white,
+        ),
       ),
       home: const SplashScreen(),
       debugShowCheckedModeBanner: false,

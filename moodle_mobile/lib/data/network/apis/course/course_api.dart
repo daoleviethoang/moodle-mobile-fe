@@ -1,14 +1,16 @@
 import 'dart:async';
 
 import 'package:moodle_mobile/data/network/constants/endpoints.dart';
+import 'package:moodle_mobile/data/network/constants/wsfunction_constants.dart';
 import 'package:moodle_mobile/data/network/dio_http.dart';
 import 'package:dio/dio.dart';
 import 'package:moodle_mobile/models/course/course.dart';
 import 'package:moodle_mobile/models/course/course_content.dart';
+import 'package:moodle_mobile/models/course_category/course_category_course.dart';
 
-class CourseApi {
+class CourseContentService {
   static Future<List<CourseContent>> getCourseContent(
-      String token, String id) async {
+      String token, int id) async {
     try {
       Dio dio = Http().client;
       final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
@@ -26,12 +28,12 @@ class CourseApi {
     }
   }
 
-  static Future<Course> getCourseById(String token, String id) async {
+  static Future<CourseCategoryCourse> getCourseById(String token, int id) async {
     try {
       Dio dio = Http().client;
       final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
         'wstoken': token,
-        'wsfunction': 'core_course_get_courses_by_field',
+        'wsfunction': Wsfunction.GET_COURSE_BY_FIELD,
         'moodlewsrestformat': 'json',
         'value': id,
         'field': 'id',
@@ -39,7 +41,7 @@ class CourseApi {
 
       var list = (res.data as Map)['courses'];
 
-      return Course.fromJson(list[0]);
+      return CourseCategoryCourse.fromJson(list[0]);
     } catch (e) {
       rethrow;
     }
