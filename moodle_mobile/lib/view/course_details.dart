@@ -2,11 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/constants/styles.dart';
-import 'package:moodle_mobile/data/network/apis/course/course_api.dart';
-import 'package:moodle_mobile/data/network/apis/course/course_detail_service.dart';
-import 'package:moodle_mobile/models/course/course_content.dart';
-import 'package:moodle_mobile/models/course/course_detail.dart';
-import 'package:moodle_mobile/models/course_category/course_category_course.dart';
 import 'package:moodle_mobile/view/common/content_item.dart';
 import 'package:moodle_mobile/view/common/data_card.dart';
 import 'package:moodle_mobile/view/common/image_view.dart';
@@ -295,107 +290,72 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     );
   }
 
-  // endregion
-
-  Future<Map<CourseDetail, List<CourseContent>>?> queryData() async {
-    var contents = <CourseContent>[];
-    CourseDetail course;
-    try {
-      contents = await CourseContentService.getCourseContent(
-        _userStore.user.token,
-        _courseId,
-      );
-      course = await CourseDetailService.getCourseById(
-        _userStore.user.token,
-        _courseId,
-      );
-      print(course.toJson());
-      return {course: contents};
-    } catch (e) {
-      debugPrint(e.toString());
-    }
-    return null;
-  }
-
   @override
   Widget build(BuildContext context) {
     _initBody();
 
     return Scaffold(
-      body: FutureBuilder(
-          future: queryData(),
-          builder: (context, data) {
-            if (!data.hasData) {
-              return data.hasError
-                  ? ErrorCard(text: '${data.error}')
-                  : const LoadingCard();
-            }
-            final d = data.data as Map<CourseDetail, List<CourseContent>>;
-            final course = d.keys.first;
-            final content = d.values.first;
-            return NestedScrollView(
-              floatHeaderSlivers: true,
-              headerSliverBuilder: (context, innerBoxIsScrolled) {
-                return [
-                  SliverAppBar(
-                    expandedHeight: 200,
-                    floating: true,
-                    snap: true,
-                    leading: TextButton(
-                      style: TextButton.styleFrom(
-                        primary: Colors.white,
-                        padding: EdgeInsets.zero,
-                        shape: const CircleBorder(),
-                      ),
-                      child: const Icon(CupertinoIcons.back),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                    flexibleSpace: FlexibleSpaceBar(
-                      background: Container(
-                        color: Theme.of(context).colorScheme.primary,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 24, vertical: 64),
-                          child: SizedBox(
-                            height: 120,
-                            child: Align(
-                              alignment: Alignment.bottomLeft,
-                              child: Text(
-                                course.displayname ?? '',
-                                maxLines: 2,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 32,
-                                ),
-                              ),
-                            ),
+      body: NestedScrollView(
+        floatHeaderSlivers: true,
+        headerSliverBuilder: (context, innerBoxIsScrolled) {
+          return [
+            SliverAppBar(
+              expandedHeight: 200,
+              floating: true,
+              snap: true,
+              leading: TextButton(
+                style: TextButton.styleFrom(
+                  primary: Colors.white,
+                  padding: EdgeInsets.zero,
+                  shape: const CircleBorder(),
+                ),
+                child: const Icon(CupertinoIcons.back),
+                onPressed: () => Navigator.pop(context),
+              ),
+              flexibleSpace: FlexibleSpaceBar(
+                background: Container(
+                  color: Theme.of(context).primaryColor,
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 64),
+                    child: SizedBox(
+                      height: 120,
+                      child: Align(
+                        alignment: Alignment.bottomLeft,
+                        child: Text(
+                          'Đồ án tốt nghiệp',
+                          maxLines: 2,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 32,
                           ),
                         ),
                       ),
                     ),
-                    bottom: TabBar(
-                      isScrollable: true,
-                      controller: _tabController,
-                      tabs: _tabs,
-                      onTap: (value) => setState(() => _index = value),
-                    ),
                   ),
-                ];
-              },
-              body: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Container(height: 12),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: _body[_index],
-                    ),
-                    Container(height: 12),
-                  ],
                 ),
               ),
-            );
-          }),
+              bottom: TabBar(
+                isScrollable: true,
+                controller: _tabController,
+                tabs: _tabs,
+                onTap: (value) => setState(() => _index = value),
+              ),
+            ),
+          ];
+        },
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(height: 12),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: _body[_index],
+              ),
+              Container(height: 12),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
