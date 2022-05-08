@@ -81,7 +81,7 @@ class NotificationPreferenceApi {
       final res =
           await dio.get(Endpoints.webserviceServer, queryParameters: query);
 
-      if (res.data["error"] != null) {
+      if (res.data != null && res.data["error"] != null) {
         throw res.data["error"];
       }
 

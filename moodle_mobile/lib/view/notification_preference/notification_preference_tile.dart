@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/models/notification_preference/notification_preference.dart';
-import 'package:moodle_mobile/view/notification_preference/notification_preference_tile%20copy.dart';
+import 'package:moodle_mobile/view/notification_preference/notification_preference_child_tile.dart';
 
 class NotificationPreferenceTile extends StatelessWidget {
   String preferenceName;
