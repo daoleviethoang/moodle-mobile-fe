@@ -7,7 +7,7 @@ import 'package:dio/dio.dart';
 import 'package:moodle_mobile/models/course/course_detail.dart';
 
 class CourseDetailService {
-  static Future<CourseDetail> getCourseById(String token, int id) async {
+  Future<CourseDetail> getCourseById(String token, int id) async {
     try {
       Dio dio = Http().client;
       final res = await dio.get(Endpoints.webserviceServer, queryParameters: {

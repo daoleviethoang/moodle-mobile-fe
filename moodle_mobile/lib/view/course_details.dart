@@ -1,7 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/constants/styles.dart';
+import 'package:moodle_mobile/data/network/apis/course/course_content_service.dart';
+import 'package:moodle_mobile/data/network/apis/course/course_detail_service.dart';
+import 'package:moodle_mobile/models/course/course_content.dart';
+import 'package:moodle_mobile/models/course/course_detail.dart';
+import 'package:moodle_mobile/models/module/module.dart';
 import 'package:moodle_mobile/view/common/content_item.dart';
 import 'package:moodle_mobile/view/common/data_card.dart';
 import 'package:moodle_mobile/view/common/image_view.dart';
@@ -10,9 +17,7 @@ import 'package:moodle_mobile/view/forum/forum_screen.dart';
 import 'package:moodle_mobile/view/grade_in_one_course.dart';
 import 'package:moodle_mobile/view/user_detail/user_detail.dart';
 import 'package:moodle_mobile/view/user_detail/user_detail_student.dart';
-
-import '../models/course/course.dart';
-import '../store/user/user_store.dart';
+import 'package:moodle_mobile/store/user/user_store.dart';
 
 class CourseDetailsScreen extends StatefulWidget {
   final int courseId;
@@ -39,6 +44,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
 
   late int _courseId;
   late UserStore _userStore;
+  CourseDetail? _course;
+  List<CourseContent> _content = [];
 
   @override
   void initState() {
@@ -87,95 +94,73 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   void _initHomeTab() {
     _homeTab = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SectionItem(
-          header: const HeaderItem(text: 'General'),
-          body: [
-            const RichTextCard(
-                text: "<div>"
-                    "<h1>Demo Page</h1>"
-                    "<p>This is a fantastic product that you should buy!</p>"
-                    "<h3>Features</h3>"
-                    "<ul>"
-                    "<li>It actually works</li>"
-                    "<li>It exists</li>"
-                    "<li>It doesn't cost much!</li>"
-                    "</ul>"
-                    "</div>"),
-            ForumItem(
-              title: 'Q&A',
-              onPressed: () => {},
-            ),
-          ],
-          hasSeparator: true,
-        ),
-        SectionItem(
-          header: const HeaderItem(text: 'Topic 1'),
-          body: [
-            const DocumentItem(
-              title: 'Week 1 - Getting start',
-              documentUrl:
-                  'https://www.ets.org/Media/Tests/GRE/pdf/gre_research_validity_data.pdf',
-            ),
-            const UrlItem(
-              title: 'Week 1 - Getting start',
-              url: 'https://docs.flutter.dev/',
-            ),
-            const VideoItem(
-              title: 'Week 1 video',
-              videoUrl:
-                  'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-            ),
-            SubmissionItem(
-              title: 'Nộp Proposal',
-              submissionId: '',
-              dueDate: DateTime.utc(2022, 01, 20),
-            ),
-          ],
-          hasSeparator: true,
-        ),
-        SectionItem(
-          header: const HeaderItem(text: 'Topic 2'),
-          body: [
-            const DocumentItem(
-              title: 'Week 2 - Overview React Native',
-              documentUrl: '',
-            ),
-            const DocumentItem(
-              title: 'Week 2 - Overview Flutter',
-              documentUrl: '',
-            ),
-            SubmissionItem(
-              title: 'Nộp báo cáo tuần 1',
-              submissionId: '',
-              dueDate: DateTime.utc(2022, 01, 27),
-            ),
-            QuizItem(
-              title: 'Quiz 1',
-              quizId: '',
-              openDate: DateTime.utc(2022, 01, 28),
-            ),
-          ],
-          hasSeparator: true,
-        ),
-        const SectionItem(
-          header: HeaderItem(text: 'Topic 3'),
-          body: [
-            DocumentItem(
-              title: 'Week 3 - Components and Layouts',
-              documentUrl: '',
-            ),
-          ],
-        ),
-      ],
+      children: _content.map((c) {
+        return SectionItem(
+          header: HeaderItem(text: c.name),
+          body: c.modules.map((m) {
+            final title = m.name ?? '';
+            switch (m.modname ?? '') {
+              case ModuleName.assign:
+                final dueDate = DateTime.fromMillisecondsSinceEpoch(
+                    (jsonDecode(m.customdata ?? '')['duedate'] ?? 0) * 1000);
+                return SubmissionItem(
+                  title: title,
+                  submissionId: '${m.contextid ?? 0}',
+                  dueDate: dueDate,
+                );
+              case ModuleName.chat:
+                return ChatItem(
+                  title: title,
+                  onPressed: () {},
+                );
+              case ModuleName.forum:
+                return ForumItem(
+                  title: title,
+                  onPressed: () {},
+                );
+              case ModuleName.label:
+                return RichTextCard(text: m.description ?? '');
+              case ModuleName.page:
+                return PageItem(
+                  title: title,
+                  onPressed: () {},
+                );
+              case ModuleName.quiz:
+                return QuizItem(
+                  title: title,
+                  quizId: '${m.contextid ?? 0}',
+                );
+              case ModuleName.resource:
+                var url = m.contents?[0].fileurl ?? '';
+                if (url.isNotEmpty) {
+                  url = url.substring(0, url.indexOf('?forcedownload'));
+                  url += '?token=' + _userStore.user.token;
+                }
+                return DocumentItem(
+                  title: title,
+                  documentUrl: url,
+                );
+              case ModuleName.url:
+                return UrlItem(
+                  title: title,
+                  url: m.contents?[0].fileurl ?? '',
+                );
+              default:
+                throw Exception('Unknown module name: ' + (m.modname ?? ''));
+            }
+          }).toList(),
+        );
+      }).toList(),
     );
   }
 
   void _initAnnouncementsTab() {
+    // TODO: Parse module from API
     _announcementsTab = const Center(child: Text('Announcements'));
   }
 
   void _initDiscussionsTab() {
+    // TODO: Parse module from API
     _discussionsTab = const ForumScreen();
   }
 
@@ -291,72 +276,98 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     );
   }
 
+  // endregion
+
+  Future queryData() async {
+    try {
+      _content = await CourseContentService().getCourseContent(
+        _userStore.user.token,
+        _courseId,
+      );
+      _course = await CourseDetailService().getCourseById(
+        _userStore.user.token,
+        _courseId,
+      );
+      _initBody();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    _initBody();
-
     return Scaffold(
-      body: NestedScrollView(
-        floatHeaderSlivers: true,
-        headerSliverBuilder: (context, innerBoxIsScrolled) {
-          return [
-            SliverAppBar(
-              expandedHeight: 200,
-              floating: true,
-              snap: true,
-              leading: TextButton(
-                style: TextButton.styleFrom(
-                  primary: Colors.white,
-                  padding: EdgeInsets.zero,
-                  shape: const CircleBorder(),
-                ),
-                child: const Icon(CupertinoIcons.back),
-                onPressed: () => Navigator.pop(context),
-              ),
-              flexibleSpace: FlexibleSpaceBar(
-                background: Container(
-                  color: Theme.of(context).primaryColor,
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 64),
-                    child: SizedBox(
-                      height: 120,
-                      child: Align(
-                        alignment: Alignment.bottomLeft,
-                        child: Text(
-                          'Đồ án tốt nghiệp',
-                          maxLines: 2,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 32,
+      body: FutureBuilder(
+          future: queryData(),
+          builder: (context, data) {
+            if (data.hasError) {
+              return ErrorCard(text: '${data.error}');
+            } else if (_content.isEmpty || _course == null) {
+              return const LoadingCard();
+            }
+            return NestedScrollView(
+              floatHeaderSlivers: true,
+              headerSliverBuilder: (context, innerBoxIsScrolled) {
+                return [
+                  SliverAppBar(
+                    expandedHeight: 200,
+                    floating: true,
+                    snap: true,
+                    leading: TextButton(
+                      style: TextButton.styleFrom(
+                        primary: Colors.white,
+                        padding: EdgeInsets.zero,
+                        shape: const CircleBorder(),
+                      ),
+                      child: const Icon(CupertinoIcons.back),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                    flexibleSpace: FlexibleSpaceBar(
+                      background: Container(
+                        color: Theme.of(context).colorScheme.primary,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 24, vertical: 64),
+                          child: SizedBox(
+                            height: 120,
+                            child: Align(
+                              alignment: Alignment.bottomLeft,
+                              child: Text(
+                                _course?.displayname ?? '',
+                                maxLines: 2,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 32,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                       ),
                     ),
+                    bottom: TabBar(
+                      isScrollable: true,
+                      controller: _tabController,
+                      tabs: _tabs,
+                      onTap: (value) => setState(() => _index = value),
+                    ),
                   ),
+                ];
+              },
+              body: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Container(height: 12),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: _body[_index],
+                    ),
+                    Container(height: 12),
+                  ],
                 ),
               ),
-              bottom: TabBar(
-                isScrollable: true,
-                controller: _tabController,
-                tabs: _tabs,
-                onTap: (value) => setState(() => _index = value),
-              ),
-            ),
-          ];
-        },
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(height: 12),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: _body[_index],
-              ),
-              Container(height: 12),
-            ],
-          ),
-        ),
-      ),
+            );
+          }),
     );
   }
 }

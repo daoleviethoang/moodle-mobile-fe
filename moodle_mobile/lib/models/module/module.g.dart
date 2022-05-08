@@ -10,6 +10,7 @@ Module _$ModuleFromJson(Map<String, dynamic> json) => Module(
       id: json['id'] as int?,
       url: json['url'] as String?,
       name: json['name'] as String?,
+      description: json['description'] as String?,
       instance: json['instance'] as int?,
       contextid: json['contextid'] as int?,
       visible: json['visible'] as int?,
@@ -29,12 +30,20 @@ Module _$ModuleFromJson(Map<String, dynamic> json) => Module(
           ? null
           : Completiondata.fromJson(
               json['completiondata'] as Map<String, dynamic>),
+      contents: (json['contents'] as List<dynamic>?)
+          ?.map((e) => ModuleContent.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      contentsInfo: json['contentsInfo'] == null
+          ? null
+          : ModuleContentsInfo.fromJson(
+              json['contentsInfo'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$ModuleToJson(Module instance) => <String, dynamic>{
       'id': instance.id,
       'url': instance.url,
       'name': instance.name,
+      'description': instance.description,
       'instance': instance.instance,
       'contextid': instance.contextid,
       'visible': instance.visible,
@@ -51,4 +60,6 @@ Map<String, dynamic> _$ModuleToJson(Module instance) => <String, dynamic>{
       'completion': instance.completion,
       'dates': instance.dates,
       'completiondata': instance.completiondata,
+      'contents': instance.contents,
+      'contentsInfo': instance.contentsInfo,
     };
