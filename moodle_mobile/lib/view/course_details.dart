@@ -1,12 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/view/common/content_item.dart';
+import 'package:moodle_mobile/view/common/data_card.dart';
 import 'package:moodle_mobile/view/common/image_view.dart';
 import 'package:moodle_mobile/view/common/menu_item.dart';
 import 'package:moodle_mobile/view/forum/forum_screen.dart';
 import 'package:moodle_mobile/view/user_detail/user_detail.dart';
 import 'package:moodle_mobile/view/user_detail/user_detail_student.dart';
+
+import '../models/course/course.dart';
+import '../store/user/user_store.dart';
 
 class CourseDetailsScreen extends StatefulWidget {
   final int courseId;
@@ -32,12 +37,16 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   late Widget _peopleTab;
 
   late int _courseId;
+  late UserStore _userStore;
 
   @override
   void initState() {
     super.initState();
     _courseId = widget.courseId;
+    _userStore = GetIt.instance<UserStore>();
   }
+
+  // region BODY
 
   void _initBody() {
     _initTabList();
