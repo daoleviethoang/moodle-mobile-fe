@@ -128,9 +128,9 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                 );
               case ModuleName.quiz:
                 return QuizItem(
-                  title: title,
-                  quizId: '${m.contextid ?? 0}',
-                );
+                    title: title,
+                    quizInstanceId: m.instance ?? 0,
+                    courseId: widget.courseId);
               case ModuleName.resource:
                 var url = m.contents?[0].fileurl ?? '';
                 if (url.isNotEmpty) {

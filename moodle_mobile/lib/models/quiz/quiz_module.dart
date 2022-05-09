@@ -97,7 +97,6 @@ class QuizModule {
 class Completiondata {
   int? state;
   int? timecompleted;
-  dynamic overrideby;
   bool? valueused;
   bool? hascompletion;
   bool? isautomatic;
@@ -107,7 +106,6 @@ class Completiondata {
   Completiondata({
     this.state,
     this.timecompleted,
-    this.overrideby,
     this.valueused,
     this.hascompletion,
     this.isautomatic,
@@ -118,7 +116,6 @@ class Completiondata {
   Completiondata.fromJson(Map<String, dynamic> json) {
     state = json['state'];
     timecompleted = json['timecompleted'];
-    overrideby = json['overrideby'];
     valueused = json['valueused'];
     hascompletion = json['hascompletion'];
     isautomatic = json['isautomatic'];
@@ -130,7 +127,6 @@ class Completiondata {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['state'] = state;
     data['timecompleted'] = timecompleted;
-    data['overrideby'] = overrideby;
     data['valueused'] = valueused;
     data['hascompletion'] = hascompletion;
     data['isautomatic'] = isautomatic;
