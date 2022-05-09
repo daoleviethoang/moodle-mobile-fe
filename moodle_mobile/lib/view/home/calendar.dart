@@ -4,11 +4,13 @@ import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/data/network/apis/calendar/calendar_service.dart';
+import 'package:moodle_mobile/data/network/apis/module/module_service.dart';
 import 'package:moodle_mobile/models/calendar/calendar.dart';
 import 'package:moodle_mobile/models/calendar/day.dart';
 import 'package:moodle_mobile/models/calendar/event.dart';
 import 'package:moodle_mobile/models/calendar/week.dart';
 import 'package:moodle_mobile/models/module/module.dart';
+import 'package:moodle_mobile/models/module/module_course.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/content_item.dart';
 import 'package:moodle_mobile/view/common/custom_button.dart';
@@ -195,24 +197,45 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
           // Event list
           ..._selectedEvents.map((e) {
-            // TODO: instance is ModuleId -> Get instance id
             final title = e.name ?? '';
             final dueDate =
                 DateTime.fromMillisecondsSinceEpoch((e.timestart ?? 0) * 1000);
             switch (e.modulename ?? '') {
               case ModuleName.assign:
-                return SubmissionItem(
-                  title: title,
-                  submissionId: e.instance ?? 0,
-                  courseId: e.course?.id ?? 0,
-                  dueDate: dueDate,
+                return FutureBuilder(
+                  future: queryModule(e),
+                  builder: (context, data) {
+                    if (data.hasError) {
+                      return ErrorCard(text: '${data.error}');
+                    } else if (!data.hasData) {
+                      return const LoadingCard();
+                    }
+                    final instance = (data.data as ModuleCourse).instance ?? 0;
+                    return SubmissionItem(
+                      title: title,
+                      submissionId: instance,
+                      courseId: e.course?.id ?? 0,
+                      dueDate: dueDate,
+                    );
+                  }
                 );
               case ModuleName.quiz:
-                return QuizItem(
-                  title: title,
-                  openDate: dueDate,
-                  quizInstanceId: e.instance ?? 0,
-                  courseId: e.course?.id ?? 0,
+                return FutureBuilder(
+                  future: queryModule(e),
+                  builder: (context, data) {
+                    if (data.hasError) {
+                      return ErrorCard(text: '${data.error}');
+                    } else if (!data.hasData) {
+                      return const LoadingCard();
+                    }
+                    final instance = (data.data as ModuleCourse).instance ?? 0;
+                    return QuizItem(
+                      title: title,
+                      openDate: dueDate,
+                      quizInstanceId: instance,
+                      courseId: e.course?.id ?? 0,
+                    );
+                  }
                 );
               default:
                 throw Exception('Unknown module name: ' + (e.modulename ?? ''));
@@ -221,6 +244,17 @@ class _CalendarScreenState extends State<CalendarScreen> {
         ],
       ),
     );
+  }
+
+  Future<ModuleCourse> queryModule(Event e) async {
+    try {
+      return await ModuleService().getModule(
+        _userStore.user.token,
+        e.instance ?? 0,
+      );
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future queryData() async {

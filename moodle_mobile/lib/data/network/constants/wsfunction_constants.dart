@@ -1,10 +1,14 @@
 class Wsfunction {
   Wsfunction._();
 
+  // course
   static const String GET_USERS_COURSES = "core_enrol_get_users_courses";
   static const String GET_ENROLLED_USERS = "core_enrol_get_enrolled_users";
   static const String GET_COURSE_BY_FIELD = "core_course_get_courses_by_field";
   static const String GET_COURSE_CONTENTS = "core_course_get_contents";
+
+  // module
+  static const String GET_MODULE_BY_ID = "core_course_get_course_module";
 
   //user
   static const String GET_COURSE_GET_CATEGORIES = "core_course_get_categories";
