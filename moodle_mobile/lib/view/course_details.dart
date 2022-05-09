@@ -155,7 +155,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
               case ModuleName.zoom:
                 return Container();
               default:
-                return Container();
+                return ErrorCard(text: 'Unknown module name: ${m.modname}');
             }
           }).toList(),
         );
