@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
@@ -10,6 +11,7 @@ import 'package:moodle_mobile/models/calendar/week.dart';
 import 'package:moodle_mobile/models/module/module.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/content_item.dart';
+import 'package:moodle_mobile/view/common/custom_button.dart';
 import 'package:moodle_mobile/view/common/data_card.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -24,6 +26,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   late Widget _monthView;
   late Widget _dayView;
 
+  var _jumpDate = DateTime.now();
   var _selectedDay = DateTime.now();
   var _focusedDay = DateTime.now();
   var _selectedEvents = <Event>[];
@@ -50,9 +53,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
           // Calendar style
           sixWeekMonthsEnforced: true,
           headerStyle: const HeaderStyle(
-            titleCentered: true,
-            formatButtonVisible: false,
-          ),
+              titleCentered: true,
+              formatButtonVisible: false,
+              titleTextStyle: TextStyle(
+                fontSize: 17,
+                decoration: TextDecoration.underline,
+              )),
           calendarStyle: const CalendarStyle(
             todayDecoration: BoxDecoration(
               color: MoodleColors.blueLight,
@@ -77,11 +83,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           },
           onDaySelected: (selectedDay, focusedDay) {
             if (!isSameDay(_selectedDay, selectedDay)) {
-              setState(() {
-                _focusedDay = focusedDay;
-                _selectedDay = selectedDay;
-                _selectedEvents = _getEventsForDay(selectedDay);
-              });
+              _updateFocusedDay(selectedDay, focusedDay);
             }
           },
           onPageChanged: (focusedDay) {
@@ -91,12 +93,21 @@ class _CalendarScreenState extends State<CalendarScreen> {
             });
           },
           pageJumpingEnabled: true,
+          onHeaderTapped: (_) => _jumpToDate(),
 
           // Add events from HashMap
           eventLoader: (day) => _getEventsForDay(day),
         ),
       ),
     );
+  }
+
+  void _updateFocusedDay(DateTime selectedDay, DateTime focusedDay) {
+    setState(() {
+      _focusedDay = focusedDay;
+      _selectedDay = selectedDay;
+      _selectedEvents = _getEventsForDay(selectedDay);
+    });
   }
 
   List<Event> _getEventsForDay(DateTime day) {
@@ -111,6 +122,58 @@ class _CalendarScreenState extends State<CalendarScreen> {
       }
     }
     return events.toSet().toList();
+  }
+
+  void _jumpToDate() async {
+    _jumpDate = DateTime.now();
+    await showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(12)),
+      ),
+      isDismissible: true,
+      isScrollControlled: true,
+      useRootNavigator: true,
+      builder: (_) => Wrap(
+        children: [
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(height: 20),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: Text('Jump to date', style: TextStyle(fontSize: 20)),
+              ),
+              Container(height: 40),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 32),
+                child: SizedBox(
+                  height: 100,
+                  child: CupertinoDatePicker(
+                    initialDateTime: DateTime.now(),
+                    onDateTimeChanged: (value) =>
+                        setState(() => _jumpDate = value),
+                    mode: CupertinoDatePickerMode.date,
+                  ),
+                ),
+              ),
+              Container(height: 40),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: CustomButtonWidget(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    _updateFocusedDay(_jumpDate, _jumpDate);
+                  },
+                  textButton: 'Jump',
+                ),
+              ),
+              Container(height: 20),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
   void _initDayView() {
@@ -132,6 +195,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
           // Event list
           ..._selectedEvents.map((e) {
+            // TODO: instance is ModuleId -> Get instance id
             final title = e.name ?? '';
             final dueDate =
                 DateTime.fromMillisecondsSinceEpoch((e.timestart ?? 0) * 1000);
@@ -139,14 +203,16 @@ class _CalendarScreenState extends State<CalendarScreen> {
               case ModuleName.assign:
                 return SubmissionItem(
                   title: title,
-                  submissionId: '${e.instance ?? 0}',
+                  submissionId: e.instance ?? 0,
+                  courseId: e.course?.id ?? 0,
                   dueDate: dueDate,
                 );
               case ModuleName.quiz:
                 return QuizItem(
                   title: title,
                   openDate: dueDate,
-                  quizId: '${e.instance ?? 0}',
+                  quizInstanceId: e.instance ?? 0,
+                  courseId: e.course?.id ?? 0,
                 );
               default:
                 throw Exception('Unknown module name: ' + (e.modulename ?? ''));
