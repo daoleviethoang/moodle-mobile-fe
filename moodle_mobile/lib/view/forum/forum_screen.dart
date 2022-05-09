@@ -1,19 +1,48 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:intl/intl.dart';
+import 'package:moodle_mobile/data/network/apis/forum/forum_api.dart';
+import 'package:moodle_mobile/models/forum/forum_discussion.dart';
+import 'package:moodle_mobile/store/user/user_store.dart';
+import 'package:moodle_mobile/view/common/image_view.dart';
 import 'package:moodle_mobile/view/forum/add_post/add_post_screen.dart';
 import 'package:moodle_mobile/view/forum/forum_detail_screen.dart';
 import 'package:moodle_mobile/view/forum/forum_header.dart';
 
 class ForumScreen extends StatefulWidget {
-  const ForumScreen({Key? key}) : super(key: key);
+  final int? forumId;
+  final int? courseId;
+  ForumScreen({Key? key, this.forumId, this.courseId}) : super(key: key);
 
   @override
   State<ForumScreen> createState() => _ForumScreenState();
 }
 
 class _ForumScreenState extends State<ForumScreen> {
+  late UserStore _userStore;
+  List<ForumDiscussion> _forumDiscussion = [];
+
+  @override
+  void initState() {
+    _userStore = GetIt.instance();
+    // TODO: implement initState
+    super.initState();
+    fetch();
+  }
+
   void Sort() {
     setState(() {
       sortDesc = !sortDesc;
+    });
+  }
+
+  void fetch() async {
+    await ForumApi()
+        .getForumDiscussion(_userStore.user.token, widget.forumId!)
+        .then((value) {
+      setState(() {
+        _forumDiscussion = value!;
+      });
     });
   }
 
@@ -43,24 +72,25 @@ class _ForumScreenState extends State<ForumScreen> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (builder) => const AddPostScreen(
-                                  forumInstanceId: 1872,
-                                  courseId: 1257,
-                                )));
+                            builder: (builder) => AddPostScreen(
+                                  forumInstanceId: widget.forumId!,
+                                  courseId: widget.courseId!,
+                                ))).then((_) {
+                      fetch();
+                    });
                   },
                   icon: Icon(Icons.add)),
             ],
           ),
         ),
-        PostCard(
-          title: 'How to use widgets in flutter',
-          value: true,
-        ),
-        PostCard(
-          title: 'How to rm /* like a boss',
-          value: false,
-          relyNum: 0,
-        )
+        ..._forumDiscussion.map((e) {
+          return PostCard(
+            title: e.name!,
+            article: e.userfullname,
+            relyNum: e.numreplies!,
+            date: DateTime.fromMillisecondsSinceEpoch(e.created! * 1000),
+          );
+        }),
       ],
     );
   }
@@ -68,10 +98,17 @@ class _ForumScreenState extends State<ForumScreen> {
 
 class PostCard extends StatefulWidget {
   final String title;
+  final String? article;
   final int relyNum;
+  final DateTime? date;
   bool value;
   PostCard(
-      {Key? key, required this.title, this.relyNum = 2, required this.value})
+      {Key? key,
+      this.article,
+      this.date,
+      required this.title,
+      this.relyNum = 2,
+      this.value = true})
       : super(key: key);
 
   @override
@@ -103,7 +140,59 @@ class _PostCardState extends State<PostCard> {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: ForumHeader(),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: CircleImageView(
+                        imageUrl: '',
+                        height: 60,
+                        width: 60,
+                        placeholder: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Icon(
+                            Icons.person,
+                            size: 35,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    SizedBox(
+                      height: 60,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                'Started by ',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                widget.article!,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blue),
+                              ),
+                            ],
+                          ),
+                          //SizedBox(height: 20),
+                          Text(
+                            DateFormat('hh:mm dd-MM-yyyy')
+                                .format(widget.date!)
+                                .toString(),
+                            style: TextStyle(fontSize: 10),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
