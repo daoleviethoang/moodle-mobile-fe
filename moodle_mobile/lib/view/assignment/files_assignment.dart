@@ -293,7 +293,7 @@ class _FilesAssignmentScreenState extends State<FilesAssignmentScreen> {
                                       .uploadMultipleFile(
                                           _userStore.user.token, files);
                                   if (itemId != null) {
-                                    AssignmentApi().saveAssignment(
+                                    await AssignmentApi().saveAssignment(
                                         _userStore.user.token,
                                         widget.assignId,
                                         itemId);

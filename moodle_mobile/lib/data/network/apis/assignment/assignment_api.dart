@@ -9,7 +9,7 @@ import 'package:moodle_mobile/models/assignment/assignment.dart';
 import 'package:moodle_mobile/models/assignment/attemp_assignment.dart';
 
 class AssignmentApi {
-  void saveAssignment(String token, int assignid, int itemid) async {
+  saveAssignment(String token, int assignid, int itemid) async {
     try {
       Dio dio = Http().client;
       var res = await dio.get(Endpoints.webserviceServer, queryParameters: {
