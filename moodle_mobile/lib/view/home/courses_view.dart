@@ -41,10 +41,13 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
       isLoad = true;
     });
 
-    await Future<dynamic>.delayed(const Duration(milliseconds: 2));
     try {
       List<Course> courses = await CourseService()
           .getCourses(_userStore.user.token, _userStore.user.id);
+
+      if (mounted) {
+        return;
+      }
 
       setState(() {
         coursesOverview = courses
@@ -52,12 +55,20 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
                 id: element.id, title: element.displayname, teacher: []))
             .toList();
       });
+
+      if (mounted) {
+        return;
+      }
       setState(() {
         isLoad = false;
       });
+
       for (var element in courses) {
         List<Contact> contacts = await ContactService()
             .getContacts(_userStore.user.token, element.id);
+        if (mounted) {
+          return;
+        }
         setState(() {
           coursesOverview.where((e) => element.id == e.id).first.teacher =
               contacts;
@@ -67,6 +78,10 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(e.toString()), backgroundColor: Colors.red));
     }
+    if (mounted) {
+      return;
+    }
+
     setState(() {
       isLoad = false;
     });
