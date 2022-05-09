@@ -40,4 +40,11 @@ class Wsfunction {
       "core_message_mute_conversations";
   static const String CORE_MESSAGE_GET_CONVERSATIONS =
       "core_message_get_conversations";
+  
+  //notification preference
+  static const String CORE_MESSAGE_GET_USER_NOTIFICATION_PREFERENCES =
+      "core_message_get_user_notification_preferences";
+  static const String CORE_USER_UPDATE_USER_PREFERENCE =
+      "core_user_update_user_preferences";
 }
+

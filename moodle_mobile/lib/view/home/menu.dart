@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moodle_mobile/view/menu/profile/profile.dart';
+import 'package:moodle_mobile/view/notification_preference/index.dart';
 
 class MenuScreen extends StatelessWidget {
   const MenuScreen({Key? key}) : super(key: key);
@@ -199,7 +200,7 @@ class Settings extends StatelessWidget {
           //   height: MediaQuery.of(context).size.height * 0.3 * 0.02),
           Expanded(
             child: Row(
-              children: const [
+              children: [
                 Icon(
                   Icons.circle_notifications_outlined,
                   color: Colors.orange,
@@ -208,7 +209,17 @@ class Settings extends StatelessWidget {
                 SizedBox(
                   width: 8,
                 ),
-                Text('Notifications & sounds'),
+                InkWell(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            const NotificationPreferenceScreen(),
+                      ),
+                    );
+                  },
+                  child: Text('Notifications & sounds'),
+                )
               ],
             ),
           ),
