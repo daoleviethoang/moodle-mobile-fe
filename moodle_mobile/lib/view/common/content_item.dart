@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:intl/intl.dart';
+import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/view/assignment/index.dart';
 import 'package:moodle_mobile/view/common/menu_item.dart';
@@ -165,11 +166,11 @@ class SubmissionItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return MenuItem(
       icon: const Icon(CupertinoIcons.doc),
-      color: Colors.blue,
+      color: MoodleColors.blue,
       title: title,
       subtitle: (dueDate == null)
           ? null
-          : DateFormat('dd MMMM, yyyy').format(dueDate!),
+          : DateFormat('HH:mm, dd MMMM, yyyy').format(dueDate!),
       fullWidth: true,
       onPressed: () {
         Navigator.push(
@@ -203,11 +204,11 @@ class QuizItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return MenuItem(
       icon: const Icon(CupertinoIcons.question_square),
-      color: Colors.blue,
+      color: MoodleColors.blue,
       title: title,
       subtitle: (openDate == null)
           ? null
-          : DateFormat('dd MMMM, yyyy').format(openDate!),
+          : DateFormat('HH:mm, dd MMMM, yyyy').format(openDate!),
       fullWidth: true,
       onPressed: () {
         Navigator.push(

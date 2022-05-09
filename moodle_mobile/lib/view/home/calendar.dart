@@ -1,8 +1,16 @@
-import 'dart:collection';
-
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
-import 'package:moodle_mobile/view/common/menu_item.dart';
+import 'package:moodle_mobile/constants/colors.dart';
+import 'package:moodle_mobile/data/network/apis/calendar/calendar_service.dart';
+import 'package:moodle_mobile/models/calendar/calendar.dart';
+import 'package:moodle_mobile/models/calendar/day.dart';
+import 'package:moodle_mobile/models/calendar/event.dart';
+import 'package:moodle_mobile/models/calendar/week.dart';
+import 'package:moodle_mobile/models/module/module.dart';
+import 'package:moodle_mobile/store/user/user_store.dart';
+import 'package:moodle_mobile/view/common/content_item.dart';
+import 'package:moodle_mobile/view/common/data_card.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CalendarScreen extends StatefulWidget {
@@ -18,18 +26,15 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   var _selectedDay = DateTime.now();
   var _focusedDay = DateTime.now();
-  var _selectedEvents = <String>[];
-  final events = LinkedHashMap(
-    equals: isSameDay,
-  );
+  var _selectedEvents = <Event>[];
 
-  void _initEvents() {
-    final now = DateTime.now();
-    events.addAll({
-      DateTime.utc(now.year, now.month, 18): ['Do stuffs', 'Do more stuffs'],
-      DateTime.utc(now.year, now.month, 16): ['Do things'],
-      DateTime.utc(now.year, now.month, 14): ['Do doings'],
-    });
+  late UserStore _userStore;
+  Calendar? _calendar;
+
+  @override
+  void initState() {
+    super.initState();
+    _userStore = GetIt.instance<UserStore>();
   }
 
   void _initMonthView() {
@@ -38,7 +43,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
         padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
         child: TableCalendar(
           // Set range and current date
-          firstDay: DateTime.utc(2022, 01, 01),
+          firstDay: DateTime.utc(2000, 01, 01),
           lastDay: DateTime.utc(2099, 31, 12),
           focusedDay: _focusedDay,
 
@@ -48,23 +53,25 @@ class _CalendarScreenState extends State<CalendarScreen> {
             titleCentered: true,
             formatButtonVisible: false,
           ),
-          calendarStyle: CalendarStyle(
+          calendarStyle: const CalendarStyle(
             todayDecoration: BoxDecoration(
-              color: Theme.of(context).primaryColorLight,
+              color: MoodleColors.blueLight,
               shape: BoxShape.circle,
             ),
-            todayTextStyle: const TextStyle(),
+            todayTextStyle: TextStyle(),
             selectedDecoration: BoxDecoration(
-              color: Theme.of(context).primaryColor,
+              color: MoodleColors.blue,
               shape: BoxShape.circle,
             ),
+            markerMargin: EdgeInsets.symmetric(horizontal: 1),
             markerDecoration: BoxDecoration(
-              color: Theme.of(context).primaryColorDark,
+              color: MoodleColors.blueDark,
               shape: BoxShape.circle,
             ),
           ),
 
           // Selecting a date by tapping
+          availableGestures: AvailableGestures.none,
           selectedDayPredicate: (day) {
             return isSameDay(_selectedDay, day);
           },
@@ -78,7 +85,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
             }
           },
           onPageChanged: (focusedDay) {
-            _focusedDay = focusedDay;
+            setState(() {
+              _calendar = null;
+              _focusedDay = focusedDay;
+            });
           },
           pageJumpingEnabled: true,
 
@@ -89,16 +99,27 @@ class _CalendarScreenState extends State<CalendarScreen> {
     );
   }
 
-  List<String> _getEventsForDay(DateTime day) {
-    return events[day] ?? [];
+  List<Event> _getEventsForDay(DateTime day) {
+    final events = <Event>[];
+    for (Week w in _calendar?.weeks ?? []) {
+      for (Day d in w.days ?? []) {
+        DateTime dt =
+            DateTime.fromMillisecondsSinceEpoch((d.timestamp ?? 0) * 1000);
+        if (isSameDay(dt, day)) {
+          events.addAll(d.events ?? []);
+        }
+      }
+    }
+    return events.toSet().toList();
   }
 
   void _initDayView() {
     _dayView = ConstrainedBox(
-      constraints: const BoxConstraints(minHeight: 650),
+      constraints: const BoxConstraints(minHeight: 500),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Day view header
           Padding(
             padding: const EdgeInsets.only(bottom: 12),
             child:
@@ -108,47 +129,89 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       fontSize: 20,
                     )),
           ),
-          for (var e in _selectedEvents)
-            Padding(
-              padding: const EdgeInsets.only(left: 8),
-              child: MenuItem(
-                title: e,
-                subtitle: DateFormat('dd MMMM, yyyy').format(_selectedDay),
-                onPressed: null,
-              ),
-            ),
+
+          // Event list
+          ..._selectedEvents.map((e) {
+            final title = e.name ?? '';
+            final dueDate =
+                DateTime.fromMillisecondsSinceEpoch((e.timestart ?? 0) * 1000);
+            switch (e.modulename ?? '') {
+              case ModuleName.assign:
+                return SubmissionItem(
+                  title: title,
+                  submissionId: '${e.instance ?? 0}',
+                  dueDate: dueDate,
+                );
+              case ModuleName.quiz:
+                return QuizItem(
+                  title: title,
+                  openDate: dueDate,
+                  quizId: '${e.instance ?? 0}',
+                );
+              default:
+                throw Exception('Unknown module name: ' + (e.modulename ?? ''));
+            }
+          }).toList()
         ],
       ),
     );
   }
 
-  @override
-  void initState() {
-    _initEvents();
-    super.initState();
+  Future queryData() async {
+    try {
+      _calendar = await CalendarService().getCalendarByRange(
+        _userStore.user.token,
+        _focusedDay,
+        range: 0,
+      );
+      _initMonthView();
+      _initDayView();
+    } catch (e) {
+      rethrow;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    _initMonthView();
-    _initDayView();
-
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          children: [
-            _monthView,
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 12, left: 12),
-                child: _dayView,
+    return FutureBuilder(
+        future: queryData(),
+        builder: (context, data) {
+          if (data.hasError) {
+            return ErrorCard(text: '${data.error}');
+          }
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                children: [
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      AnimatedOpacity(
+                        opacity: (_calendar == null) ? .5 : 1,
+                        duration: const Duration(milliseconds: 300),
+                        child: IgnorePointer(
+                          ignoring: _calendar == null,
+                          child: _monthView,
+                        ),
+                      ),
+                      AnimatedOpacity(
+                          opacity: (_calendar == null) ? 1 : 0,
+                          duration: const Duration(milliseconds: 300),
+                          child: const CircularProgressIndicator.adaptive()),
+                    ],
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 12, left: 12),
+                      child: _dayView,
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
-      ),
-    );
+          );
+        });
   }
 }

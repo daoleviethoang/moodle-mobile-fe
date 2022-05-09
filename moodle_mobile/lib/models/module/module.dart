@@ -9,12 +9,14 @@ part 'module.g.dart';
 class ModuleName {
   static const String assign = 'assign';
   static const String chat = 'chat';
+  static const String folder = 'folder';
   static const String forum = 'forum';
   static const String label = 'label';
   static const String page = 'page';
   static const String quiz = 'quiz';
   static const String resource = 'resource';
   static const String url = 'url';
+  static const String zoom = 'zoom';
 }
 
 @JsonSerializable()
