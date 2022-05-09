@@ -114,8 +114,9 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                   title: title,
                   onPressed: () {},
                 );
+              case ModuleName.folder:
+                return Container();
               case ModuleName.forum:
-                _initDiscussionsTab(forumId: m.instance!);
                 return ForumItem(
                   title: title,
                   onPressed: () {
@@ -151,8 +152,10 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                   title: title,
                   url: m.contents?[0].fileurl ?? '',
                 );
-              default:
+              case ModuleName.zoom:
                 return Container();
+              default:
+                return ErrorCard(text: 'Unknown module name: ${m.modname}');
             }
           }).toList(),
         );
@@ -165,13 +168,11 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     _announcementsTab = const Center(child: Text('Announcements'));
   }
 
-  void _initDiscussionsTab({int forumId = 0}) {
-    // TODO: Parse module from API
+  void _initDiscussionsTab() {
     if (_content.isEmpty) {
       _discussionsTab = ForumScreen(forumId: 0);
     } else {
       _discussionsTab = ForumScreen(
-        //0
         forumId: _content[0].modules[1].instance ?? 0,
         courseId: _courseId,
       );
