@@ -115,9 +115,14 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                   onPressed: () {},
                 );
               case ModuleName.forum:
+                _initDiscussionsTab(forumId: m.instance!);
                 return ForumItem(
                   title: title,
-                  onPressed: () {},
+                  onPressed: () {
+                    // Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
+                    //   return ForumScreen();
+                    // })))
+                  },
                 );
               case ModuleName.label:
                 return RichTextCard(text: m.description ?? '');
@@ -160,9 +165,17 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     _announcementsTab = const Center(child: Text('Announcements'));
   }
 
-  void _initDiscussionsTab() {
+  void _initDiscussionsTab({int forumId = 0}) {
     // TODO: Parse module from API
-    _discussionsTab = const ForumScreen();
+    if (_content.isEmpty) {
+      _discussionsTab = ForumScreen(forumId: 0);
+    } else {
+      _discussionsTab = ForumScreen(
+        //0
+        forumId: _content[0].modules[1].instance ?? 0,
+        courseId: _courseId,
+      );
+    }
   }
 
   void _initUpcomingTab() {

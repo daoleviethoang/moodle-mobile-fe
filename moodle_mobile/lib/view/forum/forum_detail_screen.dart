@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:moodle_mobile/view/common/content_item.dart';
-import 'forum_header.dart';
 
 class ForumDetailScreen extends StatelessWidget {
   const ForumDetailScreen({Key? key}) : super(key: key);
@@ -15,7 +14,6 @@ class ForumDetailScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
         child: Column(
           children: [
-            ForumHeader(),
             SizedBox(
               height: 20,
             ),
