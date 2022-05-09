@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:dio/dio.dart';
 import 'package:moodle_mobile/data/network/constants/endpoints.dart';
+import 'package:moodle_mobile/data/network/constants/wsfunction_constants.dart';
 import 'package:moodle_mobile/data/network/dio_http.dart';
 import 'package:moodle_mobile/models/notification/notification.dart';
 
@@ -13,14 +14,12 @@ class NotificationApi {
       Dio dio = Http().client;
       final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
         'wstoken': token,
-        'wsfunction': 'message_popup_get_popup_notifications',
+        'wsfunction': Wsfunction.MESSAGE_POPUP_GET_POPUP_NOTIFICATION,
         'moodlewsrestformat': 'json',
         'useridto': useridto,
       });
       var popup = NotificationPopup.fromJson(res.data);
-      print(true);
       return popup;
     } catch (e) {}
-    return null;
   }
 }

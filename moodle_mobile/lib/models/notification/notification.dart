@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class NotificationPopup {
   List<NotificationDetail>? notificationDetail;
   int? unreadcount;
@@ -38,7 +40,7 @@ class NotificationDetail {
   String? iconurl;
   String? component;
   String? eventtype;
-  String? customdata;
+  CustomData? customdata;
   NotificationDetail(
       {this.component,
       this.contexturl,
@@ -83,6 +85,35 @@ class NotificationDetail {
     iconurl = json['iconurl'];
     component = json['component'];
     eventtype = json['eventtype'];
-    //customdata = json['customdata'];
+    customdata = CustomData.fromJson(jsonDecode(json['customdata']));
+  }
+}
+
+class CustomData {
+  String? cmid;
+  String? instance;
+  String? discussionid;
+  String? postid;
+  String? notificationiconurl;
+  List<String>? actionbuttons;
+  String? courseId;
+  CustomData(
+      {this.actionbuttons,
+      this.cmid,
+      this.courseId,
+      this.discussionid,
+      this.instance,
+      this.notificationiconurl,
+      this.postid});
+  CustomData.fromJson(Map<String, dynamic> json) {
+    cmid = json['cmid'];
+    instance = json['instance'];
+    discussionid = json['discussionid'];
+    postid = json['postid'];
+    notificationiconurl = json['notificationurl'];
+    // if (json['actionbuttons'] != null) {
+    //   actionbuttons = json['actionbuttons'];
+    // }
+    courseId = json['courseid'];
   }
 }

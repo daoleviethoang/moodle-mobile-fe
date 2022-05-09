@@ -39,4 +39,8 @@ class Wsfunction {
       "core_message_mute_conversations";
   static const String CORE_MESSAGE_GET_CONVERSATIONS =
       "core_message_get_conversations";
+
+  //notification
+  static const String MESSAGE_POPUP_GET_POPUP_NOTIFICATION =
+      'message_popup_get_popup_notifications';
 }
