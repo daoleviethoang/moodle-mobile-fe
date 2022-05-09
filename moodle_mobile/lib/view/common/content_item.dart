@@ -148,14 +148,16 @@ class UrlItem extends StatelessWidget {
 
 class SubmissionItem extends StatelessWidget {
   final String title;
-  final String submissionId;
+  final int submissionId;
   final DateTime? dueDate;
+  final int courseId;
 
   const SubmissionItem({
     Key? key,
     required this.title,
     required this.submissionId,
     this.dueDate,
+    required this.courseId,
   }) : super(key: key);
 
   @override
@@ -174,8 +176,8 @@ class SubmissionItem extends StatelessWidget {
             MaterialPageRoute(
                 builder: (context) => AssignmentScreen(
                       title: title,
-                      assignInstanceId: 11129,
-                      courseId: 1873,
+                      assignInstanceId: submissionId,
+                      courseId: courseId,
                     )));
       },
     );

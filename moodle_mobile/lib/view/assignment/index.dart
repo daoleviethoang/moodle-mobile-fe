@@ -236,6 +236,7 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                                 return FilesAssignmentScreen(
                                   assignId: widget.assignInstanceId,
                                   dueDate: assignment.duedate ?? 0,
+                                  canEdit: attempt.canedit ?? false,
                                   maxByteSize: int.parse(
                                       assignment.configs != null
                                           ? assignment.configs!

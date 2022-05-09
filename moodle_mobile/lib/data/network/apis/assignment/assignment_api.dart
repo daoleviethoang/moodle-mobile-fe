@@ -12,18 +12,27 @@ class AssignmentApi {
   void saveAssignment(String token, int assignid, int itemid) async {
     try {
       Dio dio = Http().client;
-      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+      var res = await dio.get(Endpoints.webserviceServer, queryParameters: {
         'wstoken': token,
         'wsfunction': Wsfunction.MOD_ASSIGNMENT_SAVE_SUBMISSION,
         "moodlewsrestformat": "json",
         'assignmentid': assignid,
         'plugindata[files_filemanager]': itemid,
       });
-      if (res.data["error"] != null) {
-        throw res.data["error"];
+
+      if (res.data is Map<String, dynamic> &&
+          (res.data as Map<String, dynamic>).containsKey("exception")) {
+        throw res.data["exception"];
+      }
+
+      List list = res.data as List;
+
+      if (list.isNotEmpty && (res.data[0]["warningcode"] ?? "").isNotEmpty) {
+        throw res.data[0]["warningcode"];
       }
       return;
     } catch (e) {
+      print(e.toString());
       throw "Save asignment fail";
     }
   }
@@ -39,8 +48,8 @@ class AssignmentApi {
         'courseids[]': courseId,
       });
 
-      if (res.data["error"] != null) {
-        throw res.data["error"];
+      if (res.data["exception"] != null) {
+        throw res.data["exception"];
       }
       final list = res.data['courses'][0]['assignments'] as List;
 
@@ -63,8 +72,8 @@ class AssignmentApi {
         "moodlewsrestformat": "json",
         'assignid': assignInstanceId,
       });
-      if (res.data["error"] != null) {
-        throw res.data["error"];
+      if (res.data["exception"] != null) {
+        throw res.data["exception"];
       }
       final data = res.data['lastattempt'] as Map<String, dynamic>;
       AttemptAssignment temp = AttemptAssignment.fromJson(data);
