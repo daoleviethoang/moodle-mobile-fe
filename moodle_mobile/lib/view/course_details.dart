@@ -105,7 +105,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                     (jsonDecode(m.customdata ?? '')['duedate'] ?? 0) * 1000);
                 return SubmissionItem(
                   title: title,
-                  submissionId: '${m.contextid ?? 0}',
+                  submissionId: m.instance ?? 0,
+                  courseId: widget.courseId,
                   dueDate: dueDate,
                 );
               case ModuleName.chat:
@@ -146,7 +147,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                   url: m.contents?[0].fileurl ?? '',
                 );
               default:
-                throw Exception('Unknown module name: ' + (m.modname ?? ''));
+                return Container();
             }
           }).toList(),
         );
@@ -186,7 +187,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
               padding: const EdgeInsets.only(left: 8, right: 24),
               child: SubmissionItem(
                 title: eventKeys[index],
-                submissionId: '',
+                submissionId: 0,
+                courseId: widget.courseId,
                 dueDate: eventValues[index],
               ),
             );

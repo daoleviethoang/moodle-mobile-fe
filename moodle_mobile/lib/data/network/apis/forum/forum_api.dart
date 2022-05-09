@@ -116,8 +116,8 @@ class ForumApi {
       final res =
           await dio.get(Endpoints.webserviceServer, queryParameters: query);
 
-      if (res.data["error"] != null) {
-        throw res.data["error"];
+      if (res.data["exception"] != null) {
+        throw res.data["exception"];
       }
 
       return;
