@@ -114,6 +114,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                   title: title,
                   onPressed: () {},
                 );
+              case ModuleName.folder:
+                return Container();
               case ModuleName.forum:
                 return ForumItem(
                   title: title,
@@ -146,6 +148,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                   title: title,
                   url: m.contents?[0].fileurl ?? '',
                 );
+              case ModuleName.zoom:
+                return Container();
               default:
                 return Container();
             }

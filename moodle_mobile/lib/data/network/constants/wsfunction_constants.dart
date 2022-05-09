@@ -9,6 +9,10 @@ class Wsfunction {
   //user
   static const String GET_COURSE_GET_CATEGORIES = "core_course_get_categories";
 
+  // calendar
+  static const String GET_CALENDAR_MONTHLY =
+      "core_calendar_get_calendar_monthly_view";
+
   //course category
   static const String CORE_USER_GET_USERS_BY_FIELD =
       "core_user_get_users_by_field";
