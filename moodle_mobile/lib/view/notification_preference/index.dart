@@ -41,6 +41,12 @@ class _NotificationPreferenceScreenState
     });
   }
 
+  @override
+  dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
   loadData() async {
     NotificationPreference? temp;
     try {
@@ -154,10 +160,10 @@ class _NotificationPreferenceScreenState
                               shrinkWrap: true,
                               children: notificationPreference?.components
                                       ?.map((e) => NotificationPreferenceTile(
-                                          preferenceName: notificationPreference
-                                                  ?.processors?[_index]
-                                                  .displayname ??
-                                              "",
+                                          preferenceName:
+                                              notificationPreference!
+                                                  .processors![_index]
+                                                  .displayname!,
                                           disable: disableAll,
                                           components: e))
                                       .toList() ??

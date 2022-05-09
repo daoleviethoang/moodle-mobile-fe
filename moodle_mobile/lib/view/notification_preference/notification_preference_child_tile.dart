@@ -8,7 +8,7 @@ import 'package:moodle_mobile/store/user/user_store.dart';
 class NotificationPreferenceChildTile extends StatefulWidget {
   bool disable;
   Notifications components;
-  String? preferenceName;
+  String preferenceName;
   NotificationPreferenceChildTile({
     Key? key,
     required this.disable,
@@ -31,13 +31,6 @@ class _NotificationPreferenceChildTileState
   void initState() {
     _userStore = GetIt.instance<UserStore>();
     super.initState();
-    var procesors = widget.components.processors!
-        .where((element) => element.displayname == widget.preferenceName)
-        .first;
-    setState(() {
-      online = procesors.loggedin?.checked ?? false;
-      offline = procesors.loggedoff?.checked ?? false;
-    });
   }
 
   setValueOfflineSwitch() async {
@@ -97,6 +90,13 @@ class _NotificationPreferenceChildTileState
 
   @override
   Widget build(BuildContext context) {
+    var procesors = widget.components.processors!
+        .where((element) => element.displayname == widget.preferenceName)
+        .first;
+    setState(() {
+      online = procesors.loggedin?.checked ?? false;
+      offline = procesors.loggedoff?.checked ?? false;
+    });
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
