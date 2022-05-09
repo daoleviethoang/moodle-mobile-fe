@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:moodle_mobile/models/course_category/course_category_course.dart';
+import 'package:moodle_mobile/models/module/module_course.dart';
 
 import 'calendar.dart';
 import 'calendar_subscription.dart';
@@ -51,6 +52,7 @@ class Event {
   int? maxdaytimestamp;
   String? maxdayerror;
   bool? draggable;
+  ModuleCourse? cm;
 
   Event({
     this.id,
@@ -96,6 +98,7 @@ class Event {
     this.maxdaytimestamp,
     this.maxdayerror,
     this.draggable,
+    this.cm
   });
 
   factory Event.fromJson(Map<String, dynamic> json) => _$EventFromJson(json);

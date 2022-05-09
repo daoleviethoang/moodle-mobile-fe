@@ -58,6 +58,9 @@ Event _$EventFromJson(Map<String, dynamic> json) => Event(
       maxdaytimestamp: json['maxdaytimestamp'] as int?,
       maxdayerror: json['maxdayerror'] as String?,
       draggable: json['draggable'] as bool?,
+      cm: json['cm'] == null
+          ? null
+          : ModuleCourse.fromJson(json['cm'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$EventToJson(Event instance) => <String, dynamic>{
@@ -104,4 +107,5 @@ Map<String, dynamic> _$EventToJson(Event instance) => <String, dynamic>{
       'maxdaytimestamp': instance.maxdaytimestamp,
       'maxdayerror': instance.maxdayerror,
       'draggable': instance.draggable,
+      'cm': instance.cm,
     };

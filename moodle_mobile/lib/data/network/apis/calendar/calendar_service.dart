@@ -20,7 +20,8 @@ class CalendarService {
 
       var json = res.data as Map<String, dynamic>;
 
-      return Calendar.fromJson(json);
+      final calendar = Calendar.fromJson(json);
+      return calendar;
     } catch (e) {
       rethrow;
     }
