@@ -152,10 +152,6 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                   url: m.contents?[0].fileurl ?? '',
                 );
               default:
-<<<<<<< Updated upstream
-=======
-                //throw Exception('Unknown module name: ' + (m.modname ?? ''));
->>>>>>> Stashed changes
                 return Container();
             }
           }).toList(),

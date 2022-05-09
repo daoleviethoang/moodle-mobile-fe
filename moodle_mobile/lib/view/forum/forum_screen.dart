@@ -7,7 +7,6 @@ import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/image_view.dart';
 import 'package:moodle_mobile/view/forum/add_post/add_post_screen.dart';
 import 'package:moodle_mobile/view/forum/forum_detail_screen.dart';
-import 'package:moodle_mobile/view/forum/forum_header.dart';
 
 class ForumScreen extends StatefulWidget {
   final int? forumId;
