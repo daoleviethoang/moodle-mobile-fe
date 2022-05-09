@@ -297,6 +297,10 @@ class _FilesAssignmentScreenState extends State<FilesAssignmentScreen> {
                                         _userStore.user.token,
                                         widget.assignId,
                                         itemId);
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                            content: Text("Submit success"),
+                                            backgroundColor: Colors.green));
                                     widget.reload();
                                   } else {
                                     ScaffoldMessenger.of(context).showSnackBar(
