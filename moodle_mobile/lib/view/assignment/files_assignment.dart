@@ -40,7 +40,7 @@ class _FilesAssignmentScreenState extends State<FilesAssignmentScreen> {
   Assignment assignment = Assignment();
   late UserStore _userStore;
   bool sortASC = true;
-  List<FileAssignment> files = [];
+  List<FileUpload> files = [];
   int mbSize = 0;
   bool disable = false;
   bool isLoading = false;
@@ -80,12 +80,12 @@ class _FilesAssignmentScreenState extends State<FilesAssignmentScreen> {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: Text("Cancel"),
+                child: const Text("Cancel"),
               ),
               TextButton(
                 onPressed: () {
                   setState(() {
-                    files[index] = FileAssignment(
+                    files[index] = FileUpload(
                         filename: file.name,
                         filepath: file.path ?? "",
                         timeModified: DateTime.now(),
@@ -95,7 +95,7 @@ class _FilesAssignmentScreenState extends State<FilesAssignmentScreen> {
                   // break dialog
                   Navigator.pop(context);
                 },
-                child: Text("Ok"),
+                child: const Text("Ok"),
               ),
             ],
           );
@@ -119,7 +119,7 @@ class _FilesAssignmentScreenState extends State<FilesAssignmentScreen> {
           var file = await DefaultCacheManager()
               .getSingleFile(item.fileurl! + "?token=" + _userStore.user.token);
           setState(() {
-            files.add(FileAssignment(
+            files.add(FileUpload(
                 filename: item.filename ?? "",
                 filepath: file.path,
                 filesize: item.filesize ?? 0,
@@ -199,7 +199,7 @@ class _FilesAssignmentScreenState extends State<FilesAssignmentScreen> {
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 6,
                                   ),
                                   Text(
@@ -210,7 +210,7 @@ class _FilesAssignmentScreenState extends State<FilesAssignmentScreen> {
                                             .ceil()
                                             .toString() +
                                         "MB",
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontSize: 14,
                                     ),
                                   ),
@@ -230,7 +230,7 @@ class _FilesAssignmentScreenState extends State<FilesAssignmentScreen> {
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 6,
                                   ),
                                   Text(
@@ -266,7 +266,7 @@ class _FilesAssignmentScreenState extends State<FilesAssignmentScreen> {
                         },
                       ),
                       ListView.builder(
-                        padding: EdgeInsets.only(top: 0),
+                        padding: const EdgeInsets.only(top: 0),
                         shrinkWrap: true,
                         itemCount: files.length,
                         itemBuilder: (BuildContext context, int index) {
@@ -278,7 +278,7 @@ class _FilesAssignmentScreenState extends State<FilesAssignmentScreen> {
                           );
                         },
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       CustomButtonWidget(
@@ -287,21 +287,22 @@ class _FilesAssignmentScreenState extends State<FilesAssignmentScreen> {
                             ? null
                             : () async {
                                 try {
-                                  int itemId = await FileApi().uploadFile(
-                                      _userStore.user.token,
-                                      files.first.filepath,
-                                      null);
-                                  for (int i = 1; i < files.length; i++) {
-                                    await FileApi().uploadFile(
+                                  int? itemId = await FileApi()
+                                      .uploadMultipleFile(
+                                          _userStore.user.token, files);
+                                  if (itemId != null) {
+                                    AssignmentApi().saveAssignment(
                                         _userStore.user.token,
-                                        files[i].filepath,
+                                        widget.assignId,
                                         itemId);
+                                    widget.reload();
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                            content:
+                                                Text("Can't found any file"),
+                                            backgroundColor: Colors.red));
                                   }
-                                  AssignmentApi().saveAssignment(
-                                      _userStore.user.token,
-                                      widget.assignId,
-                                      itemId);
-                                  widget.reload();
                                 } catch (e) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
@@ -349,7 +350,7 @@ class _FilesAssignmentScreenState extends State<FilesAssignmentScreen> {
                   bool check = checkOverwrite(file);
                   if (check == true) return;
                   // add file
-                  files.add(FileAssignment(
+                  files.add(FileUpload(
                       filename: file.name,
                       filepath: file.path ?? "",
                       timeModified: DateTime.now(),

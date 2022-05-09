@@ -38,24 +38,24 @@ class _CourseCategoryScreenState extends State<CourseCategoryScreen> {
       // get max depth
       int maxDepth = 0;
       categories.forEach((element) {
-        if (element.depth > maxDepth) {
-          maxDepth = element.depth;
+        if (element.depth! > maxDepth) {
+          maxDepth = element.depth ?? 0;
         }
       });
 
       // group folder
       for (var i = maxDepth - 1; i >= 0; i--) {
         categories.forEach((element) {
-          if (element.depth >= i && element.depth <= i + 1) {
+          if (element.depth! >= i && element.depth! <= i + 1) {
             if (categoryMap.containsKey(element.parent)) {
               categoryMap[element.parent]!.addChild(element);
               categoryMap[element.parent]!.sumCoursecount +=
-                  element.coursecount;
+                  element.coursecount!;
               categoryMap[element.parent]!.sumCoursecount +=
                   element.sumCoursecount;
               categoryMap.removeWhere((key, value) => key == element.id);
             } else {
-              final iter = <int, CourseCategory>{element.id: element};
+              final iter = <int, CourseCategory>{element.id!: element};
               categoryMap.addEntries(iter.entries);
             }
           }

@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:moodle_mobile/data/network/constants/endpoints.dart';
+import 'package:moodle_mobile/data/network/constants/wsfunction_constants.dart';
 import 'package:moodle_mobile/data/network/dio_client.dart';
 import 'package:moodle_mobile/data/network/dio_http.dart';
 import 'package:moodle_mobile/models/user.dart';
@@ -40,7 +41,7 @@ class UserApi {
       Dio dio = Http().client;
       var res = await dio.get(Endpoints.webserviceServer, queryParameters: {
         'wstoken': token,
-        'wsfunction': 'core_user_get_users_by_field',
+        'wsfunction': Wsfunction.CORE_USER_GET_USERS_BY_FIELD,
         'moodlewsrestformat': 'json',
         'field': 'username',
         'values[]': [username]

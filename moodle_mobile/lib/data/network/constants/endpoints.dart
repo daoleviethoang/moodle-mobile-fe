@@ -15,5 +15,5 @@ class Endpoints {
   static const String login = baseUrl + "/login/token.php";
   static const String webserviceServer =
       baseUrl + "/webservice/rest/server.php";
-  static const String uploadFile = baseUrl + "/webservice/upload.php?";
+  static const String uploadFile = baseUrl + "/webservice/upload.php";
 }

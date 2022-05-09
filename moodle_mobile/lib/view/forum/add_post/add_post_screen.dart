@@ -31,7 +31,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
   bool showAdvance = false;
   late UserStore _userStore;
   bool isLoading = false;
-  List<FileAssignment> files = [];
+  List<FileUpload> files = [];
 
   ForumCourse? forumCourse;
   @override
@@ -116,7 +116,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
               TextButton(
                 onPressed: () {
                   setState(() {
-                    files[index] = FileAssignment(
+                    files[index] = FileUpload(
                         filename: file.name,
                         filepath: file.path ?? "",
                         timeModified: DateTime.now(),
@@ -382,7 +382,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                         if (check == true) return;
 
                                         // add file
-                                        files.add(FileAssignment(
+                                        files.add(FileUpload(
                                             filename: file.name,
                                             filepath: file.path ?? "",
                                             timeModified: DateTime.now(),

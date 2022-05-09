@@ -14,7 +14,7 @@ typedef Int2VoidFunc = void Function(int);
 typedef Int2StringVoidFunc = void Function(int, String);
 
 class FileAssignmentTile extends StatefulWidget {
-  final FileAssignment file;
+  final FileUpload file;
   final Int2StringVoidFunc rename;
   final Int2VoidFunc delete;
   final int index;

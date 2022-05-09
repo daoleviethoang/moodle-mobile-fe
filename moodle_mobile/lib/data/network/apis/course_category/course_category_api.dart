@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:moodle_mobile/data/network/constants/endpoints.dart';
+import 'package:moodle_mobile/data/network/constants/wsfunction_constants.dart';
 import 'package:moodle_mobile/data/network/dio_http.dart';
 import 'package:moodle_mobile/models/course_category/course_category.dart';
 import 'package:moodle_mobile/models/course_category/course_category_course.dart';
@@ -12,7 +13,7 @@ class CourseCategoryApi {
       Dio dio = Http().client;
       final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
         'wstoken': token,
-        'wsfunction': 'core_course_get_categories',
+        'wsfunction': Wsfunction.GET_COURSE_GET_CATEGORIES,
         'moodlewsrestformat': 'json',
       });
 
@@ -30,7 +31,7 @@ class CourseCategoryApi {
       Dio dio = Http().client;
       final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
         'wstoken': token,
-        'wsfunction': 'core_course_get_courses_by_field',
+        'wsfunction': Wsfunction.GET_COURSE_BY_FIELD,
         'moodlewsrestformat': 'json',
         'field': 'category',
         'value': idFolder

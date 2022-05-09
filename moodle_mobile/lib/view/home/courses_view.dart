@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:moodle_mobile/models/courses.dart';
+import 'package:get_it/get_it.dart';
+import 'package:moodle_mobile/data/network/apis/contact/contact_service.dart';
+import 'package:moodle_mobile/data/network/apis/course/course_detail_service.dart';
+import 'package:moodle_mobile/data/network/apis/course/course_service.dart';
+import 'package:moodle_mobile/models/contact/contact.dart';
+import 'package:moodle_mobile/models/course/course.dart';
+import 'package:moodle_mobile/models/course/course_detail.dart';
+import 'package:moodle_mobile/models/course/courses.dart';
+import 'package:moodle_mobile/store/user/user_store.dart';
+import 'package:moodle_mobile/view/course_details.dart';
 
 import '../../constants/colors.dart';
 
 class PopularCourseListView extends StatefulWidget {
-  const PopularCourseListView({Key? key, this.callBack}) : super(key: key);
+  const PopularCourseListView({Key? key}) : super(key: key);
 
-  final Function()? callBack;
   @override
   _PopularCourseListViewState createState() => _PopularCourseListViewState();
 }
@@ -14,36 +22,72 @@ class PopularCourseListView extends StatefulWidget {
 class _PopularCourseListViewState extends State<PopularCourseListView>
     with TickerProviderStateMixin {
   AnimationController? animationController;
+  List<CourseOverview> coursesOverview = [];
+  bool isLoad = false;
+  late UserStore _userStore;
+
   @override
   void initState() {
     animationController = AnimationController(
         duration: const Duration(milliseconds: 2000), vsync: this);
+    _userStore = GetIt.instance<UserStore>();
+    getData();
+    setState(() {});
     super.initState();
   }
 
-  Future<bool> getData() async {
-    await Future<dynamic>.delayed(const Duration(milliseconds: 200));
-    return true;
+  getData() async {
+    setState(() {
+      isLoad = true;
+    });
+
+    await Future<dynamic>.delayed(const Duration(milliseconds: 2));
+    try {
+      List<Course> courses = await CourseService()
+          .getCourses(_userStore.user.token, _userStore.user.id);
+
+      setState(() {
+        coursesOverview = courses
+            .map((element) => CourseOverview(
+                id: element.id, title: element.displayname, teacher: []))
+            .toList();
+      });
+      setState(() {
+        isLoad = false;
+      });
+      for (var element in courses) {
+        List<Contact> contacts = await ContactService()
+            .getContacts(_userStore.user.token, element.id);
+        setState(() {
+          coursesOverview.where((e) => element.id == e.id).first.teacher =
+              contacts;
+        });
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString()), backgroundColor: Colors.red));
+    }
+    setState(() {
+      isLoad = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 0),
-      child: FutureBuilder<bool>(
-        future: getData(),
-        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-          if (!snapshot.hasData) {
-            return const SizedBox();
-          } else {
-            return ListView(
+      padding: const EdgeInsets.only(left: 0, top: 20),
+      child: isLoad
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : ListView(
               padding: const EdgeInsets.all(8),
               physics: const BouncingScrollPhysics(),
               scrollDirection: Axis.vertical,
               children: List<Widget>.generate(
-                Course.popularCourseList.length,
+                coursesOverview.length,
                 (int index) {
-                  final int count = Course.popularCourseList.length;
+                  final int count = coursesOverview.length;
                   final Animation<double> animation =
                       Tween<double>(begin: 0.0, end: 1.0).animate(
                     CurvedAnimation(
@@ -54,32 +98,23 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
                   );
                   animationController?.forward();
                   return CategoryView(
-                    callback: widget.callBack,
-                    course: Course.popularCourseList[index],
+                    course: coursesOverview[index],
                     animation: animation,
                     animationController: animationController,
                   );
                 },
               ),
-            );
-          }
-        },
-      ),
+            ),
     );
   }
 }
 
 class CategoryView extends StatelessWidget {
   const CategoryView(
-      {Key? key,
-      this.course,
-      this.animationController,
-      this.animation,
-      this.callback})
+      {Key? key, this.course, this.animationController, this.animation})
       : super(key: key);
 
-  final VoidCallback? callback;
-  final Course? course;
+  final CourseOverview? course;
   final AnimationController? animationController;
   final Animation<double>? animation;
 
@@ -95,7 +130,7 @@ class CategoryView extends StatelessWidget {
                 0.0, 50 * (1.0 - animation!.value), 0.0),
             child: InkWell(
               splashColor: Colors.transparent,
-              onTap: callback,
+              onTap: () => moveToCourseDetail(context, course!.id),
               child: Padding(
                 padding: const EdgeInsets.only(
                     left: 0.0, top: 0.0, right: 0.0, bottom: 10.0),
@@ -114,8 +149,7 @@ class CategoryView extends StatelessWidget {
                         begin: Alignment.topRight,
                         stops: [0.1, 0.02],
                         colors: [MoodleColors.blue, Colors.white]),
-                    borderRadius:
-                        const BorderRadius.all(const Radius.circular(8.0)),
+                    borderRadius: const BorderRadius.all(Radius.circular(8.0)),
                   ),
                   child: Container(
                     margin: const EdgeInsets.only(
@@ -124,58 +158,28 @@ class CategoryView extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Container(
-                              height: 26,
-                              width: 54,
-                              decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.5),
-                                    spreadRadius: 2,
-                                    blurRadius: 2,
-                                    offset: const Offset(
-                                        0, 2), // changes position of shadow
-                                  ),
-                                ],
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(3.0)),
-                                color: MoodleColors.tagColor,
-                              ),
-                              child: Center(
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 8, top: 5),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Flexible(
                                 child: Text(
-                                  '${course!.tag}',
-                                  textAlign: TextAlign.left,
+                                  '${course!.title}',
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 12,
+                                      fontSize: 16,
                                       letterSpacing: 0.27,
-                                      color: MoodleColors.blue),
+                                      color: MoodleColors.black),
                                 ),
                               ),
-                            ),
-                            IconButton(
-                              iconSize: 30,
-                              icon: const Icon(Icons.more_vert),
-                              color: MoodleColors.black,
-                              onPressed: () {},
-                            ),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 0.0, top: 4.0, right: 0.0, bottom: 15.0),
-                          child: Text(
-                            '${course!.title}',
-                            textAlign: TextAlign.left,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                letterSpacing: 0.27,
-                                color: MoodleColors.black),
+                              IconButton(
+                                iconSize: 30,
+                                icon: const Icon(Icons.more_vert),
+                                color: MoodleColors.black,
+                                onPressed: () {},
+                              ),
+                            ],
                           ),
                         ),
                         Column(
@@ -184,8 +188,7 @@ class CategoryView extends StatelessWidget {
                             children: List<Widget>.generate(
                               course!.teacher.length,
                               (int index) {
-                                final int count =
-                                    Course.popularCourseList.length;
+                                final int count = course!.teacher.length;
                                 final Animation<double> animation =
                                     Tween<double>(begin: 0.0, end: 1.0).animate(
                                   CurvedAnimation(
@@ -195,21 +198,23 @@ class CategoryView extends StatelessWidget {
                                   ),
                                 );
                                 animationController?.forward();
-                                return Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 0.0,
-                                        top: 0.0,
-                                        right: 0.0,
-                                        bottom: 8.0),
-                                    child: Text(
-                                      'Teacher: ' + course!.teacher[index],
-                                      textAlign: TextAlign.left,
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.normal,
-                                          fontSize: 13,
-                                          letterSpacing: 0.27,
-                                          color: MoodleColors.black),
-                                    ));
+                                return Container(
+                                  padding: const EdgeInsets.only(
+                                      left: 0.0,
+                                      top: 0.0,
+                                      right: 0.0,
+                                      bottom: 8.0),
+                                  child: Text(
+                                    'Teacher: ' +
+                                        course!.teacher[index].fullname,
+                                    textAlign: TextAlign.left,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: 13,
+                                        letterSpacing: 0.27,
+                                        color: MoodleColors.black),
+                                  ),
+                                );
                               },
                             ))
                       ],
@@ -221,6 +226,15 @@ class CategoryView extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  void moveToCourseDetail(BuildContext context, int id) {
+    Navigator.push<dynamic>(
+      context,
+      MaterialPageRoute<dynamic>(
+        builder: (BuildContext context) => CourseDetailsScreen(courseId: id),
+      ),
     );
   }
 }
