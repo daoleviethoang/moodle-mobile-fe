@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'module.dart';
+import '../module/module.dart';
 
 part 'course_content.g.dart';
 
@@ -31,4 +31,9 @@ class CourseContent {
   factory CourseContent.fromJson(Map<String, dynamic> json) =>
       _$CourseContentFromJson(json);
   Map<String, dynamic> toJson() => _$CourseContentToJson(this);
+
+  @override
+  String toString() {
+    return toJson().toString();
+  }
 }
