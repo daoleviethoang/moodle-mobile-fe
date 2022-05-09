@@ -117,7 +117,6 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
               case ModuleName.folder:
                 return Container();
               case ModuleName.forum:
-                _initDiscussionsTab(forumId: m.instance!);
                 return ForumItem(
                   title: title,
                   onPressed: () {
@@ -169,13 +168,11 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     _announcementsTab = const Center(child: Text('Announcements'));
   }
 
-  void _initDiscussionsTab({int forumId = 0}) {
-    // TODO: Parse module from API
+  void _initDiscussionsTab() {
     if (_content.isEmpty) {
       _discussionsTab = ForumScreen(forumId: 0);
     } else {
       _discussionsTab = ForumScreen(
-        //0
         forumId: _content[0].modules[1].instance ?? 0,
         courseId: _courseId,
       );
