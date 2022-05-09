@@ -26,6 +26,8 @@ class Wsfunction {
   static const String MOD_FORUM_ADD_DISCUSSION = "mod_forum_add_discussion";
   static const String MOD_FORUM_ADD_DISCUSSION_POST =
       "mod_forum_add_discussion_post";
+  static const String MOD_FORUM_GET_FORUM_DISCUSSIONS =
+      "mod_forum_get_forum_discussions";
 
   // message
   static const String CORE_MESSAGE_SEND_MESSAGES_TO_CONVERSATION =
@@ -40,6 +42,7 @@ class Wsfunction {
       "core_message_mute_conversations";
   static const String CORE_MESSAGE_GET_CONVERSATIONS =
       "core_message_get_conversations";
+<<<<<<< Updated upstream
 
   //notification
   static const String MESSAGE_POPUP_GET_POPUP_NOTIFICATION =
@@ -52,3 +55,6 @@ class Wsfunction {
       "core_user_update_user_preferences";
 }
 
+=======
+}
+>>>>>>> Stashed changes
