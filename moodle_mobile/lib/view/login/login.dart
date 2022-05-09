@@ -168,8 +168,15 @@ class _LoginScreenState extends State<LoginScreen> {
     await _userStore.login(usernameControler.text, passwordController.text);
 
     if (_userStore.isLogin == true) {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const DirectScreen()));
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return const DirectScreen();
+          },
+        ),
+        (route) => false,
+      );
     }
   }
 
