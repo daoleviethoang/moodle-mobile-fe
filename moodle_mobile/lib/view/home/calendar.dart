@@ -5,10 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/data/network/apis/calendar/calendar_service.dart';
 import 'package:moodle_mobile/data/network/apis/module/module_service.dart';
-import 'package:moodle_mobile/models/calendar/calendar.dart';
-import 'package:moodle_mobile/models/calendar/day.dart';
 import 'package:moodle_mobile/models/calendar/event.dart';
-import 'package:moodle_mobile/models/calendar/week.dart';
 import 'package:moodle_mobile/models/module/module.dart';
 import 'package:moodle_mobile/models/module/module_course.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
@@ -25,8 +22,8 @@ class CalendarScreen extends StatefulWidget {
 }
 
 class _CalendarScreenState extends State<CalendarScreen> {
-  late Widget _monthView;
-  late Widget _dayView;
+  Widget _monthView = Container();
+  Widget _dayView = Container();
 
   var _jumpDate = DateTime.now();
   var _selectedDay = DateTime.now();
@@ -34,7 +31,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   var _selectedEvents = <Event>[];
 
   late UserStore _userStore;
-  Calendar? _calendar;
+  Map<String, List<Event>> _events = {};
 
   @override
   void initState() {
@@ -90,7 +87,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           },
           onPageChanged: (focusedDay) {
             setState(() {
-              _calendar = null;
+              _events.clear();
               _focusedDay = focusedDay;
             });
           },
@@ -113,17 +110,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 
   List<Event> _getEventsForDay(DateTime day) {
-    final events = <Event>[];
-    for (Week w in _calendar?.weeks ?? []) {
-      for (Day d in w.days ?? []) {
-        DateTime dt =
-            DateTime.fromMillisecondsSinceEpoch((d.timestamp ?? 0) * 1000);
-        if (isSameDay(dt, day)) {
-          events.addAll(d.events ?? []);
-        }
-      }
-    }
-    return events.toSet().toList();
+    return _events[DateFormat.yMd().format(day)] ?? [];
   }
 
   void _jumpToDate() async {
@@ -136,45 +123,46 @@ class _CalendarScreenState extends State<CalendarScreen> {
       isDismissible: true,
       isScrollControlled: true,
       useRootNavigator: true,
-      builder: (_) => Wrap(
-        children: [
-          Column(
-            mainAxisSize: MainAxisSize.min,
+      builder: (_) =>
+          Wrap(
             children: [
-              Container(height: 20),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: Text('Jump to date', style: TextStyle(fontSize: 20)),
-              ),
-              Container(height: 40),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 32),
-                child: SizedBox(
-                  height: 100,
-                  child: CupertinoDatePicker(
-                    initialDateTime: DateTime.now(),
-                    onDateTimeChanged: (value) =>
-                        setState(() => _jumpDate = value),
-                    mode: CupertinoDatePickerMode.date,
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(height: 20),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    child: Text('Jump to date', style: TextStyle(fontSize: 20)),
                   ),
-                ),
+                  Container(height: 40),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 32),
+                    child: SizedBox(
+                      height: 100,
+                      child: CupertinoDatePicker(
+                        initialDateTime: DateTime.now(),
+                        onDateTimeChanged: (value) =>
+                            setState(() => _jumpDate = value),
+                        mode: CupertinoDatePickerMode.date,
+                      ),
+                    ),
+                  ),
+                  Container(height: 40),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: CustomButtonWidget(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        _updateFocusedDay(_jumpDate, _jumpDate);
+                      },
+                      textButton: 'Jump',
+                    ),
+                  ),
+                  Container(height: 20),
+                ],
               ),
-              Container(height: 40),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: CustomButtonWidget(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    _updateFocusedDay(_jumpDate, _jumpDate);
-                  },
-                  textButton: 'Jump',
-                ),
-              ),
-              Container(height: 20),
             ],
           ),
-        ],
-      ),
     );
   }
 
@@ -188,54 +176,56 @@ class _CalendarScreenState extends State<CalendarScreen> {
           Padding(
             padding: const EdgeInsets.only(bottom: 12),
             child:
-                Text('Events on ' + DateFormat('MMMM dd').format(_selectedDay),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    )),
+            Text('Events on ' + DateFormat('MMMM dd').format(_selectedDay),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                )),
           ),
 
           // Event list
           ..._selectedEvents.map((e) {
             final title = e.name ?? '';
-            final dueDate =
-                DateTime.fromMillisecondsSinceEpoch((e.timestart ?? 0) * 1000);
+            final epoch = (e.timestart ?? 0) * 1000;
+            final dueDate = DateTime.fromMillisecondsSinceEpoch(epoch);
             switch (e.modulename ?? '') {
               case ModuleName.assign:
                 return FutureBuilder(
-                  future: queryModule(e),
-                  builder: (context, data) {
-                    if (data.hasError) {
-                      return ErrorCard(text: '${data.error}');
-                    } else if (!data.hasData) {
-                      return const LoadingCard();
+                    future: queryModule(e),
+                    builder: (context, data) {
+                      if (data.hasError) {
+                        return ErrorCard(text: '${data.error}');
+                      } else if (!data.hasData) {
+                        return const LoadingCard();
+                      }
+                      final instance = (data.data as ModuleCourse).instance ??
+                          0;
+                      return SubmissionItem(
+                        title: title,
+                        submissionId: instance,
+                        courseId: e.course?.id ?? 0,
+                        dueDate: dueDate,
+                      );
                     }
-                    final instance = (data.data as ModuleCourse).instance ?? 0;
-                    return SubmissionItem(
-                      title: title,
-                      submissionId: instance,
-                      courseId: e.course?.id ?? 0,
-                      dueDate: dueDate,
-                    );
-                  }
                 );
               case ModuleName.quiz:
                 return FutureBuilder(
-                  future: queryModule(e),
-                  builder: (context, data) {
-                    if (data.hasError) {
-                      return ErrorCard(text: '${data.error}');
-                    } else if (!data.hasData) {
-                      return const LoadingCard();
+                    future: queryModule(e),
+                    builder: (context, data) {
+                      if (data.hasError) {
+                        return ErrorCard(text: '${data.error}');
+                      } else if (!data.hasData) {
+                        return const LoadingCard();
+                      }
+                      final instance = (data.data as ModuleCourse).instance ??
+                          0;
+                      return QuizItem(
+                        title: title,
+                        openDate: dueDate,
+                        quizInstanceId: instance,
+                        courseId: e.course?.id ?? 0,
+                      );
                     }
-                    final instance = (data.data as ModuleCourse).instance ?? 0;
-                    return QuizItem(
-                      title: title,
-                      openDate: dueDate,
-                      quizInstanceId: instance,
-                      courseId: e.course?.id ?? 0,
-                    );
-                  }
                 );
               default:
                 throw Exception('Unknown module name: ' + (e.modulename ?? ''));
@@ -259,10 +249,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   Future queryData() async {
     try {
-      _calendar = await CalendarService().getCalendarByRange(
+      _events = await CalendarService().getEventsByMonth(
         _userStore.user.token,
         _focusedDay,
-        range: 0,
       );
       _initMonthView();
       _initDayView();
@@ -288,15 +277,15 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     alignment: Alignment.center,
                     children: [
                       AnimatedOpacity(
-                        opacity: (_calendar == null) ? .5 : 1,
+                        opacity: (_events.isEmpty) ? .5 : 1,
                         duration: const Duration(milliseconds: 300),
                         child: IgnorePointer(
-                          ignoring: _calendar == null,
+                          ignoring: _events.isEmpty,
                           child: _monthView,
                         ),
                       ),
                       AnimatedOpacity(
-                          opacity: (_calendar == null) ? 1 : 0,
+                          opacity: (_events.isEmpty) ? 1 : 0,
                           duration: const Duration(milliseconds: 300),
                           child: const CircularProgressIndicator.adaptive()),
                     ],

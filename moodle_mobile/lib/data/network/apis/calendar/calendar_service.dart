@@ -1,10 +1,14 @@
 import 'dart:async';
 
+import 'package:intl/intl.dart';
 import 'package:moodle_mobile/data/network/constants/endpoints.dart';
 import 'package:moodle_mobile/data/network/constants/wsfunction_constants.dart';
 import 'package:moodle_mobile/data/network/dio_http.dart';
 import 'package:dio/dio.dart';
 import 'package:moodle_mobile/models/calendar/calendar.dart';
+import 'package:moodle_mobile/models/calendar/day.dart';
+import 'package:moodle_mobile/models/calendar/event.dart';
+import 'package:moodle_mobile/models/calendar/week.dart';
 
 class CalendarService {
   Future<Calendar> getCalendarByMonth(String token, DateTime date) async {
@@ -27,19 +31,21 @@ class CalendarService {
     }
   }
 
-  Future<Calendar> getCalendarByRange(String token, DateTime date,
-      {int range = 0}) async {
-    range = range.abs();
+  Future<Map<String, List<Event>>> getEventsByMonth(
+      String token, DateTime date) async {
     final calendar = await getCalendarByMonth(token, date);
-    calendar.weeks = calendar.weeks ?? [];
-    for (var i = 0; i < range; i += 1) {
-      final lastMonth = await getCalendarByMonth(
-          token, DateTime(date.year, date.month - i + 1, date.day));
-      final nextMonth = await getCalendarByMonth(
-          token, DateTime(date.year, date.month + i + 1, date.day));
-      calendar.weeks!.addAll(lastMonth.weeks ?? []);
-      calendar.weeks!.addAll(nextMonth.weeks ?? []);
+    final events = <String, List<Event>>{};
+    for (Week w in calendar.weeks ?? []) {
+      for (Day d in w.days ?? []) {
+        final epoch = (d.timestamp ?? 0) * 1000;
+        DateTime dt = DateTime.fromMillisecondsSinceEpoch(epoch);
+        var key = DateFormat.yMd().format(dt);
+        var visibleEvents =
+            (d.events ?? []).where((e) => (e.visible ?? 0) != 0);
+        events[key] ??= [];
+        events[key]!.addAll(visibleEvents);
+      }
     }
-    return calendar;
+    return events;
   }
 }
