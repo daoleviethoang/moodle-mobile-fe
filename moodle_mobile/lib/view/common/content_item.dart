@@ -23,6 +23,28 @@ class ForumItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MenuItem(
+      icon: const Icon(Icons.forum_outlined),
+      color: Colors.amber,
+      title: title,
+      fullWidth: true,
+      onPressed: onPressed,
+    );
+  }
+}
+
+class ChatItem extends StatelessWidget {
+  final String title;
+  final VoidCallback? onPressed;
+
+  const ChatItem({
+    Key? key,
+    required this.title,
+    required this.onPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MenuItem(
       icon: const Icon(CupertinoIcons.chat_bubble_2),
       color: Colors.amber,
       title: title,
@@ -51,9 +73,10 @@ class DocumentItem extends StatelessWidget {
       fullWidth: true,
       onPressed: () async {
         // Download this document from link
-        var ableLaunch = await canLaunch(documentUrl);
+        final uri = Uri.parse(documentUrl);
+        var ableLaunch = await canLaunchUrl(uri);
         if (ableLaunch) {
-          await launch(documentUrl);
+          await launchUrl(uri);
         } else {
           print("URL can't be launched.");
         }
@@ -111,9 +134,10 @@ class UrlItem extends StatelessWidget {
       fullWidth: true,
       onPressed: () async {
         // Go to webpage in browser
-        var ableLaunch = await canLaunch(url);
+        final uri = Uri.parse(url);
+        var ableLaunch = await canLaunchUrl(uri);
         if (ableLaunch) {
-          await launch(url);
+          await launchUrl(uri);
         } else {
           print("URL can't be launched.");
         }
@@ -124,14 +148,16 @@ class UrlItem extends StatelessWidget {
 
 class SubmissionItem extends StatelessWidget {
   final String title;
-  final String submissionId;
+  final int submissionId;
   final DateTime? dueDate;
+  final int courseId;
 
   const SubmissionItem({
     Key? key,
     required this.title,
     required this.submissionId,
     this.dueDate,
+    required this.courseId,
   }) : super(key: key);
 
   @override
@@ -150,8 +176,8 @@ class SubmissionItem extends StatelessWidget {
             MaterialPageRoute(
                 builder: (context) => AssignmentScreen(
                       title: title,
-                      assignInstanceId: 11129,
-                      courseId: 1873,
+                      assignInstanceId: submissionId,
+                      courseId: courseId,
                     )));
       },
     );
@@ -210,6 +236,28 @@ class AttachmentItem extends StatelessWidget {
   }
 }
 
+class PageItem extends StatelessWidget {
+  final String title;
+  final VoidCallback? onPressed;
+
+  const PageItem({
+    Key? key,
+    required this.title,
+    required this.onPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MenuItem(
+      icon: const Icon(CupertinoIcons.doc_richtext),
+      color: Colors.pink,
+      title: title,
+      fullWidth: true,
+      onPressed: onPressed,
+    );
+  }
+}
+
 // endregion
 
 // region Cards
@@ -232,6 +280,32 @@ class RichTextCard extends StatelessWidget {
           child: Html(
             data: text,
             style: MoodleStyles.htmlStyle,
+            onLinkTap: (url, cxt, attributes, element) async {
+              await showGeneralDialog(
+                context: context,
+                pageBuilder: (context, ani1, ani2) {
+                  return AlertDialog(
+                    title: const Text('Open link in browser'),
+                    content: Text(url ?? ''),
+                    shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(16))),
+                    actions: [
+                      TextButton(
+                        onPressed: () async => Navigator.pop(context),
+                        child: const Text('Cancel'),
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          Navigator.pop(context);
+                          await launchUrl(Uri.parse(url ?? ''));
+                        },
+                        child: const Text('Open'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
           ),
         ),
       ),
@@ -259,7 +333,7 @@ class HeaderItem extends StatelessWidget {
         text,
         style: TextStyle(
           fontSize: 18,
-          color: Theme.of(context).primaryColor,
+          color: Theme.of(context).colorScheme.primary,
           fontWeight: FontWeight.bold,
         ),
       ),

@@ -19,6 +19,7 @@ class MoodleColors {
   static const Color darkGrayShadow = Color(0xffacacac);
   static const Color brightGray = Color(0xffe8edf4);
   static const Color gray = Color(0xff808080);
+  static const Color mediumGray = Color(0x00B5B5B5);
   static const Color purple = Color(0xff7B61FF);
   static const Color grey_icon_status = Color(0xffC4C4C4);
   static const Color green_icon_status = Color(0xff3CC13B);

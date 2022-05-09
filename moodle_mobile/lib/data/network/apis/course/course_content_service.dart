@@ -4,18 +4,16 @@ import 'package:moodle_mobile/data/network/constants/endpoints.dart';
 import 'package:moodle_mobile/data/network/constants/wsfunction_constants.dart';
 import 'package:moodle_mobile/data/network/dio_http.dart';
 import 'package:dio/dio.dart';
-import 'package:moodle_mobile/models/course/course.dart';
 import 'package:moodle_mobile/models/course/course_content.dart';
-import 'package:moodle_mobile/models/course_category/course_category_course.dart';
 
 class CourseContentService {
-  static Future<List<CourseContent>> getCourseContent(
+  Future<List<CourseContent>> getCourseContent(
       String token, int id) async {
     try {
       Dio dio = Http().client;
       final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
         'wstoken': token,
-        'wsfunction': 'core_course_get_contents',
+        'wsfunction': Wsfunction.GET_COURSE_CONTENTS,
         'moodlewsrestformat': 'json',
         'courseid': id,
       });

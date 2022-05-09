@@ -22,6 +22,7 @@ class FilesAssignmentScreen extends StatefulWidget {
   final int assignId;
   final int dueDate;
   final VoidCallback reload;
+  final bool canEdit;
   const FilesAssignmentScreen({
     Key? key,
     required this.maxByteSize,
@@ -30,6 +31,7 @@ class FilesAssignmentScreen extends StatefulWidget {
     required this.reload,
     required this.assignId,
     required this.dueDate,
+    required this.canEdit,
   }) : super(key: key);
 
   @override
@@ -131,7 +133,7 @@ class _FilesAssignmentScreenState extends State<FilesAssignmentScreen> {
       }
     });
     setState(() {
-      disable = widget.dueDate * 1000 < DateTime.now().millisecondsSinceEpoch;
+      disable = !widget.canEdit;
       files.sort(((a, b) => a.filename.compareTo(b.filename)));
       isLoading = false;
     });
@@ -291,10 +293,14 @@ class _FilesAssignmentScreenState extends State<FilesAssignmentScreen> {
                                       .uploadMultipleFile(
                                           _userStore.user.token, files);
                                   if (itemId != null) {
-                                    AssignmentApi().saveAssignment(
+                                    await AssignmentApi().saveAssignment(
                                         _userStore.user.token,
                                         widget.assignId,
                                         itemId);
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                            content: Text("Submit success"),
+                                            backgroundColor: Colors.green));
                                     widget.reload();
                                   } else {
                                     ScaffoldMessenger.of(context).showSnackBar(

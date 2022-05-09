@@ -4,6 +4,7 @@ class Wsfunction {
   static const String GET_USERS_COURSES = "core_enrol_get_users_courses";
   static const String GET_ENROLLED_USERS = "core_enrol_get_enrolled_users";
   static const String GET_COURSE_BY_FIELD = "core_course_get_courses_by_field";
+  static const String GET_COURSE_CONTENTS = "core_course_get_contents";
 
   //user
   static const String GET_COURSE_GET_CATEGORIES = "core_course_get_categories";
@@ -43,4 +44,11 @@ class Wsfunction {
   //notification
   static const String MESSAGE_POPUP_GET_POPUP_NOTIFICATION =
       'message_popup_get_popup_notifications';
+  
+  //notification preference
+  static const String CORE_MESSAGE_GET_USER_NOTIFICATION_PREFERENCES =
+      "core_message_get_user_notification_preferences";
+  static const String CORE_USER_UPDATE_USER_PREFERENCE =
+      "core_user_update_user_preferences";
 }
+
