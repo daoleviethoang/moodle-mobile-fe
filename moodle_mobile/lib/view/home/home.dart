@@ -13,6 +13,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  ContantModel arrangeTypeSelected = ContantExtension.CourseArrangeSelected;
+  ContantModel statusTypeSelected = ContantExtension.CourseStatusSelected;
+  bool showOnlyStarSelected = false;
+  bool isFilter = false;
   CategoryType categoryType = CategoryType.my;
 
   @override
@@ -51,7 +55,11 @@ class _HomeScreenState extends State<HomeScreen> {
         children: <Widget>[
           Container(
             margin: const EdgeInsets.only(top: 30),
-            child: const PopularCourseListView(),
+            child: PopularCourseListView(
+                arrangeTypeSelected: arrangeTypeSelected,
+                statusTypeSelected: statusTypeSelected,
+                showOnlyStarSelected: showOnlyStarSelected,
+                isFilter: isFilter),
           ),
           getDropdownStatus(),
         ],
@@ -149,12 +157,22 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget getDropdownStatus() {
     return SelectCourseFilter(
-      ContantExtension.CourseArrangeSelected,
-      ContantExtension.CourseStatusSelected,
-      (optionItem1, optionItem2) {
-        optionItem1;
-        optionItem2;
-        setState(() {});
+      arrangeTypeSelected,
+      statusTypeSelected,
+      showOnlyStarSelected,
+      isFilter,
+      (arrangeTypeSelected, statusTypeSelected, showOnlyStarSelected,
+          isFilter) {
+        arrangeTypeSelected;
+        statusTypeSelected;
+        showOnlyStarSelected;
+        isFilter;
+        setState(() {
+          this.arrangeTypeSelected = arrangeTypeSelected;
+          this.statusTypeSelected = statusTypeSelected;
+          this.showOnlyStarSelected = showOnlyStarSelected;
+          this.isFilter = isFilter;
+        });
       },
     );
   }

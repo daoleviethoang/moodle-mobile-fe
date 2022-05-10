@@ -4,6 +4,7 @@ import 'package:moodle_mobile/data/network/apis/contact/contact_service.dart';
 import 'package:moodle_mobile/data/network/apis/course/course_detail_service.dart';
 import 'package:moodle_mobile/data/network/apis/course/course_service.dart';
 import 'package:moodle_mobile/models/contact/contact.dart';
+import 'package:moodle_mobile/models/contant/contant_model.dart';
 import 'package:moodle_mobile/models/course/course.dart';
 import 'package:moodle_mobile/models/course/course_detail.dart';
 import 'package:moodle_mobile/models/course/courses.dart';
@@ -13,10 +14,21 @@ import 'package:moodle_mobile/view/course_details.dart';
 import '../../constants/colors.dart';
 
 class PopularCourseListView extends StatefulWidget {
-  const PopularCourseListView({Key? key}) : super(key: key);
+  final ContantModel arrangeTypeSelected;
+  final ContantModel statusTypeSelected;
+  final bool showOnlyStarSelected;
+  final bool isFilter;
+
+  PopularCourseListView(
+      {Key? key,
+      required this.arrangeTypeSelected,
+      required this.statusTypeSelected,
+      required this.showOnlyStarSelected,
+      required this.isFilter})
+      : super(key: key);
 
   @override
-  _PopularCourseListViewState createState() => _PopularCourseListViewState();
+  State<StatefulWidget> createState() => _PopularCourseListViewState();
 }
 
 class _PopularCourseListViewState extends State<PopularCourseListView>
@@ -32,7 +44,6 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
         duration: const Duration(milliseconds: 2000), vsync: this);
     _userStore = GetIt.instance<UserStore>();
     getData();
-    setState(() {});
     super.initState();
   }
 
@@ -80,31 +91,33 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
           ? const Center(
               child: CircularProgressIndicator(),
             )
-          : ListView(
-              padding: const EdgeInsets.all(8),
-              physics: const BouncingScrollPhysics(),
-              scrollDirection: Axis.vertical,
-              children: List<Widget>.generate(
-                coursesOverview.length,
-                (int index) {
-                  final int count = coursesOverview.length;
-                  final Animation<double> animation =
-                      Tween<double>(begin: 0.0, end: 1.0).animate(
-                    CurvedAnimation(
-                      parent: animationController!,
-                      curve: Interval((1 / count) * index, 1.0,
-                          curve: Curves.fastOutSlowIn),
-                    ),
-                  );
-                  animationController?.forward();
-                  return CategoryView(
-                    course: coursesOverview[index],
-                    animation: animation,
-                    animationController: animationController,
-                  );
-                },
-              ),
-            ),
+          : widget.isFilter
+              ? Text("filter")
+              : ListView(
+                  padding: const EdgeInsets.all(8),
+                  physics: const BouncingScrollPhysics(),
+                  scrollDirection: Axis.vertical,
+                  children: List<Widget>.generate(
+                    coursesOverview.length,
+                    (int index) {
+                      final int count = coursesOverview.length;
+                      final Animation<double> animation =
+                          Tween<double>(begin: 0.0, end: 1.0).animate(
+                        CurvedAnimation(
+                          parent: animationController!,
+                          curve: Interval((1 / count) * index, 1.0,
+                              curve: Curves.fastOutSlowIn),
+                        ),
+                      );
+                      animationController?.forward();
+                      return CategoryView(
+                        course: coursesOverview[index],
+                        animation: animation,
+                        animationController: animationController,
+                      );
+                    },
+                  ),
+                ),
     );
   }
 }
