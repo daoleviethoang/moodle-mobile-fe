@@ -1,17 +1,34 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:moodle_mobile/store/user/user_store.dart';
+import 'package:moodle_mobile/view/menu/profile/profile.dart';
 
-class MenuScreen extends StatelessWidget {
+class MenuScreen extends StatefulWidget {
   const MenuScreen({Key? key}) : super(key: key);
+
+  @override
+  State<MenuScreen> createState() => _MenuScreenState();
+}
+
+class _MenuScreenState extends State<MenuScreen> {
+  late UserStore _userStore;
+
+  @override
+  void initState() {
+    _userStore = GetIt.instance();
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          title: Text(
-        'Learning Management System',
-        style: TextStyle(color: Colors.white),
-      )),
+      // appBar: AppBar(
+      //     title: Text(
+      //   'Learning Management System',
+      //   style: TextStyle(color: Colors.white),
+      // )),
       body: Padding(
         padding: const EdgeInsets.only(top: 20, left: 15, right: 15),
         child: SingleChildScrollView(
@@ -19,34 +36,7 @@ class MenuScreen extends StatelessWidget {
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Padding(
               padding: const EdgeInsets.only(bottom: 10),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CircleAvatar(
-                    radius: 23,
-                  ),
-                  SizedBox(
-                    width: 5,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Tran Dinh Phat',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(height: 6),
-                      Text(
-                        '18127177@student.hcmus.edu.vn',
-                        style: TextStyle(
-                            color: Colors.grey,
-                            decoration: TextDecoration.underline),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+              child: ProfileHeader(userStore: _userStore),
             ),
             Container(
               margin: EdgeInsets.only(left: 10.0, right: 10.0),
@@ -202,7 +192,9 @@ class MenuScreen extends StatelessWidget {
                       height: 8,
                     ),
                     MenuButton(
-                      onTap: () {},
+                      onTap: () {
+                        //Navigator.pop(context);
+                      },
                       iconColor: Colors.grey,
                       name: 'Log out',
                       iconName: Icons.logout_outlined,
@@ -211,6 +203,55 @@ class MenuScreen extends StatelessWidget {
             ),
           ]),
         ),
+      ),
+    );
+  }
+}
+
+class ProfileHeader extends StatelessWidget {
+  const ProfileHeader({
+    Key? key,
+    required UserStore userStore,
+  })  : _userStore = userStore,
+        super(key: key);
+
+  final UserStore _userStore;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () => Navigator.push<dynamic>(
+        context,
+        MaterialPageRoute<dynamic>(
+          builder: (BuildContext context) => const ProfileScreen(),
+        ),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CircleAvatar(
+            radius: 23,
+          ),
+          SizedBox(
+            width: 5,
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                _userStore.user.fullname,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 6),
+              Text(
+                _userStore.user.email,
+                style: TextStyle(
+                    color: Colors.grey, decoration: TextDecoration.underline),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

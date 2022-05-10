@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/constants/colors.dart';
+import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/user/description_common.dart';
 import 'package:moodle_mobile/view/common/user/public_user_information_common.dart';
 import 'package:moodle_mobile/view/common/user/user_detail_common.dart';
@@ -12,6 +14,15 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  late UserStore _userStore;
+
+  @override
+  void initState() {
+    _userStore = GetIt.instance();
+    // TODO: implement initState
+    super.initState();
+  }
+
   // int _selectedIndex = 0;
 
   // void _onItemTapped(int index) {
@@ -37,14 +48,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
           padding: const EdgeInsets.only(left: 20, right: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: const <Widget>[
+            children: <Widget>[
               PublicInfomationCommonView(
                 imageUrl:
                     'https://meta.vn/Data/image/2021/08/17/con-vit-vang-tren-fb-la-gi-trend-anh-avatar-con-vit-vang-la-gi-3.jpg',
-                name: "Tran Dinh Phat",
+                name: _userStore.user.fullname,
               ),
               UserDetailCommonView(
-                email: "18127177@student.hcmus.edu.vn",
+                email: _userStore.user.email,
                 location: "Ho Chi Minh, Viet Nam",
               ),
               DescriptionCommonView(

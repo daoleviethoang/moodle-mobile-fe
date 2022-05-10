@@ -1,12 +1,21 @@
 class Wsfunction {
   Wsfunction._();
 
+  // course
   static const String GET_USERS_COURSES = "core_enrol_get_users_courses";
   static const String GET_ENROLLED_USERS = "core_enrol_get_enrolled_users";
   static const String GET_COURSE_BY_FIELD = "core_course_get_courses_by_field";
+  static const String GET_COURSE_CONTENTS = "core_course_get_contents";
+
+  // module
+  static const String GET_MODULE_BY_ID = "core_course_get_course_module";
 
   //user
   static const String GET_COURSE_GET_CATEGORIES = "core_course_get_categories";
+
+  // calendar
+  static const String GET_CALENDAR_MONTHLY =
+      "core_calendar_get_calendar_monthly_view";
 
   //course category
   static const String CORE_USER_GET_USERS_BY_FIELD =
@@ -25,6 +34,8 @@ class Wsfunction {
   static const String MOD_FORUM_ADD_DISCUSSION = "mod_forum_add_discussion";
   static const String MOD_FORUM_ADD_DISCUSSION_POST =
       "mod_forum_add_discussion_post";
+  static const String MOD_FORUM_GET_FORUM_DISCUSSIONS =
+      "mod_forum_get_forum_discussions";
 
   // message
   static const String CORE_MESSAGE_SEND_MESSAGES_TO_CONVERSATION =
@@ -39,4 +50,14 @@ class Wsfunction {
       "core_message_mute_conversations";
   static const String CORE_MESSAGE_GET_CONVERSATIONS =
       "core_message_get_conversations";
+
+  //notification
+  static const String MESSAGE_POPUP_GET_POPUP_NOTIFICATION =
+      'message_popup_get_popup_notifications';
+
+  //notification preference
+  static const String CORE_MESSAGE_GET_USER_NOTIFICATION_PREFERENCES =
+      "core_message_get_user_notification_preferences";
+  static const String CORE_USER_UPDATE_USER_PREFERENCE =
+      "core_user_update_user_preferences";
 }

@@ -8,6 +8,7 @@ import 'package:moodle_mobile/data/network/constants/wsfunction_constants.dart';
 import 'package:moodle_mobile/data/network/dio_http.dart';
 import 'package:moodle_mobile/models/assignment/file_assignment.dart';
 import 'package:moodle_mobile/models/forum/forum_course.dart';
+import 'package:moodle_mobile/models/forum/forum_discussion.dart';
 
 class ForumApi {
   // injecting dio instance
@@ -35,6 +36,24 @@ class ForumApi {
         }
       }
       return null;
+    } catch (e) {}
+    return null;
+  }
+
+  Future<List<ForumDiscussion>?> getForumDiscussion(
+      String token, int forumid) async {
+    try {
+      Dio dio = Http().client;
+      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': Wsfunction.MOD_FORUM_GET_FORUM_DISCUSSIONS,
+        'moodlewsrestformat': "json",
+        'forumid': forumid
+      });
+      var list = res.data["discussions"] as List;
+      List<ForumDiscussion> temp =
+          list.map((e) => ForumDiscussion.fromJson(e)).toList();
+      return temp;
     } catch (e) {}
     return null;
   }
@@ -116,8 +135,8 @@ class ForumApi {
       final res =
           await dio.get(Endpoints.webserviceServer, queryParameters: query);
 
-      if (res.data["error"] != null) {
-        throw res.data["error"];
+      if (res.data["exception"] != null) {
+        throw res.data["exception"];
       }
 
       return;

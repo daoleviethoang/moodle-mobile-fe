@@ -21,23 +21,31 @@ class CourseDetail {
   List<Contact>? contacts;
   List<String>? enrollmentmethods;
 
-  CourseDetail(
-      {this.id,
-        this.fullname,
-        this.displayname,
-        this.shortname,
-        this.categoryid,
-        this.categoryname,
-        this.sortorder,
-        this.summary,
-        this.summaryformat,
-        this.summaryfiles,
-        this.overviewfiles,
-        this.showactivitydates,
-        this.showcompletionconditions,
-        this.contacts,
-        this.enrollmentmethods});
+  CourseDetail({
+    this.id,
+    this.fullname,
+    this.displayname,
+    this.shortname,
+    this.categoryid,
+    this.categoryname,
+    this.sortorder,
+    this.summary,
+    this.summaryformat,
+    this.summaryfiles,
+    this.overviewfiles,
+    this.showactivitydates,
+    this.showcompletionconditions,
+    this.contacts,
+    this.enrollmentmethods,
+  });
 
-  factory CourseDetail.fromJson(Map<String, dynamic> json) => _$CourseDetailFromJson(json);
+  factory CourseDetail.fromJson(Map<String, dynamic> json) =>
+      _$CourseDetailFromJson(json);
+
   Map<String, dynamic> toJson() => _$CourseDetailToJson(this);
+
+  @override
+  String toString() {
+    return toJson().toString();
+  }
 }

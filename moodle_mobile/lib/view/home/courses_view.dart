@@ -52,7 +52,6 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
       isLoad = true;
     });
 
-    await Future<dynamic>.delayed(const Duration(milliseconds: 2));
     try {
       List<Course> courses = await CourseService()
           .getCourses(_userStore.user.token, _userStore.user.id);
