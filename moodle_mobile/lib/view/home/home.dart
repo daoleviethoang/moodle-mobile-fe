@@ -50,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Stack(
         children: <Widget>[
           Container(
-            margin: const EdgeInsets.only(top: 30),
+            margin: const EdgeInsets.only(top: 40),
             child: const PopularCourseListView(),
           ),
           getDropdownStatus(),

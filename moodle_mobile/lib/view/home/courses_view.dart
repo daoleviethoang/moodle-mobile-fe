@@ -29,7 +29,7 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
   @override
   void initState() {
     animationController = AnimationController(
-        duration: const Duration(milliseconds: 2000), vsync: this);
+        duration: const Duration(milliseconds: 1200), vsync: this);
     _userStore = GetIt.instance<UserStore>();
     getData();
     setState(() {});
@@ -83,26 +83,31 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
               padding: const EdgeInsets.all(8),
               physics: const BouncingScrollPhysics(),
               scrollDirection: Axis.vertical,
-              children: List<Widget>.generate(
-                coursesOverview.length,
-                (int index) {
-                  final int count = coursesOverview.length;
-                  final Animation<double> animation =
-                      Tween<double>(begin: 0.0, end: 1.0).animate(
-                    CurvedAnimation(
-                      parent: animationController!,
-                      curve: Interval((1 / count) * index, 1.0,
-                          curve: Curves.fastOutSlowIn),
-                    ),
-                  );
-                  animationController?.forward();
-                  return CategoryView(
-                    course: coursesOverview[index],
-                    animation: animation,
-                    animationController: animationController,
-                  );
-                },
-              ),
+              children: [
+                ...List<Widget>.generate(
+                  coursesOverview.length,
+                  (int index) {
+                    final int count = coursesOverview.length;
+                    final Animation<double> animation =
+                        Tween<double>(begin: 0.0, end: 1.0).animate(
+                      CurvedAnimation(
+                        parent: animationController!,
+                        curve: Interval((1 / count) * index, 1.0,
+                            curve: Curves.fastOutSlowIn),
+                      ),
+                    );
+                    animationController?.forward();
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: CategoryView(
+                        course: coursesOverview[index],
+                        animation: animation,
+                        animationController: animationController,
+                      ),
+                    );
+                  },
+                ),
+              ],
             ),
     );
   }

@@ -30,4 +30,12 @@ class SharedPreferenceHelper {
   Future<bool> saveUsername(String username) async {
     return _sharedPreference.setString(Preferences.username, username);
   }
+
+  String? get baseUrl {
+    return _sharedPreference.getString(Preferences.base_url);
+  }
+
+  Future<bool> saveBaseUrl(String baseUrl) async {
+    return _sharedPreference.setString(Preferences.base_url, baseUrl);
+  }
 }
