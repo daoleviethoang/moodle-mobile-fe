@@ -11,8 +11,6 @@ import 'package:moodle_mobile/view/viewer/image_viewer.dart';
 import 'package:moodle_mobile/view/viewer/video_viewer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'image_view.dart';
-
 // region Icon and text
 
 class ForumItem extends StatelessWidget {
