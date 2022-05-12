@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/view/assignment/index.dart';
-import 'package:moodle_mobile/view/common/menu_item.dart';
+import 'package:moodle_mobile/view/common/menu_item.dart' as m;
 import 'package:moodle_mobile/view/quiz/index.dart';
 import 'package:moodle_mobile/view/video_viewer.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -24,7 +24,7 @@ class ForumItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MenuItem(
+    return m.MenuItem(
       icon: const Icon(Icons.forum_outlined),
       color: Colors.amber,
       title: title,
@@ -46,7 +46,7 @@ class ChatItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MenuItem(
+    return m.MenuItem(
       icon: const Icon(CupertinoIcons.chat_bubble_2),
       color: Colors.amber,
       title: title,
@@ -68,7 +68,7 @@ class DocumentItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MenuItem(
+    return m.MenuItem(
       icon: const Icon(CupertinoIcons.book),
       color: Colors.pink,
       title: title,
@@ -99,7 +99,7 @@ class VideoItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MenuItem(
+    return m.MenuItem(
       icon: const Icon(CupertinoIcons.video_camera),
       color: Colors.green,
       title: title,
@@ -128,7 +128,7 @@ class UrlItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MenuItem(
+    return m.MenuItem(
       icon: const Icon(CupertinoIcons.link),
       color: Colors.deepPurple,
       title: title,
@@ -164,7 +164,7 @@ class SubmissionItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MenuItem(
+    return m.MenuItem(
       icon: const Icon(CupertinoIcons.doc),
       color: MoodleColors.blue,
       title: title,
@@ -202,7 +202,7 @@ class QuizItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MenuItem(
+    return m.MenuItem(
       icon: const Icon(CupertinoIcons.question_square),
       color: MoodleColors.blue,
       title: title,
@@ -238,7 +238,7 @@ class AttachmentItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MenuItem(
+    return m.MenuItem(
       icon: const Icon(CupertinoIcons.doc),
       color: Colors.grey,
       title: title,
@@ -261,7 +261,7 @@ class PageItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MenuItem(
+    return m.MenuItem(
       icon: const Icon(CupertinoIcons.doc_richtext),
       color: Colors.pink,
       title: title,

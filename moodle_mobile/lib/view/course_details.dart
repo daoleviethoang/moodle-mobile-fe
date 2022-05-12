@@ -12,7 +12,7 @@ import 'package:moodle_mobile/models/module/module.dart';
 import 'package:moodle_mobile/view/common/content_item.dart';
 import 'package:moodle_mobile/view/common/data_card.dart';
 import 'package:moodle_mobile/view/common/image_view.dart';
-import 'package:moodle_mobile/view/common/menu_item.dart';
+import 'package:moodle_mobile/view/common/menu_item.dart' as m;
 import 'package:moodle_mobile/view/forum/forum_screen.dart';
 import 'package:moodle_mobile/view/grade_in_one_course.dart';
 import 'package:moodle_mobile/view/user_detail/user_detail.dart';
@@ -238,7 +238,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
           ...List.generate(participants.length, (index) {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: MenuItem(
+              child: m.MenuItem(
                 image: const RoundedImageView(
                   imageUrl: 'user-avatar-url',
                   placeholder: Icon(Icons.person, size: 48),
