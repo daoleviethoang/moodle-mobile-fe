@@ -13,6 +13,7 @@ import 'package:moodle_mobile/view/common/content_item.dart';
 import 'package:moodle_mobile/view/common/data_card.dart';
 import 'package:moodle_mobile/view/common/image_view.dart';
 import 'package:moodle_mobile/view/common/menu_item.dart';
+import 'package:moodle_mobile/view/enroll/enroll.dart';
 import 'package:moodle_mobile/view/forum/forum_screen.dart';
 import 'package:moodle_mobile/view/grade_in_one_course.dart';
 import 'package:moodle_mobile/view/user_detail/user_detail.dart';
@@ -306,6 +307,13 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
       );
       _initBody();
     } catch (e) {
+      if (e.toString() == "errorcoursecontextnotvalid") {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) {
+          return EnrollScreen(
+            courseId: widget.courseId,
+          );
+        }));
+      }
       rethrow;
     }
   }

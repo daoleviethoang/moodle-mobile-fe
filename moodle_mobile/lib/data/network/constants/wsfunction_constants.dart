@@ -60,4 +60,7 @@ class Wsfunction {
       "core_message_get_user_notification_preferences";
   static const String CORE_USER_UPDATE_USER_PREFERENCE =
       "core_user_update_user_preferences";
+
+  //enroll
+  static const String ENROL_SELF_ENROL_USER = "enrol_self_enrol_user";
 }
