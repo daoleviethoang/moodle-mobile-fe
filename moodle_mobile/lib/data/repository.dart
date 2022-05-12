@@ -32,6 +32,14 @@ class Repository {
     return _sharedPreferencesHelper.saveUsername(username);
   }
 
+  String? get baseUrl {
+    return _sharedPreferencesHelper.baseUrl;
+  }
+
+  Future<bool> saveBaseUrl(String baseUrl) {
+    return _sharedPreferencesHelper.saveBaseUrl(baseUrl);
+  }
+
   // User Login
   Future<String> login(String username, String password, String service) =>
       _userApi.login(username, password, service);
