@@ -80,7 +80,7 @@ abstract class _UserStore with Store {
       String? username = _repository.username;
       String? baseUrl = _repository.baseUrl;
 
-      if (token == null || username == null || baseUrl == null) {
+      if (token == null || token == "" || username == null || baseUrl == null) {
         isLogin = false;
         isLoading = false;
         return;
@@ -102,8 +102,25 @@ abstract class _UserStore with Store {
   }
 
   @action
+  Future setUser(String token, String username) async {
+    try {
+      _repository.saveAuthToken(token);
+      _repository.saveUsername(username);
+
+      user = await _repository.getUserInfo(token, username);
+      print("here userstore");
+
+      isLogin = true;
+    } catch (e) {
+      print("Set user error: " + e.toString());
+      isLoginFailed = true;
+      isLogin = false;
+    }
+  }
+
+  @action
   void logout() {
-    _repository.removeAuthToken();
+    _repository.saveAuthToken("");
     isLogin = false;
   }
 }

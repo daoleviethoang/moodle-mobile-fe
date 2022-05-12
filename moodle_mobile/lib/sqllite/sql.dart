@@ -43,7 +43,7 @@ class SQLHelper {
 
   static Future<List<UserLogin>> getUserItems() async {
     final db = await SQLHelper.db();
-    var list = db.query('users', orderBy: "id") as List;
+    var list = await db.query('users', orderBy: "id");
 
     return list.map((e) => UserLogin.fromJson(e)).toList();
   }
