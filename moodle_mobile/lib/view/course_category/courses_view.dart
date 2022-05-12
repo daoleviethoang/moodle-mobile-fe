@@ -60,10 +60,13 @@ class _CategoryCourseListViewState extends State<CategoryCourseListView>
                     ),
                   );
                   animationController?.forward();
-                  return CategoryView(
-                    course: widget.courses[index],
-                    animation: animation,
-                    animationController: animationController,
+                  return Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: CategoryView(
+                      course: widget.courses[index],
+                      animation: animation,
+                      animationController: animationController,
+                    ),
                   );
                 },
               ),

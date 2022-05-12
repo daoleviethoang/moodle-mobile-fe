@@ -10,6 +10,7 @@ class MoodleColors {
   static const Color white = Color(0xffFFFFFF);
   static const Color black = Color(0xff000000);
   static const Color blueButton = Color(0xffE8EDF4);
+  static const Color blue_soft = Color(0xffdfe5ed);
   static const Color tagColor = Color(0xffD1DAE8);
   static const Color grey = Color(0xffA3A3A3);
   static const Color grey_soft = Color.fromARGB(255, 214, 213, 213);
