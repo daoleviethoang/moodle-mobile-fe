@@ -475,7 +475,7 @@ class _SectionItemState extends State<SectionItem> {
                     ),
                     child: AnimatedRotation(
                       turns: _expanded ? 0 : .5,
-                      duration: const Duration(milliseconds: 400),
+                      duration: const Duration(milliseconds: 200),
                       child: const Icon(CupertinoIcons.chevron_down),
                     ),
                     onPressed: () => setState(() => _expanded = !_expanded),
