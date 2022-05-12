@@ -7,8 +7,7 @@ import 'package:dio/dio.dart';
 import 'package:moodle_mobile/models/course/course_content.dart';
 
 class CourseContentService {
-  Future<List<CourseContent>> getCourseContent(
-      String token, int id) async {
+  Future<List<CourseContent>> getCourseContent(String token, int id) async {
     try {
       Dio dio = Http().client;
       final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
@@ -17,6 +16,11 @@ class CourseContentService {
         'moodlewsrestformat': 'json',
         'courseid': id,
       });
+
+      if (res.data is Map<String, dynamic> &&
+          (res.data as Map<String, dynamic>).containsKey("exception")) {
+        throw res.data["errorcode"];
+      }
 
       var list = res.data as List;
 
