@@ -5,10 +5,13 @@ import 'package:intl/intl.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/view/assignment/index.dart';
-import 'package:moodle_mobile/view/common/menu_item.dart';
+import 'package:moodle_mobile/view/common/menu_item.dart' as m;
 import 'package:moodle_mobile/view/quiz/index.dart';
-import 'package:moodle_mobile/view/video_viewer.dart';
+import 'package:moodle_mobile/view/viewer/image_viewer.dart';
+import 'package:moodle_mobile/view/viewer/video_viewer.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import 'image_view.dart';
 
 // region Icon and text
 
@@ -24,7 +27,7 @@ class ForumItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MenuItem(
+    return m.MenuItem(
       icon: const Icon(Icons.forum_outlined),
       color: Colors.amber,
       title: title,
@@ -46,7 +49,7 @@ class ChatItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MenuItem(
+    return m.MenuItem(
       icon: const Icon(CupertinoIcons.chat_bubble_2),
       color: Colors.amber,
       title: title,
@@ -68,7 +71,7 @@ class DocumentItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MenuItem(
+    return m.MenuItem(
       icon: const Icon(CupertinoIcons.book),
       color: Colors.pink,
       title: title,
@@ -99,7 +102,7 @@ class VideoItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MenuItem(
+    return m.MenuItem(
       icon: const Icon(CupertinoIcons.video_camera),
       color: Colors.green,
       title: title,
@@ -128,7 +131,7 @@ class UrlItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MenuItem(
+    return m.MenuItem(
       icon: const Icon(CupertinoIcons.link),
       color: Colors.deepPurple,
       title: title,
@@ -164,7 +167,7 @@ class SubmissionItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MenuItem(
+    return m.MenuItem(
       icon: const Icon(CupertinoIcons.doc),
       color: MoodleColors.blue,
       title: title,
@@ -202,7 +205,7 @@ class QuizItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MenuItem(
+    return m.MenuItem(
       icon: const Icon(CupertinoIcons.question_square),
       color: MoodleColors.blue,
       title: title,
@@ -238,7 +241,7 @@ class AttachmentItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MenuItem(
+    return m.MenuItem(
       icon: const Icon(CupertinoIcons.doc),
       color: Colors.grey,
       title: title,
@@ -261,12 +264,61 @@ class PageItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MenuItem(
+    return m.MenuItem(
       icon: const Icon(CupertinoIcons.doc_richtext),
       color: Colors.pink,
       title: title,
       fullWidth: true,
       onPressed: onPressed,
+    );
+  }
+}
+
+class FolderItem extends StatelessWidget {
+  final String title;
+  final int instanceId;
+
+  const FolderItem({
+    Key? key,
+    required this.title,
+    required this.instanceId,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return m.MenuItem(
+      icon: const Icon(CupertinoIcons.folder),
+      color: Colors.grey,
+      title: title,
+      onPressed: () {
+        // TODO: Open folder in a new screen
+      },
+    );
+  }
+}
+
+class ZoomItem extends StatelessWidget {
+  final String title;
+  final int instanceId;
+
+  const ZoomItem({
+    Key? key,
+    required this.title,
+    required this.instanceId,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return m.MenuItem(
+      image: const CircleImageView(
+        imageUrl: 'https://st1.zoom.us/static/6.1.6366/image/new/home/meetings.png',
+        placeholder: Icon(CupertinoIcons.video_camera, size: 48),
+      ),
+      color: Colors.grey,
+      title: title,
+      onPressed: () {
+        // TODO: Open zoom
+      },
     );
   }
 }
@@ -286,41 +338,43 @@ class RichTextCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Html(
-            data: text,
-            style: MoodleStyles.htmlStyle,
-            onLinkTap: (url, cxt, attributes, element) async {
-              await showGeneralDialog(
-                context: context,
-                pageBuilder: (context, ani1, ani2) {
-                  return AlertDialog(
-                    title: const Text('Open link in browser'),
-                    content: Text(url ?? ''),
-                    shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(16))),
-                    actions: [
-                      TextButton(
-                        onPressed: () async => Navigator.pop(context),
-                        child: const Text('Cancel'),
-                      ),
-                      TextButton(
-                        onPressed: () async {
-                          Navigator.pop(context);
-                          await launchUrl(Uri.parse(url ?? ''));
-                        },
-                        child: const Text('Open'),
-                      ),
-                    ],
-                  );
-                },
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Html(
+        data: text,
+        style: MoodleStyles.htmlStyle,
+        onImageTap: (url, cxt, attributes, element) {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (_) => ImageViewer(
+                title: 'Image',
+                base64: url?.split(',')[1] ?? '',
+              )));
+        },
+        onLinkTap: (url, cxt, attributes, element) async {
+          await showGeneralDialog(
+            context: context,
+            pageBuilder: (context, ani1, ani2) {
+              return AlertDialog(
+                title: const Text('Open link in browser'),
+                content: Text(url ?? ''),
+                shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(16))),
+                actions: [
+                  TextButton(
+                    onPressed: () async => Navigator.pop(context),
+                    child: const Text('Cancel'),
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      Navigator.pop(context);
+                      await launchUrl(Uri.parse(url ?? ''));
+                    },
+                    child: const Text('Open'),
+                  ),
+                ],
               );
             },
-          ),
-        ),
+          );
+        },
       ),
     );
   }
@@ -421,7 +475,7 @@ class _SectionItemState extends State<SectionItem> {
                     ),
                     child: AnimatedRotation(
                       turns: _expanded ? 0 : .5,
-                      duration: const Duration(milliseconds: 400),
+                      duration: const Duration(milliseconds: 200),
                       child: const Icon(CupertinoIcons.chevron_down),
                     ),
                     onPressed: () => setState(() => _expanded = !_expanded),

@@ -19,6 +19,7 @@ class AssignmentScreen extends StatefulWidget {
   final int assignInstanceId;
   final int courseId;
   final String title;
+
   const AssignmentScreen({
     Key? key,
     required this.assignInstanceId,
@@ -102,32 +103,52 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
   }
 
   dateDiffSubmit() {
-    DateTime modifi = DateTime.fromMillisecondsSinceEpoch(
-        (attempt.submission?.timemodified ?? 0) * 1000);
     DateTime dueDate =
         DateTime.fromMillisecondsSinceEpoch((assignment.duedate ?? 0) * 1000);
-    Duration duration = modifi.difference(dueDate);
     var zero = DateTime(0);
-    final dateTime = zero.add(duration.abs());
-    int day = dateTime.day - 1;
-    if (day > 0) {
+
+    if ((attempt.submission?.status ?? 'new') == 'new') {
+      Duration duration = dueDate.difference(DateTime.now());
+      final dateTime = zero.add(duration.abs());
+      int day = dateTime.day - 1;
       setState(() {
-        dateDiff = "Submitted " +
-            day.toString() +
-            " days " +
-            dateTime.hour.toString() +
-            " hours " +
-            (duration.isNegative ? "late" : " early");
+        dateDiff = (dueDate.isAfter(DateTime.now())
+                ? "Assignment is due in "
+                : "Assignment is overdue by: ") +
+                ((day > 0)
+                    ? (duration.inDays.abs().toString() +
+                        " days " +
+                        dateTime.hour.toString() +
+                        " hours")
+                    : ((duration.inMinutes.abs() > 0)
+                        ? (dateTime.hour.toString() +
+                            " hours " +
+                            dateTime.minute.toString() +
+                            " minutes")
+                        : dateTime.second.toString() + " seconds"));
       });
       return;
     }
+
+    DateTime modifi = DateTime.fromMillisecondsSinceEpoch(
+        (attempt.submission?.timemodified ?? 0) * 1000);
+    Duration duration = dueDate.difference(modifi);
+    final dateTime = zero.add(duration.abs());
+    int day = dateTime.day - 1;
     setState(() {
       dateDiff = "Submitted " +
-          dateTime.hour.toString() +
-          " hours " +
-          dateTime.minute.toString() +
-          " minutes " +
-          (duration.isNegative ? "late" : " early");
+          ((day > 0)
+              ? (duration.inDays.abs().toString() +
+              " days " +
+              dateTime.hour.toString() +
+              " hours")
+              : ((duration.inMinutes.abs() > 0)
+              ? (dateTime.hour.toString() +
+              " hours " +
+              dateTime.minute.toString() +
+              " minutes")
+              : dateTime.second.toString() + " seconds")) +
+          (duration.isNegative ? " late" : " early");
     });
   }
 

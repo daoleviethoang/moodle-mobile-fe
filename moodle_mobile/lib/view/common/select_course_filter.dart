@@ -60,7 +60,7 @@ class _SelectCourseFilterState extends State<SelectCourseFilter>
       child: Column(
         children: <Widget>[
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
             decoration: new BoxDecoration(
               border: Border.all(color: MoodleColors.grey),
               borderRadius: BorderRadius.circular(8.0),
