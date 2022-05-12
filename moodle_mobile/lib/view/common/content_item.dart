@@ -286,41 +286,36 @@ class RichTextCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Html(
-            data: text,
-            style: MoodleStyles.htmlStyle,
-            onLinkTap: (url, cxt, attributes, element) async {
-              await showGeneralDialog(
-                context: context,
-                pageBuilder: (context, ani1, ani2) {
-                  return AlertDialog(
-                    title: const Text('Open link in browser'),
-                    content: Text(url ?? ''),
-                    shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(16))),
-                    actions: [
-                      TextButton(
-                        onPressed: () async => Navigator.pop(context),
-                        child: const Text('Cancel'),
-                      ),
-                      TextButton(
-                        onPressed: () async {
-                          Navigator.pop(context);
-                          await launchUrl(Uri.parse(url ?? ''));
-                        },
-                        child: const Text('Open'),
-                      ),
-                    ],
-                  );
-                },
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Html(
+        data: text,
+        style: MoodleStyles.htmlStyle,
+        onLinkTap: (url, cxt, attributes, element) async {
+          await showGeneralDialog(
+            context: context,
+            pageBuilder: (context, ani1, ani2) {
+              return AlertDialog(
+                title: const Text('Open link in browser'),
+                content: Text(url ?? ''),
+                shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(16))),
+                actions: [
+                  TextButton(
+                    onPressed: () async => Navigator.pop(context),
+                    child: const Text('Cancel'),
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      Navigator.pop(context);
+                      await launchUrl(Uri.parse(url ?? ''));
+                    },
+                    child: const Text('Open'),
+                  ),
+                ],
               );
             },
-          ),
-        ),
+          );
+        },
       ),
     );
   }
