@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/menu/profile/profile.dart';
+import 'package:moodle_mobile/view/splash/splash_screen.dart';
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({Key? key}) : super(key: key);
@@ -192,8 +193,12 @@ class _MenuScreenState extends State<MenuScreen> {
                       height: 8,
                     ),
                     MenuButton(
-                      onTap: () {
-                        //Navigator.pop(context);
+                      onTap: () async {
+                        _userStore.logout();
+                        Navigator.of(context)
+                            .pushReplacement(MaterialPageRoute(builder: (_) {
+                          return const SplashScreen();
+                        }));
                       },
                       iconColor: Colors.grey,
                       name: 'Log out',

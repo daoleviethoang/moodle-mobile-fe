@@ -1,6 +1,8 @@
 import 'package:mobx/mobx.dart';
 import 'package:moodle_mobile/data/repository.dart';
 import 'package:moodle_mobile/models/user.dart';
+import 'package:moodle_mobile/models/user_login.dart';
+import 'package:moodle_mobile/sqllite/sql.dart';
 
 // Include generated file
 part 'user_store.g.dart';
@@ -50,7 +52,13 @@ abstract class _UserStore with Store {
       }
 
       //need save to list userlogin success
-      if (rememberAccount) {}
+      if (rememberAccount) {
+        SQLHelper.createUserItem(UserLogin(
+          token: token,
+          baseUrl: _repository.baseUrl ?? "",
+          username: username,
+        ));
+      }
 
       isLogin = true;
     } catch (e) {
@@ -95,6 +103,7 @@ abstract class _UserStore with Store {
 
   @action
   void logout() {
+    _repository.removeAuthToken();
     isLogin = false;
   }
 }
