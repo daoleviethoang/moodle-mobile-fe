@@ -23,6 +23,10 @@ class Repository {
     return _sharedPreferencesHelper.saveAuthToken(authToken);
   }
 
+  Future<bool> removeAuthToken() async {
+    return _sharedPreferencesHelper.removeAuthToken();
+  }
+
   // Get and Save Username
   String? get username {
     return _sharedPreferencesHelper.username;

@@ -13,7 +13,7 @@ import 'package:moodle_mobile/models/module/module.dart';
 import 'package:moodle_mobile/view/common/content_item.dart';
 import 'package:moodle_mobile/view/common/data_card.dart';
 import 'package:moodle_mobile/view/common/image_view.dart';
-import 'package:moodle_mobile/view/common/menu_item.dart';
+import 'package:moodle_mobile/view/common/menu_item.dart' as m;
 import 'package:moodle_mobile/view/enroll/enroll.dart';
 import 'package:moodle_mobile/view/forum/forum_screen.dart';
 import 'package:moodle_mobile/view/grade_in_one_course.dart';

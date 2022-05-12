@@ -1,6 +1,8 @@
 import 'package:mobx/mobx.dart';
 import 'package:moodle_mobile/data/repository.dart';
 import 'package:moodle_mobile/models/user.dart';
+import 'package:moodle_mobile/models/user_login.dart';
+import 'package:moodle_mobile/sqllite/sql.dart';
 
 // Include generated file
 part 'user_store.g.dart';
@@ -50,7 +52,13 @@ abstract class _UserStore with Store {
       }
 
       //need save to list userlogin success
-      if (rememberAccount) {}
+      if (rememberAccount) {
+        SQLHelper.createUserItem(UserLogin(
+          token: token,
+          baseUrl: _repository.baseUrl ?? "",
+          username: username,
+        ));
+      }
 
       isLogin = true;
     } catch (e) {
@@ -72,7 +80,7 @@ abstract class _UserStore with Store {
       String? username = _repository.username;
       String? baseUrl = _repository.baseUrl;
 
-      if (token == null || username == null || baseUrl == null) {
+      if (token == null || token == "" || username == null || baseUrl == null) {
         isLogin = false;
         isLoading = false;
         return;
@@ -94,7 +102,25 @@ abstract class _UserStore with Store {
   }
 
   @action
+  Future setUser(String token, String username) async {
+    try {
+      _repository.saveAuthToken(token);
+      _repository.saveUsername(username);
+
+      user = await _repository.getUserInfo(token, username);
+      print("here userstore");
+
+      isLogin = true;
+    } catch (e) {
+      print("Set user error: " + e.toString());
+      isLoginFailed = true;
+      isLogin = false;
+    }
+  }
+
+  @action
   void logout() {
+    _repository.saveAuthToken("");
     isLogin = false;
   }
 }
