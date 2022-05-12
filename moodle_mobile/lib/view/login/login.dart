@@ -23,6 +23,8 @@ class _LoginScreenState extends State<LoginScreen> {
   // Create a text controler
   final TextEditingController usernameControler = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController baseUrlController =
+      TextEditingController(text: "https://courses.ctda.hcmus.edu.vn");
 
   // Store
   late UserStore _userStore;
@@ -50,6 +52,20 @@ class _LoginScreenState extends State<LoginScreen> {
               height: MediaQuery.of(context).size.height * 1 / 4,
               child: Image.asset('assets/image/logo.png'),
             ),
+
+            // base url text field
+            Padding(
+                padding: const EdgeInsets.only(
+                    left: Dimens.login_padding_left,
+                    right: Dimens.login_padding_right),
+                child: CustomTextFieldWidget(
+                  hintText: "BaseUrl",
+                  controller: baseUrlController,
+                  prefixIcon: Icons.people,
+                  borderRadius: Dimens.default_border_radius,
+                )),
+
+            const SizedBox(height: Dimens.login_sizedbox_height),
 
             // Username text field
             Padding(
@@ -165,7 +181,12 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void onLoginPressed() async {
-    await _userStore.login(usernameControler.text, passwordController.text);
+    _userStore.setBaseUrl(baseUrlController.text);
+
+    await _userStore.login(
+      usernameControler.text,
+      passwordController.text,
+    );
 
     if (_userStore.isLogin == true) {
       Navigator.pushAndRemoveUntil(

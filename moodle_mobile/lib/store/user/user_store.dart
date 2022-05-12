@@ -23,8 +23,8 @@ abstract class _UserStore with Store {
   }
 
   @observable
-  UserModel user =
-      UserModel(token: "", id: 0, username: "", fullname: "", email: "");
+  UserModel user = UserModel(
+      token: "", id: 0, username: "", fullname: "", email: "", baseUrl: "");
 
   @observable
   bool isLogin = false;
@@ -55,14 +55,19 @@ abstract class _UserStore with Store {
     }
   }
 
+  void setBaseUrl(String baseUrl) {
+    _repository.saveBaseUrl(baseUrl);
+  }
+
   Future checkIsLogin() async {
     try {
       isLoading = true;
 
       String? token = _repository.authToken;
       String? username = _repository.username;
+      String? baseUrl = _repository.baseUrl;
 
-      if (token == null || username == null) {
+      if (token == null || username == null || baseUrl == null) {
         isLogin = false;
         isLoading = false;
         return;

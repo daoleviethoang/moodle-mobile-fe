@@ -51,6 +51,7 @@ class UserApi {
       return UserModel(
           id: res.data[0]['id'],
           token: token,
+          baseUrl: Endpoints.baseUrl,
           username: res.data[0]['username'],
           fullname: res.data[0]['fullname'],
           email: res.data[0]['email']);
