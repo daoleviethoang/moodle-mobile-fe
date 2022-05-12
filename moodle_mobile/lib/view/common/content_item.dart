@@ -7,8 +7,11 @@ import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/view/assignment/index.dart';
 import 'package:moodle_mobile/view/common/menu_item.dart' as m;
 import 'package:moodle_mobile/view/quiz/index.dart';
-import 'package:moodle_mobile/view/video_viewer.dart';
+import 'package:moodle_mobile/view/viewer/image_viewer.dart';
+import 'package:moodle_mobile/view/viewer/video_viewer.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import 'image_view.dart';
 
 // region Icon and text
 
@@ -271,6 +274,55 @@ class PageItem extends StatelessWidget {
   }
 }
 
+class FolderItem extends StatelessWidget {
+  final String title;
+  final int instanceId;
+
+  const FolderItem({
+    Key? key,
+    required this.title,
+    required this.instanceId,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return m.MenuItem(
+      icon: const Icon(CupertinoIcons.folder),
+      color: Colors.grey,
+      title: title,
+      onPressed: () {
+        // TODO: Open folder in a new screen
+      },
+    );
+  }
+}
+
+class ZoomItem extends StatelessWidget {
+  final String title;
+  final int instanceId;
+
+  const ZoomItem({
+    Key? key,
+    required this.title,
+    required this.instanceId,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return m.MenuItem(
+      image: const CircleImageView(
+        imageUrl: 'https://st1.zoom.us/static/6.1.6366/image/new/home/meetings.png',
+        placeholder: Icon(CupertinoIcons.video_camera, size: 48),
+      ),
+      color: Colors.grey,
+      title: title,
+      onPressed: () {
+        // TODO: Open zoom
+      },
+    );
+  }
+}
+
 // endregion
 
 // region Cards
@@ -290,6 +342,13 @@ class RichTextCard extends StatelessWidget {
       child: Html(
         data: text,
         style: MoodleStyles.htmlStyle,
+        onImageTap: (url, cxt, attributes, element) {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (_) => ImageViewer(
+                title: 'Image',
+                base64: url?.split(',')[1] ?? '',
+              )));
+        },
         onLinkTap: (url, cxt, attributes, element) async {
           await showGeneralDialog(
             context: context,
