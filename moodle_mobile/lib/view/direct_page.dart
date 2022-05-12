@@ -1,10 +1,14 @@
+import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:moodle_mobile/models/course/courses.dart';
+import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/home/calendar.dart';
 import 'package:moodle_mobile/view/home/home.dart';
 import 'package:moodle_mobile/view/home/menu_screen.dart';
 import 'package:moodle_mobile/view/home/notification_screen.dart';
 import 'package:moodle_mobile/view/message/message_screen.dart';
+import 'package:moodle_mobile/view/search_course/search_course.dart';
 
 class DirectScreen extends StatefulWidget {
   const DirectScreen({Key? key}) : super(key: key);
@@ -15,6 +19,7 @@ class DirectScreen extends StatefulWidget {
 
 class _DirectScreenState extends State<DirectScreen> {
   int _selectedIndex = 0;
+  late UserStore _userStore;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
@@ -36,6 +41,12 @@ class _DirectScreenState extends State<DirectScreen> {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  @override
+  void initState() {
+    _userStore = GetIt.instance<UserStore>();
+    super.initState();
   }
 
   @override
@@ -67,11 +78,15 @@ class _DirectScreenState extends State<DirectScreen> {
           width: 60,
           height: 60,
           child: IconButton(
-            iconSize: 40,
-            icon: const Icon(Icons.search),
-            color: MoodleColors.white,
-            onPressed: () {},
-          ),
+              iconSize: 40,
+              icon: const Icon(Icons.search),
+              color: MoodleColors.white,
+              onPressed: () async {
+                await showSearch<CourseOverview?>(
+                  context: context,
+                  delegate: CoursesSearch(token: _userStore.user.token),
+                );
+              }),
         )
       ],
     );

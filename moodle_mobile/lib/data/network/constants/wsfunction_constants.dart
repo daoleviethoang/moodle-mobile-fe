@@ -60,4 +60,7 @@ class Wsfunction {
       "core_message_get_user_notification_preferences";
   static const String CORE_USER_UPDATE_USER_PREFERENCE =
       "core_user_update_user_preferences";
+
+  //search course
+  static const String CORE_COURSE_SEARCH_COURSES = "core_course_search_courses";
 }
