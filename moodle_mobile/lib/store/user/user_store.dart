@@ -36,16 +36,21 @@ abstract class _UserStore with Store {
   bool isLoginFailed = false;
 
   @action
-  Future login(String username, String password) async {
+  Future login(String username, String password, bool rememberAccount) async {
     try {
       String token =
           await _repository.login(username, password, 'moodle_mobile_app');
       user = await _repository.getUserInfo(token, username);
       print("here userstore");
 
-      // Save to shared references
-      _repository.saveAuthToken(token);
-      _repository.saveUsername(username);
+      if (rememberAccount) {
+        // Save to shared references
+        _repository.saveAuthToken(token);
+        _repository.saveUsername(username);
+      }
+
+      //need save to list userlogin success
+      if (rememberAccount) {}
 
       isLogin = true;
     } catch (e) {

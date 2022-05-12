@@ -62,6 +62,9 @@ dependencies:
   #permission
   permission_handler: ^9.2.0
 
+  #auto complete text field
+  autocomplete_textfield_ns: ^2.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

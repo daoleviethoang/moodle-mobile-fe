@@ -29,6 +29,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.8.2"
+  autocomplete_textfield_ns:
+    dependency: "direct main"
+    description:
+      name: autocomplete_textfield_ns
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
   boolean_selector:
     dependency: transitive
     description:

@@ -1,3 +1,4 @@
+import 'package:autocomplete_textfield_ns/autocomplete_textfield_ns.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -7,7 +8,6 @@ import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/custom_button.dart';
 import 'package:moodle_mobile/view/common/custom_text_field.dart';
 import 'package:moodle_mobile/view/direct_page.dart';
-import 'package:moodle_mobile/view/home/home.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -24,7 +24,15 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController usernameControler = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController baseUrlController =
-      TextEditingController(text: "https://courses.ctda.hcmus.edu.vn");
+      TextEditingController(text: "");
+
+  final List<String> suggestions = [
+    "https://courses.ctda.hcmus.edu.vn",
+    "https://courses.fit.hcmus.edu.vn",
+    "https://elearning.fit.hcmus.edu.vn",
+  ];
+
+  GlobalKey<AutoCompleteTextFieldState<String>> key = new GlobalKey();
 
   // Store
   late UserStore _userStore;
@@ -58,11 +66,23 @@ class _LoginScreenState extends State<LoginScreen> {
                 padding: const EdgeInsets.only(
                     left: Dimens.login_padding_left,
                     right: Dimens.login_padding_right),
-                child: CustomTextFieldWidget(
-                  hintText: "BaseUrl",
+                child: SimpleAutoCompleteTextField(
+                  decoration: const InputDecoration(
+                    contentPadding:
+                        EdgeInsets.all(Dimens.default_padding_double),
+                    hintText: "BaseUrl",
+                    prefixIcon: Icon(Icons.language),
+                    hintStyle: TextStyle(fontSize: 16),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(
+                            Radius.circular(Dimens.default_border_radius))),
+                  ),
+                  suggestions: suggestions,
                   controller: baseUrlController,
-                  prefixIcon: Icons.people,
-                  borderRadius: Dimens.default_border_radius,
+                  key: key,
+                  textChanged: (text) {},
+                  clearOnSubmit: false,
+                  textSubmitted: (text) {},
                 )),
 
             const SizedBox(height: Dimens.login_sizedbox_height),
@@ -186,6 +206,7 @@ class _LoginScreenState extends State<LoginScreen> {
     await _userStore.login(
       usernameControler.text,
       passwordController.text,
+      isCheck,
     );
 
     if (_userStore.isLogin == true) {
