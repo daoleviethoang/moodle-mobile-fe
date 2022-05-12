@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/data/network/apis/course/course_content_service.dart';
 import 'package:moodle_mobile/data/network/apis/course/course_detail_service.dart';
@@ -35,12 +36,12 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   late var _tabs = <Widget>[];
   var _index = 0;
   late var _body = <Widget>[];
-  late Widget _homeTab;
-  late Widget _announcementsTab;
-  late Widget _discussionsTab;
-  late Widget _upcomingTab;
-  late Widget _gradesTab;
-  late Widget _peopleTab;
+  Widget _homeTab = Container();
+  Widget _announcementsTab = Container();
+  Widget _discussionsTab = Container();
+  Widget _upcomingTab = Container();
+  Widget _gradesTab = Container();
+  Widget _peopleTab = Container();
 
   late int _courseId;
   late UserStore _userStore;
@@ -316,11 +317,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
       body: FutureBuilder(
           future: queryData(),
           builder: (context, data) {
-            if (data.hasError) {
-              return ErrorCard(text: '${data.error}');
-            } else if (_content.isEmpty || _course == null) {
-              return const LoadingCard();
-            }
+            final hasError = data.hasError;
+            final hasData = _content.isNotEmpty && _course != null;
             return NestedScrollView(
               floatHeaderSlivers: true,
               headerSliverBuilder: (context, innerBoxIsScrolled) {
@@ -348,12 +346,16 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                             height: 120,
                             child: Align(
                               alignment: Alignment.bottomLeft,
-                              child: Text(
-                                _course?.displayname ?? '',
-                                maxLines: 2,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 32,
+                              child: AnimatedOpacity(
+                                opacity: hasData ? 1.0 : 0.0,
+                                duration: const Duration(milliseconds: 1200),
+                                child: Text(
+                                  _course?.displayname ?? '',
+                                  maxLines: 2,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 32,
+                                  ),
                                 ),
                               ),
                             ),
@@ -361,27 +363,44 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                         ),
                       ),
                     ),
-                    bottom: TabBar(
-                      isScrollable: true,
-                      controller: _tabController,
-                      tabs: _tabs,
-                      onTap: (value) => setState(() => _index = value),
-                    ),
+                    bottom: hasData
+                        ? TabBar(
+                            indicatorPadding: const EdgeInsets.all(4),
+                            indicator: const BoxDecoration(
+                              color: MoodleColors.blueDark,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(8)),
+                            ),
+                            isScrollable: true,
+                            controller: _tabController,
+                            tabs: _tabs,
+                            onTap: (value) => setState(() => _index = value),
+                          )
+                        : null,
                   ),
                 ];
               },
-              body: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Container(height: 12),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: _body[_index],
-                    ),
-                    Container(height: 12),
-                  ],
-                ),
-              ),
+              body: hasError
+                  ? ErrorCard(text: '${data.error}')
+                  : !hasData
+                      ? const LoadingCard()
+                      : AnimatedOpacity(
+                          opacity: hasData ? 1.0 : 0.0,
+                          duration: const Duration(milliseconds: 1200),
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                Container(height: 12),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20),
+                                  child: _body[_index],
+                                ),
+                                Container(height: 12),
+                              ],
+                            ),
+                          ),
+                        ),
             );
           }),
     );

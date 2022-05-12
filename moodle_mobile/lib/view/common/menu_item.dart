@@ -75,7 +75,7 @@ class MenuItem extends StatelessWidget {
             // Title
             Text(
               title,
-              maxLines: 1,
+              softWrap: true,
               style: TextStyle(
                 color: Theme.of(context).colorScheme.onSurface,
                 fontSize: 18,
