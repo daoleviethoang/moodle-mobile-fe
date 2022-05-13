@@ -61,8 +61,10 @@ class Wsfunction {
   static const String CORE_USER_UPDATE_USER_PREFERENCE =
       "core_user_update_user_preferences";
 
-  //enroll
+  //enrol
   static const String ENROL_SELF_ENROL_USER = "enrol_self_enrol_user";
+  static const String ENROL_GET_COURSE_ENROL_METHODS =
+      "core_enrol_get_course_enrolment_methods";
 
   //search course
   static const String CORE_COURSE_SEARCH_COURSES = "core_course_search_courses";
