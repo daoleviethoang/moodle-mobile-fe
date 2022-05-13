@@ -58,6 +58,8 @@ class Wsfunction {
   //notification preference
   static const String CORE_MESSAGE_GET_USER_NOTIFICATION_PREFERENCES =
       "core_message_get_user_notification_preferences";
+  static const String CORE_MESSAGE_GET_USER_MESSAGE_PREFERENCES =
+      "core_message_get_user_message_preferences";
   static const String CORE_USER_UPDATE_USER_PREFERENCE =
       "core_user_update_user_preferences";
 
