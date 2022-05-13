@@ -45,11 +45,9 @@ abstract class _UserStore with Store {
       user = await _repository.getUserInfo(token, username);
       print("here userstore");
 
-      if (rememberAccount) {
-        // Save to shared references
-        _repository.saveAuthToken(token);
-        _repository.saveUsername(username);
-      }
+      // Save to shared references
+      _repository.saveAuthToken(token);
+      _repository.saveUsername(username);
 
       //need save to list userlogin success
       if (rememberAccount) {
