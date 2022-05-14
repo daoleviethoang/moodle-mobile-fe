@@ -10,9 +10,6 @@ import 'package:moodle_mobile/models/conversation/conversation_message.dart';
 import 'package:moodle_mobile/data/network/dio_http.dart';
 
 class ConversationApi {
-  final DioClient _dioClient;
-
-  ConversationApi(this._dioClient);
   Future<List<ConversationModel>> getConversationInfo(
       String token, int userid) async {
     try {
@@ -28,9 +25,6 @@ class ConversationApi {
       if (res.data['message'] != null) {
         throw Exception(res.data['message']);
       }
-      print("here iss resssssss api");
-      print(res);
-      print("STOP");
       List<ConversationModel> listConversation = [];
       for (var i = 0; i < res.data['conversations'].length; i++) {
         List<ConversationMemberModel> listConversationMember = [];

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class ImageView extends StatelessWidget {
   final String imageUrl;
@@ -152,7 +153,8 @@ class CircleCaptionedImageView extends StatelessWidget {
           padding: const EdgeInsets.only(top: 8),
           child: SizedBox(
             width: width * 1.5,
-            child: Text(caption + "\n",
+            child: Text(
+              caption + "\n",
               textAlign: TextAlign.center,
               maxLines: 2,
             ),

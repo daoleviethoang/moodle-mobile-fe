@@ -39,4 +39,8 @@ class Wsfunction {
       "core_message_mute_conversations";
   static const String CORE_MESSAGE_GET_CONVERSATIONS =
       "core_message_get_conversations";
+
+  //courses
+  static const String CORE_COURSES_PARTICIPANT =
+      "core_enrol_get_enrolled_users";
 }
