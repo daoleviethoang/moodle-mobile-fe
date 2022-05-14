@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/menu/profile/profile.dart';
+import 'package:moodle_mobile/view/message_preference/index.dart';
+import 'package:moodle_mobile/view/notification_preference/index.dart';
 import 'package:moodle_mobile/view/splash/splash_screen.dart';
 
 class MenuScreen extends StatefulWidget {
@@ -118,9 +120,28 @@ class _MenuScreenState extends State<MenuScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     MenuButton(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (_) {
+                          return const NotificationPreferenceScreen();
+                        }));
+                      },
                       iconColor: Colors.amber,
                       name: 'Notifications & sounds',
+                      iconName: Icons.circle_notifications,
+                    ),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    MenuButton(
+                      onTap: () {
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (_) {
+                          return const MessagePreferenceScreen();
+                        }));
+                      },
+                      iconColor: Colors.amber,
+                      name: 'Message notification',
                       iconName: Icons.circle_notifications,
                     ),
                     SizedBox(
