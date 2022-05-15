@@ -1,5 +1,6 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:moodle_mobile/constants/colors.dart';
@@ -9,16 +10,15 @@ import 'package:moodle_mobile/view/splash/splash_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   try {
-    await FlutterDownloader.initialize(
-        debug: true // optional: set false to disable printing logs to console
-    );
+    // optional: set false to disable printing logs to console
+    await FlutterDownloader.initialize(debug: kDebugMode);
   } catch (e) {}
 
   await setupLocator();
 
   runApp(
     DevicePreview(
-      enabled: true,
+      enabled: kDebugMode && kIsWeb,
       builder: (context) => const MyApp(), // Wrap your app
     ),
   );
@@ -60,8 +60,8 @@ class MyApp extends StatelessWidget {
           ),
         ),
         appBarTheme: Theme.of(context).appBarTheme.copyWith(
-          foregroundColor: Colors.white,
-        ),
+              foregroundColor: Colors.white,
+            ),
       ),
       home: const SplashScreen(),
       debugShowCheckedModeBanner: false,

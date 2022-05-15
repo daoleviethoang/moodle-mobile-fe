@@ -46,7 +46,6 @@ class UserApi {
         'field': 'username',
         'values[]': [username]
       });
-      print("here user api");
 
       return UserModel(
           id: res.data[0]['id'],
@@ -56,7 +55,7 @@ class UserApi {
           fullname: res.data[0]['fullname'],
           email: res.data[0]['email']);
     } catch (e) {
-      print("Error here");
+      print("$e");
       rethrow;
     }
   }
