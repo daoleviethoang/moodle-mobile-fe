@@ -1,4 +1,5 @@
 import 'package:device_preview/device_preview.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:moodle_mobile/constants/colors.dart';
@@ -44,12 +45,12 @@ class MyApp extends StatelessWidget {
           primaryVariant: Colors.black,
           secondaryVariant: Colors.black,
           surface: Colors.black,
-          error: Colors.black,
+          error: CupertinoColors.systemRed,
           onPrimary: Colors.black,
           onSecondary: Colors.black,
           onSurface: Colors.black,
           onBackground: Colors.black,
-          onError: Colors.black,
+          onError: Colors.white,
         ),
         cardTheme: CardTheme(
           color: Theme.of(context).colorScheme.surface,

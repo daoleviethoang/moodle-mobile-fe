@@ -48,4 +48,27 @@ class CalendarService {
     }
     return events;
   }
+
+  Future<List<Event>> getUpcomingByCourse(
+      String token, int courseId) async {
+    try {
+      Dio dio = Http().client;
+      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': Wsfunction.GET_UPCOMING,
+        'moodlewsrestformat': 'json',
+        'courseid': courseId,
+      });
+
+      var json = res.data as Map<String, dynamic>;
+
+      final events = <Event>[];
+      for (Map<String, dynamic> e in json['events']) {
+        events.add(Event.fromJson(e));
+      }
+      return events;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
