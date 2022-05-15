@@ -53,22 +53,29 @@ class _MessageScreenState extends State<MessageScreen> {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 16.0),
+            padding: const EdgeInsets.only(top: 16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                CustomButtonShort(
-                    text: "Message",
-                    textColor: MoodleColors.blue,
-                    bgColor: MoodleColors.brightGray,
-                    blurRadius: 10.0,
-                    onPressed: () {}),
-                CustomButtonShort(
-                    text: "Contact",
-                    textColor: Colors.black,
-                    bgColor: Colors.white,
-                    blurRadius: 4.0,
-                    onPressed: () {}),
+                Container(width: 12),
+                Expanded(
+                  child: CustomButtonShort(
+                      text: "Message",
+                      textColor: MoodleColors.blue,
+                      bgColor: MoodleColors.brightGray,
+                      blurRadius: 3,
+                      onPressed: () {}),
+                ),
+                Container(width: 12),
+                Expanded(
+                  child: CustomButtonShort(
+                      text: "Contact",
+                      textColor: Colors.black,
+                      bgColor: Colors.white,
+                      blurRadius: 3,
+                      onPressed: () {}),
+                ),
+                Container(width: 12),
               ],
             ),
           ),

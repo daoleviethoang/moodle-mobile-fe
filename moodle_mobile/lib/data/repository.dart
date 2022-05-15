@@ -23,6 +23,10 @@ class Repository {
     return _sharedPreferencesHelper.saveAuthToken(authToken);
   }
 
+  Future<bool> removeAuthToken() async {
+    return _sharedPreferencesHelper.removeAuthToken();
+  }
+
   // Get and Save Username
   String? get username {
     return _sharedPreferencesHelper.username;
@@ -30,6 +34,14 @@ class Repository {
 
   Future<bool> saveUsername(String username) {
     return _sharedPreferencesHelper.saveUsername(username);
+  }
+
+  String? get baseUrl {
+    return _sharedPreferencesHelper.baseUrl;
+  }
+
+  Future<bool> saveBaseUrl(String baseUrl) {
+    return _sharedPreferencesHelper.saveBaseUrl(baseUrl);
   }
 
   // User Login

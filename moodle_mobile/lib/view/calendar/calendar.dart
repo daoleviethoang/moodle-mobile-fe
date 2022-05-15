@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:moodle_mobile/constants/colors.dart';
+import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/data/network/apis/calendar/calendar_service.dart';
 import 'package:moodle_mobile/data/network/apis/module/module_service.dart';
 import 'package:moodle_mobile/models/calendar/event.dart';
@@ -123,46 +124,45 @@ class _CalendarScreenState extends State<CalendarScreen> {
       isDismissible: true,
       isScrollControlled: true,
       useRootNavigator: true,
-      builder: (_) =>
-          Wrap(
+      builder: (_) => Wrap(
+        children: [
+          Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(height: 20),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: Text('Jump to date', style: TextStyle(fontSize: 20)),
-                  ),
-                  Container(height: 40),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 32),
-                    child: SizedBox(
-                      height: 100,
-                      child: CupertinoDatePicker(
-                        initialDateTime: DateTime.now(),
-                        onDateTimeChanged: (value) =>
-                            setState(() => _jumpDate = value),
-                        mode: CupertinoDatePickerMode.date,
-                      ),
-                    ),
-                  ),
-                  Container(height: 40),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: CustomButtonWidget(
-                      onPressed: () {
-                        Navigator.pop(context);
-                        _updateFocusedDay(_jumpDate, _jumpDate);
-                      },
-                      textButton: 'Jump',
-                    ),
-                  ),
-                  Container(height: 20),
-                ],
+              Container(height: 20),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: Text('Jump to date', style: TextStyle(fontSize: 20)),
               ),
+              Container(height: 40),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 32),
+                child: SizedBox(
+                  height: 100,
+                  child: CupertinoDatePicker(
+                    initialDateTime: DateTime.now(),
+                    onDateTimeChanged: (value) =>
+                        setState(() => _jumpDate = value),
+                    mode: CupertinoDatePickerMode.date,
+                  ),
+                ),
+              ),
+              Container(height: 40),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: CustomButtonWidget(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    _updateFocusedDay(_jumpDate, _jumpDate);
+                  },
+                  textButton: 'Jump',
+                ),
+              ),
+              Container(height: 20),
             ],
           ),
+        ],
+      ),
     );
   }
 
@@ -176,11 +176,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
           Padding(
             padding: const EdgeInsets.only(bottom: 12),
             child:
-            Text('Events on ' + DateFormat('MMMM dd').format(_selectedDay),
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                )),
+                Text('Events on ' + DateFormat('MMMM dd').format(_selectedDay),
+                    style: MoodleStyles.sectionHeaderStyle),
           ),
 
           // Event list
@@ -198,16 +195,15 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       } else if (!data.hasData) {
                         return const LoadingCard();
                       }
-                      final instance = (data.data as ModuleCourse).instance ??
-                          0;
+                      final instance =
+                          (data.data as ModuleCourse).instance ?? 0;
                       return SubmissionItem(
                         title: title,
                         submissionId: instance,
                         courseId: e.course?.id ?? 0,
                         dueDate: dueDate,
                       );
-                    }
-                );
+                    });
               case ModuleName.quiz:
                 return FutureBuilder(
                     future: queryModule(e),
@@ -217,20 +213,21 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       } else if (!data.hasData) {
                         return const LoadingCard();
                       }
-                      final instance = (data.data as ModuleCourse).instance ??
-                          0;
+                      final instance =
+                          (data.data as ModuleCourse).instance ?? 0;
                       return QuizItem(
                         title: title,
                         openDate: dueDate,
                         quizInstanceId: instance,
                         courseId: e.course?.id ?? 0,
                       );
-                    }
-                );
+                    });
               default:
-                throw Exception('Unknown module name: ' + (e.modulename ?? ''));
+                return ErrorCard(
+                  text: 'Unknown module name: ' + (e.modulename ?? ''),
+                );
             }
-          }).toList()
+          }).toList(),
         ],
       ),
     );

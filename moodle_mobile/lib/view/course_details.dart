@@ -1,18 +1,25 @@
 import 'dart:convert';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/styles.dart';
+import 'package:moodle_mobile/data/network/apis/calendar/calendar_service.dart';
 import 'package:moodle_mobile/data/network/apis/course/course_content_service.dart';
 import 'package:moodle_mobile/data/network/apis/course/course_detail_service.dart';
+import 'package:moodle_mobile/data/network/apis/module/module_service.dart';
+import 'package:moodle_mobile/models/calendar/event.dart';
 import 'package:moodle_mobile/models/course/course_content.dart';
 import 'package:moodle_mobile/models/course/course_detail.dart';
 import 'package:moodle_mobile/models/module/module.dart';
+import 'package:moodle_mobile/models/module/module_course.dart';
 import 'package:moodle_mobile/view/common/content_item.dart';
 import 'package:moodle_mobile/view/common/data_card.dart';
 import 'package:moodle_mobile/view/common/image_view.dart';
-import 'package:moodle_mobile/view/common/menu_item.dart';
+import 'package:moodle_mobile/view/common/menu_item.dart' as m;
+import 'package:moodle_mobile/view/enrol/enrol.dart';
 import 'package:moodle_mobile/view/forum/forum_screen.dart';
 import 'package:moodle_mobile/view/grade_in_one_course.dart';
 import 'package:moodle_mobile/view/user_detail/user_detail.dart';
@@ -35,17 +42,18 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   late var _tabs = <Widget>[];
   var _index = 0;
   late var _body = <Widget>[];
-  late Widget _homeTab;
-  late Widget _announcementsTab;
-  late Widget _discussionsTab;
-  late Widget _upcomingTab;
-  late Widget _gradesTab;
-  late Widget _peopleTab;
+  Widget _homeTab = Container();
+  Widget _announcementsTab = Container();
+  Widget _discussionsTab = Container();
+  Widget _upcomingTab = Container();
+  Widget _gradesTab = Container();
+  Widget _peopleTab = Container();
 
   late int _courseId;
   late UserStore _userStore;
   CourseDetail? _course;
   List<CourseContent> _content = [];
+  List<Event> _upcoming = [];
 
   @override
   void initState() {
@@ -180,15 +188,6 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   }
 
   void _initUpcomingTab() {
-    // TODO: Get event list from API
-    final events = {
-      'Nộp Proposal': DateTime.utc(2022, 01, 20),
-      'Nộp báo cáo tuần 1': DateTime.utc(2022, 01, 27),
-      'Quiz 1': DateTime.utc(2022, 01, 28),
-    };
-    final eventKeys = events.keys.toList();
-    final eventValues = events.values.toList();
-
     _upcomingTab = Align(
       alignment: Alignment.centerLeft,
       child: Column(
@@ -196,17 +195,53 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
         children: [
           const Text('Upcoming events', style: MoodleStyles.courseHeaderStyle),
           Container(height: 16),
-          ...List.generate(events.length, (index) {
-            return Padding(
-              padding: const EdgeInsets.only(left: 8, right: 24),
-              child: SubmissionItem(
-                title: eventKeys[index],
-                submissionId: 0,
-                courseId: widget.courseId,
-                dueDate: eventValues[index],
-              ),
-            );
-          }),
+          ..._upcoming.map((e) {
+            final title = e.name ?? '';
+            final epoch = (e.timestart ?? 0) * 1000;
+            final dueDate = DateTime.fromMillisecondsSinceEpoch(epoch);
+            switch (e.modulename ?? '') {
+              case ModuleName.assign:
+                return FutureBuilder(
+                    future: queryModule(e),
+                    builder: (context, data) {
+                      if (data.hasError) {
+                        return ErrorCard(text: '${data.error}');
+                      } else if (!data.hasData) {
+                        return const LoadingCard();
+                      }
+                      final instance = (data.data as ModuleCourse).instance ??
+                          0;
+                      return SubmissionItem(
+                        title: title,
+                        submissionId: instance,
+                        courseId: e.course?.id ?? 0,
+                        dueDate: dueDate,
+                      );
+                    }
+                );
+              case ModuleName.quiz:
+                return FutureBuilder(
+                    future: queryModule(e),
+                    builder: (context, data) {
+                      if (data.hasError) {
+                        return ErrorCard(text: '${data.error}');
+                      } else if (!data.hasData) {
+                        return const LoadingCard();
+                      }
+                      final instance = (data.data as ModuleCourse).instance ??
+                          0;
+                      return QuizItem(
+                        title: title,
+                        openDate: dueDate,
+                        quizInstanceId: instance,
+                        courseId: e.course?.id ?? 0,
+                      );
+                    }
+                );
+              default:
+                throw Exception('Unknown module name: ' + (e.modulename ?? ''));
+            }
+          }).toList(),
         ],
       ),
     );
@@ -238,7 +273,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
           ...List.generate(participants.length, (index) {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: MenuItem(
+              child: m.MenuItem(
                 image: const RoundedImageView(
                   imageUrl: 'user-avatar-url',
                   placeholder: Icon(Icons.person, size: 48),
@@ -294,6 +329,17 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
 
   // endregion
 
+  Future<ModuleCourse> queryModule(Event e) async {
+    try {
+      return await ModuleService().getModule(
+        _userStore.user.token,
+        e.instance ?? 0,
+      );
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future queryData() async {
     try {
       _content = await CourseContentService().getCourseContent(
@@ -304,8 +350,19 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
         _userStore.user.token,
         _courseId,
       );
+      _upcoming = await CalendarService().getUpcomingByCourse(
+        _userStore.user.token,
+        _courseId,
+      );
       _initBody();
     } catch (e) {
+      if (e.toString() == "errorcoursecontextnotvalid") {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) {
+          return EnrolScreen(
+            courseId: widget.courseId,
+          );
+        }));
+      }
       rethrow;
     }
   }
@@ -316,11 +373,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
       body: FutureBuilder(
           future: queryData(),
           builder: (context, data) {
-            if (data.hasError) {
-              return ErrorCard(text: '${data.error}');
-            } else if (_content.isEmpty || _course == null) {
-              return const LoadingCard();
-            }
+            final hasError = data.hasError;
+            final hasData = _content.isNotEmpty && _course != null;
             return NestedScrollView(
               floatHeaderSlivers: true,
               headerSliverBuilder: (context, innerBoxIsScrolled) {
@@ -348,12 +402,14 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                             height: 120,
                             child: Align(
                               alignment: Alignment.bottomLeft,
-                              child: Text(
-                                _course?.displayname ?? '',
-                                maxLines: 2,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 32,
+                              child: AnimatedOpacity(
+                                opacity: hasData ? 1.0 : 0.0,
+                                duration: const Duration(milliseconds: 1200),
+                                child: AutoSizeText(
+                                  _course?.displayname ?? '',
+                                  maxLines: 2,
+                                  presetFontSizes: const [28, 24, 20],
+                                  style: MoodleStyles.appBarTitleStyle,
                                 ),
                               ),
                             ),
@@ -361,27 +417,44 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                         ),
                       ),
                     ),
-                    bottom: TabBar(
-                      isScrollable: true,
-                      controller: _tabController,
-                      tabs: _tabs,
-                      onTap: (value) => setState(() => _index = value),
-                    ),
+                    bottom: hasData
+                        ? TabBar(
+                            indicatorPadding: const EdgeInsets.all(4),
+                            indicator: const BoxDecoration(
+                              color: MoodleColors.blueDark,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(8)),
+                            ),
+                            isScrollable: true,
+                            controller: _tabController,
+                            tabs: _tabs,
+                            onTap: (value) => setState(() => _index = value),
+                          )
+                        : null,
                   ),
                 ];
               },
-              body: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Container(height: 12),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: _body[_index],
-                    ),
-                    Container(height: 12),
-                  ],
-                ),
-              ),
+              body: hasError
+                  ? ErrorCard(text: '${data.error}')
+                  : !hasData
+                      ? const LoadingCard()
+                      : AnimatedOpacity(
+                          opacity: hasData ? 1.0 : 0.0,
+                          duration: const Duration(milliseconds: 1200),
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                Container(height: 12),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20),
+                                  child: _body[_index],
+                                ),
+                                Container(height: 12),
+                              ],
+                            ),
+                          ),
+                        ),
             );
           }),
     );

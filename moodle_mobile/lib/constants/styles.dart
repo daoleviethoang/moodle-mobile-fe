@@ -1,9 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 
-class MoodleStyles {
+import 'colors.dart';
 
+class MoodleStyles {
   MoodleStyles._();
+
+  static const TextStyle appBarTitleStyle = TextStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: 18,
+      letterSpacing: 1,
+      color: MoodleColors.white);
+
+  static const sectionHeaderStyle = TextStyle(
+    fontWeight: FontWeight.bold,
+    fontSize: 20,
+  );
 
   static const TextStyle courseHeaderStyle = TextStyle(
     fontSize: 20,

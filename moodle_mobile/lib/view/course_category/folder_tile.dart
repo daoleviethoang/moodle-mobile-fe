@@ -28,7 +28,7 @@ class _FolderTileState extends State<FolderTile> {
     return Container(
         margin: widget.margin,
         decoration: BoxDecoration(
-          color: MoodleColors.grey_soft,
+          color: MoodleColors.blue_soft,
           border: Border.all(
             width: 5,
             color: Colors.transparent,
@@ -46,32 +46,38 @@ class _FolderTileState extends State<FolderTile> {
           },
           child: Column(
             children: [
+              Container(height: 8),
               Row(
                 children: [
                   SizedBox(width: 8),
-                  Icon(Icons.folder_open_outlined, color: Colors.black),
+                  Icon(Icons.folder_open_outlined, color: MoodleColors.blueDark),
                   SizedBox(width: 8),
-                  Text(widget.data.name ?? "",
-                      style: const TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w900,
-                      )),
                   Expanded(
-                    child: Row(
-                      children: [
-                        Text(((widget.data.sumCoursecount) +
-                                (widget.data.coursecount ?? 0))
-                            .toString()),
-                        Icon(
-                          Icons.arrow_right,
-                          color: Colors.black,
-                        ),
-                      ],
-                      mainAxisAlignment: MainAxisAlignment.end,
-                    ),
+                    child: Text(widget.data.name ?? "",
+                        softWrap: true,
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: (widget.data.parent == 0)
+                                ? FontWeight.w900
+                                : FontWeight.normal,
+                            color: MoodleColors.blueDark)),
+                  ),
+                  Row(
+                    children: [
+                      Text((widget.data.sumCoursecount +
+                          (widget.data.coursecount ?? 0))
+                          .toString(),
+                        style: const TextStyle(color: MoodleColors.blueDark),),
+                      Icon(
+                        showChild ? Icons.arrow_drop_down : Icons.arrow_right,
+                        color: MoodleColors.blueDark,
+                      ),
+                    ],
+                    mainAxisAlignment: MainAxisAlignment.end,
                   ),
                 ],
               ),
+              Container(height: 8),
             ],
           ),
         ));

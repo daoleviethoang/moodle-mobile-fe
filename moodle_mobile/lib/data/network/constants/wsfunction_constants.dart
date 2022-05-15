@@ -16,6 +16,7 @@ class Wsfunction {
   // calendar
   static const String GET_CALENDAR_MONTHLY =
       "core_calendar_get_calendar_monthly_view";
+  static const String GET_UPCOMING = "core_calendar_get_calendar_upcoming_view";
 
   //course category
   static const String CORE_USER_GET_USERS_BY_FIELD =
@@ -58,6 +59,16 @@ class Wsfunction {
   //notification preference
   static const String CORE_MESSAGE_GET_USER_NOTIFICATION_PREFERENCES =
       "core_message_get_user_notification_preferences";
+  static const String CORE_MESSAGE_GET_USER_MESSAGE_PREFERENCES =
+      "core_message_get_user_message_preferences";
   static const String CORE_USER_UPDATE_USER_PREFERENCE =
       "core_user_update_user_preferences";
+
+  //enrol
+  static const String ENROL_SELF_ENROL_USER = "enrol_self_enrol_user";
+  static const String ENROL_GET_COURSE_ENROL_METHODS =
+      "core_enrol_get_course_enrolment_methods";
+
+  //search course
+  static const String CORE_COURSE_SEARCH_COURSES = "core_course_search_courses";
 }
