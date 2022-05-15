@@ -68,6 +68,7 @@ class CalendarService {
       }
       return events;
     } catch (e) {
+      print('$e');
       rethrow;
     }
   }

@@ -106,64 +106,74 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
         return SectionItem(
           header: HeaderItem(text: c.name),
           body: c.modules.map((m) {
-            final title = m.name ?? '';
-            switch (m.modname ?? '') {
-              case ModuleName.assign:
-                final dueDate = DateTime.fromMillisecondsSinceEpoch(
-                    (jsonDecode(m.customdata ?? '')['duedate'] ?? 0) * 1000);
-                return SubmissionItem(
-                  title: title,
-                  submissionId: m.instance ?? 0,
-                  courseId: widget.courseId,
-                  dueDate: dueDate,
-                );
-              case ModuleName.chat:
-                return ChatItem(
-                  title: title,
-                  onPressed: () {},
-                );
-              case ModuleName.folder:
-                return Container();
-              case ModuleName.forum:
-                return ForumItem(
-                  title: title,
-                  onPressed: () {
-                    // Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
-                    //   return ForumScreen();
-                    // })))
-                  },
-                );
-              case ModuleName.label:
-                return RichTextCard(text: m.description ?? '');
-              case ModuleName.page:
-                return PageItem(
-                  title: title,
-                  onPressed: () {},
-                );
-              case ModuleName.quiz:
-                return QuizItem(
+            try {
+              final title = m.name ?? '';
+              switch (m.modname ?? '') {
+                case ModuleName.assign:
+                  final ms = jsonDecode(m.customdata ?? '')['duedate'];
+                  final dueDate = (ms != null)
+                      ? DateTime.fromMillisecondsSinceEpoch(
+                          jsonDecode(m.customdata ?? '')['duedate'] * 1000)
+                      : null;
+                  return SubmissionItem(
                     title: title,
-                    quizInstanceId: m.instance ?? 0,
-                    courseId: widget.courseId);
-              case ModuleName.resource:
-                var url = m.contents?[0].fileurl ?? '';
-                if (url.isNotEmpty) {
-                  url = url.substring(0, url.indexOf('?forcedownload'));
-                  url += '?token=' + _userStore.user.token;
-                }
-                return DocumentItem(
-                  title: title,
-                  documentUrl: url,
-                );
-              case ModuleName.url:
-                return UrlItem(
-                  title: title,
-                  url: m.contents?[0].fileurl ?? '',
-                );
-              case ModuleName.zoom:
-                return Container();
-              default:
-                return ErrorCard(text: 'Unknown module name: ${m.modname}');
+                    submissionId: m.instance ?? 0,
+                    courseId: widget.courseId,
+                    dueDate: dueDate,
+                  );
+                case ModuleName.chat:
+                  return ChatItem(
+                    title: title,
+                    onPressed: () {},
+                  );
+                case ModuleName.folder:
+                  return Container();
+                case ModuleName.forum:
+                  return ForumItem(
+                    title: title,
+                    onPressed: () {
+                      // Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
+                      //   return ForumScreen();
+                      // })))
+                    },
+                  );
+                case ModuleName.label:
+                  return RichTextCard(text: m.description ?? '');
+                case ModuleName.page:
+                  return PageItem(
+                    title: title,
+                    onPressed: () {},
+                  );
+                case ModuleName.quiz:
+                  return QuizItem(
+                      title: title,
+                      quizInstanceId: m.instance ?? 0,
+                      courseId: widget.courseId);
+                case ModuleName.resource:
+                  var url = m.contents?[0].fileurl ?? '';
+                  if (url.isNotEmpty) {
+                    url = url.substring(0, url.indexOf('?forcedownload'));
+                    url += '?token=' + _userStore.user.token;
+                  }
+                  return DocumentItem(
+                    title: title,
+                    documentUrl: url,
+                  );
+                case ModuleName.url:
+                  return UrlItem(
+                    title: title,
+                    url: m.contents?[0].fileurl ?? '',
+                  );
+                case ModuleName.zoom:
+                  return Container();
+                default:
+                  print('$m');
+                  return ErrorCard(text: 'Unknown module name: ${m.modname}');
+              }
+            } catch (e) {
+              // FIXME: Assignment text is [] instead of string
+              print('$m');
+              return ErrorCard(text: '$e');
             }
           }).toList(),
         );
@@ -209,16 +219,15 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                       } else if (!data.hasData) {
                         return const LoadingCard();
                       }
-                      final instance = (data.data as ModuleCourse).instance ??
-                          0;
+                      final instance =
+                          (data.data as ModuleCourse).instance ?? 0;
                       return SubmissionItem(
                         title: title,
                         submissionId: instance,
                         courseId: e.course?.id ?? 0,
                         dueDate: dueDate,
                       );
-                    }
-                );
+                    });
               case ModuleName.quiz:
                 return FutureBuilder(
                     future: queryModule(e),
@@ -228,16 +237,15 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                       } else if (!data.hasData) {
                         return const LoadingCard();
                       }
-                      final instance = (data.data as ModuleCourse).instance ??
-                          0;
+                      final instance =
+                          (data.data as ModuleCourse).instance ?? 0;
                       return QuizItem(
                         title: title,
                         openDate: dueDate,
                         quizInstanceId: instance,
                         courseId: e.course?.id ?? 0,
                       );
-                    }
-                );
+                    });
               default:
                 throw Exception('Unknown module name: ' + (e.modulename ?? ''));
             }
