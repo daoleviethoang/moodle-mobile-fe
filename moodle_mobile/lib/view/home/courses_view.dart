@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/data/network/apis/contact/contact_service.dart';
-import 'package:moodle_mobile/data/network/apis/course/course_detail_service.dart';
 import 'package:moodle_mobile/data/network/apis/course/course_service.dart';
 import 'package:moodle_mobile/models/contact/contact.dart';
 import 'package:moodle_mobile/models/contant/contant_model.dart';
 import 'package:moodle_mobile/models/contant/course_arrange.dart';
+import 'package:moodle_mobile/models/contant/course_status.dart';
 import 'package:moodle_mobile/models/course/course.dart';
-import 'package:moodle_mobile/models/course/course_detail.dart';
 import 'package:moodle_mobile/models/course/courses.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/course_details.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../constants/colors.dart';
 
@@ -36,6 +36,7 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
     with TickerProviderStateMixin {
   AnimationController? animationController;
   List<CourseOverview> coursesOverview = [];
+  List<CourseOverview> coursesOverviewOld = [];
   bool isLoad = false;
   late UserStore _userStore;
 
@@ -44,8 +45,8 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
     animationController = AnimationController(
         duration: const Duration(milliseconds: 2000), vsync: this);
     _userStore = GetIt.instance<UserStore>();
-    getData();
     super.initState();
+    getData();
   }
 
   getData() async {
@@ -59,7 +60,7 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
           .getCourses(_userStore.user.token, _userStore.user.id);
 
       setState(() {
-        coursesOverview = courses
+        List<CourseOverview> coursesOverviewList = courses
             .map((element) => CourseOverview(
                 id: element.id,
                 title: element.displayname,
@@ -67,9 +68,12 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
                 hidden: element.hidden,
                 startdate: element.startdate,
                 enddate: element.enddate,
-                lastaccess: element.enddate,
+                lastaccess: element.lastaccess,
                 teacher: []))
             .toList();
+        coursesOverviewList.sort((a, b) => a.title.compareTo(b.title));
+        coursesOverview = coursesOverviewList;
+        coursesOverviewOld = coursesOverview;
       });
       setState(() {
         isLoad = false;
@@ -92,35 +96,119 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
   }
 
   List<CourseOverview> filterCourseHomePage() {
-    if (widget.arrangeTypeSelected.key == CourseArrange.name) {
-      coursesOverview.sort((a, b) => a.title.compareTo(b.title));
-      print(widget.arrangeTypeSelected.key);
+    List<CourseOverview> coursesOverviewFilter = coursesOverview;
+    DateTime currentPhoneDate = DateTime.now(); //DateTime
+    int currentTimeStamp =
+        Timestamp.fromDate(currentPhoneDate).seconds; //To TimeStamp
+
+    setState(() {
+      isLoad = true;
+    });
+    if (widget.showOnlyStarSelected) {
+      coursesOverviewFilter = coursesOverviewFilter
+          .where((element) => element.isfavourite)
+          .toList();
     }
-    if (widget.arrangeTypeSelected.key == CourseArrange.last_accessed) {
-      coursesOverview.sort((a, b) => a.lastaccess.compareTo(b.lastaccess));
-      print(widget.arrangeTypeSelected.key);
+    switch (widget.statusTypeSelected.key) {
+      case CourseStatus.all:
+        {
+          if (!widget.showOnlyStarSelected)
+            coursesOverviewFilter = coursesOverview;
+          break;
+        }
+      case CourseStatus.past:
+        {
+          coursesOverviewFilter = coursesOverviewFilter
+              .where((element) =>
+                  (element.enddate < currentTimeStamp && element.enddate != 0))
+              .toList();
+          break;
+        }
+      case CourseStatus.in_progress:
+        {
+          coursesOverviewFilter = coursesOverviewFilter
+              .where((element) =>
+                  (element.enddate >= currentTimeStamp ||
+                      element.enddate == 0) &&
+                  element.startdate <= currentTimeStamp)
+              .toList();
+          break;
+        }
+      case CourseStatus.future:
+        {
+          coursesOverviewFilter = coursesOverviewFilter
+              .where((element) => (element.startdate > currentTimeStamp))
+              .toList();
+          break;
+        }
+      case CourseStatus.removed_from_view:
+        {
+          coursesOverviewFilter =
+              coursesOverviewFilter.where((element) => element.hidden).toList();
+          break;
+        }
+      case CourseStatus.all_expand:
+        {
+          coursesOverviewFilter = coursesOverviewFilter
+              .where((element) => element.hidden == false)
+              .toList();
+          break;
+        }
+      default:
+        {
+          if (!widget.showOnlyStarSelected)
+            coursesOverviewFilter = coursesOverview;
+          break;
+        }
+    }
+    if (widget.arrangeTypeSelected.key == CourseArrange.name) {
+      coursesOverviewFilter.sort((a, b) => a.title.compareTo(b.title));
+    } else if (widget.arrangeTypeSelected.key == CourseArrange.last_accessed) {
+      coursesOverviewFilter.sort((a, b) {
+        if (a.lastaccess > b.lastaccess)
+          return 1;
+        else
+          return 0;
+      });
     }
     setState(() {
       isLoad = false;
     });
-    print(widget.statusTypeSelected.key);
-    return coursesOverview;
+    return coursesOverviewFilter;
   }
 
   @override
   Widget build(BuildContext context) {
     if (widget.isFilter) {
-      print(widget.isFilter);
-      setState(() {
-        isLoad = true;
-      });
-      setState(() {
-        coursesOverview = filterCourseHomePage();
-      });
+      coursesOverview = coursesOverviewOld;
+      List<CourseOverview> newCourseOverview = filterCourseHomePage();
+      if (newCourseOverview.isEmpty) {
+        return Center(
+            child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: const <Widget>[
+            Icon(Icons.notifications_none, size: 50),
+            Padding(padding: EdgeInsets.all(20)),
+            Text(
+              "Your search didn't match any courses.",
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  letterSpacing: 0.27,
+                  color: MoodleColors.black),
+            ),
+          ],
+        ));
+      } else {
+        setState(() {
+          coursesOverview = newCourseOverview;
+        });
+      }
     }
 
     return Padding(
-      padding: const EdgeInsets.only(left: 0, top: 20),
+      padding: const EdgeInsets.only(left: 0, top: 50),
       child: isLoad
           ? const Center(
               child: CircularProgressIndicator(),

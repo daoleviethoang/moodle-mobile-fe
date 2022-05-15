@@ -22,6 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: MoodleColors.white,
       body: Column(
         children: <Widget>[
@@ -48,23 +49,28 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget getListCoursesUI() {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
-      child: Stack(
-        children: <Widget>[
-          Container(
-            margin: const EdgeInsets.only(top: 30),
-            child: PopularCourseListView(
-                arrangeTypeSelected: arrangeTypeSelected,
-                statusTypeSelected: statusTypeSelected,
-                showOnlyStarSelected: showOnlyStarSelected,
-                isFilter: isFilter),
-          ),
-          getDropdownStatus(),
-        ],
-      ),
-    );
+    return PopularCourseListView(
+        arrangeTypeSelected: arrangeTypeSelected,
+        statusTypeSelected: statusTypeSelected,
+        showOnlyStarSelected: showOnlyStarSelected,
+        isFilter: isFilter);
+    // return SizedBox(
+    //   width: MediaQuery.of(context).size.width,
+    //   height: MediaQuery.of(context).size.height,
+    //   child: Stack(
+    //     children: <Widget>[
+    //       Container(
+    //         margin: const EdgeInsets.only(top: 30),
+    //         child: PopularCourseListView(
+    //             arrangeTypeSelected: arrangeTypeSelected,
+    //             statusTypeSelected: statusTypeSelected,
+    //             showOnlyStarSelected: showOnlyStarSelected,
+    //             isFilter: isFilter),
+    //       ),
+    //       getDropdownStatus(),
+    //     ],
+    //   ),
+    // );
   }
 
   Widget getScreenTabUI(CategoryType categoryTypeData) {
@@ -77,17 +83,42 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget getMyCoursesUI() {
+    // SizedBox(
+    //   width: MediaQuery.of(context).size.width,
+    //   height: MediaQuery.of(context).size.height,
+    //   child: Stack(
+    //     children: <Widget>[
+    //       Container(
+    //         margin: const EdgeInsets.only(top: 30),
+    //         child: PopularCourseListView(
+    //             arrangeTypeSelected: arrangeTypeSelected,
+    //             statusTypeSelected: statusTypeSelected,
+    //             showOnlyStarSelected: showOnlyStarSelected,
+    //             isFilter: isFilter),
+    //       ),
+    //       getDropdownStatus(),
+    //     ],
+    //   ),
+    // );
     return Expanded(
-      child: SingleChildScrollView(
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: Padding(
-            padding: const EdgeInsets.only(top: 0, left: 5, right: 5),
-            child: getListCoursesUI(),
-          ),
-        ),
+      child: Stack(
+        children: <Widget>[
+          getListCoursesUI(),
+          getDropdownStatus(),
+        ],
       ),
     );
+    // return Expanded(
+    //   child: SingleChildScrollView(
+    //     child: SizedBox(
+    //       height: MediaQuery.of(context).size.height,
+    //       child: Padding(
+    //         padding: const EdgeInsets.only(top: 0, left: 5, right: 5),
+    //         child: getListCoursesUI(),
+    //       ),
+    //     ),
+    //   ),
+    // );
   }
 
   Widget getAllCoursesUI() {
