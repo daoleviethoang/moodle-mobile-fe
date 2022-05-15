@@ -352,19 +352,9 @@ class _SelectCourseFilterState extends State<SelectCourseFilter>
                     borderRadius: BorderRadius.all(Radius.circular(8))),
               ),
               onPressed: () {
-                if (arrangeTypeSelected.key ==
-                        ContantExtension.CourseArrangeSelected.key &&
-                    statusTypeSelected.key ==
-                        ContantExtension.CourseStatusSelected.key &&
-                    showOnlyStarSelected == false) {
-                  setState(() {
-                    this.isFilter = false;
-                  });
-                } else {
-                  setState(() {
-                    this.isFilter = true;
-                  });
-                }
+                setState(() {
+                  this.isFilter = true;
+                });
                 setState(() {
                   this.isShow = !this.isShow;
                 });
@@ -373,6 +363,15 @@ class _SelectCourseFilterState extends State<SelectCourseFilter>
                     this.statusTypeSelected,
                     this.showOnlyStarSelected,
                     this.isFilter);
+                // if (arrangeTypeSelected.key ==
+                //         ContantExtension.CourseArrangeSelected.key &&
+                //     statusTypeSelected.key ==
+                //         ContantExtension.CourseStatusSelected.key &&
+                //     showOnlyStarSelected == false) {
+                //   setState(() {
+                //     this.isFilter = false;
+                //   });
+                // }
                 _runExpandCheck();
               },
               child: const Padding(

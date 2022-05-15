@@ -5,6 +5,7 @@ import 'package:moodle_mobile/data/network/apis/course/course_detail_service.dar
 import 'package:moodle_mobile/data/network/apis/course/course_service.dart';
 import 'package:moodle_mobile/models/contact/contact.dart';
 import 'package:moodle_mobile/models/contant/contant_model.dart';
+import 'package:moodle_mobile/models/contant/course_arrange.dart';
 import 'package:moodle_mobile/models/course/course.dart';
 import 'package:moodle_mobile/models/course/course_detail.dart';
 import 'package:moodle_mobile/models/course/courses.dart';
@@ -41,7 +42,7 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
   @override
   void initState() {
     animationController = AnimationController(
-        duration: const Duration(milliseconds: 1200), vsync: this);
+        duration: const Duration(milliseconds: 2000), vsync: this);
     _userStore = GetIt.instance<UserStore>();
     getData();
     super.initState();
@@ -52,6 +53,7 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
       isLoad = true;
     });
 
+    await Future<dynamic>.delayed(const Duration(milliseconds: 2));
     try {
       List<Course> courses = await CourseService()
           .getCourses(_userStore.user.token, _userStore.user.id);
@@ -59,7 +61,14 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
       setState(() {
         coursesOverview = courses
             .map((element) => CourseOverview(
-                id: element.id, title: element.displayname, teacher: []))
+                id: element.id,
+                title: element.displayname,
+                isfavourite: element.isfavourite,
+                hidden: element.hidden,
+                startdate: element.startdate,
+                enddate: element.enddate,
+                lastaccess: element.enddate,
+                teacher: []))
             .toList();
       });
       setState(() {
@@ -82,74 +91,65 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
     });
   }
 
+  List<CourseOverview> filterCourseHomePage() {
+    if (widget.arrangeTypeSelected.key == CourseArrange.name) {
+      coursesOverview.sort((a, b) => a.title.compareTo(b.title));
+      print(widget.arrangeTypeSelected.key);
+    }
+    if (widget.arrangeTypeSelected.key == CourseArrange.last_accessed) {
+      coursesOverview.sort((a, b) => a.lastaccess.compareTo(b.lastaccess));
+      print(widget.arrangeTypeSelected.key);
+    }
+    setState(() {
+      isLoad = false;
+    });
+    print(widget.statusTypeSelected.key);
+    return coursesOverview;
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (widget.isFilter) {
+      print(widget.isFilter);
+      setState(() {
+        isLoad = true;
+      });
+      setState(() {
+        coursesOverview = filterCourseHomePage();
+      });
+    }
+
     return Padding(
       padding: const EdgeInsets.only(left: 0, top: 20),
       child: isLoad
           ? const Center(
               child: CircularProgressIndicator(),
             )
-<<<<<<< HEAD
-          : widget.isFilter
-              ? Text("filter")
-              : ListView(
-                  padding: const EdgeInsets.all(8),
-                  physics: const BouncingScrollPhysics(),
-                  scrollDirection: Axis.vertical,
-                  children: List<Widget>.generate(
-                    coursesOverview.length,
-                    (int index) {
-                      final int count = coursesOverview.length;
-                      final Animation<double> animation =
-                          Tween<double>(begin: 0.0, end: 1.0).animate(
-                        CurvedAnimation(
-                          parent: animationController!,
-                          curve: Interval((1 / count) * index, 1.0,
-                              curve: Curves.fastOutSlowIn),
-                        ),
-                      );
-                      animationController?.forward();
-                      return CategoryView(
-                        course: coursesOverview[index],
-                        animation: animation,
-                        animationController: animationController,
-                      );
-                    },
-                  ),
-                ),
-=======
           : ListView(
               padding: const EdgeInsets.all(8),
               physics: const BouncingScrollPhysics(),
               scrollDirection: Axis.vertical,
-              children: [
-                ...List<Widget>.generate(
-                  coursesOverview.length,
-                  (int index) {
-                    final int count = coursesOverview.length;
-                    final Animation<double> animation =
-                        Tween<double>(begin: 0.0, end: 1.0).animate(
-                      CurvedAnimation(
-                        parent: animationController!,
-                        curve: Interval((1 / count) * index, 1.0,
-                            curve: Curves.fastOutSlowIn),
-                      ),
-                    );
-                    animationController?.forward();
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: CategoryView(
-                        course: coursesOverview[index],
-                        animation: animation,
-                        animationController: animationController,
-                      ),
-                    );
-                  },
-                ),
-              ],
+              children: List<Widget>.generate(
+                coursesOverview.length,
+                (int index) {
+                  final int count = coursesOverview.length;
+                  final Animation<double> animation =
+                      Tween<double>(begin: 0.0, end: 1.0).animate(
+                    CurvedAnimation(
+                      parent: animationController!,
+                      curve: Interval((1 / count) * index, 1.0,
+                          curve: Curves.fastOutSlowIn),
+                    ),
+                  );
+                  animationController?.forward();
+                  return CategoryView(
+                    course: coursesOverview[index],
+                    animation: animation,
+                    animationController: animationController,
+                  );
+                },
+              ),
             ),
->>>>>>> 9f19387427a49c3e9aef67e4fa97961b9f0e949a
     );
   }
 }
