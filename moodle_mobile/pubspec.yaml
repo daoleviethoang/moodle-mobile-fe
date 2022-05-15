@@ -67,6 +67,8 @@ dependencies:
   autocomplete_textfield_ns: ^2.0.0
   auto_size_text: ^3.0.0
 
+  cloud_firestore: ^3.1.15
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

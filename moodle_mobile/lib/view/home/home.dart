@@ -13,11 +13,16 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  ContantModel arrangeTypeSelected = ContantExtension.CourseArrangeSelected;
+  ContantModel statusTypeSelected = ContantExtension.CourseStatusSelected;
+  bool showOnlyStarSelected = false;
+  bool isFilter = false;
   CategoryType categoryType = CategoryType.my;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: MoodleColors.white,
       body: Column(
         children: <Widget>[
@@ -44,19 +49,28 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget getListCoursesUI() {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
-      child: Stack(
-        children: <Widget>[
-          Container(
-            margin: const EdgeInsets.only(top: 40),
-            child: const PopularCourseListView(),
-          ),
-          getDropdownStatus(),
-        ],
-      ),
-    );
+    return PopularCourseListView(
+        arrangeTypeSelected: arrangeTypeSelected,
+        statusTypeSelected: statusTypeSelected,
+        showOnlyStarSelected: showOnlyStarSelected,
+        isFilter: isFilter);
+    // return SizedBox(
+    //   width: MediaQuery.of(context).size.width,
+    //   height: MediaQuery.of(context).size.height,
+    //   child: Stack(
+    //     children: <Widget>[
+    //       Container(
+    //         margin: const EdgeInsets.only(top: 30),
+    //         child: PopularCourseListView(
+    //             arrangeTypeSelected: arrangeTypeSelected,
+    //             statusTypeSelected: statusTypeSelected,
+    //             showOnlyStarSelected: showOnlyStarSelected,
+    //             isFilter: isFilter),
+    //       ),
+    //       getDropdownStatus(),
+    //     ],
+    //   ),
+    // );
   }
 
   Widget getScreenTabUI(CategoryType categoryTypeData) {
@@ -69,17 +83,42 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget getMyCoursesUI() {
+    // SizedBox(
+    //   width: MediaQuery.of(context).size.width,
+    //   height: MediaQuery.of(context).size.height,
+    //   child: Stack(
+    //     children: <Widget>[
+    //       Container(
+    //         margin: const EdgeInsets.only(top: 30),
+    //         child: PopularCourseListView(
+    //             arrangeTypeSelected: arrangeTypeSelected,
+    //             statusTypeSelected: statusTypeSelected,
+    //             showOnlyStarSelected: showOnlyStarSelected,
+    //             isFilter: isFilter),
+    //       ),
+    //       getDropdownStatus(),
+    //     ],
+    //   ),
+    // );
     return Expanded(
-      child: SingleChildScrollView(
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: Padding(
-            padding: const EdgeInsets.only(top: 0, left: 5, right: 5),
-            child: getListCoursesUI(),
-          ),
-        ),
+      child: Stack(
+        children: <Widget>[
+          getListCoursesUI(),
+          getDropdownStatus(),
+        ],
       ),
     );
+    // return Expanded(
+    //   child: SingleChildScrollView(
+    //     child: SizedBox(
+    //       height: MediaQuery.of(context).size.height,
+    //       child: Padding(
+    //         padding: const EdgeInsets.only(top: 0, left: 5, right: 5),
+    //         child: getListCoursesUI(),
+    //       ),
+    //     ),
+    //   ),
+    // );
   }
 
   Widget getAllCoursesUI() {
@@ -149,12 +188,22 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget getDropdownStatus() {
     return SelectCourseFilter(
-      ContantExtension.CourseArrangeSelected,
-      ContantExtension.CourseStatusSelected,
-      (optionItem1, optionItem2) {
-        optionItem1;
-        optionItem2;
-        setState(() {});
+      arrangeTypeSelected,
+      statusTypeSelected,
+      showOnlyStarSelected,
+      isFilter,
+      (arrangeTypeSelected, statusTypeSelected, showOnlyStarSelected,
+          isFilter) {
+        arrangeTypeSelected;
+        statusTypeSelected;
+        showOnlyStarSelected;
+        isFilter;
+        setState(() {
+          this.arrangeTypeSelected = arrangeTypeSelected;
+          this.statusTypeSelected = statusTypeSelected;
+          this.showOnlyStarSelected = showOnlyStarSelected;
+          this.isFilter = isFilter;
+        });
       },
     );
   }

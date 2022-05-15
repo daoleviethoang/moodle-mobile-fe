@@ -7,7 +7,7 @@ class Course {
   int id;
   String? shortname;
   String? fullname;
-  String? displayname;
+  String displayname;
   int? enrolledusercount;
   String? idnumber;
   int? visible;
@@ -22,12 +22,12 @@ class Course {
   int? category;
   double? progress;
   bool? completed;
-  int? startdate;
-  int? enddate;
+  int startdate;
+  int enddate;
   int? marker;
-  int? lastaccess;
-  bool? isfavourite;
-  bool? hidden;
+  int lastaccess;
+  bool isfavourite;
+  bool hidden;
   bool? showactivitydates;
   bool? showcompletionconditions;
 
@@ -35,7 +35,7 @@ class Course {
     required this.id,
     this.shortname,
     this.fullname,
-    this.displayname,
+    required this.displayname,
     this.enrolledusercount,
     this.idnumber,
     this.visible,
@@ -50,12 +50,12 @@ class Course {
     this.category,
     this.progress,
     this.completed,
-    this.startdate,
-    this.enddate,
+    this.startdate = 0,
+    this.enddate = 0,
     this.marker,
-    this.lastaccess,
-    this.isfavourite,
-    this.hidden,
+    this.lastaccess = 0,
+    this.isfavourite = false,
+    this.hidden = false,
     this.showactivitydates,
     this.showcompletionconditions,
   });
