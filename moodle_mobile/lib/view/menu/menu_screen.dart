@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/constants/colors.dart';
+import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/content_item.dart';
 import 'package:moodle_mobile/view/common/menu_item.dart' as m;
@@ -51,7 +52,7 @@ class _MenuScreenState extends State<MenuScreen> {
                 padding: EdgeInsets.only(left: 8),
                 child: Text(
                   'News & Info',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                  style: MoodleStyles.sectionHeaderStyle,
                 ),
               ),
               const SizedBox(height: 20),
@@ -104,7 +105,7 @@ class _MenuScreenState extends State<MenuScreen> {
                 padding: EdgeInsets.only(left: 8),
                 child: Text(
                   'Settings',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                  style: MoodleStyles.sectionHeaderStyle,
                 ),
               ),
               const SizedBox(height: 20),
@@ -175,7 +176,7 @@ class _MenuScreenState extends State<MenuScreen> {
                 padding: EdgeInsets.only(left: 8),
                 child: Text(
                   'Account',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                  style: MoodleStyles.sectionHeaderStyle,
                 ),
               ),
               const SizedBox(height: 20),

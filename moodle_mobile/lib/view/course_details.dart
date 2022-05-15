@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -404,13 +405,11 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                               child: AnimatedOpacity(
                                 opacity: hasData ? 1.0 : 0.0,
                                 duration: const Duration(milliseconds: 1200),
-                                child: Text(
+                                child: AutoSizeText(
                                   _course?.displayname ?? '',
                                   maxLines: 2,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 32,
-                                  ),
+                                  presetFontSizes: const [28, 24, 20],
+                                  style: MoodleStyles.appBarTitleStyle,
                                 ),
                               ),
                             ),

@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/models/course/courses.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/calendar/calendar.dart';
@@ -68,11 +69,7 @@ class _DirectScreenState extends State<DirectScreen> {
     return AppBar(
       title: Text(_widgetAppBarTitle.elementAt(_selectedIndex),
           textAlign: TextAlign.left,
-          style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
-              letterSpacing: 1,
-              color: MoodleColors.white)),
+          style: MoodleStyles.appBarTitleStyle),
       actions: <Widget>[
         SizedBox(
           width: 60,
