@@ -49,7 +49,6 @@ class Repository {
       _userApi.login(username, password, service);
 
   Future<UserModel> getUserInfo(String token, String username) {
-    print("Here repository");
     return _userApi.getUserInfo(token, username);
   }
 
