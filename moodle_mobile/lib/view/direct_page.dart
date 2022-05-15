@@ -75,7 +75,7 @@ class _DirectScreenState extends State<DirectScreen> {
           width: 60,
           height: 60,
           child: IconButton(
-              iconSize: 40,
+              iconSize: 28,
               icon: const Icon(Icons.search),
               color: MoodleColors.white,
               onPressed: () async {

@@ -35,8 +35,15 @@ class CustomButtonShort extends StatelessWidget {
       child: TextButton(
         onPressed: onPressed,
         child: Text(text,
-            style: TextStyle(color: textColor, fontWeight: FontWeight.w700)),
-        style: ButtonStyle(backgroundColor: MaterialStateProperty.all(bgColor)),
+            style: TextStyle(
+              color: textColor,
+              fontWeight: FontWeight.w700,
+              fontSize: 16,
+            )),
+        style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(bgColor),
+            shape: MaterialStateProperty.all(const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(8.0))))),
       ),
     );
   }
