@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:moodle_mobile/constants/colors.dart';
+import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/data/network/apis/calendar/calendar_service.dart';
 import 'package:moodle_mobile/data/network/apis/module/module_service.dart';
 import 'package:moodle_mobile/models/calendar/event.dart';
@@ -176,10 +177,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
             padding: const EdgeInsets.only(bottom: 12),
             child:
                 Text('Events on ' + DateFormat('MMMM dd').format(_selectedDay),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    )),
+                    style: MoodleStyles.sectionHeaderStyle),
           ),
 
           // Event list
@@ -225,7 +223,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       );
                     });
               default:
-                throw Exception('Unknown module name: ' + (e.modulename ?? ''));
+                return ErrorCard(
+                  text: 'Unknown module name: ' + (e.modulename ?? ''),
+                );
             }
           }).toList(),
         ],

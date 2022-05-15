@@ -65,6 +65,7 @@ dependencies:
 
   #auto complete text field
   autocomplete_textfield_ns: ^2.0.0
+  auto_size_text: ^3.0.0
 
 dev_dependencies:
   flutter_test:

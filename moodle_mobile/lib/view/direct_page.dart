@@ -1,12 +1,13 @@
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/models/course/courses.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
-import 'package:moodle_mobile/view/home/calendar.dart';
+import 'package:moodle_mobile/view/calendar/calendar.dart';
 import 'package:moodle_mobile/view/home/home.dart';
 import 'package:moodle_mobile/view/menu/menu_screen.dart';
-import 'package:moodle_mobile/view/home/notification_screen.dart';
+import 'package:moodle_mobile/view/notifications/notification_screen.dart';
 import 'package:moodle_mobile/view/message/message_screen.dart';
 import 'package:moodle_mobile/view/search_course/search_course.dart';
 
@@ -68,17 +69,13 @@ class _DirectScreenState extends State<DirectScreen> {
     return AppBar(
       title: Text(_widgetAppBarTitle.elementAt(_selectedIndex),
           textAlign: TextAlign.left,
-          style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
-              letterSpacing: 1,
-              color: MoodleColors.white)),
+          style: MoodleStyles.appBarTitleStyle),
       actions: <Widget>[
         SizedBox(
           width: 60,
           height: 60,
           child: IconButton(
-              iconSize: 40,
+              iconSize: 28,
               icon: const Icon(Icons.search),
               color: MoodleColors.white,
               onPressed: () async {

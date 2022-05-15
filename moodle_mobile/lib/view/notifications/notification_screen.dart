@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
-import 'package:mobx/mobx.dart';
 import 'package:moodle_mobile/data/network/apis/course/course_detail_service.dart';
 import 'package:moodle_mobile/data/network/apis/notification/notification_api.dart';
-import 'package:moodle_mobile/di/service_locator.dart';
 import 'package:moodle_mobile/models/course/course_detail.dart';
 import 'package:moodle_mobile/models/notification/notification.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
@@ -26,7 +24,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     _userStore = GetIt.instance<UserStore>();
     getData();
     //getName();

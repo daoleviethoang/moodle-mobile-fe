@@ -1,7 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:moodle_mobile/constants/colors.dart';
+import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
+import 'package:moodle_mobile/view/common/content_item.dart';
+import 'package:moodle_mobile/view/common/menu_item.dart' as m;
 import 'package:moodle_mobile/view/menu/profile/profile.dart';
 import 'package:moodle_mobile/view/message_preference/index.dart';
 import 'package:moodle_mobile/view/notification_preference/index.dart';
@@ -20,214 +24,207 @@ class _MenuScreenState extends State<MenuScreen> {
   @override
   void initState() {
     _userStore = GetIt.instance();
-    // TODO: implement initState
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //     title: Text(
-      //   'Learning Management System',
-      //   style: TextStyle(color: Colors.white),
-      // )),
-      body: Padding(
-        padding: const EdgeInsets.only(top: 20, left: 15, right: 15),
-        child: SingleChildScrollView(
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: ProfileHeader(userStore: _userStore),
-            ),
-            Container(
-              margin: EdgeInsets.only(left: 10.0, right: 10.0),
-              child: Divider(
-                height: 15,
-                thickness: 1,
-                color: Colors.red,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 20),
+              ProfileHeader(userStore: _userStore),
+              const SizedBox(height: 10),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                child: Divider(
+                  height: 15,
+                  thickness: 1,
+                  color: MoodleColors.iconGrey,
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 8, top: 10, bottom: 10),
-              child: Text('News & Info',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-            ),
-            Container(
-              color: Colors.grey[200],
-              margin: EdgeInsets.only(top: 10, left: 10),
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-              //padding: EdgeInsets.only(bottom: 15),
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    MenuButton(
-                      onTap: () {},
-                      iconColor: Colors.purple.shade300,
-                      name: 'Moodle FAQS',
-                      iconName: Icons.link,
-                    ),
-                    SizedBox(
-                      height: 8,
-                    ),
-                    MenuButton(
-                      onTap: () {},
-                      iconColor: Colors.purple.shade300,
-                      name: 'Giang day tai FIT.HCMUS',
-                      iconName: Icons.account_circle,
-                    ),
-                    SizedBox(
-                      height: 8,
-                    ),
-                    MenuButton(
-                      onTap: () {},
-                      iconColor: Colors.purple.shade300,
-                      name: 'Cac chuong trinh theo de an',
-                      iconName: Icons.link,
-                    ),
-                    SizedBox(
-                      height: 8,
-                    ),
-                    MenuButton(
-                      onTap: () {},
-                      iconColor: Colors.purple.shade300,
-                      name: 'Dao tao sau dai hoc',
-                      iconName: Icons.link,
-                    ),
-                    SizedBox(
-                      height: 8,
-                    ),
-                    MenuButton(
-                      onTap: () {},
-                      iconColor: Colors.purple.shade300,
-                      name: 'Nghien cuu khoa hoc',
-                      iconName: Icons.link,
-                    ),
-                  ]),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 8, top: 10, bottom: 10),
-              child: Text('Settings',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-            ),
-            Container(
-              color: Colors.grey[200],
-              margin: EdgeInsets.only(top: 10, left: 10),
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-              //padding: EdgeInsets.only(bottom: 15),
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    MenuButton(
-                      onTap: () {
-                        Navigator.of(context)
-                            .push(MaterialPageRoute(builder: (_) {
-                          return const NotificationPreferenceScreen();
-                        }));
-                      },
-                      iconColor: Colors.amber,
-                      name: 'Notifications & sounds',
-                      iconName: Icons.circle_notifications,
-                    ),
-                    SizedBox(
-                      height: 8,
-                    ),
-                    MenuButton(
-                      onTap: () {
-                        Navigator.of(context)
-                            .push(MaterialPageRoute(builder: (_) {
-                          return const MessagePreferenceScreen();
-                        }));
-                      },
-                      iconColor: Colors.amber,
-                      name: 'Message notification',
-                      iconName: Icons.circle_notifications,
-                    ),
-                    SizedBox(
-                      height: 8,
-                    ),
-                    MenuButton(
-                      onTap: () {},
-                      iconColor: Colors.blueGrey,
-                      name: 'Moodle Settings',
-                      iconName: Icons.account_circle,
-                    ),
-                    SizedBox(
-                      height: 8,
-                    ),
-                    MenuButton(
-                      onTap: () {},
-                      iconColor: Colors.purple.shade200,
-                      name: 'App Theme',
-                      iconName: CupertinoIcons.circle_righthalf_fill,
-                    ),
-                    SizedBox(
-                      height: 8,
-                    ),
-                    MenuButton(
-                      onTap: () {},
-                      iconColor: Colors.green,
-                      name: 'Device Permisson',
-                      iconName: CupertinoIcons.lock_circle_fill,
-                    ),
-                  ]),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 8, top: 10, bottom: 10),
-              child: Text('Account',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-            ),
-            Container(
-              color: Colors.grey[200],
-              margin: EdgeInsets.only(top: 10, left: 10),
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-              //padding: EdgeInsets.only(bottom: 15),
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    MenuButton(
-                      onTap: () {},
-                      iconColor: Colors.blue,
-                      name: 'Change password',
-                      iconName: Icons.password_outlined,
-                    ),
-                    SizedBox(
-                      height: 8,
-                    ),
-                    MenuButton(
-                      onTap: () {},
-                      iconColor: Colors.red,
-                      name: 'Report a problem',
-                      iconName: Icons.campaign_rounded,
-                    ),
-                    SizedBox(
-                      height: 8,
-                    ),
-                    MenuButton(
-                      onTap: () {},
-                      iconColor: Colors.purple.shade200,
-                      name: 'App Theme',
-                      iconName: Icons.chat_bubble,
-                    ),
-                    SizedBox(
-                      height: 8,
-                    ),
-                    MenuButton(
-                      onTap: () async {
-                        _userStore.logout();
-                        Navigator.of(context)
-                            .pushReplacement(MaterialPageRoute(builder: (_) {
-                          return const SplashScreen();
-                        }));
-                      },
-                      iconColor: Colors.grey,
-                      name: 'Log out',
-                      iconName: Icons.logout_outlined,
-                    ),
-                  ]),
-            ),
-          ]),
+              const SizedBox(height: 10),
+              const Padding(
+                padding: EdgeInsets.only(left: 8),
+                child: Text(
+                  'News & Info',
+                  style: MoodleStyles.sectionHeaderStyle,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Card(
+                color: Colors.grey[200],
+                margin: const EdgeInsets.only(left: 10),
+                elevation: 0,
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    mainAxisSize: MainAxisSize.max,
+                    children: const [
+                      UrlItem(
+                        title: 'Hệ thống Q&A FIT',
+                        url: 'https://courses.fit.hcmus.edu.vn/q2a',
+                      ),
+                      SizedBox(height: 8),
+                      UrlItem(
+                        title: 'Đào tạo sau đại học',
+                        url: 'https://www.fit.hcmus.edu.vn/vn/sdh',
+                      ),
+                      SizedBox(height: 8),
+                      UrlItem(
+                        title: 'Nghiên cứu khoa học',
+                        url:
+                            'https://www.fit.hcmus.edu.vn/vn/Default.aspx?tabid=1067',
+                      ),
+                      SizedBox(height: 8),
+                      UrlItem(
+                        title: 'Các chương trình theo đề án',
+                        url: 'https://www.ctda.hcmus.edu.vn/',
+                      ),
+                      SizedBox(height: 8),
+                      UrlItem(
+                        title: 'Giảng dạy tại FIT.HCMUS',
+                        url: 'https://teaching.fit.hcmus.edu.vn/',
+                      ),
+                      SizedBox(height: 8),
+                      UrlItem(
+                        title: 'Moodle FAQS',
+                        url: 'https://courses.fit.hcmus.edu.vn/faq/',
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              const Padding(
+                padding: EdgeInsets.only(left: 8),
+                child: Text(
+                  'Settings',
+                  style: MoodleStyles.sectionHeaderStyle,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Card(
+                color: Colors.grey[200],
+                margin: const EdgeInsets.only(left: 10),
+                elevation: 0,
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      m.MenuItem(
+                        title: 'Notifications & sounds',
+                        color: Colors.amber,
+                        icon: const Icon(Icons.notifications_rounded),
+                        fullWidth: true,
+                        onPressed: () {
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (_) {
+                            return const NotificationPreferenceScreen();
+                          }));
+                        },
+                      ),
+                      const SizedBox(height: 8),
+                      m.MenuItem(
+                        title: 'Message notification',
+                        color: Colors.amber,
+                        icon: const Icon(Icons.messenger_rounded),
+                        fullWidth: true,
+                        onPressed: () {
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (_) {
+                            return const MessagePreferenceScreen();
+                          }));
+                        },
+                      ),
+                      const SizedBox(height: 8),
+                      m.MenuItem(
+                        title: 'Moodle Settings',
+                        color: Colors.blueGrey,
+                        icon: const Icon(Icons.school_rounded),
+                        fullWidth: true,
+                        onPressed: () {},
+                      ),
+                      const SizedBox(height: 8),
+                      m.MenuItem(
+                        title: 'App Theme',
+                        color: Colors.purple.shade200,
+                        icon: const Icon(Icons.lightbulb_rounded),
+                        fullWidth: true,
+                        onPressed: () {},
+                      ),
+                      const SizedBox(height: 8),
+                      m.MenuItem(
+                        title: 'Device Permissions',
+                        color: Colors.green,
+                        icon: const Icon(Icons.lock_rounded),
+                        fullWidth: true,
+                        onPressed: () {},
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              const Padding(
+                padding: EdgeInsets.only(left: 8),
+                child: Text(
+                  'Account',
+                  style: MoodleStyles.sectionHeaderStyle,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Card(
+                color: Colors.grey[200],
+                margin: const EdgeInsets.only(left: 10),
+                elevation: 0,
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      m.MenuItem(
+                        title: 'Change password',
+                        color: Colors.blue,
+                        icon: const Icon(Icons.password_rounded),
+                        fullWidth: true,
+                        onPressed: () {},
+                      ),
+                      const SizedBox(height: 8),
+                      m.MenuItem(
+                        title: 'Report a problem',
+                        color: Colors.red,
+                        icon: const Icon(Icons.campaign_rounded),
+                        fullWidth: true,
+                        onPressed: () {},
+                      ),
+                      const SizedBox(height: 8),
+                      m.MenuItem(
+                        title: 'Logout',
+                        color: Colors.grey,
+                        icon: const Icon(Icons.logout_rounded),
+                        fullWidth: true,
+                        onPressed: () async {
+                          _userStore.logout();
+                          Navigator.of(context)
+                              .pushReplacement(MaterialPageRoute(builder: (_) {
+                            return const SplashScreen();
+                          }));
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+            ],
+          ),
         ),
       ),
     );
@@ -255,11 +252,11 @@ class ProfileHeader extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CircleAvatar(
+          const CircleAvatar(
             radius: 23,
           ),
-          SizedBox(
-            width: 5,
+          const SizedBox(
+            width: 10,
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -267,13 +264,15 @@ class ProfileHeader extends StatelessWidget {
             children: [
               Text(
                 _userStore.user.fullname,
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
               ),
-              SizedBox(height: 6),
+              const SizedBox(height: 6),
               Text(
                 _userStore.user.email,
-                style: TextStyle(
-                    color: Colors.grey, decoration: TextDecoration.underline),
+                style: const TextStyle(color: Colors.grey),
               ),
             ],
           ),
@@ -288,6 +287,7 @@ class MenuButton extends StatelessWidget {
   final IconData iconName;
   final String name;
   final Color iconColor;
+
   const MenuButton({
     Key? key,
     required this.onTap,
@@ -311,12 +311,12 @@ class MenuButton extends StatelessWidget {
               size: 28,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             width: 8,
           ),
           Text(
             name,
-            style: TextStyle(fontSize: 14, color: Colors.black87),
+            style: const TextStyle(fontSize: 14, color: Colors.black87),
           ),
         ],
       ),
