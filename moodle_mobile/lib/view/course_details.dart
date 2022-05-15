@@ -5,11 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/styles.dart';
+import 'package:moodle_mobile/data/network/apis/calendar/calendar_service.dart';
 import 'package:moodle_mobile/data/network/apis/course/course_content_service.dart';
 import 'package:moodle_mobile/data/network/apis/course/course_detail_service.dart';
+import 'package:moodle_mobile/data/network/apis/module/module_service.dart';
+import 'package:moodle_mobile/models/calendar/event.dart';
 import 'package:moodle_mobile/models/course/course_content.dart';
 import 'package:moodle_mobile/models/course/course_detail.dart';
 import 'package:moodle_mobile/models/module/module.dart';
+import 'package:moodle_mobile/models/module/module_course.dart';
 import 'package:moodle_mobile/view/common/content_item.dart';
 import 'package:moodle_mobile/view/common/data_card.dart';
 import 'package:moodle_mobile/view/common/image_view.dart';
@@ -48,6 +52,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   late UserStore _userStore;
   CourseDetail? _course;
   List<CourseContent> _content = [];
+  List<Event> _upcoming = [];
 
   @override
   void initState() {
@@ -182,15 +187,6 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   }
 
   void _initUpcomingTab() {
-    // TODO: Get event list from API
-    final events = {
-      'Nộp Proposal': DateTime.utc(2022, 01, 20),
-      'Nộp báo cáo tuần 1': DateTime.utc(2022, 01, 27),
-      'Quiz 1': DateTime.utc(2022, 01, 28),
-    };
-    final eventKeys = events.keys.toList();
-    final eventValues = events.values.toList();
-
     _upcomingTab = Align(
       alignment: Alignment.centerLeft,
       child: Column(
@@ -198,17 +194,53 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
         children: [
           const Text('Upcoming events', style: MoodleStyles.courseHeaderStyle),
           Container(height: 16),
-          ...List.generate(events.length, (index) {
-            return Padding(
-              padding: const EdgeInsets.only(left: 8, right: 24),
-              child: SubmissionItem(
-                title: eventKeys[index],
-                submissionId: 0,
-                courseId: widget.courseId,
-                dueDate: eventValues[index],
-              ),
-            );
-          }),
+          ..._upcoming.map((e) {
+            final title = e.name ?? '';
+            final epoch = (e.timestart ?? 0) * 1000;
+            final dueDate = DateTime.fromMillisecondsSinceEpoch(epoch);
+            switch (e.modulename ?? '') {
+              case ModuleName.assign:
+                return FutureBuilder(
+                    future: queryModule(e),
+                    builder: (context, data) {
+                      if (data.hasError) {
+                        return ErrorCard(text: '${data.error}');
+                      } else if (!data.hasData) {
+                        return const LoadingCard();
+                      }
+                      final instance = (data.data as ModuleCourse).instance ??
+                          0;
+                      return SubmissionItem(
+                        title: title,
+                        submissionId: instance,
+                        courseId: e.course?.id ?? 0,
+                        dueDate: dueDate,
+                      );
+                    }
+                );
+              case ModuleName.quiz:
+                return FutureBuilder(
+                    future: queryModule(e),
+                    builder: (context, data) {
+                      if (data.hasError) {
+                        return ErrorCard(text: '${data.error}');
+                      } else if (!data.hasData) {
+                        return const LoadingCard();
+                      }
+                      final instance = (data.data as ModuleCourse).instance ??
+                          0;
+                      return QuizItem(
+                        title: title,
+                        openDate: dueDate,
+                        quizInstanceId: instance,
+                        courseId: e.course?.id ?? 0,
+                      );
+                    }
+                );
+              default:
+                throw Exception('Unknown module name: ' + (e.modulename ?? ''));
+            }
+          }).toList(),
         ],
       ),
     );
@@ -296,6 +328,17 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
 
   // endregion
 
+  Future<ModuleCourse> queryModule(Event e) async {
+    try {
+      return await ModuleService().getModule(
+        _userStore.user.token,
+        e.instance ?? 0,
+      );
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future queryData() async {
     try {
       _content = await CourseContentService().getCourseContent(
@@ -303,6 +346,10 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
         _courseId,
       );
       _course = await CourseDetailService().getCourseById(
+        _userStore.user.token,
+        _courseId,
+      );
+      _upcoming = await CalendarService().getUpcomingByCourse(
         _userStore.user.token,
         _courseId,
       );

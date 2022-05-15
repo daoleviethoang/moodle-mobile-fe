@@ -16,6 +16,7 @@ class Wsfunction {
   // calendar
   static const String GET_CALENDAR_MONTHLY =
       "core_calendar_get_calendar_monthly_view";
+  static const String GET_UPCOMING = "core_calendar_get_calendar_upcoming_view";
 
   //course category
   static const String CORE_USER_GET_USERS_BY_FIELD =
