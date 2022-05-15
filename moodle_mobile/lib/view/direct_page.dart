@@ -3,10 +3,10 @@ import 'package:moodle_mobile/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:moodle_mobile/models/course/courses.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
-import 'package:moodle_mobile/view/home/calendar.dart';
+import 'package:moodle_mobile/view/calendar/calendar.dart';
 import 'package:moodle_mobile/view/home/home.dart';
 import 'package:moodle_mobile/view/menu/menu_screen.dart';
-import 'package:moodle_mobile/view/home/notification_screen.dart';
+import 'package:moodle_mobile/view/notifications/notification_screen.dart';
 import 'package:moodle_mobile/view/message/message_screen.dart';
 import 'package:moodle_mobile/view/search_course/search_course.dart';
 

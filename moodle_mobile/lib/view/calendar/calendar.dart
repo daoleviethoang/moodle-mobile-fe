@@ -225,7 +225,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       );
                     });
               default:
-                throw Exception('Unknown module name: ' + (e.modulename ?? ''));
+                return ErrorCard(
+                  text: 'Unknown module name: ' + (e.modulename ?? ''),
+                );
             }
           }).toList(),
         ],
