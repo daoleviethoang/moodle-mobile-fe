@@ -26,6 +26,7 @@ class CourseContentService {
 
       return list.map((e) => CourseContent.fromJson(e)).toList();
     } catch (e) {
+      print('$e');
       rethrow;
     }
   }

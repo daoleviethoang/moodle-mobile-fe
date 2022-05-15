@@ -22,6 +22,7 @@ class CourseDetailService {
 
       return CourseDetail.fromJson(list[0]);
     } catch (e) {
+      print('$e');
       rethrow;
     }
   }

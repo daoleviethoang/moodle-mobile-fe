@@ -398,6 +398,7 @@ class HeaderItem extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 8),
       child: Text(
         text,
+        softWrap: true,
         style: TextStyle(
           fontSize: 18,
           color: Theme.of(context).colorScheme.primary,
@@ -458,12 +459,14 @@ class _SectionItemState extends State<SectionItem> {
           GestureDetector(
             onTap: () => setState(() => _expanded = !_expanded),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 4),
-                  child: widget.header,
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 4),
+                    child: widget.header,
+                  ),
                 ),
                 SizedBox(
                   child: TextButton(
