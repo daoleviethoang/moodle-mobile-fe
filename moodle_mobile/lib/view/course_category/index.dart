@@ -1,13 +1,11 @@
 import 'dart:collection';
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' as rootBundle;
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/data/network/apis/course_category/course_category_api.dart';
 import 'package:moodle_mobile/models/course_category/course_category.dart';
 import 'package:moodle_mobile/view/course_category/category_course_list_tile.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CourseCategoryScreen extends StatefulWidget {
   const CourseCategoryScreen({Key? key}) : super(key: key);
@@ -25,10 +23,8 @@ class _CourseCategoryScreenState extends State<CourseCategoryScreen> {
       categories =
           await CourseCategoryApi().getCourseCategory(_userStore.user.token);
     } catch (e) {
-      const snackBar = SnackBar(
-          content:
-              Text("Loading course category fail, please try again later"));
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(AppLocalizations.of(context)!.load_category_fail)));
     }
 
     if (categories.isNotEmpty) {
