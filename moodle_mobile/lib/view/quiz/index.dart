@@ -1,25 +1,16 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' as rootBundle;
 import 'package:flutter_html/flutter_html.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:moodle_mobile/constants/colors.dart';
-import 'package:moodle_mobile/data/network/apis/assignment/assignment_api.dart';
 import 'package:moodle_mobile/data/network/apis/quiz/quiz_api.dart';
-import 'package:moodle_mobile/models/assignment/assignment.dart';
-import 'package:moodle_mobile/models/assignment/attemp_assignment.dart';
 import 'package:moodle_mobile/models/quiz/attempt.dart';
 import 'package:moodle_mobile/models/quiz/quiz.dart';
-import 'package:moodle_mobile/models/quiz/quiz_module.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/assignment/date_assignment_tile.dart';
-import 'package:moodle_mobile/view/assignment/files_assignment.dart';
-import 'package:moodle_mobile/view/assignment/submission_status_tile.dart';
-import 'package:moodle_mobile/view/common/custom_button.dart';
 import 'package:moodle_mobile/view/common/custom_button_short.dart';
+import 'package:moodle_mobile/view/quiz/preview_quiz.dart';
 
 class QuizScreen extends StatefulWidget {
   final int quizInstanceId;
@@ -72,7 +63,7 @@ class _QuizScreenState extends State<QuizScreen> {
       if (attemps.isNotEmpty) {
         Attempt temp = attemps.first;
         for (var item in attemps) {
-          if ((item.timefinish ?? 0) > (temp.timefinish ?? 0)) {
+          if ((item.timestart ?? 0) > (temp.timestart ?? 0)) {
             temp = item;
           }
         }
@@ -284,21 +275,39 @@ class _QuizScreenState extends State<QuizScreen> {
                           ? Center(
                               child: CustomButtonShort(
                                 text: "Preview",
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(builder: (_) {
+                                    return QuizPreviewScreen(
+                                      title: widget.title,
+                                      attemptId: lastAttempt.id ?? 0,
+                                    );
+                                  }));
+                                },
                                 bgColor: MoodleColors.blue,
                                 blurRadius: 0,
                                 textColor: Colors.white,
                               ),
                             )
-                          : Center(
-                              child: CustomButtonShort(
-                                text: "Attempt quiz now",
-                                onPressed: () {},
-                                bgColor: MoodleColors.blue,
-                                blurRadius: 0,
-                                textColor: Colors.white,
-                              ),
-                            ),
+                          : lastAttempt.state == "finished"
+                              ? Center(
+                                  child: CustomButtonShort(
+                                    text: "Attempt quiz now",
+                                    onPressed: () {},
+                                    bgColor: MoodleColors.blue,
+                                    blurRadius: 0,
+                                    textColor: Colors.white,
+                                  ),
+                                )
+                              : Center(
+                                  child: CustomButtonShort(
+                                    text: "Continue attempt",
+                                    onPressed: () {},
+                                    bgColor: MoodleColors.blue,
+                                    blurRadius: 0,
+                                    textColor: Colors.white,
+                                  ),
+                                ),
                     ],
                   ),
                 ),

@@ -4,7 +4,9 @@ import 'package:dio/dio.dart';
 import 'package:moodle_mobile/data/network/constants/endpoints.dart';
 import 'package:moodle_mobile/data/network/dio_http.dart';
 import 'package:moodle_mobile/models/quiz/attempt.dart';
+import 'package:moodle_mobile/models/quiz/question.dart';
 import 'package:moodle_mobile/models/quiz/quiz.dart';
+import 'package:moodle_mobile/models/quiz/quizData.dart';
 
 class QuizApi {
   Future<List<Quiz>> getQuizs(String token, int courseId) async {
@@ -16,9 +18,10 @@ class QuizApi {
         'moodlewsrestformat': 'json',
         'courseids[]': [courseId]
       });
-      if (res.data["error"] != null) {
-        throw res.data["error"];
+      if (res.data["exception"] != null) {
+        throw res.data["exception"];
       }
+
       var list = res.data["quizzes"] as List;
       return list.map((e) => Quiz.fromJson(e)).toList();
     } catch (e) {
@@ -36,13 +39,31 @@ class QuizApi {
         'quizid': quizId,
         'includepreviews': 1,
       });
-      if (res.data["error"] != null) {
-        throw res.data["error"];
+      if (res.data["exception"] != null) {
+        throw res.data["exception"];
       }
       var list = res.data["attempts"] as List;
       return list.map((e) => Attempt.fromJson(e)).toList();
     } catch (e) {
       throw "Can't get attempt of quiz $quizId";
+    }
+  }
+
+  Future<QuizData> getPreviewQuiz(String token, int attemptid) async {
+    try {
+      Dio dio = Http().client;
+      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': 'mod_quiz_get_attempt_review',
+        'moodlewsrestformat': 'json',
+        'attemptid': attemptid,
+      });
+      if (res.data["exception"] != null) {
+        throw res.data["exception"];
+      }
+      return QuizData.fromJson(res.data);
+    } catch (e) {
+      rethrow;
     }
   }
 
@@ -55,8 +76,8 @@ class QuizApi {
         'moodlewsrestformat': 'json',
         'quizid': quizId,
       });
-      if (res.data["error"] != null) {
-        throw res.data["error"];
+      if (res.data["exception"] != null) {
+        throw res.data["exception"];
       }
       if (res.data["hasgrade"] == false) {
         return null;
