@@ -68,12 +68,36 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
 
   void _initBody() {
     _initTabList();
-    _initHomeTab();
-    _initAnnouncementsTab();
-    _initDiscussionsTab();
-    _initUpcomingTab();
-    _initGradesTab();
-    _initPeopleTab();
+    try {
+      _initHomeTab();
+    } catch (e) {
+      _homeTab = ErrorCard(text: '$e');
+    }
+    try {
+      _initAnnouncementsTab();
+    } catch (e) {
+      _announcementsTab = ErrorCard(text: '$e');
+    }
+    try {
+      _initDiscussionsTab();
+    } catch (e) {
+      _discussionsTab = ErrorCard(text: '$e');
+    }
+    try {
+      _initUpcomingTab();
+    } catch (e) {
+      _upcomingTab = ErrorCard(text: '$e');
+    }
+    try {
+      _initGradesTab();
+    } catch (e) {
+      _gradesTab = ErrorCard(text: '$e');
+    }
+    try {
+      _initPeopleTab();
+    } catch (e) {
+      _peopleTab = ErrorCard(text: '$e');
+    }
 
     _body = [
       _homeTab,
