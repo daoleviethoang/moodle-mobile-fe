@@ -46,7 +46,9 @@ class _UserLoginTileState extends State<UserLoginTile> {
         onTap: () async {
           await login();
         },
-        tileColor: MoodleColors.grey_soft,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(2.0),
+            side: BorderSide(width: 1, color: Colors.grey)),
         leading: const CircleAvatar(
           radius: 20,
           backgroundColor: MoodleColors.blue,

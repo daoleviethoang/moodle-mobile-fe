@@ -24,7 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController usernameControler = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController baseUrlController =
-      TextEditingController(text: "");
+      TextEditingController(text: "https://");
 
   final List<String> suggestions = [
     "https://courses.ctda.hcmus.edu.vn",
@@ -67,6 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     left: Dimens.login_padding_left,
                     right: Dimens.login_padding_right),
                 child: SimpleAutoCompleteTextField(
+                  textInputAction: TextInputAction.search,
                   decoration: const InputDecoration(
                     contentPadding:
                         EdgeInsets.all(Dimens.default_padding_double),

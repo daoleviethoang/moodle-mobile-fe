@@ -34,7 +34,6 @@ class _ListUserLoginScreenState extends State<ListUserLoginScreen> {
         users = temp;
       });
     } catch (e) {
-      print(e.toString());
       print("error sql lite");
     }
     if (users.isEmpty) {
