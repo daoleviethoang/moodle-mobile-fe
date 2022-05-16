@@ -1,16 +1,13 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' as rootBundle;
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/data/network/apis/course_category/course_category_api.dart';
 import 'package:moodle_mobile/models/course_category/course_category.dart';
 import 'package:moodle_mobile/models/course_category/course_category_course.dart';
 import 'package:moodle_mobile/models/course/courses.dart';
-import 'package:moodle_mobile/models/user/user_overview.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/course_category/courses_view.dart';
 import 'package:moodle_mobile/view/course_category/folder_tile.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CourseCategoryFolderScreen extends StatefulWidget {
   final CourseCategory data;
@@ -32,10 +29,8 @@ class _CourseCategoryFolderScreenState
       course = await CourseCategoryApi()
           .getCourseInFolder(_userStore.user.token, widget.data.id ?? 0);
     } catch (e) {
-      const snackBar = SnackBar(
-          content:
-              Text("Loading course category fail, please try again later"));
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(AppLocalizations.of(context)!.load_category_fail)));
     }
 
     return course;
@@ -92,7 +87,8 @@ class _CourseCategoryFolderScreenState
                     children: [
                   widget.data.child.isNotEmpty
                       ? Container(
-                          child: Text("Danh mục khóa học"),
+                          child: Text(
+                              AppLocalizations.of(context)!.course_category),
                           margin: const EdgeInsets.only(
                               top: 5.0, left: 15.0, bottom: 5),
                         )
@@ -118,7 +114,7 @@ class _CourseCategoryFolderScreenState
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
-                              child: Text("Khóa học"),
+                              child: Text(AppLocalizations.of(context)!.course),
                               margin: const EdgeInsets.only(
                                   top: 10.0, left: 15.0, bottom: 5),
                             ),
