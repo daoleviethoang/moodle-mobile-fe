@@ -230,10 +230,13 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
                     ),
                   );
                   animationController?.forward();
-                  return CategoryView(
-                    course: coursesOverview[index],
-                    animation: animation,
-                    animationController: animationController,
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CategoryView(
+                      course: coursesOverview[index],
+                      animation: animation,
+                      animationController: animationController,
+                    ),
                   );
                 },
               ),
