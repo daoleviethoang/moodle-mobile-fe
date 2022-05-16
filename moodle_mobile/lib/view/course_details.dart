@@ -9,10 +9,12 @@ import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/data/network/apis/calendar/calendar_service.dart';
 import 'package:moodle_mobile/data/network/apis/course/course_content_service.dart';
 import 'package:moodle_mobile/data/network/apis/course/course_detail_service.dart';
+import 'package:moodle_mobile/data/network/apis/lti/lti_service.dart';
 import 'package:moodle_mobile/data/network/apis/module/module_service.dart';
 import 'package:moodle_mobile/models/calendar/event.dart';
 import 'package:moodle_mobile/models/course/course_content.dart';
 import 'package:moodle_mobile/models/course/course_detail.dart';
+import 'package:moodle_mobile/models/lti/lti.dart';
 import 'package:moodle_mobile/models/module/module.dart';
 import 'package:moodle_mobile/models/module/module_course.dart';
 import 'package:moodle_mobile/view/common/content_item.dart';
@@ -139,6 +141,23 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                   );
                 case ModuleName.label:
                   return RichTextCard(text: m.description ?? '');
+                case ModuleName.lti:
+                  return FutureBuilder(
+                    future: queryLti(m.instance ?? 0),
+                    builder: (context, data) {
+                      if (data.hasError) {
+                        throw Exception(data.error);
+                      }
+                      if (!data.hasData) {
+                        return const LoadingCard();
+                      }
+                      Lti d = data.data as Lti;
+                      return UrlItem(
+                        title: title,
+                        url: d.endpoint ?? '',
+                      );
+                    },
+                  );
                 case ModuleName.page:
                   return PageItem(
                     title: title,
@@ -167,8 +186,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                 case ModuleName.zoom:
                   return Container();
                 default:
-                  print('$m');
-                  return ErrorCard(text: 'Unknown module name: ${m.modname}');
+                  throw Exception('Unknown module name: ${m.modname}');
               }
             } catch (e) {
               // FIXME: Assignment text is [] instead of string
@@ -336,6 +354,17 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   }
 
   // endregion
+
+  Future<Lti> queryLti(int toolid) async {
+    try {
+      return await LtiService().getLti(
+        _userStore.user.token,
+        toolid,
+      );
+    } catch (e) {
+      rethrow;
+    }
+  }
 
   Future<ModuleCourse> queryModule(Event e) async {
     try {
