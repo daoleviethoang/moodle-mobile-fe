@@ -1,3 +1,4 @@
+import 'package:html/parser.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -311,7 +312,8 @@ class ZoomItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return m.MenuItem(
       image: const CircleImageView(
-        imageUrl: 'https://st1.zoom.us/static/6.1.6366/image/new/home/meetings.png',
+        imageUrl:
+            'https://st1.zoom.us/static/6.1.6366/image/new/home/meetings.png',
         placeholder: Icon(CupertinoIcons.video_camera, size: 48),
       ),
       color: Colors.grey,
@@ -345,9 +347,9 @@ class RichTextCard extends StatelessWidget {
         onImageTap: (url, cxt, attributes, element) {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (_) => ImageViewer(
-                title: 'Image',
-                base64: url?.split(',')[1] ?? '',
-              )));
+                    title: 'Image',
+                    base64: url?.split(',')[1] ?? '',
+                  )));
         },
         onLinkTap: (url, cxt, attributes, element) async {
           await showGeneralDialog(
@@ -394,6 +396,7 @@ class HeaderItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final text = parseFragment(this.text).text ?? '';
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Text(
