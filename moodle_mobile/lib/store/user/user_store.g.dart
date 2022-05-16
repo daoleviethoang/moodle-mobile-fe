@@ -81,6 +81,14 @@ mixin _$UserStore on _UserStore, Store {
         .run(() => super.login(username, password, rememberAccount));
   }
 
+  late final _$setUserAsyncAction =
+      AsyncAction('_UserStore.setUser', context: context);
+
+  @override
+  Future<dynamic> setUser(String token, String username) {
+    return _$setUserAsyncAction.run(() => super.setUser(token, username));
+  }
+
   late final _$_UserStoreActionController =
       ActionController(name: '_UserStore', context: context);
 
