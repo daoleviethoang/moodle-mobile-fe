@@ -9,6 +9,7 @@ import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/data/network/apis/calendar/calendar_service.dart';
 import 'package:moodle_mobile/data/network/apis/course/course_content_service.dart';
 import 'package:moodle_mobile/data/network/apis/course/course_detail_service.dart';
+import 'package:moodle_mobile/data/network/apis/course/course_service.dart';
 import 'package:moodle_mobile/data/network/apis/lti/lti_service.dart';
 import 'package:moodle_mobile/data/network/apis/module/module_service.dart';
 import 'package:moodle_mobile/models/calendar/event.dart';
@@ -40,7 +41,7 @@ class CourseDetailsScreen extends StatefulWidget {
 
 class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     with TickerProviderStateMixin {
-  late TabController _tabController;
+  TabController? _tabController;
   late var _tabs = <Widget>[];
   var _index = 0;
   late var _body = <Widget>[];
@@ -67,7 +68,6 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   // region BODY
 
   void _initBody() {
-    _initTabList();
     try {
       _initHomeTab();
     } catch (e) {
@@ -98,6 +98,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     } catch (e) {
       _peopleTab = ErrorCard(text: '$e');
     }
+    _initTabList();
 
     _body = [
       _homeTab,
@@ -110,14 +111,23 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   }
 
   void _initTabList() {
-    _tabs = [
-      const Tab(child: Text('Home')),
-      const Tab(child: Text('Announcements')),
-      const Tab(child: Text('Discussion Forums')),
-      const Tab(child: Text('Events')),
-      const Tab(child: Text('Grades')),
-      const Tab(child: Text('Participants')),
-    ];
+    _tabs = [const Tab(child: Text('Home'))];
+    if (_announcementsTab is! Container) {
+      _tabs.add(const Tab(child: Text('Announcements')));
+    }
+    if (_discussionsTab is! Container) {
+      _tabs.add(const Tab(child: Text('Discussion Forums')));
+    }
+    if (_upcomingTab is! Container) {
+      _tabs.add(const Tab(child: Text('Events')));
+    }
+    if (_gradesTab is! Container) {
+      _tabs.add(const Tab(child: Text('Grades')));
+    }
+    if (_peopleTab is! Container) {
+      _tabs.add(const Tab(child: Text('Participants')));
+    }
+
     _tabController = TabController(
       length: _tabs.length,
       initialIndex: _index,
@@ -230,16 +240,20 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
 
   void _initDiscussionsTab() {
     if (_content.isEmpty) {
-      _discussionsTab = ForumScreen(forumId: 0);
-    } else {
-      _discussionsTab = ForumScreen(
-        forumId: _content[0].modules[1].instance ?? 0,
-        courseId: _courseId,
-      );
+      _discussionsTab = Container();
+      return;
     }
+    _discussionsTab = ForumScreen(
+      forumId: _content[0].modules[1].instance ?? 0,
+      courseId: _courseId,
+    );
   }
 
   void _initUpcomingTab() {
+    if (_upcoming.isEmpty) {
+      _upcomingTab = Container();
+      return;
+    }
     _upcomingTab = Align(
       alignment: Alignment.centerLeft,
       child: Column(
@@ -415,6 +429,10 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
         _userStore.user.token,
         _courseId,
       );
+      await CourseService().triggerViewCourse(
+        _userStore.user.token,
+        _courseId,
+      );
       _initBody();
     } catch (e) {
       if (e.toString() == "errorcoursecontextnotvalid") {
@@ -478,7 +496,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                         ),
                       ),
                     ),
-                    bottom: hasData
+                    bottom: hasData && _tabController != null
                         ? TabBar(
                             indicatorPadding: const EdgeInsets.all(4),
                             indicator: const BoxDecoration(

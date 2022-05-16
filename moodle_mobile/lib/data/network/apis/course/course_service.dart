@@ -25,4 +25,24 @@ class CourseService {
       //throw "Can't get list courses by user";
     }
   }
+
+  Future triggerViewCourse(String token, int id) async {
+    try {
+      Dio dio = Http().client;
+      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': Wsfunction.TRIGGER_VIEW_COURSE,
+        'moodlewsrestformat': 'json',
+        'courseid': id,
+      });
+
+      List<dynamic>? warnings = (res.data as Map)['warnings'];
+      if ((warnings ?? []).isNotEmpty) {
+        throw Exception(jsonEncode(warnings));
+      }
+    } catch (e) {
+      print('$e');
+      rethrow;
+    }
+  }
 }

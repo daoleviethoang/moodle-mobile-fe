@@ -6,6 +6,7 @@ class Wsfunction {
   static const String GET_ENROLLED_USERS = "core_enrol_get_enrolled_users";
   static const String GET_COURSE_BY_FIELD = "core_course_get_courses_by_field";
   static const String GET_COURSE_CONTENTS = "core_course_get_contents";
+  static const String TRIGGER_VIEW_COURSE = "core_course_view_course";
 
   // module
   static const String GET_MODULE_BY_ID = "core_course_get_course_module";
