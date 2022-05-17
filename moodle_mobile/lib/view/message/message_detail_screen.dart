@@ -57,6 +57,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
     super.dispose();
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
