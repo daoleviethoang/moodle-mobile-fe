@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -23,6 +25,7 @@ class _MessageScreenState extends State<MessageScreen> {
   late ConversationStore _conversationStore;
   late UserStore _userStore;
   late ConversationDetailStore _conversationDetailStore;
+  late Timer _refreshTimer;
 
   @override
   void initState() {
@@ -45,6 +48,18 @@ class _MessageScreenState extends State<MessageScreen> {
         _userStore.user.token, _userStore.user.id);
 
     // Nhu vay la hoan tat
+
+    // Update message list
+    _refreshTimer = Timer.periodic(
+        const Duration(seconds: 5),
+        (t) => _conversationStore.getListConversation(
+            _userStore.user.token, _userStore.user.id));
+  }
+
+  @override
+  void dispose() {
+    _refreshTimer.cancel();
+    super.dispose();
   }
 
   @override
@@ -81,8 +96,8 @@ class _MessageScreenState extends State<MessageScreen> {
           ),
           Observer(builder: (_) {
             return Expanded(
-                child: _conversationStore.isLoading
-                    ? Container()
+                child: _conversationStore.listConversation.isEmpty
+                    ? const Center(child: CircularProgressIndicator.adaptive())
                     : ListView.builder(
                         padding: EdgeInsets.all(Dimens.default_padding),
                         itemCount: _conversationStore.listConversation.length,
