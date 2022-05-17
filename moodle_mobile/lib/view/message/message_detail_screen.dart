@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -40,6 +42,12 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
         ConversationDetailStore(GetIt.instance<Repository>());
     _conversationDetailStore.getListMessage(
         _userStore.user.token, _userStore.user.id, widget.conversationId);
+
+    // Update message list
+    Timer.periodic(
+        const Duration(seconds: 5),
+        (t) => _conversationDetailStore.getListMessage(
+            _userStore.user.token, _userStore.user.id, widget.conversationId));
   }
 
   Widget build(BuildContext context) {
