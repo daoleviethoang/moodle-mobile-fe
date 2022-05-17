@@ -1,7 +1,7 @@
 import 'package:moodle_mobile/models/quiz/question.dart';
 
 class QuizData {
-  int? grade;
+  double? grade;
   AttemptData? attempt;
   List<Question>? questions;
 

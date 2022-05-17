@@ -10,7 +10,7 @@ import 'package:moodle_mobile/models/quiz/quiz.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/assignment/date_assignment_tile.dart';
 import 'package:moodle_mobile/view/common/custom_button_short.dart';
-import 'package:moodle_mobile/view/quiz/preview_quiz.dart';
+import 'package:moodle_mobile/view/quiz/preview/preview_quiz.dart';
 
 class QuizScreen extends StatefulWidget {
   final int quizInstanceId;
@@ -272,23 +272,25 @@ class _QuizScreenState extends State<QuizScreen> {
                       ),
                       ((quiz.timeclose ?? 0 * 1000) <
                               DateTime.now().millisecondsSinceEpoch)
-                          ? Center(
-                              child: CustomButtonShort(
-                                text: "Preview",
-                                onPressed: () {
-                                  Navigator.of(context).pushReplacement(
-                                      MaterialPageRoute(builder: (_) {
-                                    return QuizPreviewScreen(
-                                      title: widget.title,
-                                      attemptId: lastAttempt.id ?? 0,
-                                    );
-                                  }));
-                                },
-                                bgColor: MoodleColors.blue,
-                                blurRadius: 0,
-                                textColor: Colors.white,
-                              ),
-                            )
+                          ? lastAttempt.id != null
+                              ? Center(
+                                  child: CustomButtonShort(
+                                    text: "Preview",
+                                    onPressed: () {
+                                      Navigator.of(context).pushReplacement(
+                                          MaterialPageRoute(builder: (_) {
+                                        return QuizPreviewScreen(
+                                          title: widget.title,
+                                          attemptId: lastAttempt.id ?? 0,
+                                        );
+                                      }));
+                                    },
+                                    bgColor: MoodleColors.blue,
+                                    blurRadius: 0,
+                                    textColor: Colors.white,
+                                  ),
+                                )
+                              : Container()
                           : lastAttempt.state == "finished"
                               ? Center(
                                   child: CustomButtonShort(

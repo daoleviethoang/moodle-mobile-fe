@@ -26,4 +26,6 @@ class MoodleColors {
   static const Color green_icon_status = Color(0xff3CC13B);
   static const Color yellow_icon = Color(0xffFEDD64);
   static const Color grey_text = Color(0xff333333);
+  static const Color grade_quiz_foreground = Color.fromARGB(223, 242, 210, 147);
+  static const Color grade_quiz_text = Color.fromARGB(223, 245, 108, 10);
 }

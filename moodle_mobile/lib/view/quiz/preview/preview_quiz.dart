@@ -4,8 +4,9 @@ import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/data/network/apis/quiz/quiz_api.dart';
 import 'package:moodle_mobile/models/quiz/quizData.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
-import 'package:moodle_mobile/view/quiz/type/multi_choice_quiz.dart';
-import 'package:moodle_mobile/view/quiz/type/one_choice_quiz.dart';
+import 'package:moodle_mobile/view/quiz/preview/type/multi_choice_quiz.dart';
+import 'package:moodle_mobile/view/quiz/preview/type/one_choice_quiz.dart';
+import 'package:moodle_mobile/view/quiz/question_tile.dart';
 
 class QuizPreviewScreen extends StatefulWidget {
   final int attemptId;
@@ -45,6 +46,7 @@ class _QuizPreviewScreenState extends State<QuizPreviewScreen> {
         quizData = temp;
       });
     } catch (e) {
+      print(e.toString());
       setState(() {
         error = true;
       });
@@ -92,15 +94,31 @@ class _QuizPreviewScreenState extends State<QuizPreviewScreen> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: quizData?.questions?.map((question) {
+                              int index =
+                                  quizData!.questions!.indexOf(question);
+                              int uniqueId = quizData?.attempt?.uniqueid ?? 0;
+                              int slot = question.slot ?? 0;
                               if (question.type == "multichoice") {
-                                int uniqueId = quizData?.attempt?.uniqueid ?? 0;
-                                int slot = question.slot ?? 0;
                                 if (question.html?.contains(
                                         "q$uniqueId:$slot" "_choice0") ??
                                     false) {
-                                  return MultiChoiceQuiz();
+                                  return QuestionTile(
+                                      content: MultiChoiceQuiz(
+                                        uniqueId: uniqueId,
+                                        slot: slot,
+                                        html: question.html ?? "",
+                                      ),
+                                      question: question,
+                                      index: index);
                                 } else {
-                                  return OneChoiceQuiz();
+                                  return QuestionTile(
+                                      content: OneChoiceQuiz(
+                                        uniqueId: uniqueId,
+                                        slot: slot,
+                                        html: question.html ?? "",
+                                      ),
+                                      question: question,
+                                      index: index);
                                 }
                               }
                               return Container();
