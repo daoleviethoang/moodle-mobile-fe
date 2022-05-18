@@ -9,16 +9,18 @@ class MultiChoiceDoQuiz extends StatefulWidget {
   final String html;
   final int index;
   final int sequenceCheck;
+  final Function(int, bool) setComplete;
   final Function(int, List<String>, List<String>) setData;
-  const MultiChoiceDoQuiz(
-      {Key? key,
-      required this.uniqueId,
-      required this.slot,
-      required this.html,
-      required this.index,
-      required this.setData,
-      required this.sequenceCheck})
-      : super(key: key);
+  const MultiChoiceDoQuiz({
+    Key? key,
+    required this.uniqueId,
+    required this.slot,
+    required this.html,
+    required this.index,
+    required this.setData,
+    required this.sequenceCheck,
+    required this.setComplete,
+  }) : super(key: key);
 
   @override
   State<MultiChoiceDoQuiz> createState() => _MultiChoiceDoQuizState();
@@ -29,6 +31,7 @@ class _MultiChoiceDoQuizState extends State<MultiChoiceDoQuiz> {
   String question = "";
   List<String> keySave = [""];
   List<String> valueSave = [""];
+  List<bool> check = [];
   int sequenceCheck = 0;
 
   parseHtml() {
@@ -52,8 +55,12 @@ class _MultiChoiceDoQuizState extends State<MultiChoiceDoQuiz> {
         bool isCheck = input.attributes.containsKey("checked");
         if (isCheck == true) {
           setCheck(answers.indexOf(answer), true, false);
+          widget.setComplete(widget.index, true);
           break;
         }
+        setState(() {
+          check.add(isCheck);
+        });
       }
     }
   }
@@ -73,6 +80,7 @@ class _MultiChoiceDoQuizState extends State<MultiChoiceDoQuiz> {
           "_choice" +
           index.toString();
       valueSave[index + 1] = value ? "1" : "0";
+      check[index] = value;
     });
     if (saveData == true) {
       setState(() {
@@ -125,7 +133,7 @@ class _MultiChoiceDoQuizState extends State<MultiChoiceDoQuiz> {
                         child: MultiChoiceTile(
                           element: e,
                           state: this,
-                          isCheck: valueSave[index + 1] == "1",
+                          isCheck: check[index],
                           index: index,
                         ));
                   }).toList(),

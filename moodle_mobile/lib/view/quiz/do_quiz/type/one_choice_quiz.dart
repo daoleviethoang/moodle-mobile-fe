@@ -9,16 +9,18 @@ class OneChoiceDoQuiz extends StatefulWidget {
   final String html;
   final int index;
   final int sequenceCheck;
+  final Function(int, bool) setComplete;
   final Function(int, List<String>, List<String>) setData;
-  const OneChoiceDoQuiz(
-      {Key? key,
-      required this.uniqueId,
-      required this.slot,
-      required this.html,
-      required this.index,
-      required this.setData,
-      required this.sequenceCheck})
-      : super(key: key);
+  const OneChoiceDoQuiz({
+    Key? key,
+    required this.uniqueId,
+    required this.slot,
+    required this.html,
+    required this.index,
+    required this.setData,
+    required this.sequenceCheck,
+    required this.setComplete,
+  }) : super(key: key);
 
   @override
   State<OneChoiceDoQuiz> createState() => _OneChoiceDoQuizState();
@@ -49,6 +51,7 @@ class _OneChoiceDoQuizState extends State<OneChoiceDoQuiz> {
         setState(() {
           indexChoose = answers.indexOf(answer);
         });
+        widget.setComplete(widget.index, true);
       }
     }
   }
