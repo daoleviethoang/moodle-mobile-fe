@@ -1,18 +1,20 @@
 import 'package:moodle_mobile/data/network/apis/conversation/conversation_api.dart';
+import 'package:moodle_mobile/data/network/apis/course/course_participants.dart';
 import 'package:moodle_mobile/data/network/apis/user/user_api.dart';
 import 'package:moodle_mobile/data/shared_reference/shared_preference_helper.dart';
 import 'package:moodle_mobile/models/conversation/conversation.dart';
 import 'package:moodle_mobile/models/conversation/conversation_message.dart';
+import 'package:moodle_mobile/models/course/course_participants.dart';
 import 'package:moodle_mobile/models/user.dart';
 
 class Repository {
   final UserApi _userApi;
   final ConversationApi _conversationApi;
   final SharedPreferenceHelper _sharedPreferencesHelper;
-
+  final CourseParticipants _courseParticipants;
   // Constructor
-  Repository(
-      this._userApi, this._conversationApi, this._sharedPreferencesHelper);
+  Repository(this._userApi, this._conversationApi,
+      this._sharedPreferencesHelper, this._courseParticipants);
 
   // AuthToken
   String? get authToken {
@@ -74,4 +76,6 @@ class Repository {
           token, userId, conversationId, newest, limit);
   Future sentMessage(String token, int conversationId, String text) =>
       _conversationApi.sentMessage(token, conversationId, text);
+  Future<List<CourseParticipantsModel>> courseParticipant(token, courseId) =>
+      _courseParticipants.getParticipantInCourse(token, courseId);
 }

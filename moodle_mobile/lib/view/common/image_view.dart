@@ -88,6 +88,7 @@ class RoundedImageView extends StatelessWidget {
   final BoxFit fit;
   final Color? color;
   final BorderRadius borderRadius;
+  final VoidCallback? onClick;
 
   const RoundedImageView({
     Key? key,
@@ -98,19 +99,23 @@ class RoundedImageView extends StatelessWidget {
     this.fit = BoxFit.contain,
     this.color,
     this.borderRadius = const BorderRadius.all(Radius.circular(12)),
+    this.onClick,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: borderRadius,
-      child: ImageView(
-        imageUrl: imageUrl,
-        placeholder: placeholder,
-        width: width,
-        height: height,
-        fit: fit,
-        color: color,
+    return InkWell(
+      onTap: onClick,
+      child: ClipRRect(
+        borderRadius: borderRadius,
+        child: ImageView(
+          imageUrl: imageUrl,
+          placeholder: placeholder,
+          width: width,
+          height: height,
+          fit: fit,
+          color: color,
+        ),
       ),
     );
   }
@@ -152,7 +157,8 @@ class CircleCaptionedImageView extends StatelessWidget {
           padding: const EdgeInsets.only(top: 8),
           child: SizedBox(
             width: width * 1.5,
-            child: Text(caption + "\n",
+            child: Text(
+              caption + "\n",
               textAlign: TextAlign.center,
               maxLines: 2,
             ),
