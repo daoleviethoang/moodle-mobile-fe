@@ -305,8 +305,11 @@ class _QuizDoScreenState extends State<QuizDoScreen> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     const Icon(
-                      Icons.watch,
+                      Icons.alarm_outlined,
                       size: 25,
+                    ),
+		                const SizedBox(
+          		        height: 5,
                     ),
                     CountdownTimer(
                       textStyle: TextStyle(fontSize: 18),
