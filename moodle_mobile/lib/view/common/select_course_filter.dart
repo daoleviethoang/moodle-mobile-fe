@@ -27,7 +27,6 @@ class _SelectCourseFilterState extends State<SelectCourseFilter>
   ContantModel statusTypeSelected;
   bool showOnlyStarSelected = false;
   bool isFilter;
-  CourseStatus courseStatusSelected = CourseStatus.all;
 
   late AnimationController expandController;
   late Animation<double> animation;
@@ -85,7 +84,9 @@ class _SelectCourseFilterState extends State<SelectCourseFilter>
                 color: Colors.white,
                 boxShadow: const [
                   BoxShadow(
-                      blurRadius: 10, color: Colors.black26, offset: Offset(0, 2))
+                      blurRadius: 10,
+                      color: Colors.black26,
+                      offset: Offset(0, 2))
                 ],
               ),
               child: new Row(
@@ -97,11 +98,11 @@ class _SelectCourseFilterState extends State<SelectCourseFilter>
                   ),
                   Expanded(
                       child: Text(
-                        statusTypeSelected.value +
-                            " | " +
-                            arrangeTypeSelected.value,
-                        style: TextStyle(color: MoodleColors.black, fontSize: 16),
-                      )),
+                    statusTypeSelected.value +
+                        " | " +
+                        arrangeTypeSelected.value,
+                    style: TextStyle(color: MoodleColors.black, fontSize: 16),
+                  )),
                   Align(
                     alignment: Alignment(1, 0),
                     child: Icon(
@@ -327,10 +328,9 @@ class _SelectCourseFilterState extends State<SelectCourseFilter>
               ),
               onPressed: () {
                 setState(() {
-                  arrangeTypeSelected = ContantExtension.CourseArrangeSelected;
-                  statusTypeSelected = ContantExtension.CourseStatusSelected;
+                  arrangeTypeSelected = ContantExtension.courseArrangeSelected;
+                  statusTypeSelected = ContantExtension.courseStatusSelected;
                   showOnlyStarSelected = false;
-                  courseStatusSelected = CourseStatus.all;
                 });
               },
               child: const Padding(
