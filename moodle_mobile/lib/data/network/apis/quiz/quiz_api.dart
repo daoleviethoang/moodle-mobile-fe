@@ -37,6 +37,7 @@ class QuizApi {
         'wsfunction': 'mod_quiz_get_user_attempts',
         'moodlewsrestformat': 'json',
         'quizid': quizId,
+        'status': "all",
         'includepreviews': 1,
       });
       if (res.data["exception"] != null) {
@@ -46,6 +47,45 @@ class QuizApi {
       return list.map((e) => Attempt.fromJson(e)).toList();
     } catch (e) {
       throw "Can't get attempt of quiz $quizId";
+    }
+  }
+
+  Future<Attempt> startQuiz(String token, int quizId) async {
+    try {
+      Dio dio = Http().client;
+      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': 'mod_quiz_start_attempt',
+        'moodlewsrestformat': 'json',
+        'quizid': quizId,
+      });
+
+      if (res.data["exception"] != null) {
+        throw res.data["exception"];
+      }
+      return Attempt.fromJson(res.data["attempt"]);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<bool> endQuiz(String token, int attemptid) async {
+    try {
+      Dio dio = Http().client;
+      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': 'mod_quiz_process_attempt',
+        'moodlewsrestformat': 'json',
+        'attemptid': attemptid,
+        'finishattempt': 1,
+      });
+
+      if (res.data["exception"] != null) {
+        throw res.data["exception"];
+      }
+      return true;
+    } catch (e) {
+      return false;
     }
   }
 

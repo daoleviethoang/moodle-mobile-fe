@@ -109,7 +109,7 @@ class _QuizPreviewScreenState extends State<QuizPreviewScreen> {
                                         html: question.html ?? "",
                                       ),
                                       question: question,
-                                      index: index);
+                                      index: index + 1);
                                 } else {
                                   return QuestionTile(
                                       content: OneChoiceQuiz(
@@ -118,7 +118,7 @@ class _QuizPreviewScreenState extends State<QuizPreviewScreen> {
                                         html: question.html ?? "",
                                       ),
                                       question: question,
-                                      index: index);
+                                      index: index + 1);
                                 }
                               }
                               return Container();

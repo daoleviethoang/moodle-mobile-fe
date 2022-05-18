@@ -57,12 +57,12 @@ class _MultiChoiceDoQuizState extends State<MultiChoiceDoQuiz> {
           answer.querySelector("input")?.attributes.containsKey("checked") ??
               false;
       if (isCheck == true) {
-        setCheck(answers.indexOf(answer), isCheck);
+        setCheck(answers.indexOf(answer), isCheck, false);
       }
     }
   }
 
-  setCheck(int index, bool value) {
+  setCheck(int index, bool value, bool saveData) {
     setState(() {
       keySave[index + 1] = "q" +
           widget.uniqueId.toString() +
@@ -72,7 +72,9 @@ class _MultiChoiceDoQuizState extends State<MultiChoiceDoQuiz> {
           index.toString();
       valueSave[index + 1] = value ? "1" : "0";
     });
-    widget.setData(widget.index, keySave, valueSave);
+    if (saveData == true) {
+      widget.setData(widget.index, keySave, valueSave);
+    }
   }
 
   @override
@@ -128,19 +130,16 @@ class MultiChoiceTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MergeSemantics(
-      child: ListTileTheme.merge(
-        child: ListTile(
-          title: Text(element.text),
-          leading: Checkbox(
-              value: isCheck,
-              shape: CircleBorder(),
-              activeColor: Colors.green,
-              onChanged: (value) async {
-                state.setCheck(index, !isCheck);
-              }),
-        ),
-      ),
+    return ListTile(
+      visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+      title: Text(element.text),
+      leading: Checkbox(
+          value: isCheck,
+          shape: CircleBorder(),
+          activeColor: Colors.green,
+          onChanged: (value) async {
+            state.setCheck(index, !isCheck, true);
+          }),
     );
   }
 }

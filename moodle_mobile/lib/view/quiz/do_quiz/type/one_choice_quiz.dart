@@ -50,7 +50,9 @@ class _OneChoiceDoQuizState extends State<OneChoiceDoQuiz> {
           answer.querySelector("input")?.attributes.containsKey("checked") ??
               false;
       if (isCheck == true) {
-        setCheck(answers.indexOf(answer));
+        setState(() {
+          indexChoose = answers.indexOf(answer);
+        });
       }
     }
   }
@@ -121,19 +123,16 @@ class OneChoiceTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MergeSemantics(
-      child: ListTileTheme.merge(
-        child: ListTile(
-          title: Text(element.text),
-          leading: Checkbox(
-              value: isCheck,
-              shape: CircleBorder(),
-              activeColor: Colors.green,
-              onChanged: (value) async {
-                state.setCheck(index);
-              }),
-        ),
-      ),
+    return ListTile(
+      visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+      title: Text(element.text),
+      leading: Checkbox(
+          value: isCheck,
+          shape: CircleBorder(),
+          activeColor: Colors.green,
+          onChanged: (value) async {
+            state.setCheck(index);
+          }),
     );
   }
 }

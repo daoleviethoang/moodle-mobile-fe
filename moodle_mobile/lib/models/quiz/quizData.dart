@@ -3,16 +3,19 @@ import 'package:moodle_mobile/models/quiz/question.dart';
 class QuizData {
   double? grade;
   AttemptData? attempt;
+  int? nextpage;
   List<Question>? questions;
 
   QuizData({
     this.grade,
     this.attempt,
+    this.nextpage,
     this.questions,
   });
 
   QuizData.fromJson(Map<String, dynamic> json) {
     grade = json['grade'];
+    nextpage = json["nextpage"];
     attempt = json['attempt'] != null
         ? new AttemptData.fromJson(json['attempt'])
         : null;
@@ -27,6 +30,7 @@ class QuizData {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['grade'] = this.grade;
+    data['nextpage'] = this.nextpage;
     if (this.attempt != null) {
       data['attempt'] = this.attempt!.toJson();
     }

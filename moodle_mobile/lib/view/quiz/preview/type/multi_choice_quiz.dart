@@ -74,17 +74,14 @@ class MultiChoiceTile extends StatelessWidget {
     bool isCheck =
         element.querySelector("input")?.attributes.containsKey("checked") ??
             false;
-    return MergeSemantics(
-      child: ListTileTheme.merge(
-        child: ListTile(
-          title: Text(element.text),
-          leading: Checkbox(
-              value: isCheck,
-              shape: CircleBorder(),
-              activeColor: Colors.green,
-              onChanged: (value) async {}),
-        ),
-      ),
+    return ListTile(
+      visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+      title: Text(element.text),
+      leading: Checkbox(
+          value: isCheck,
+          shape: CircleBorder(),
+          activeColor: Colors.green,
+          onChanged: (value) async {}),
     );
   }
 }

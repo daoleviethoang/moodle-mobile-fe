@@ -23,6 +23,7 @@ class _QuestionTileState extends State<QuestionTile> {
     return Column(
       children: [
         ListTile(
+          visualDensity: VisualDensity(horizontal: -4, vertical: -4),
           title: Text(
             "Question " + widget.index.toString() + ":",
             textScaleFactor: 1.2,
@@ -42,7 +43,7 @@ class _QuestionTileState extends State<QuestionTile> {
         ),
         widget.content,
         const SizedBox(
-          height: 10,
+          height: 40,
         ),
       ],
     );
