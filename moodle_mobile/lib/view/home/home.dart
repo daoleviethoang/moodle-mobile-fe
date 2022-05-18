@@ -13,8 +13,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  ContantModel arrangeTypeSelected = ContantExtension.CourseArrangeSelected;
-  ContantModel statusTypeSelected = ContantExtension.CourseStatusSelected;
+  ContantModel arrangeTypeSelected = ContantExtension.courseArrangeSelected;
+  ContantModel statusTypeSelected = ContantExtension.courseStatusSelected;
   bool showOnlyStarSelected = false;
   bool isFilter = false;
   CategoryType categoryType = CategoryType.my;
@@ -54,23 +54,6 @@ class _HomeScreenState extends State<HomeScreen> {
         statusTypeSelected: statusTypeSelected,
         showOnlyStarSelected: showOnlyStarSelected,
         isFilter: isFilter);
-    // return SizedBox(
-    //   width: MediaQuery.of(context).size.width,
-    //   height: MediaQuery.of(context).size.height,
-    //   child: Stack(
-    //     children: <Widget>[
-    //       Container(
-    //         margin: const EdgeInsets.only(top: 30),
-    //         child: PopularCourseListView(
-    //             arrangeTypeSelected: arrangeTypeSelected,
-    //             statusTypeSelected: statusTypeSelected,
-    //             showOnlyStarSelected: showOnlyStarSelected,
-    //             isFilter: isFilter),
-    //       ),
-    //       getDropdownStatus(),
-    //     ],
-    //   ),
-    // );
   }
 
   Widget getScreenTabUI(CategoryType categoryTypeData) {
@@ -83,23 +66,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget getMyCoursesUI() {
-    // SizedBox(
-    //   width: MediaQuery.of(context).size.width,
-    //   height: MediaQuery.of(context).size.height,
-    //   child: Stack(
-    //     children: <Widget>[
-    //       Container(
-    //         margin: const EdgeInsets.only(top: 30),
-    //         child: PopularCourseListView(
-    //             arrangeTypeSelected: arrangeTypeSelected,
-    //             statusTypeSelected: statusTypeSelected,
-    //             showOnlyStarSelected: showOnlyStarSelected,
-    //             isFilter: isFilter),
-    //       ),
-    //       getDropdownStatus(),
-    //     ],
-    //   ),
-    // );
     return Expanded(
       child: Stack(
         children: <Widget>[
@@ -108,17 +74,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
     );
-    // return Expanded(
-    //   child: SingleChildScrollView(
-    //     child: SizedBox(
-    //       height: MediaQuery.of(context).size.height,
-    //       child: Padding(
-    //         padding: const EdgeInsets.only(top: 0, left: 5, right: 5),
-    //         child: getListCoursesUI(),
-    //       ),
-    //     ),
-    //   ),
-    // );
   }
 
   Widget getAllCoursesUI() {

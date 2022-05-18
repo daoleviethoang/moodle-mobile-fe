@@ -37,6 +37,7 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
   AnimationController? animationController;
   List<CourseOverview> coursesOverview = [];
   List<CourseOverview> coursesOverviewOld = [];
+
   bool isLoad = false;
   late UserStore _userStore;
 
@@ -49,138 +50,9 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
     getData();
   }
 
-  getData() async {
-    setState(() {
-      isLoad = true;
-    });
-
-    await Future<dynamic>.delayed(const Duration(milliseconds: 2));
-    try {
-      List<Course> courses = await CourseService()
-          .getCourses(_userStore.user.token, _userStore.user.id);
-
-      setState(() {
-        List<CourseOverview> coursesOverviewList = courses
-            .map((element) => CourseOverview(
-                id: element.id,
-                title: element.displayname,
-                isfavourite: element.isfavourite,
-                hidden: element.hidden,
-                startdate: element.startdate,
-                enddate: element.enddate,
-                lastaccess: element.lastaccess,
-                teacher: []))
-            .toList();
-        coursesOverviewList.sort((a, b) => a.title.compareTo(b.title));
-        coursesOverview = coursesOverviewList;
-        coursesOverviewOld = coursesOverview;
-      });
-      setState(() {
-        isLoad = false;
-      });
-      for (var element in courses) {
-        List<Contact> contacts = await ContactService()
-            .getContacts(_userStore.user.token, element.id);
-        setState(() {
-          coursesOverview.where((e) => element.id == e.id).first.teacher =
-              contacts;
-        });
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString()), backgroundColor: Colors.red));
-    }
-    setState(() {
-      isLoad = false;
-    });
-  }
-
-  List<CourseOverview> filterCourseHomePage() {
-    List<CourseOverview> coursesOverviewFilter = coursesOverview;
-    DateTime currentPhoneDate = DateTime.now(); //DateTime
-    int currentTimeStamp =
-        Timestamp.fromDate(currentPhoneDate).seconds; //To TimeStamp
-
-    setState(() {
-      isLoad = true;
-    });
-    if (widget.showOnlyStarSelected) {
-      coursesOverviewFilter = coursesOverviewFilter
-          .where((element) => element.isfavourite)
-          .toList();
-    }
-    switch (widget.statusTypeSelected.key) {
-      case CourseStatus.all:
-        {
-          if (!widget.showOnlyStarSelected)
-            coursesOverviewFilter = coursesOverview;
-          break;
-        }
-      case CourseStatus.past:
-        {
-          coursesOverviewFilter = coursesOverviewFilter
-              .where((element) =>
-                  (element.enddate < currentTimeStamp && element.enddate != 0))
-              .toList();
-          break;
-        }
-      case CourseStatus.in_progress:
-        {
-          coursesOverviewFilter = coursesOverviewFilter
-              .where((element) =>
-                  (element.enddate >= currentTimeStamp ||
-                      element.enddate == 0) &&
-                  element.startdate <= currentTimeStamp)
-              .toList();
-          break;
-        }
-      case CourseStatus.future:
-        {
-          coursesOverviewFilter = coursesOverviewFilter
-              .where((element) => (element.startdate > currentTimeStamp))
-              .toList();
-          break;
-        }
-      case CourseStatus.removed_from_view:
-        {
-          coursesOverviewFilter =
-              coursesOverviewFilter.where((element) => element.hidden).toList();
-          break;
-        }
-      case CourseStatus.all_expand:
-        {
-          coursesOverviewFilter = coursesOverviewFilter
-              .where((element) => element.hidden == false)
-              .toList();
-          break;
-        }
-      default:
-        {
-          if (!widget.showOnlyStarSelected)
-            coursesOverviewFilter = coursesOverview;
-          break;
-        }
-    }
-    if (widget.arrangeTypeSelected.key == CourseArrange.name) {
-      coursesOverviewFilter.sort((a, b) => a.title.compareTo(b.title));
-    } else if (widget.arrangeTypeSelected.key == CourseArrange.last_accessed) {
-      coursesOverviewFilter.sort((a, b) {
-        if (a.lastaccess > b.lastaccess)
-          return 1;
-        else
-          return 0;
-      });
-    }
-    setState(() {
-      isLoad = false;
-    });
-    return coursesOverviewFilter;
-  }
-
   @override
   Widget build(BuildContext context) {
     if (widget.isFilter) {
-      coursesOverview = coursesOverviewOld;
       List<CourseOverview> newCourseOverview = filterCourseHomePage();
       if (newCourseOverview.isEmpty) {
         return Center(
@@ -242,6 +114,125 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
               ),
             ),
     );
+  }
+
+  getData() async {
+    setState(() {
+      isLoad = true;
+    });
+
+    await Future<dynamic>.delayed(const Duration(milliseconds: 2));
+    try {
+      List<Course> courses = await CourseService()
+          .getCourses(_userStore.user.token, _userStore.user.id);
+
+      setState(() {
+        coursesOverview = courses
+            .map((element) => CourseOverview(
+                id: element.id,
+                title: element.displayname,
+                isfavourite: element.isfavourite,
+                hidden: element.hidden,
+                startdate: element.startdate,
+                enddate: element.enddate,
+                lastaccess: element.lastaccess,
+                teacher: []))
+            .toList();
+      });
+      setState(() {
+        isLoad = false;
+      });
+      for (var element in courses) {
+        List<Contact> contacts = await ContactService()
+            .getContacts(_userStore.user.token, element.id);
+        setState(() {
+          coursesOverview.where((e) => element.id == e.id).first.teacher =
+              contacts;
+        });
+      }
+      coursesOverviewOld.addAll(coursesOverview);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString()), backgroundColor: Colors.red));
+    }
+    setState(() {
+      isLoad = false;
+    });
+  }
+
+  List<CourseOverview> filterCourseHomePage() {
+    setState(() {
+      isLoad = true;
+    });
+    List<CourseOverview> coursesOverviewFilter = [];
+    coursesOverviewFilter.addAll(coursesOverviewOld);
+    DateTime currentPhoneDate = DateTime.now(); //DateTime
+    int currentTimeStamp =
+        Timestamp.fromDate(currentPhoneDate).seconds; //To TimeStamp
+
+    if (widget.showOnlyStarSelected) {
+      coursesOverviewFilter = coursesOverviewFilter
+          .where((element) => element.isfavourite)
+          .toList();
+    }
+    switch (widget.statusTypeSelected.key) {
+      case CourseStatus.past:
+        {
+          coursesOverviewFilter = coursesOverviewFilter
+              .where((element) =>
+                  (element.enddate < currentTimeStamp && element.enddate != 0))
+              .toList();
+          break;
+        }
+      case CourseStatus.in_progress:
+        {
+          coursesOverviewFilter = coursesOverviewFilter
+              .where((element) =>
+                  (element.enddate >= currentTimeStamp ||
+                      element.enddate == 0) &&
+                  element.startdate <= currentTimeStamp)
+              .toList();
+          break;
+        }
+      case CourseStatus.future:
+        {
+          coursesOverviewFilter = coursesOverviewFilter
+              .where((element) => (element.startdate > currentTimeStamp))
+              .toList();
+          break;
+        }
+      case CourseStatus.removed_from_view:
+        {
+          coursesOverviewFilter =
+              coursesOverviewFilter.where((element) => element.hidden).toList();
+          break;
+        }
+      case CourseStatus.all_expand:
+        {
+          coursesOverviewFilter = coursesOverviewFilter
+              .where((element) => element.hidden == false)
+              .toList();
+          break;
+        }
+      default:
+        {
+          break;
+        }
+    }
+    if (widget.arrangeTypeSelected.key == CourseArrange.name) {
+      coursesOverviewFilter.sort((a, b) => a.title.compareTo(b.title));
+    } else if (widget.arrangeTypeSelected.key == CourseArrange.last_accessed) {
+      coursesOverviewFilter.sort((a, b) {
+        if (a.lastaccess > b.lastaccess)
+          return 1;
+        else
+          return 0;
+      });
+    }
+    setState(() {
+      isLoad = false;
+    });
+    return coursesOverviewFilter;
   }
 }
 

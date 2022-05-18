@@ -14,6 +14,7 @@ extension ContantExtension on ContantModel {
     for (var value in CourseArrange.values) {
       ContantModel courseStatusModel =
           ContantModel(key: value, value: value.name);
+      if (value == CourseArrange.default_) continue;
       list.add(courseStatusModel);
     }
     return list;
@@ -30,12 +31,12 @@ extension ContantExtension on ContantModel {
     return list;
   }
 
-  static ContantModel get CourseStatusSelected {
+  static ContantModel get courseStatusSelected {
     return ContantModel(key: CourseStatus.all, value: CourseStatus.all.name);
   }
 
-  static ContantModel get CourseArrangeSelected {
+  static ContantModel get courseArrangeSelected {
     return ContantModel(
-        key: CourseArrange.name, value: CourseArrange.name.name);
+        key: CourseArrange.default_, value: CourseArrange.default_.name);
   }
 }
