@@ -25,6 +25,7 @@ import 'package:moodle_mobile/view/common/menu_item.dart' as m;
 import 'package:moodle_mobile/view/enrol/enrol.dart';
 import 'package:moodle_mobile/view/forum/forum_screen.dart';
 import 'package:moodle_mobile/view/grade_in_one_course.dart';
+import 'package:moodle_mobile/view/participants_in_one_course.dart';
 import 'package:moodle_mobile/view/user_detail/user_detail.dart';
 import 'package:moodle_mobile/view/user_detail/user_detail_student.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
@@ -118,9 +119,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     if (_discussionsTab is! Container) {
       _tabs.add(const Tab(child: Text('Discussion Forums')));
     }
-    if (_upcomingTab is! Container) {
-      _tabs.add(const Tab(child: Text('Events')));
-    }
+    _tabs.add(const Tab(child: Text('Events')));
     if (_gradesTab is! Container) {
       _tabs.add(const Tab(child: Text('Grades')));
     }
@@ -317,78 +316,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
 
   void _initPeopleTab() {
     // TODO: Get participant list from API
-    final participants = [
-      'Lâm Quang Vũ',
-      'Nguyễn Gia Hưng',
-      'Ngô Thị Thanh Theo',
-      'Hà Thế Hiển',
-      'Đào Lê Việt Hoàng',
-      'Trần Đình Phát',
-    ];
-
-    // Return People list section
-    _peopleTab = SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text('People in this course',
-              style: MoodleStyles.courseHeaderStyle),
-          Container(height: 16),
-          ...List.generate(participants.length, (index) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: m.MenuItem(
-                image: const RoundedImageView(
-                  imageUrl: 'user-avatar-url',
-                  placeholder: Icon(Icons.person, size: 48),
-                ),
-                title: participants[index],
-                subtitle: 'Student',
-                onPressed: () => {
-                  if (index == 0)
-                    {
-                      Navigator.push<dynamic>(
-                        context,
-                        MaterialPageRoute<dynamic>(
-                          builder: (BuildContext context) => UserDetailsScreen(
-                            avatar:
-                                'https://meta.vn/Data/image/2021/08/17/con-vit-vang-tren-fb-la-gi-trend-anh-avatar-con-vit-vang-la-gi-3.jpg',
-                            role: 'Teacher',
-                            course: 'Đồ án tốt nghiệp',
-                            email: 'lqvu@fit.hcmus.edu.vn',
-                            location: 'TP.HCM, Vietnam',
-                            name: participants[index],
-                            status: 'Last online 22 hours ago',
-                          ),
-                        ),
-                      )
-                    }
-                  else
-                    {
-                      Navigator.push<dynamic>(
-                        context,
-                        MaterialPageRoute<dynamic>(
-                          builder: (BuildContext context) =>
-                              UserDetailStudentScreen(
-                            avatar:
-                                'https://meta.vn/Data/image/2021/08/17/con-vit-vang-tren-fb-la-gi-trend-anh-avatar-con-vit-vang-la-gi-3.jpg',
-                            role: 'Student',
-                            course: 'Đồ án tốt nghiệp',
-                            email: '18127044@student.hcmus.edu.vn',
-                            location: 'TP.HCM, Vietnam',
-                            name: participants[index],
-                            status: 'Online just now',
-                          ),
-                        ),
-                      )
-                    }
-                },
-              ),
-            );
-          }),
-        ],
-      ),
-    );
+    _peopleTab = ParticipantsInOneCourse(courseId: _courseId);
   }
 
   // endregion

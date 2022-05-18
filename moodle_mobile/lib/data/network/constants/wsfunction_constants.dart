@@ -73,4 +73,8 @@ class Wsfunction {
 
   //search course
   static const String CORE_COURSE_SEARCH_COURSES = "core_course_search_courses";
+
+  //courses
+  static const String CORE_COURSES_PARTICIPANT =
+      "core_enrol_get_enrolled_users";
 }
