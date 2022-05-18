@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:html/parser.dart' show parse;
 import 'package:html/dom.dart' as dom;
+import 'package:moodle_mobile/constants/colors.dart';
 
 class OneChoiceDoQuiz extends StatefulWidget {
   final int uniqueId;
@@ -28,7 +29,8 @@ class _OneChoiceDoQuizState extends State<OneChoiceDoQuiz> {
   String question = "";
   List<String> keySave = ["", ""];
   List<String> valueSave = ["", ""];
-  int indexChoose = 0;
+  int indexChoose = -1;
+  int sequenceCheck = 0;
 
   parseHtml() {
     var document = parse(widget.html);
@@ -38,12 +40,6 @@ class _OneChoiceDoQuizState extends State<OneChoiceDoQuiz> {
     setState(() {
       question = questions.isNotEmpty ? questions.first.text : "";
       answers = elements;
-      keySave[0] = "q" +
-          widget.uniqueId.toString() +
-          ":" +
-          widget.slot.toString() +
-          "_:sequencecheck";
-      valueSave[0] = (widget.sequenceCheck + 1).toString();
     });
     for (var answer in answers) {
       bool isCheck =
@@ -60,12 +56,20 @@ class _OneChoiceDoQuizState extends State<OneChoiceDoQuiz> {
   @override
   void initState() {
     parseHtml();
+    sequenceCheck = widget.sequenceCheck;
     super.initState();
   }
 
-  setCheck(int index) {
+  setCheck(int index) async {
     setState(() {
+      sequenceCheck++;
       indexChoose = index;
+      keySave[0] = "q" +
+          widget.uniqueId.toString() +
+          ":" +
+          widget.slot.toString() +
+          "_:sequencecheck";
+      valueSave[0] = (widget.sequenceCheck).toString();
       keySave[1] = "q" +
           widget.uniqueId.toString() +
           ":" +
@@ -73,7 +77,7 @@ class _OneChoiceDoQuizState extends State<OneChoiceDoQuiz> {
           "_answer";
       valueSave[1] = index.toString();
     });
-    widget.setData(widget.index, keySave, valueSave);
+    await widget.setData(widget.index, keySave, valueSave);
   }
 
   @override
@@ -86,7 +90,17 @@ class _OneChoiceDoQuizState extends State<OneChoiceDoQuiz> {
           children: [
             Text(
               question,
-              textScaleFactor: 1.2,
+              textScaleFactor: 1.3,
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            Text(
+              "Select one:",
+              textScaleFactor: 1.1,
+            ),
+            SizedBox(
+              height: 5,
             ),
             Container(
                 width: MediaQuery.of(context).size.width,
@@ -95,14 +109,17 @@ class _OneChoiceDoQuizState extends State<OneChoiceDoQuiz> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: answers.map((e) {
                     int index = answers.indexOf(e);
-                    return OneChoiceTile(
-                      element: e,
-                      state: this,
-                      isCheck: indexChoose == index,
-                      index: index,
-                    );
+                    return Container(
+                        margin: const EdgeInsets.only(bottom: 5),
+                        child: OneChoiceTile(
+                          element: e,
+                          state: this,
+                          isCheck: indexChoose == index,
+                          index: index,
+                        ));
                   }).toList(),
                 )),
+            Divider(),
           ],
         ));
   }
@@ -123,16 +140,47 @@ class OneChoiceTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      visualDensity: VisualDensity(horizontal: -4, vertical: -4),
-      title: Text(element.text),
-      leading: Checkbox(
-          value: isCheck,
-          shape: CircleBorder(),
-          activeColor: Colors.green,
-          onChanged: (value) async {
-            state.setCheck(index);
-          }),
-    );
+    var list = element.text.split(".");
+    var first = list.first.toUpperCase();
+    var last = list.last;
+    return isCheck
+        ? ListTile(
+            shape: const RoundedRectangleBorder(
+                side: BorderSide.none,
+                borderRadius: BorderRadius.all(Radius.circular(8))),
+            contentPadding: EdgeInsets.zero,
+            tileColor: MoodleColors.blue_soft,
+            visualDensity: VisualDensity(horizontal: -2, vertical: -2),
+            title: Text(last),
+            leading: MaterialButton(
+              shape: CircleBorder(
+                  side: BorderSide(color: MoodleColors.blueDark, width: 2)),
+              onPressed: null,
+              child: Text(
+                first,
+                textScaleFactor: 1.1,
+                style: const TextStyle(color: MoodleColors.blueDark),
+              ),
+            ),
+          )
+        : ListTile(
+            shape: const RoundedRectangleBorder(
+                side: BorderSide.none,
+                borderRadius: BorderRadius.all(Radius.circular(8))),
+            contentPadding: EdgeInsets.zero,
+            visualDensity: VisualDensity(horizontal: -2, vertical: -2),
+            title: Text(last),
+            leading: MaterialButton(
+              shape:
+                  CircleBorder(side: BorderSide(color: Colors.black, width: 2)),
+              onPressed: () {
+                state.setCheck(index);
+              },
+              child: Text(
+                first,
+                textScaleFactor: 1.1,
+              ),
+            ),
+          );
   }
 }

@@ -72,6 +72,9 @@ dependencies:
   #count down timer
   flutter_countdown_timer: ^4.1.0
 
+  #list scroll to index
+  scrollable_positioned_list: ^0.2.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

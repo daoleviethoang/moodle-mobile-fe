@@ -30,13 +30,12 @@ class _QuizDoScreenState extends State<QuizDoScreen> {
   late UserStore _userStore;
   int page = 0;
   List<QuizSaveData> list = [];
-  List<QuizSaveData> temp = [];
   QuizData? quizData;
   bool error = false;
 
   saveQuiz() async {
-    for (var element in temp) {
-      if (element.answers.length > 0) {
+    for (var element in list) {
+      if (element.answers.isNotEmpty) {
         try {
           await QuizApi().saveQuizData(_userStore.user.token, widget.attemptId,
               element.answers, element.values);
@@ -47,10 +46,22 @@ class _QuizDoScreenState extends State<QuizDoScreen> {
     }
   }
 
-  setDataSave(int index, List<String> answers, List<String> values) {
+  endQuiz() async {
+    try {
+      await QuizApi().endQuiz(
+        _userStore.user.token,
+        widget.attemptId,
+      );
+    } catch (e) {
+      print("Can't end quiz");
+    }
+  }
+
+  setDataSave(int index, List<String> answers, List<String> values) async {
     setState(() {
       list[index] = QuizSaveData(answers: answers, values: values);
     });
+    await saveQuiz();
   }
 
   @override
@@ -66,29 +77,18 @@ class _QuizDoScreenState extends State<QuizDoScreen> {
     });
     try {
       var temp = await QuizApi()
-          .getDoQuizData(_userStore.user.token, widget.attemptId, page);
+          .getDoQuizData(_userStore.user.token, widget.attemptId);
       setState(() {
         quizData = temp;
       });
     } catch (e) {
-      print(e.toString());
       setState(() {
         error = true;
       });
     }
     setState(() {
-      list = [];
       isLoading = false;
     });
-  }
-
-  void setPage(int index) {
-    setState(() {
-      temp.addAll(list);
-      page = index;
-    });
-    load();
-    saveQuiz();
   }
 
   _buildMainContent() {
@@ -175,39 +175,30 @@ class _QuizDoScreenState extends State<QuizDoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      endDrawer: Drawer(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[],
+          ),
+        ),
+      ),
+      endDrawerEnableOpenDragGesture: true,
       body: Stack(
         children: [
           _buildMainContent(),
           Align(
-            alignment: Alignment.bottomLeft,
+            alignment: Alignment.bottomCenter,
             child: Padding(
-              padding: EdgeInsets.only(bottom: 40),
-              child: page > 0
-                  ? TextButton.icon(
-                      onPressed: () {
-                        setPage(page - 1);
-                      },
-                      icon: Icon(Icons.arrow_back),
-                      label: Text("Back"),
-                    )
-                  : Container(),
+              padding: EdgeInsets.only(bottom: 20),
+              child: CountdownTimer(
+                endTime: widget.endTime,
+                onEnd: () async {
+                  await endQuiz();
+                  Navigator.pop(context);
+                },
+              ),
             ),
-          ),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Padding(
-                padding: EdgeInsets.only(bottom: 40),
-                child: isLoading
-                    ? Container()
-                    : quizData!.nextpage != null && quizData!.nextpage == 1
-                        ? TextButton.icon(
-                            onPressed: () {
-                              setPage(page + 1);
-                            },
-                            icon: Icon(Icons.arrow_right),
-                            label: Text("Next"),
-                          )
-                        : Container()),
           ),
         ],
       ),

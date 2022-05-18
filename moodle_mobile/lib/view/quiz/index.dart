@@ -285,7 +285,7 @@ class _QuizScreenState extends State<QuizScreen> {
                       lastAttempt.id != null && lastAttempt.state == "finished"
                           ? Center(
                               child: CustomButtonShort(
-                                text: "Preview",
+                                text: "Preview last",
                                 onPressed: () {
                                   Navigator.of(context)
                                       .push(MaterialPageRoute(builder: (_) {
@@ -301,8 +301,11 @@ class _QuizScreenState extends State<QuizScreen> {
                               ),
                             )
                           : Container(),
+                      const SizedBox(
+                        height: 15,
+                      ),
                       lastAttempt.state == "finished" &&
-                              (quiz.attempts ?? 0) < numAttempt
+                              (quiz.attempts ?? 0) > numAttempt
                           ? Center(
                               child: CustomButtonShort(
                                 text: "Attempt quiz now",
@@ -315,7 +318,13 @@ class _QuizScreenState extends State<QuizScreen> {
                                     return QuizDoScreen(
                                       title: widget.title,
                                       attemptId: attempt.id ?? 0,
-                                      endTime: (attempt.timefinish ?? 0) * 1000,
+                                      endTime:
+                                          DateTime.fromMillisecondsSinceEpoch(
+                                                  (attempt.timestart ?? 0) *
+                                                      1000)
+                                              .add(Duration(
+                                                  seconds: quiz.timelimit ?? 0))
+                                              .millisecondsSinceEpoch,
                                     );
                                   })).then((value) => load());
                                 },
@@ -337,8 +346,7 @@ class _QuizScreenState extends State<QuizScreen> {
                                       attemptId: lastAttempt.id ?? 0,
                                       endTime:
                                           DateTime.fromMillisecondsSinceEpoch(
-                                                  (lastAttempt.timefinish ??
-                                                          0) *
+                                                  (lastAttempt.timestart ?? 0) *
                                                       1000)
                                               .add(Duration(
                                                   seconds: quiz.timelimit ?? 0))

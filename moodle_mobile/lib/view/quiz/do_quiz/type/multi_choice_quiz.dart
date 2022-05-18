@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:html/parser.dart' show parse;
 import 'package:html/dom.dart' as dom;
+import 'package:moodle_mobile/constants/colors.dart';
 
 class MultiChoiceDoQuiz extends StatefulWidget {
   final int uniqueId;
@@ -28,6 +29,7 @@ class _MultiChoiceDoQuizState extends State<MultiChoiceDoQuiz> {
   String question = "";
   List<String> keySave = [""];
   List<String> valueSave = [""];
+  int sequenceCheck = 0;
 
   parseHtml() {
     var document = parse(widget.html);
@@ -39,31 +41,31 @@ class _MultiChoiceDoQuizState extends State<MultiChoiceDoQuiz> {
       answers = elements;
     });
 
-    for (var item in answers) {
+    for (var _ in answers) {
       keySave.add("");
       valueSave.add("");
     }
 
+    for (var answer in answers) {
+      var inputs = answer.querySelectorAll("input");
+      for (var input in inputs) {
+        bool isCheck = input.attributes.containsKey("checked");
+        if (isCheck == true) {
+          setCheck(answers.indexOf(answer), true, false);
+          break;
+        }
+      }
+    }
+  }
+
+  setCheck(int index, bool value, bool saveData) async {
     setState(() {
       keySave[0] = "q" +
           widget.uniqueId.toString() +
           ":" +
           widget.slot.toString() +
           "_:sequencecheck";
-      valueSave[0] = (widget.sequenceCheck + 1).toString();
-    });
-    for (var answer in answers) {
-      bool isCheck =
-          answer.querySelector("input")?.attributes.containsKey("checked") ??
-              false;
-      if (isCheck == true) {
-        setCheck(answers.indexOf(answer), isCheck, false);
-      }
-    }
-  }
-
-  setCheck(int index, bool value, bool saveData) {
-    setState(() {
+      valueSave[0] = (sequenceCheck).toString();
       keySave[index + 1] = "q" +
           widget.uniqueId.toString() +
           ":" +
@@ -73,13 +75,19 @@ class _MultiChoiceDoQuizState extends State<MultiChoiceDoQuiz> {
       valueSave[index + 1] = value ? "1" : "0";
     });
     if (saveData == true) {
-      widget.setData(widget.index, keySave, valueSave);
+      setState(() {
+        sequenceCheck++;
+      });
+    }
+    if (saveData == true) {
+      await widget.setData(widget.index, keySave, valueSave);
     }
   }
 
   @override
   void initState() {
     parseHtml();
+    sequenceCheck = widget.sequenceCheck;
     super.initState();
   }
 
@@ -93,7 +101,17 @@ class _MultiChoiceDoQuizState extends State<MultiChoiceDoQuiz> {
           children: [
             Text(
               question,
-              textScaleFactor: 1.2,
+              textScaleFactor: 1.3,
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            Text(
+              "Select one or more:",
+              textScaleFactor: 1.1,
+            ),
+            SizedBox(
+              height: 5,
             ),
             Container(
                 width: MediaQuery.of(context).size.width,
@@ -102,14 +120,17 @@ class _MultiChoiceDoQuizState extends State<MultiChoiceDoQuiz> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: answers.map((e) {
                     int index = answers.indexOf(e);
-                    return MultiChoiceTile(
-                      element: e,
-                      state: this,
-                      isCheck: valueSave[index + 1] == "1",
-                      index: index,
-                    );
+                    return Container(
+                        margin: const EdgeInsets.only(bottom: 5),
+                        child: MultiChoiceTile(
+                          element: e,
+                          state: this,
+                          isCheck: valueSave[index + 1] == "1",
+                          index: index,
+                        ));
                   }).toList(),
                 )),
+            Divider(),
           ],
         ));
   }
@@ -130,16 +151,49 @@ class MultiChoiceTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      visualDensity: VisualDensity(horizontal: -4, vertical: -4),
-      title: Text(element.text),
-      leading: Checkbox(
-          value: isCheck,
-          shape: CircleBorder(),
-          activeColor: Colors.green,
-          onChanged: (value) async {
-            state.setCheck(index, !isCheck, true);
-          }),
-    );
+    var list = element.text.split(".");
+    var first = list.first.toUpperCase();
+    var last = list.last;
+    return isCheck
+        ? ListTile(
+            shape: const RoundedRectangleBorder(
+                side: BorderSide.none,
+                borderRadius: BorderRadius.all(Radius.circular(8))),
+            contentPadding: EdgeInsets.zero,
+            tileColor: MoodleColors.blue_soft,
+            visualDensity: VisualDensity(horizontal: -2, vertical: -2),
+            title: Text(last),
+            leading: MaterialButton(
+              shape: CircleBorder(
+                  side: BorderSide(color: MoodleColors.blueDark, width: 2)),
+              onPressed: () async {
+                await state.setCheck(index, !isCheck, true);
+              },
+              child: Text(
+                first,
+                textScaleFactor: 1.1,
+                style: const TextStyle(color: MoodleColors.blueDark),
+              ),
+            ),
+          )
+        : ListTile(
+            shape: const RoundedRectangleBorder(
+                side: BorderSide.none,
+                borderRadius: BorderRadius.all(Radius.circular(8))),
+            contentPadding: EdgeInsets.zero,
+            visualDensity: VisualDensity(horizontal: -2, vertical: -2),
+            title: Text(last),
+            leading: MaterialButton(
+              shape:
+                  CircleBorder(side: BorderSide(color: Colors.black, width: 2)),
+              onPressed: () async {
+                await state.setCheck(index, !isCheck, true);
+              },
+              child: Text(
+                first,
+                textScaleFactor: 1.1,
+              ),
+            ),
+          );
   }
 }

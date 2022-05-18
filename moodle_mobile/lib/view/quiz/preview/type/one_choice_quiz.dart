@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:html/parser.dart' show parse;
 import 'package:html/dom.dart' as dom;
+import 'package:moodle_mobile/constants/colors.dart';
 
 class OneChoiceQuiz extends StatefulWidget {
   final int uniqueId;
@@ -55,11 +56,14 @@ class _OneChoiceQuizState extends State<OneChoiceQuiz> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: answers
-                      .map((e) => OneChoiceTile(
+                      .map((e) => Container(
+                          margin: const EdgeInsets.only(bottom: 5),
+                          child: OneChoiceTile(
                             element: e,
-                          ))
+                          )))
                       .toList(),
                 )),
+                Divider(),
           ],
         ));
   }
@@ -71,17 +75,40 @@ class OneChoiceTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var list = element.text.split(".");
+    var first = list.first.toUpperCase();
+    var last = list.last;
     bool isCheck =
         element.querySelector("input")?.attributes.containsKey("checked") ??
             false;
-    return ListTile(
-      visualDensity: VisualDensity(horizontal: -4, vertical: -4),
-      title: Text(element.text),
-      leading: Checkbox(
-          value: isCheck,
-          shape: CircleBorder(),
-          activeColor: Colors.green,
-          onChanged: (value) async {}),
-    );
+    return isCheck
+        ? ListTile(
+            tileColor: MoodleColors.blue_soft,
+            visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+            title: Text(last),
+            leading: MaterialButton(
+              shape: CircleBorder(
+                  side: BorderSide(color: MoodleColors.blueDark, width: 1)),
+              onPressed: null,
+              child: Text(
+                first,
+                textScaleFactor: 1.1,
+                style: const TextStyle(color: MoodleColors.blueDark),
+              ),
+            ),
+          )
+        : ListTile(
+            visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+            title: Text(last),
+            leading: MaterialButton(
+              shape:
+                  CircleBorder(side: BorderSide(color: Colors.black, width: 1)),
+              onPressed: null,
+              child: Text(
+                first,
+                textScaleFactor: 1.1,
+              ),
+            ),
+          );
   }
 }
