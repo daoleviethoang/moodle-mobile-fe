@@ -45,7 +45,7 @@ class _QuizScreenState extends State<QuizScreen> {
     load();
   }
 
-  void load() async {
+  load() async {
     setState(() {
       isLoading = true;
     });
@@ -326,7 +326,9 @@ class _QuizScreenState extends State<QuizScreen> {
                                                   seconds: quiz.timelimit ?? 0))
                                               .millisecondsSinceEpoch,
                                     );
-                                  })).then((value) => load());
+                                  })).then((value) async {
+                                    await load();
+                                  });
                                 },
                                 bgColor: MoodleColors.blue,
                                 blurRadius: 0,
@@ -352,7 +354,9 @@ class _QuizScreenState extends State<QuizScreen> {
                                                   seconds: quiz.timelimit ?? 0))
                                               .millisecondsSinceEpoch,
                                     );
-                                  })).then((value) => load());
+                                  })).then((value) async {
+                                    await load();
+                                  });
                                 },
                                 bgColor: MoodleColors.blue,
                                 blurRadius: 0,

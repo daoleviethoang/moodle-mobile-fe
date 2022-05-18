@@ -55,8 +55,6 @@ class _MultiChoiceDoQuizState extends State<MultiChoiceDoQuiz> {
         bool isCheck = input.attributes.containsKey("checked");
         if (isCheck == true) {
           setCheck(answers.indexOf(answer), true, false);
-          widget.setComplete(widget.index, true);
-          break;
         }
         setState(() {
           check.add(isCheck);
@@ -80,23 +78,30 @@ class _MultiChoiceDoQuizState extends State<MultiChoiceDoQuiz> {
           "_choice" +
           index.toString();
       valueSave[index + 1] = value ? "1" : "0";
-      check[index] = value;
     });
     if (saveData == true) {
-      setState(() {
-        sequenceCheck++;
-      });
-    }
-    if (saveData == true) {
-      await widget.setData(widget.index, keySave, valueSave);
+      bool check2 = await widget.setData(widget.index, keySave, valueSave);
+      if (check2 == true) {
+        setState(() {
+          sequenceCheck++;
+          check[index] = value;
+        });
+      }
+      if (check.where((e) => e == true).isNotEmpty) {
+        widget.setComplete(widget.index, true);
+      } else {
+        widget.setComplete(widget.index, false);
+      }
     }
   }
 
   @override
   void initState() {
-    parseHtml();
-    sequenceCheck = widget.sequenceCheck;
     super.initState();
+    setState(() {
+      sequenceCheck = widget.sequenceCheck;
+    });
+    parseHtml();
   }
 
   @override

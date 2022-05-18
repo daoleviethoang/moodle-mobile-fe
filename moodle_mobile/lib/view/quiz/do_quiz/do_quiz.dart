@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:get_it/get_it.dart';
+import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/data/network/apis/quiz/quiz_api.dart';
 import 'package:moodle_mobile/models/quiz/question.dart';
 import 'package:moodle_mobile/models/quiz/quizData.dart';
@@ -41,17 +42,17 @@ class _QuizDoScreenState extends State<QuizDoScreen> {
   QuizData? quizData;
   bool error = false;
 
-  saveQuiz() async {
-    for (var element in list) {
-      if (element.answers.isNotEmpty) {
-        try {
-          await QuizApi().saveQuizData(_userStore.user.token, widget.attemptId,
-              element.answers, element.values);
-        } catch (e) {
-          print("Can't save quiz" + element.answers.toString());
-        }
+  Future<bool> saveQuiz(int index) async {
+    if (list[index].answers.isNotEmpty) {
+      try {
+        await QuizApi().saveQuizData(_userStore.user.token, widget.attemptId,
+            list[index].answers, list[index].values);
+        return true;
+      } catch (e) {
+        print("Can't save quiz" + list[index].values.toString());
       }
     }
+    return false;
   }
 
   endQuiz() async {
@@ -65,24 +66,27 @@ class _QuizDoScreenState extends State<QuizDoScreen> {
     }
   }
 
-  setDataSave(int index, List<String> answers, List<String> values) async {
+  Future<bool> setDataSave(
+      int index, List<String> answers, List<String> values) async {
     setState(() {
       list[index] = QuizSaveData(answers: answers, values: values);
     });
-    await saveQuiz();
+    return await saveQuiz(index);
   }
 
-  setComplete(int index, bool value) async {
-    setState(() {
-      complete[index] = value;
-    });
+  setComplete(int index, bool value) {
+    if (complete[index] != value) {
+      setState(() {
+        complete[index] = value;
+      });
+    }
   }
 
   @override
   void initState() {
     _userStore = GetIt.instance<UserStore>();
-    super.initState();
     load();
+    super.initState();
   }
 
   void load() async {
@@ -112,6 +116,34 @@ class _QuizDoScreenState extends State<QuizDoScreen> {
     setState(() {
       isLoading = false;
     });
+  }
+
+  Future<bool> showDialogFinish() async {
+    bool check = false;
+    await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Are sure you want to finish quiz?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                check = true;
+                Navigator.pop(context);
+              },
+              child: const Text("Ok"),
+            ),
+          ],
+        );
+      },
+    );
+    return check;
   }
 
   _buildMainContent() {
@@ -205,19 +237,51 @@ class _QuizDoScreenState extends State<QuizDoScreen> {
                     ...quizData?.questions?.map((e) {
                           int index = quizData!.questions!.indexOf(e);
                           return ListTile(
-                            leading: MaterialButton(
-                              shape: CircleBorder(
-                                  side: BorderSide(
-                                      color: Colors.black, width: 2)),
-                              onPressed: () {
+                            leading: InkWell(
+                              onTap: () {
                                 itemScrollController.scrollTo(
                                   index: index,
                                   duration: Duration(milliseconds: 1),
                                 );
                               },
-                              child: Text(
-                                (e.number ?? 1).toString(),
-                                textScaleFactor: 1.1,
+                              child: Stack(
+                                children: [
+                                  MaterialButton(
+                                    shape: CircleBorder(
+                                        side: BorderSide(
+                                            color: Colors.black, width: 2)),
+                                    onPressed: () {
+                                      itemScrollController.scrollTo(
+                                        index: index,
+                                        duration: Duration(milliseconds: 1),
+                                      );
+                                    },
+                                    child: Text(
+                                      (e.number ?? 1).toString(),
+                                      textScaleFactor: 1.1,
+                                    ),
+                                  ),
+                                  complete[index]
+                                      ? Positioned(
+                                          bottom: 6,
+                                          right: 15,
+                                          child: CircleAvatar(
+                                            backgroundColor: Color.fromARGB(
+                                                255, 42, 185, 49),
+                                            radius: 10,
+                                            child: Icon(
+                                              Icons.check,
+                                              size: 10,
+                                              color: Color.fromARGB(
+                                                  204, 197, 242, 199),
+                                            ),
+                                          ),
+                                        )
+                                      : Container(
+                                          height: 10,
+                                          width: 10,
+                                        ),
+                                ],
                               ),
                             ),
                             title: Text(points[index].toString() + " points"),
@@ -233,15 +297,48 @@ class _QuizDoScreenState extends State<QuizDoScreen> {
         children: [
           _buildMainContent(),
           Align(
-            alignment: Alignment.bottomCenter,
+            alignment: Alignment.bottomLeft,
+            child: Container(
+                height: 80,
+                padding: EdgeInsets.only(bottom: 30, left: 20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    const Icon(
+                      Icons.watch,
+                      size: 25,
+                    ),
+                    CountdownTimer(
+                      textStyle: TextStyle(fontSize: 18),
+                      endTime: widget.endTime,
+                      onEnd: () async {
+                        await endQuiz();
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                )),
+          ),
+          Align(
+            alignment: Alignment.bottomRight,
             child: Padding(
-              padding: EdgeInsets.only(bottom: 20),
-              child: CountdownTimer(
-                endTime: widget.endTime,
-                onEnd: () async {
-                  await endQuiz();
-                  Navigator.pop(context);
-                },
+              padding: EdgeInsets.only(bottom: 20, right: 20),
+              child: CircleAvatar(
+                radius: 30,
+                backgroundColor: MoodleColors.blue,
+                child: IconButton(
+                  onPressed: () async {
+                    bool check = await showDialogFinish();
+                    if (check == true) {
+                      await endQuiz();
+                      Navigator.pop(context);
+                    }
+                  },
+                  icon: const Icon(
+                    Icons.check,
+                    color: Colors.white,
+                  ),
+                ),
               ),
             ),
           ),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/models/quiz/question.dart';
 
-class QuestionTile extends StatefulWidget {
+class QuestionTile extends StatelessWidget {
   final Widget content;
   final Question question;
   final int index;
@@ -14,18 +14,13 @@ class QuestionTile extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<QuestionTile> createState() => _QuestionTileState();
-}
-
-class _QuestionTileState extends State<QuestionTile> {
-  @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         ListTile(
           visualDensity: VisualDensity(horizontal: -4, vertical: -4),
           title: Text(
-            "Question " + widget.index.toString() + ":",
+            "Question " + index.toString() + ":",
             textScaleFactor: 1.2,
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
@@ -35,13 +30,13 @@ class _QuestionTileState extends State<QuestionTile> {
             color: MoodleColors.grade_quiz_foreground,
             onPressed: () {},
             child: Text(
-              (widget.question.maxmark ?? 1).toString() + " points",
+              (question.maxmark ?? 1).toString() + " points",
               textScaleFactor: 1.1,
               style: TextStyle(color: MoodleColors.grade_quiz_text),
             ),
           ),
         ),
-        widget.content,
+        content,
         const SizedBox(
           height: 40,
         ),

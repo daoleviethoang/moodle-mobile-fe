@@ -51,28 +51,29 @@ class _OneChoiceDoQuizState extends State<OneChoiceDoQuiz> {
         setState(() {
           indexChoose = answers.indexOf(answer);
         });
-        widget.setComplete(widget.index, true);
+        //widget.setComplete(widget.index, true);
+        break;
       }
     }
   }
 
   @override
   void initState() {
-    parseHtml();
-    sequenceCheck = widget.sequenceCheck;
     super.initState();
+    setState(() {
+      sequenceCheck = widget.sequenceCheck;
+    });
+    parseHtml();
   }
 
   setCheck(int index) async {
     setState(() {
-      sequenceCheck++;
-      indexChoose = index;
       keySave[0] = "q" +
           widget.uniqueId.toString() +
           ":" +
           widget.slot.toString() +
           "_:sequencecheck";
-      valueSave[0] = (widget.sequenceCheck).toString();
+      valueSave[0] = (sequenceCheck).toString();
       keySave[1] = "q" +
           widget.uniqueId.toString() +
           ":" +
@@ -80,7 +81,16 @@ class _OneChoiceDoQuizState extends State<OneChoiceDoQuiz> {
           "_answer";
       valueSave[1] = index.toString();
     });
-    await widget.setData(widget.index, keySave, valueSave);
+
+    bool check2 = await widget.setData(widget.index, keySave, valueSave);
+    if (check2 == true) {
+      setState(() {
+        indexChoose = index;
+        sequenceCheck++;
+      });
+    }
+
+    widget.setComplete(widget.index, true);
   }
 
   @override
