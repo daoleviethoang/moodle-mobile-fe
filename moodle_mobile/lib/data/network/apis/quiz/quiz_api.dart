@@ -49,6 +49,49 @@ class QuizApi {
     }
   }
 
+  Future<QuizData> getDoQuizData(String token, int attemptid, int page) async {
+    try {
+      Dio dio = Http().client;
+      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': 'mod_quiz_get_attempt_data',
+        'moodlewsrestformat': 'json',
+        'attemptid': attemptid,
+        'page': page
+      });
+      if (res.data["exception"] != null) {
+        throw res.data["exception"];
+      }
+      return QuizData.fromJson(res.data);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  saveQuizData(String token, int attemptid, List<String> keys,
+      List<String> values) async {
+    try {
+      Dio dio = Http().client;
+      List list = [];
+      for (int i = 0; i < keys.length; i++) {
+        list.add({"name": keys[i], "value": values[i]});
+      }
+      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': 'mod_quiz_get_attempt_data',
+        'moodlewsrestformat': 'json',
+        'attemptid': attemptid,
+        'data': list,
+      });
+      if (res.data["exception"] != null) {
+        throw res.data["exception"];
+      }
+      return QuizData.fromJson(res.data);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<QuizData> getPreviewQuiz(String token, int attemptid) async {
     try {
       Dio dio = Http().client;
