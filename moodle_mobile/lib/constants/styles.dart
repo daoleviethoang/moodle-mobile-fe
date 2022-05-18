@@ -27,4 +27,7 @@ class MoodleStyles {
     'h2': Style(fontSize: const FontSize(17.5)),
     'h3': Style(fontSize: const FontSize(16)),
   };
+
+  static const TextStyle messageContentStyle =
+      TextStyle(fontSize: 12, color: MoodleColors.gray);
 }

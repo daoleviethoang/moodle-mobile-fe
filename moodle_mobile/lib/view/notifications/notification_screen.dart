@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
@@ -17,6 +19,7 @@ class NotificationScreen extends StatefulWidget {
 class _NotificationScreenState extends State<NotificationScreen> {
   late NotificationPopup _notificationPopup;
   late UserStore _userStore;
+  late Timer _refreshTimer;
   late CourseDetail _courseDetail;
   List<String>? name;
 
@@ -28,11 +31,22 @@ class _NotificationScreenState extends State<NotificationScreen> {
     getData();
     //getName();
     super.initState();
+
+    // Update notification list
+    _refreshTimer =
+        Timer.periodic(const Duration(seconds: 5), (t) => getData());
+  }
+
+  @override
+  void dispose() {
+    _refreshTimer.cancel();
+    super.dispose();
   }
 
   getData() async {
     await NotificationApi.fetchPopup(_userStore.user.token).then((value) async {
       List<String> temp = [];
+      setState(() => _loading = true);
       for (var t in value!.notificationDetail!) {
         await CourseDetailService()
             .getCourseById(
@@ -44,7 +58,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
       setState(() {
         _notificationPopup = value;
         name = temp;
-        _loading = !_loading;
+        _loading = false;
       });
     });
     //getName(temp!);
