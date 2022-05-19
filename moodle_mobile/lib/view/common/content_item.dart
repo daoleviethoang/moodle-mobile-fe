@@ -331,11 +331,12 @@ class ZoomItem extends StatelessWidget {
 
 class RichTextCard extends StatelessWidget {
   final String text;
+  final Map<String, Style>? style;
+  final Map<String, dynamic Function(RenderContext, Widget)>? customData;
 
-  const RichTextCard({
-    Key? key,
-    required this.text,
-  }) : super(key: key);
+  const RichTextCard(
+      {Key? key, required this.text, this.style, this.customData})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -343,7 +344,7 @@ class RichTextCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Html(
         data: text,
-        style: MoodleStyles.htmlStyle,
+        style: style ?? MoodleStyles.htmlStyle,
         onImageTap: (url, cxt, attributes, element) {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (_) => ImageViewer(
@@ -351,6 +352,7 @@ class RichTextCard extends StatelessWidget {
                     base64: url?.split(',')[1] ?? '',
                   )));
         },
+        customRender: customData ?? {},
         onLinkTap: (url, cxt, attributes, element) async {
           await showGeneralDialog(
             context: context,
