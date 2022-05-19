@@ -121,7 +121,18 @@ class _QuizPreviewScreenState extends State<QuizPreviewScreen> {
                                       index: index + 1);
                                 }
                               }
-                              return Container();
+                              return QuestionTile(
+                                  content: Container(
+                                    margin: const EdgeInsets.only(top: 10),
+                                    child: Text(
+                                      "Unsupport quiz type ${question.type}",
+                                      style: const TextStyle(color: Colors.red),
+                                      textScaleFactor: 1.5,
+                                      overflow: TextOverflow.clip,
+                                    ),
+                                  ),
+                                  question: question,
+                                  index: index + 1);
                             }).toList() ??
                             [],
                       ),

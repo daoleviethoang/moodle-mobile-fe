@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:html/parser.dart' show parse;
 import 'package:html/dom.dart' as dom;
 import 'package:moodle_mobile/constants/colors.dart';
+import 'package:moodle_mobile/view/common/content_item.dart';
 
 class OneChoiceQuiz extends StatefulWidget {
   final int uniqueId;
@@ -21,13 +23,16 @@ class OneChoiceQuiz extends StatefulWidget {
 class _OneChoiceQuizState extends State<OneChoiceQuiz> {
   List<dom.Element> answers = [];
   String question = "";
+  dom.Element? image;
   parseHtml() {
     var document = parse(widget.html);
     var questions = document.getElementsByClassName("qtext");
     List<dom.Element> elementMain = document.getElementsByClassName("answer");
     List<dom.Element> elements = elementMain.first.children;
     setState(() {
-      question = questions.isNotEmpty ? questions.first.text : "";
+      question = questions.isNotEmpty
+          ? questions.first.innerHtml.replaceAll("\n", "").replaceAll("\r", "")
+          : "";
       answers = elements;
     });
   }
@@ -46,9 +51,11 @@ class _OneChoiceQuizState extends State<OneChoiceQuiz> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              question,
-              textScaleFactor: 1.2,
+            RichTextCard(
+              text: question,
+              style: {
+                'p': Style(fontSize: const FontSize(16)),
+              },
             ),
             Container(
                 width: MediaQuery.of(context).size.width,
@@ -63,7 +70,7 @@ class _OneChoiceQuizState extends State<OneChoiceQuiz> {
                           )))
                       .toList(),
                 )),
-                Divider(),
+            Divider(),
           ],
         ));
   }
@@ -77,7 +84,8 @@ class OneChoiceTile extends StatelessWidget {
   Widget build(BuildContext context) {
     var list = element.text.split(".");
     var first = list.first.toUpperCase();
-    var last = list.last;
+    list.removeAt(0);
+    var last = list.join('.');
     bool isCheck =
         element.querySelector("input")?.attributes.containsKey("checked") ??
             false;

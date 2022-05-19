@@ -311,7 +311,8 @@ class ZoomItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return m.MenuItem(
       image: const CircleImageView(
-        imageUrl: 'https://st1.zoom.us/static/6.1.6366/image/new/home/meetings.png',
+        imageUrl:
+            'https://st1.zoom.us/static/6.1.6366/image/new/home/meetings.png',
         placeholder: Icon(CupertinoIcons.video_camera, size: 48),
       ),
       color: Colors.grey,
@@ -329,11 +330,10 @@ class ZoomItem extends StatelessWidget {
 
 class RichTextCard extends StatelessWidget {
   final String text;
+  final Map<String, Style>? style;
 
-  const RichTextCard({
-    Key? key,
-    required this.text,
-  }) : super(key: key);
+  const RichTextCard({Key? key, required this.text, this.style})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -341,13 +341,23 @@ class RichTextCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Html(
         data: text,
-        style: MoodleStyles.htmlStyle,
+        style: style ?? MoodleStyles.htmlStyle,
         onImageTap: (url, cxt, attributes, element) {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (_) => ImageViewer(
-                title: 'Image',
-                base64: url?.split(',')[1] ?? '',
-              )));
+                    title: 'Image',
+                    base64: url?.split(',')[1] ?? '',
+                  )));
+        },
+        customRender: {
+          "img": (RenderContext context, Widget child) {
+            final attrs = context.tree.element?.attributes;
+            return Image.network(
+              attrs?['src'] ?? "about:blank",
+              width: double.infinity,
+              fit: BoxFit.fitWidth,
+            );
+          },
         },
         onLinkTap: (url, cxt, attributes, element) async {
           await showGeneralDialog(

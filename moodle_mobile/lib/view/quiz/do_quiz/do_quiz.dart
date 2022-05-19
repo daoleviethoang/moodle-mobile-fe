@@ -134,14 +134,32 @@ class _QuizDoScreenState extends State<QuizDoScreen> {
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: const Text("Cancel"),
+              child: Text("Cancel",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 16,
+                  )),
+              style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(MoodleColors.grey),
+                  shape: MaterialStateProperty.all(const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(8.0))))),
             ),
             TextButton(
               onPressed: () {
                 check = true;
                 Navigator.pop(context);
               },
-              child: const Text("Ok"),
+              child: Text("Submit",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 16,
+                  )),
+              style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(MoodleColors.blue),
+                  shape: MaterialStateProperty.all(const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(8.0))))),
             ),
           ],
         );
@@ -219,7 +237,18 @@ class _QuizDoScreenState extends State<QuizDoScreen> {
                               index: question.number ?? 1);
                         }
                       }
-                      return Container();
+                      return QuestionTile(
+                          content: Container(
+                            margin: const EdgeInsets.only(top: 10),
+                            child: Text(
+                              "Unsupport quiz type ${question.type}",
+                              style: const TextStyle(color: Colors.red),
+                              textScaleFactor: 1.5,
+                              overflow: TextOverflow.clip,
+                            ),
+                          ),
+                          question: question,
+                          index: index + 1);
                     },
                     itemScrollController: itemScrollController,
                     itemPositionsListener: itemPositionsListener,

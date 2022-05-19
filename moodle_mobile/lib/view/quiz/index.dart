@@ -215,8 +215,7 @@ class _QuizScreenState extends State<QuizScreen> {
                         width: MediaQuery.of(context).size.width,
                         child: Row(
                           children: [
-                            ((quiz.timeclose ?? 0 * 1000) >
-                                    DateTime.now().millisecondsSinceEpoch)
+                            lastAttempt.state == "finished"
                                 ? Expanded(
                                     child: Column(
                                     mainAxisAlignment: MainAxisAlignment.start,

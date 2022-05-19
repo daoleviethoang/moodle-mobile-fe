@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:html/parser.dart' show parse;
 import 'package:html/dom.dart' as dom;
 import 'package:moodle_mobile/constants/colors.dart';
+import 'package:moodle_mobile/view/common/content_item.dart';
 
 class OneChoiceDoQuiz extends StatefulWidget {
   final int uniqueId;
@@ -40,7 +42,7 @@ class _OneChoiceDoQuizState extends State<OneChoiceDoQuiz> {
     List<dom.Element> elementMain = document.getElementsByClassName("answer");
     List<dom.Element> elements = elementMain.first.children;
     setState(() {
-      question = questions.isNotEmpty ? questions.first.text : "";
+      question = questions.isNotEmpty ? questions.first.innerHtml : "";
       answers = elements;
     });
     for (var answer in answers) {
@@ -101,9 +103,11 @@ class _OneChoiceDoQuizState extends State<OneChoiceDoQuiz> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              question,
-              textScaleFactor: 1.3,
+            RichTextCard(
+              text: question,
+              style: {
+                'p': Style(fontSize: const FontSize(16)),
+              },
             ),
             SizedBox(
               height: 15,
@@ -155,7 +159,8 @@ class OneChoiceTile extends StatelessWidget {
   Widget build(BuildContext context) {
     var list = element.text.split(".");
     var first = list.first.toUpperCase();
-    var last = list.last;
+    list.removeAt(0);
+    var last = list.join('.');
     return isCheck
         ? ListTile(
             shape: const RoundedRectangleBorder(

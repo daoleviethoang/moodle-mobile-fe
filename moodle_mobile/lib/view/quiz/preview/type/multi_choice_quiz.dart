@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:html/parser.dart' show parse;
 import 'package:html/dom.dart' as dom;
 import 'package:moodle_mobile/constants/colors.dart';
+import 'package:moodle_mobile/view/common/content_item.dart';
 
 class MultiChoiceQuiz extends StatefulWidget {
   final int uniqueId;
@@ -27,7 +29,9 @@ class _MultiChoiceQuizState extends State<MultiChoiceQuiz> {
     List<dom.Element> elementMain = document.getElementsByClassName("answer");
     List<dom.Element> elements = elementMain.first.children;
     setState(() {
-      question = questions.isNotEmpty ? questions.first.text : "";
+      question = questions.isNotEmpty
+          ? questions.first.innerHtml.replaceAll("\n", "").replaceAll("\r", "")
+          : "";
       answers = elements;
     });
   }
@@ -46,9 +50,11 @@ class _MultiChoiceQuizState extends State<MultiChoiceQuiz> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              question,
-              textScaleFactor: 1.2,
+            RichTextCard(
+              text: question,
+              style: {
+                'p': Style(fontSize: const FontSize(16)),
+              },
             ),
             Container(
                 width: MediaQuery.of(context).size.width,
@@ -63,7 +69,7 @@ class _MultiChoiceQuizState extends State<MultiChoiceQuiz> {
                           )))
                       .toList(),
                 )),
-                Divider(),
+            Divider(),
           ],
         ));
   }
@@ -77,7 +83,8 @@ class MultiChoiceTile extends StatelessWidget {
   Widget build(BuildContext context) {
     var list = element.text.split(".");
     var first = list.first.toUpperCase();
-    var last = list.last;
+    list.removeAt(0);
+    var last = list.join('.');
     bool isCheck =
         element.querySelector("input")?.attributes.containsKey("checked") ??
             false;

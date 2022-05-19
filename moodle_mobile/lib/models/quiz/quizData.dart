@@ -55,7 +55,7 @@ class AttemptData {
   int? timefinish;
   int? timemodified;
   int? timemodifiedoffline;
-  int? sumgrades;
+  double? sumgrades;
 
   AttemptData(
       {this.id,
