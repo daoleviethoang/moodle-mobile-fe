@@ -51,7 +51,7 @@ class _OneChoiceDoQuizState extends State<OneChoiceDoQuiz> {
         setState(() {
           indexChoose = answers.indexOf(answer);
         });
-        //widget.setComplete(widget.index, true);
+        widget.setComplete(widget.index, true);
         break;
       }
     }

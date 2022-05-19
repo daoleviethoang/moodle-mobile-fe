@@ -76,9 +76,13 @@ class _QuizDoScreenState extends State<QuizDoScreen> {
 
   setComplete(int index, bool value) {
     if (complete[index] != value) {
-      setState(() {
-        complete[index] = value;
-      });
+      WidgetsBinding.instance!.addPostFrameCallback(
+        (_) => setState(
+          () {
+            complete[index] = value;
+          },
+        ),
+      );
     }
   }
 
@@ -308,8 +312,8 @@ class _QuizDoScreenState extends State<QuizDoScreen> {
                       Icons.alarm_outlined,
                       size: 25,
                     ),
-		                const SizedBox(
-          		        height: 5,
+                    const SizedBox(
+                      height: 5,
                     ),
                     CountdownTimer(
                       textStyle: TextStyle(fontSize: 18),

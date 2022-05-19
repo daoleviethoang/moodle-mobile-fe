@@ -55,6 +55,7 @@ class _MultiChoiceDoQuizState extends State<MultiChoiceDoQuiz> {
         bool isCheck = input.attributes.containsKey("checked");
         if (isCheck == true) {
           setCheck(answers.indexOf(answer), true, false);
+          widget.setComplete(widget.index, true);
         }
         setState(() {
           check.add(isCheck);
