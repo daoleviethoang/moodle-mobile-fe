@@ -1,15 +1,18 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
+import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/models/conversation/conversation_message.dart';
 import 'package:flutter_html/flutter_html.dart';
 
 class SlidableTile extends StatelessWidget {
   const SlidableTile(
       {Key? key,
-      required this.isNotification,
+      this.isNotification = true,
+      this.isStarred = false,
       required this.nameInfo,
       required this.message,
       required this.onDeletePress,
@@ -18,11 +21,12 @@ class SlidableTile extends StatelessWidget {
       : super(key: key);
 
   final bool isNotification;
+  final bool isStarred;
   final String nameInfo;
   final ConversationMessageModel? message;
-  final VoidCallback onDeletePress;
-  final VoidCallback onAlarmPress;
-  final VoidCallback onMessDetailPress;
+  final VoidCallback? onDeletePress;
+  final VoidCallback? onAlarmPress;
+  final VoidCallback? onMessDetailPress;
 
   @override
   Widget build(BuildContext context) {
@@ -82,38 +86,52 @@ class SlidableTile extends StatelessWidget {
             color: Colors.white,
           ),
         ),
-        title: Text(
-          nameInfo,
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+        title: Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 2),
+              child: Text(
+                nameInfo,
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+              ),
+            ),
+            isStarred
+                ? const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 2),
+                    child:
+                        Icon(Icons.star_rounded, color: Colors.amber, size: 16),
+                  )
+                : Container(),
+            !isNotification
+                ? const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 2),
+                    child: Icon(Icons.notifications_off, size: 16),
+                  )
+                : Container(),
+          ],
         ),
         subtitle: message != null
-            ? Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: Text(
-                      messageContent,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                          fontSize: 12, color: MoodleColors.gray),
+            ? AutoSizeText(
+                '$messageContent  ·  $timeCreated',
+                maxLines: 1,
+                style: MoodleStyles.messageContentStyle,
+                overflowReplacement: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        messageContent,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: MoodleStyles.messageContentStyle,
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        right: Dimens.default_padding_double,
-                        left: Dimens.default_padding_double),
-                    child: Text(
-                      timeCreated,
-                      style: const TextStyle(
-                          fontSize: 12, color: MoodleColors.gray),
-                    ),
-                  ),
-                ],
+                    Text('  ·  $timeCreated',
+                        style: MoodleStyles.messageContentStyle),
+                  ],
+                ),
               )
-            : const Text(""),
-        trailing: Icon(isNotification ? null : Icons.notifications_off),
+            : const Text(''),
       ),
     );
   }

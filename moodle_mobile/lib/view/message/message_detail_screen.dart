@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -26,6 +28,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
   late UserStore _userStore;
   late ConversationDetailStore _conversationDetailStore;
   late ConversationStore _conversationStore;
+  late Timer _refreshTimer;
 
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _textEditingController = TextEditingController();
@@ -40,8 +43,21 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
         ConversationDetailStore(GetIt.instance<Repository>());
     _conversationDetailStore.getListMessage(
         _userStore.user.token, _userStore.user.id, widget.conversationId);
+
+    // Update message list
+    _refreshTimer = Timer.periodic(
+        const Duration(seconds: 5),
+        (t) => _conversationDetailStore.getListMessage(
+            _userStore.user.token, _userStore.user.id, widget.conversationId));
   }
 
+  @override
+  void dispose() {
+    _refreshTimer.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

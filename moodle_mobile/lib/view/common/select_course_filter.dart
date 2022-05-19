@@ -27,7 +27,6 @@ class _SelectCourseFilterState extends State<SelectCourseFilter>
   ContantModel statusTypeSelected;
   bool showOnlyStarSelected = false;
   bool isFilter;
-  CourseStatus courseStatusSelected = CourseStatus.all;
 
   late AnimationController expandController;
   late Animation<double> animation;
@@ -66,73 +65,75 @@ class _SelectCourseFilterState extends State<SelectCourseFilter>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(left: 8.0, right: 8.0),
-      child: Column(
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.only(bottom: 5),
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
-            decoration: new BoxDecoration(
-              border: Border.all(color: MoodleColors.grey),
-              borderRadius: BorderRadius.circular(8.0),
-              color: Colors.white,
-              boxShadow: const [
-                BoxShadow(
-                    blurRadius: 10, color: Colors.black26, offset: Offset(0, 2))
-              ],
-            ),
-            child: new Row(
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                    child: GestureDetector(
-                  onTap: () {
-                    this.isShow = !this.isShow;
-                    _runExpandCheck();
-                    setState(() {});
-                  },
-                  child: Text(
+    return GestureDetector(
+      onTap: () {
+        isShow = !isShow;
+        _runExpandCheck();
+        setState(() {});
+      },
+      child: Container(
+        margin: const EdgeInsets.only(left: 8.0, right: 8.0),
+        child: Column(
+          children: <Widget>[
+            Container(
+              margin: const EdgeInsets.only(bottom: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+              decoration: new BoxDecoration(
+                border: Border.all(color: MoodleColors.grey),
+                borderRadius: BorderRadius.circular(8.0),
+                color: Colors.white,
+                boxShadow: const [
+                  BoxShadow(
+                      blurRadius: 10,
+                      color: Colors.black26,
+                      offset: Offset(0, 2))
+                ],
+              ),
+              child: new Row(
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                      child: Text(
                     statusTypeSelected.value +
                         " | " +
                         arrangeTypeSelected.value,
                     style: TextStyle(color: MoodleColors.black, fontSize: 16),
+                  )),
+                  Align(
+                    alignment: Alignment(1, 0),
+                    child: Icon(
+                      isShow ? Icons.arrow_drop_down : Icons.arrow_right,
+                      color: MoodleColors.black,
+                      size: 15,
+                    ),
                   ),
-                )),
-                Align(
-                  alignment: Alignment(1, 0),
-                  child: Icon(
-                    isShow ? Icons.arrow_drop_down : Icons.arrow_right,
-                    color: MoodleColors.black,
-                    size: 15,
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          SizeTransition(
-              axisAlignment: 1.0,
-              sizeFactor: animation,
-              child: Container(
-                  margin: const EdgeInsets.only(bottom: 10),
-                  padding: const EdgeInsets.only(bottom: 10),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: MoodleColors.grey),
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    color: Colors.white,
-                    boxShadow: const [
-                      BoxShadow(
-                          blurRadius: 4,
-                          color: Colors.black26,
-                          offset: Offset(0, 2))
-                    ],
-                  ),
-                  child: _buildDropListOptions(context))),
-        ],
+            SizeTransition(
+                axisAlignment: 1.0,
+                sizeFactor: animation,
+                child: Container(
+                    margin: const EdgeInsets.only(bottom: 10),
+                    padding: const EdgeInsets.only(bottom: 10),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: MoodleColors.grey),
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      color: Colors.white,
+                      boxShadow: const [
+                        BoxShadow(
+                            blurRadius: 4,
+                            color: Colors.black26,
+                            offset: Offset(0, 2))
+                      ],
+                    ),
+                    child: _buildDropListOptions(context))),
+          ],
+        ),
       ),
     );
   }
@@ -327,10 +328,9 @@ class _SelectCourseFilterState extends State<SelectCourseFilter>
               ),
               onPressed: () {
                 setState(() {
-                  arrangeTypeSelected = ContantExtension.CourseArrangeSelected;
-                  statusTypeSelected = ContantExtension.CourseStatusSelected;
+                  arrangeTypeSelected = ContantExtension.courseArrangeSelected;
+                  statusTypeSelected = ContantExtension.courseStatusSelected;
                   showOnlyStarSelected = false;
-                  courseStatusSelected = CourseStatus.all;
                 });
               },
               child: const Padding(

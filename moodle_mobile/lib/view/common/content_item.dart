@@ -1,3 +1,4 @@
+import 'package:html/parser.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -331,8 +332,10 @@ class ZoomItem extends StatelessWidget {
 class RichTextCard extends StatelessWidget {
   final String text;
   final Map<String, Style>? style;
+  final Map<String, dynamic Function(RenderContext, Widget)>? customData;
 
-  const RichTextCard({Key? key, required this.text, this.style})
+  const RichTextCard(
+      {Key? key, required this.text, this.style, this.customData})
       : super(key: key);
 
   @override
@@ -349,16 +352,7 @@ class RichTextCard extends StatelessWidget {
                     base64: url?.split(',')[1] ?? '',
                   )));
         },
-        customRender: {
-          "img": (RenderContext context, Widget child) {
-            final attrs = context.tree.element?.attributes;
-            return Image.network(
-              attrs?['src'] ?? "about:blank",
-              width: double.infinity,
-              fit: BoxFit.fitWidth,
-            );
-          },
-        },
+        customRender: customData ?? {},
         onLinkTap: (url, cxt, attributes, element) async {
           await showGeneralDialog(
             context: context,
@@ -404,6 +398,7 @@ class HeaderItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final text = parseFragment(this.text).text ?? '';
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Text(

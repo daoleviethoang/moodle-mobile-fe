@@ -103,12 +103,18 @@ class _OneChoiceDoQuizState extends State<OneChoiceDoQuiz> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            RichTextCard(
-              text: question,
-              style: {
-                'p': Style(fontSize: const FontSize(16)),
+            RichTextCard(text: question, style: {
+              'p': Style(fontSize: const FontSize(16)),
+            }, customData: {
+              "img": (RenderContext context, Widget child) {
+                final attrs = context.tree.element?.attributes;
+                return Image.network(
+                  attrs?['src'] ?? "about:blank",
+                  width: double.infinity,
+                  fit: BoxFit.fitWidth,
+                );
               },
-            ),
+            }),
             SizedBox(
               height: 15,
             ),

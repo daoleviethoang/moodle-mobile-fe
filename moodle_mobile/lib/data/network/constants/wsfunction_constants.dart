@@ -6,9 +6,11 @@ class Wsfunction {
   static const String GET_ENROLLED_USERS = "core_enrol_get_enrolled_users";
   static const String GET_COURSE_BY_FIELD = "core_course_get_courses_by_field";
   static const String GET_COURSE_CONTENTS = "core_course_get_contents";
+  static const String TRIGGER_VIEW_COURSE = "core_course_view_course";
 
   // module
   static const String GET_MODULE_BY_ID = "core_course_get_course_module";
+  static const String MOD_LTI_GET_TLD = "mod_lti_get_tool_launch_data";
 
   //user
   static const String GET_COURSE_GET_CATEGORIES = "core_course_get_categories";
@@ -71,4 +73,8 @@ class Wsfunction {
 
   //search course
   static const String CORE_COURSE_SEARCH_COURSES = "core_course_search_courses";
+
+  //courses
+  static const String CORE_COURSES_PARTICIPANT =
+      "core_enrol_get_enrolled_users";
 }
