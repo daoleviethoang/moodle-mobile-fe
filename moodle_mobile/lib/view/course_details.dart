@@ -9,10 +9,13 @@ import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/data/network/apis/calendar/calendar_service.dart';
 import 'package:moodle_mobile/data/network/apis/course/course_content_service.dart';
 import 'package:moodle_mobile/data/network/apis/course/course_detail_service.dart';
+import 'package:moodle_mobile/data/network/apis/course/course_service.dart';
+import 'package:moodle_mobile/data/network/apis/lti/lti_service.dart';
 import 'package:moodle_mobile/data/network/apis/module/module_service.dart';
 import 'package:moodle_mobile/models/calendar/event.dart';
 import 'package:moodle_mobile/models/course/course_content.dart';
 import 'package:moodle_mobile/models/course/course_detail.dart';
+import 'package:moodle_mobile/models/lti/lti.dart';
 import 'package:moodle_mobile/models/module/module.dart';
 import 'package:moodle_mobile/models/module/module_course.dart';
 import 'package:moodle_mobile/view/common/content_item.dart';
@@ -22,6 +25,7 @@ import 'package:moodle_mobile/view/common/menu_item.dart' as m;
 import 'package:moodle_mobile/view/enrol/enrol.dart';
 import 'package:moodle_mobile/view/forum/forum_screen.dart';
 import 'package:moodle_mobile/view/grade_in_one_course.dart';
+import 'package:moodle_mobile/view/participants_in_one_course.dart';
 import 'package:moodle_mobile/view/user_detail/user_detail.dart';
 import 'package:moodle_mobile/view/user_detail/user_detail_student.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
@@ -38,7 +42,7 @@ class CourseDetailsScreen extends StatefulWidget {
 
 class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     with TickerProviderStateMixin {
-  late TabController _tabController;
+  TabController? _tabController;
   late var _tabs = <Widget>[];
   var _index = 0;
   late var _body = <Widget>[];
@@ -65,13 +69,37 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   // region BODY
 
   void _initBody() {
+    try {
+      _initHomeTab();
+    } catch (e) {
+      _homeTab = ErrorCard(text: '$e');
+    }
+    try {
+      _initAnnouncementsTab();
+    } catch (e) {
+      _announcementsTab = ErrorCard(text: '$e');
+    }
+    try {
+      _initDiscussionsTab();
+    } catch (e) {
+      _discussionsTab = ErrorCard(text: '$e');
+    }
+    try {
+      _initUpcomingTab();
+    } catch (e) {
+      _upcomingTab = ErrorCard(text: '$e');
+    }
+    try {
+      _initGradesTab();
+    } catch (e) {
+      _gradesTab = ErrorCard(text: '$e');
+    }
+    try {
+      _initPeopleTab();
+    } catch (e) {
+      _peopleTab = ErrorCard(text: '$e');
+    }
     _initTabList();
-    _initHomeTab();
-    _initAnnouncementsTab();
-    _initDiscussionsTab();
-    _initUpcomingTab();
-    _initGradesTab();
-    _initPeopleTab();
 
     _body = [
       _homeTab,
@@ -84,14 +112,21 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   }
 
   void _initTabList() {
-    _tabs = [
-      const Tab(child: Text('Home')),
-      const Tab(child: Text('Announcements')),
-      const Tab(child: Text('Discussion Forums')),
-      const Tab(child: Text('Events')),
-      const Tab(child: Text('Grades')),
-      const Tab(child: Text('Participants')),
-    ];
+    _tabs = [const Tab(child: Text('Home'))];
+    if (_announcementsTab is! Container) {
+      _tabs.add(const Tab(child: Text('Announcements')));
+    }
+    if (_discussionsTab is! Container) {
+      _tabs.add(const Tab(child: Text('Discussion Forums')));
+    }
+    _tabs.add(const Tab(child: Text('Events')));
+    if (_gradesTab is! Container) {
+      _tabs.add(const Tab(child: Text('Grades')));
+    }
+    if (_peopleTab is! Container) {
+      _tabs.add(const Tab(child: Text('Participants')));
+    }
+
     _tabController = TabController(
       length: _tabs.length,
       initialIndex: _index,
@@ -139,6 +174,23 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                   );
                 case ModuleName.label:
                   return RichTextCard(text: m.description ?? '');
+                case ModuleName.lti:
+                  return FutureBuilder(
+                    future: queryLti(m.instance ?? 0),
+                    builder: (context, data) {
+                      if (data.hasError) {
+                        throw Exception(data.error);
+                      }
+                      if (!data.hasData) {
+                        return const LoadingCard();
+                      }
+                      Lti d = data.data as Lti;
+                      return UrlItem(
+                        title: title,
+                        url: d.endpoint ?? '',
+                      );
+                    },
+                  );
                 case ModuleName.page:
                   return PageItem(
                     title: title,
@@ -167,8 +219,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                 case ModuleName.zoom:
                   return Container();
                 default:
-                  print('$m');
-                  return ErrorCard(text: 'Unknown module name: ${m.modname}');
+                  throw Exception('Unknown module name: ${m.modname}');
               }
             } catch (e) {
               // FIXME: Assignment text is [] instead of string
@@ -188,16 +239,20 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
 
   void _initDiscussionsTab() {
     if (_content.isEmpty) {
-      _discussionsTab = ForumScreen(forumId: 0);
-    } else {
-      _discussionsTab = ForumScreen(
-        forumId: _content[0].modules[1].instance ?? 0,
-        courseId: _courseId,
-      );
+      _discussionsTab = Container();
+      return;
     }
+    _discussionsTab = ForumScreen(
+      forumId: _content[0].modules[1].instance ?? 0,
+      courseId: _courseId,
+    );
   }
 
   void _initUpcomingTab() {
+    if (_upcoming.isEmpty) {
+      _upcomingTab = Container();
+      return;
+    }
     _upcomingTab = Align(
       alignment: Alignment.centerLeft,
       child: Column(
@@ -261,81 +316,21 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
 
   void _initPeopleTab() {
     // TODO: Get participant list from API
-    final participants = [
-      'Lâm Quang Vũ',
-      'Nguyễn Gia Hưng',
-      'Ngô Thị Thanh Theo',
-      'Hà Thế Hiển',
-      'Đào Lê Việt Hoàng',
-      'Trần Đình Phát',
-    ];
-
-    // Return People list section
-    _peopleTab = SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text('People in this course',
-              style: MoodleStyles.courseHeaderStyle),
-          Container(height: 16),
-          ...List.generate(participants.length, (index) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: m.MenuItem(
-                image: const RoundedImageView(
-                  imageUrl: 'user-avatar-url',
-                  placeholder: Icon(Icons.person, size: 48),
-                ),
-                title: participants[index],
-                subtitle: 'Student',
-                onPressed: () => {
-                  if (index == 0)
-                    {
-                      Navigator.push<dynamic>(
-                        context,
-                        MaterialPageRoute<dynamic>(
-                          builder: (BuildContext context) => UserDetailsScreen(
-                            avatar:
-                                'https://meta.vn/Data/image/2021/08/17/con-vit-vang-tren-fb-la-gi-trend-anh-avatar-con-vit-vang-la-gi-3.jpg',
-                            role: 'Teacher',
-                            course: 'Đồ án tốt nghiệp',
-                            email: 'lqvu@fit.hcmus.edu.vn',
-                            location: 'TP.HCM, Vietnam',
-                            name: participants[index],
-                            status: 'Last online 22 hours ago',
-                          ),
-                        ),
-                      )
-                    }
-                  else
-                    {
-                      Navigator.push<dynamic>(
-                        context,
-                        MaterialPageRoute<dynamic>(
-                          builder: (BuildContext context) =>
-                              UserDetailStudentScreen(
-                            avatar:
-                                'https://meta.vn/Data/image/2021/08/17/con-vit-vang-tren-fb-la-gi-trend-anh-avatar-con-vit-vang-la-gi-3.jpg',
-                            role: 'Student',
-                            course: 'Đồ án tốt nghiệp',
-                            email: '18127044@student.hcmus.edu.vn',
-                            location: 'TP.HCM, Vietnam',
-                            name: participants[index],
-                            status: 'Online just now',
-                          ),
-                        ),
-                      )
-                    }
-                },
-              ),
-            );
-          }),
-        ],
-      ),
-    );
+    _peopleTab = ParticipantsInOneCourse(courseId: _courseId);
   }
 
   // endregion
+
+  Future<Lti> queryLti(int toolid) async {
+    try {
+      return await LtiService().getLti(
+        _userStore.user.token,
+        toolid,
+      );
+    } catch (e) {
+      rethrow;
+    }
+  }
 
   Future<ModuleCourse> queryModule(Event e) async {
     try {
@@ -359,6 +354,10 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
         _courseId,
       );
       _upcoming = await CalendarService().getUpcomingByCourse(
+        _userStore.user.token,
+        _courseId,
+      );
+      await CourseService().triggerViewCourse(
         _userStore.user.token,
         _courseId,
       );
@@ -425,7 +424,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                         ),
                       ),
                     ),
-                    bottom: hasData
+                    bottom: hasData && _tabController != null
                         ? TabBar(
                             indicatorPadding: const EdgeInsets.all(4),
                             indicator: const BoxDecoration(

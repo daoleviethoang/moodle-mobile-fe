@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
+import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/data/network/apis/course/course_detail_service.dart';
 import 'package:moodle_mobile/data/network/apis/notification/notification_api.dart';
 import 'package:moodle_mobile/models/course/course_detail.dart';
@@ -15,8 +19,9 @@ class NotificationScreen extends StatefulWidget {
 }
 
 class _NotificationScreenState extends State<NotificationScreen> {
-  late NotificationPopup _notificationPopup;
+  NotificationPopup? _notificationPopup;
   late UserStore _userStore;
+  late Timer _refreshTimer;
   late CourseDetail _courseDetail;
   List<String>? name;
 
@@ -28,11 +33,22 @@ class _NotificationScreenState extends State<NotificationScreen> {
     getData();
     //getName();
     super.initState();
+
+    // Update notification list
+    _refreshTimer =
+        Timer.periodic(const Duration(seconds: 5), (t) => getData());
+  }
+
+  @override
+  void dispose() {
+    _refreshTimer.cancel();
+    super.dispose();
   }
 
   getData() async {
     await NotificationApi.fetchPopup(_userStore.user.token).then((value) async {
       List<String> temp = [];
+      setState(() => _loading = true);
       for (var t in value!.notificationDetail!) {
         await CourseDetailService()
             .getCourseById(
@@ -44,7 +60,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
       setState(() {
         _notificationPopup = value;
         name = temp;
-        _loading = !_loading;
+        _loading = false;
       });
     });
     //getName(temp!);
@@ -53,7 +69,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
   getName() async {
     print(_notificationPopup);
     List<String> temp = [];
-    for (var t in _notificationPopup.notificationDetail!) {
+    for (var t in _notificationPopup!.notificationDetail!) {
       await CourseDetailService()
           .getCourseById(
               _userStore.user.token, int.parse(t.customdata!.courseId!))
@@ -70,45 +86,46 @@ class _NotificationScreenState extends State<NotificationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _loading
-          ? Center(
-              child: CircularProgressIndicator(
-              valueColor: new AlwaysStoppedAnimation<Color>(
-                  Colors.blue), //choose your own color
-            ))
-          : Column(
-              children: [
-                ...List.generate(_notificationPopup.notificationDetail!.length,
-                    (index) {
-                  NotificationDetail temp =
-                      _notificationPopup.notificationDetail![index];
+      body: AnimatedOpacity(
+        opacity: (_notificationPopup?.notificationDetail ?? []).isEmpty ? 0 : 1,
+        duration: const Duration(milliseconds: 300),
+        child: ListView(
+          children: [
+            ...List.generate(
+                _notificationPopup?.notificationDetail?.length ?? 0, (index) {
+              NotificationDetail temp =
+                  _notificationPopup!.notificationDetail![index];
 
-                  //get subject
-                  String subject = temp.subject!;
-                  subject = subject.substring(0, subject.indexOf(':'));
+              //get subject
+              String subject = temp.subject!;
+              subject = subject.substring(0, subject.indexOf(':'));
 
-                  //get article
-                  String article = temp.smallmessage!;
-                  article = article.substring(0, article.indexOf('posted'));
+              //get article
+              String article = temp.smallmessage!;
+              article = article.substring(0, article.indexOf('posted'));
 
-                  //get date
-                  String date = DateFormat("dd-MM-yyyy")
-                      .format(DateTime.fromMillisecondsSinceEpoch(
-                          temp.timecreated! * 1000))
-                      .toString();
-                  //DateTime now = new DateTime.now();
-                  // int duraDay = int.parse(date.substring(0, date.indexOf('days')));
-                  // print(duraDay);
+              //get date
+              String date = DateFormat("dd-MM-yyyy")
+                  .format(DateTime.fromMillisecondsSinceEpoch(
+                      temp.timecreated! * 1000))
+                  .toString();
+              //DateTime now = new DateTime.now();
+              // int duraDay = int.parse(date.substring(0, date.indexOf('days')));
+              // print(duraDay);
 
-                  return NotificationPopupContainer(
-                      name: name![index],
-                      article: article,
-                      subject: subject,
-                      title: temp.contexturlname,
-                      date: date);
-                })
-              ],
-            ),
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: NotificationPopupContainer(
+                    name: name![index],
+                    article: article,
+                    subject: subject,
+                    title: temp.contexturlname,
+                    date: date),
+              );
+            })
+          ],
+        ),
+      ),
     );
   }
 }
@@ -132,77 +149,50 @@ class NotificationPopupContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
       child: Card(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        elevation: 10,
-        child: Container(
-          height: MediaQuery.of(context).size.height * 0.2,
-          padding: EdgeInsets.only(top: 8, right: 5, left: 18, bottom: 8),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    subject!,
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                  Expanded(
+                    child: Text(
+                      subject!,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
                   ),
                   Card(
-                      elevation: 5,
                       color: Colors.blue[50],
                       child: Padding(
-                        padding: const EdgeInsets.all(3),
-                        child: Text(date!),
+                        padding: const EdgeInsets.all(8),
+                        child: Text(date!,
+                            style: MoodleStyles.notificationTimestampStyle),
                       )),
                 ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.75,
-                        child: RichText(
-                          text: TextSpan(
-                              style:
-                                  TextStyle(fontSize: 12, color: Colors.black),
-                              children: [
-                                TextSpan(
-                                    text: article,
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold)),
-                                TextSpan(
-                                  text: 'posted in ',
-                                ),
-                                TextSpan(
-                                    text: name!,
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold)),
-                              ]),
-                        ),
-                      ),
-                    ],
+                  Expanded(
+                    child: Html(
+                      data: '<b>$article</b><br/>'
+                          ' in <b>${name ?? ''}</b>',
+                      style: {'*': Style(fontSize: const FontSize(12))},
+                    ),
                   ),
-                  IconButton(onPressed: () {}, icon: Icon(Icons.arrow_right))
+                  IconButton(
+                    icon: const Icon(Icons.arrow_right),
+                    onPressed: () {},
+                  )
                 ],
               ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.6,
-                child: RichText(
-                  text: TextSpan(
-                      style: TextStyle(fontSize: 14, color: Colors.black),
-                      children: [
-                        // TextSpan(
-                        //     text: 'hiện đại:',
-                        //     style: TextStyle(fontWeight: FontWeight.bold)),
-                        TextSpan(
-                          text: '[' + title! + ']',
-                        ),
-                      ]),
-                ),
+              Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: Text(title ?? ' '),
               ),
             ],
           ),

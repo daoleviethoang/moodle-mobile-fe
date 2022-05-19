@@ -1,3 +1,4 @@
+import 'package:html/parser.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -404,6 +405,7 @@ class HeaderItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final text = parseFragment(this.text).text ?? '';
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Text(
