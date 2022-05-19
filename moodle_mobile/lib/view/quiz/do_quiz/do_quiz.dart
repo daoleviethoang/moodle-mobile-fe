@@ -128,39 +128,61 @@ class _QuizDoScreenState extends State<QuizDoScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Are sure you want to finish quiz?'),
+          titlePadding: const EdgeInsets.fromLTRB(50, 30, 50, 10),
+          title: const Text(
+            'Are you want to finish quiz?',
+            textScaleFactor: 0.8,
+            style: TextStyle(
+              fontWeight: FontWeight.w800,
+            ),
+          ),
           actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text("Cancel",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 16,
-                  )),
-              style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(MoodleColors.grey),
-                  shape: MaterialStateProperty.all(const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(8.0))))),
-            ),
-            TextButton(
-              onPressed: () {
-                check = true;
-                Navigator.pop(context);
-              },
-              child: Text("Submit",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 16,
-                  )),
-              style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(MoodleColors.blue),
-                  shape: MaterialStateProperty.all(const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(8.0))))),
-            ),
+            Row(children: [
+              Expanded(
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text("Cancel",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 16,
+                      )),
+                  style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all(MoodleColors.grey),
+                      shape: MaterialStateProperty.all(
+                          const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(8.0))))),
+                ),
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              Expanded(
+                child: TextButton(
+                  onPressed: () {
+                    check = true;
+                    Navigator.pop(context);
+                  },
+                  child: Text("Submit",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 16,
+                      )),
+                  style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all(MoodleColors.blue),
+                      shape: MaterialStateProperty.all(
+                          const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(8.0))))),
+                ),
+              ),
+            ]),
           ],
         );
       },
@@ -197,7 +219,14 @@ class _QuizDoScreenState extends State<QuizDoScreen> {
                   child: Text("Error loading"),
                 )
               : Container(
-                  margin: const EdgeInsets.only(left: 10, right: 10, top: 20),
+                  padding: const EdgeInsets.only(
+                    bottom: 50,
+                  ),
+                  margin: const EdgeInsets.only(
+                    left: 10,
+                    right: 10,
+                    top: 20,
+                  ),
                   child: ScrollablePositionedList.builder(
                     shrinkWrap: true,
                     itemCount: quizData?.questions?.length ?? 0,
@@ -330,16 +359,24 @@ class _QuizDoScreenState extends State<QuizDoScreen> {
         children: [
           _buildMainContent(),
           Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              height: 95,
+              width: Size.infinite.width,
+              color: Colors.white,
+            ),
+          ),
+          Align(
             alignment: Alignment.bottomLeft,
             child: Container(
-                height: 80,
-                padding: EdgeInsets.only(bottom: 30, left: 20),
+                height: 90,
+                padding: EdgeInsets.only(bottom: 20, left: 20),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     const Icon(
                       Icons.alarm_outlined,
-                      size: 25,
+                      size: 40,
                     ),
                     const SizedBox(
                       height: 5,
