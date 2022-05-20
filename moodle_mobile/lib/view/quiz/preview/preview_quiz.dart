@@ -106,6 +106,7 @@ class _QuizPreviewScreenState extends State<QuizPreviewScreen> {
                                       content: MultiChoiceQuiz(
                                         uniqueId: uniqueId,
                                         slot: slot,
+                                        token: _userStore.user.token,
                                         html: question.html ?? "",
                                       ),
                                       question: question,
@@ -115,6 +116,7 @@ class _QuizPreviewScreenState extends State<QuizPreviewScreen> {
                                       content: OneChoiceQuiz(
                                         uniqueId: uniqueId,
                                         slot: slot,
+                                        token: _userStore.user.token,
                                         html: question.html ?? "",
                                       ),
                                       question: question,

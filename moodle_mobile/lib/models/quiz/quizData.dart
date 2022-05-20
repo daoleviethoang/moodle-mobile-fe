@@ -14,7 +14,9 @@ class QuizData {
   });
 
   QuizData.fromJson(Map<String, dynamic> json) {
-    grade = json['grade'];
+    grade = json['grade'] is int
+        ? (json['grade'] as int).toDouble()
+        : json['grade'];
     nextpage = json["nextpage"];
     attempt = json['attempt'] != null
         ? new AttemptData.fromJson(json['attempt'])
@@ -87,7 +89,9 @@ class AttemptData {
     timefinish = json['timefinish'];
     timemodified = json['timemodified'];
     timemodifiedoffline = json['timemodifiedoffline'];
-    sumgrades = json['sumgrades'];
+    sumgrades = json['sumgrades'] is int
+        ? (json['sumgrades'] as int).toDouble()
+        : json['sumgrades'];
   }
 
   Map<String, dynamic> toJson() {

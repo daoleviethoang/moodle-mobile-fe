@@ -9,12 +9,14 @@ class OneChoiceQuiz extends StatefulWidget {
   final int uniqueId;
   final int slot;
   final String html;
-  const OneChoiceQuiz(
-      {Key? key,
-      required this.uniqueId,
-      required this.slot,
-      required this.html})
-      : super(key: key);
+  final String token;
+  const OneChoiceQuiz({
+    Key? key,
+    required this.uniqueId,
+    required this.slot,
+    required this.html,
+    required this.token,
+  }) : super(key: key);
 
   @override
   State<OneChoiceQuiz> createState() => _OneChoiceQuizState();
@@ -57,9 +59,14 @@ class _OneChoiceQuizState extends State<OneChoiceQuiz> {
               "img": (RenderContext context, Widget child) {
                 final attrs = context.tree.element?.attributes;
                 return Image.network(
-                  attrs?['src'] ?? "about:blank",
+                  (attrs?['src'] ?? "about:blank").replaceAll(
+                          "pluginfile.php", "webservice/pluginfile.php") +
+                      "?token=" +
+                      widget.token,
                   width: double.infinity,
                   fit: BoxFit.fitWidth,
+                  errorBuilder: (context, error, stackTrace) =>
+                      const Text("Can't load image"),
                 );
               },
             }),
@@ -95,6 +102,12 @@ class OneChoiceTile extends StatelessWidget {
     bool isCheck =
         element.querySelector("input")?.attributes.containsKey("checked") ??
             false;
+    bool isRight = element
+        .getElementsByClassName("icon fa fa-check text-success fa-fw")
+        .isNotEmpty;
+    bool isWrong = element
+        .getElementsByClassName("icon fa fa-remove text-danger fa-fw")
+        .isNotEmpty;
     return isCheck
         ? ListTile(
             tileColor: MoodleColors.blue_soft,
@@ -110,6 +123,17 @@ class OneChoiceTile extends StatelessWidget {
                 style: const TextStyle(color: MoodleColors.blueDark),
               ),
             ),
+            trailing: isRight == false && isWrong == false
+                ? null
+                : isRight
+                    ? const Icon(
+                        Icons.check,
+                        color: Colors.green,
+                      )
+                    : const Icon(
+                        Icons.close,
+                        color: Colors.red,
+                      ),
           )
         : ListTile(
             visualDensity: VisualDensity(horizontal: -4, vertical: -4),

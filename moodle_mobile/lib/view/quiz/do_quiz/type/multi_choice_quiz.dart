@@ -8,6 +8,7 @@ import 'package:moodle_mobile/view/common/content_item.dart';
 class MultiChoiceDoQuiz extends StatefulWidget {
   final int uniqueId;
   final int slot;
+  final String token;
   final String html;
   final int index;
   final int sequenceCheck;
@@ -22,6 +23,7 @@ class MultiChoiceDoQuiz extends StatefulWidget {
     required this.setData,
     required this.sequenceCheck,
     required this.setComplete,
+    required this.token,
   }) : super(key: key);
 
   @override
@@ -115,22 +117,21 @@ class _MultiChoiceDoQuizState extends State<MultiChoiceDoQuiz> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            RichTextCard(
-              text: question,
-              style: {
-                'p': Style(fontSize: const FontSize(16)),
-              },
-              customData: {
+            RichTextCard(text: question, style: {
+              'p': Style(fontSize: const FontSize(16)),
+            }, customData: {
               "img": (RenderContext context, Widget child) {
                 final attrs = context.tree.element?.attributes;
                 return Image.network(
-                  attrs?['src'] ?? "about:blank",
+                  (attrs?['src'] ?? "about:blank").replaceAll(
+                          "pluginfile.php", "webservice/pluginfile.php") +
+                      "?token=" +
+                      widget.token,
                   width: double.infinity,
                   fit: BoxFit.fitWidth,
                 );
               },
-            }
-            ),
+            }),
             SizedBox(
               height: 15,
             ),

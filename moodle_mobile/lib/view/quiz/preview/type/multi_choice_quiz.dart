@@ -9,10 +9,12 @@ class MultiChoiceQuiz extends StatefulWidget {
   final int uniqueId;
   final int slot;
   final String html;
+  final String token;
   const MultiChoiceQuiz(
       {Key? key,
       required this.uniqueId,
       required this.slot,
+      required this.token,
       required this.html})
       : super(key: key);
 
@@ -50,22 +52,23 @@ class _MultiChoiceQuizState extends State<MultiChoiceQuiz> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            RichTextCard(
-              text: question,
-              style: {
-                'p': Style(fontSize: const FontSize(16)),
-              },
-              customData: {
+            RichTextCard(text: question, style: {
+              'p': Style(fontSize: const FontSize(16)),
+            }, customData: {
               "img": (RenderContext context, Widget child) {
                 final attrs = context.tree.element?.attributes;
                 return Image.network(
-                  attrs?['src'] ?? "about:blank",
+                  (attrs?['src'] ?? "about:blank").replaceAll(
+                          "pluginfile.php", "webservice/pluginfile.php") +
+                      "?token=" +
+                      widget.token,
                   width: double.infinity,
                   fit: BoxFit.fitWidth,
+                  errorBuilder: (context, error, stackTrace) =>
+                      const Text("Can't load image"),
                 );
               },
-            }
-            ),
+            }),
             Container(
                 width: MediaQuery.of(context).size.width,
                 child: Column(
@@ -98,6 +101,12 @@ class MultiChoiceTile extends StatelessWidget {
     bool isCheck =
         element.querySelector("input")?.attributes.containsKey("checked") ??
             false;
+    bool isRight = element
+        .getElementsByClassName("icon fa fa-check text-success fa-fw")
+        .isNotEmpty;
+    bool isWrong = element
+        .getElementsByClassName("icon fa fa-remove text-danger fa-fw")
+        .isNotEmpty;
     return isCheck
         ? ListTile(
             shape: const RoundedRectangleBorder(
@@ -117,6 +126,17 @@ class MultiChoiceTile extends StatelessWidget {
                 style: const TextStyle(color: MoodleColors.blueDark),
               ),
             ),
+            trailing: isRight == false && isWrong == false
+                ? null
+                : isRight
+                    ? const Icon(
+                        Icons.check,
+                        color: Colors.green,
+                      )
+                    : const Icon(
+                        Icons.close,
+                        color: Colors.red,
+                      ),
           )
         : ListTile(
             shape: const RoundedRectangleBorder(
