@@ -50,18 +50,24 @@ class _MultiChoiceQuizState extends State<MultiChoiceQuiz> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            RichTextCard(text: question, style: {
-              'p': Style(fontSize: const FontSize(16)),
-            }, customData: {
+            RichTextCard(
+              text: question,
+              style: {
+                'p': Style(fontSize: const FontSize(16)),
+              },
+              customData: {
               "img": (RenderContext context, Widget child) {
                 final attrs = context.tree.element?.attributes;
                 return Image.network(
-                  (attrs?['src'] ?? "about:blank"),
+                  attrs?['src'] ?? "about:blank",
                   width: double.infinity,
                   fit: BoxFit.fitWidth,
+                  errorBuilder: (context, error, stackTrace) =>
+                      const Text("Can't load image"),
                 );
               },
-            }),
+            }
+            ),
             Container(
                 width: MediaQuery.of(context).size.width,
                 child: Column(
