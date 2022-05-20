@@ -9,12 +9,12 @@ class OneChoiceQuiz extends StatefulWidget {
   final int uniqueId;
   final int slot;
   final String html;
-  const OneChoiceQuiz(
-      {Key? key,
-      required this.uniqueId,
-      required this.slot,
-      required this.html})
-      : super(key: key);
+  const OneChoiceQuiz({
+    Key? key,
+    required this.uniqueId,
+    required this.slot,
+    required this.html,
+  }) : super(key: key);
 
   @override
   State<OneChoiceQuiz> createState() => _OneChoiceQuizState();
@@ -57,9 +57,11 @@ class _OneChoiceQuizState extends State<OneChoiceQuiz> {
               "img": (RenderContext context, Widget child) {
                 final attrs = context.tree.element?.attributes;
                 return Image.network(
-                  attrs?['src'] ?? "about:blank",
+                  (attrs?['src'] ?? "about:blank"),
                   width: double.infinity,
                   fit: BoxFit.fitWidth,
+                  errorBuilder: (context, error, stackTrace) =>
+                      const Text("Can't load image"),
                 );
               },
             }),

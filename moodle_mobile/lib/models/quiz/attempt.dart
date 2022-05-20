@@ -44,7 +44,9 @@ class Attempt {
     timefinish = json['timefinish'];
     timemodified = json['timemodified'];
     timemodifiedoffline = json['timemodifiedoffline'];
-    sumgrades = json['sumgrades'];
+    sumgrades = json['sumgrades'] is int
+        ? (json['sumgrades'] as int).toDouble()
+        : json['sumgrades'];
   }
 
   Map<String, dynamic> toJson() {

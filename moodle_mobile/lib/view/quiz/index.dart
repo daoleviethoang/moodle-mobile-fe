@@ -281,7 +281,9 @@ class _QuizScreenState extends State<QuizScreen> {
                       const SizedBox(
                         height: 5,
                       ),
-                      lastAttempt.id != null && lastAttempt.state == "finished"
+                      lastAttempt.id != null &&
+                              lastAttempt.state == "finished" &&
+                              lastAttempt.preview == 0
                           ? Center(
                               child: CustomButtonShort(
                                 text: "Preview last",
