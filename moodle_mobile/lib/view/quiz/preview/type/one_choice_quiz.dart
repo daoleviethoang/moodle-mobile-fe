@@ -97,6 +97,12 @@ class OneChoiceTile extends StatelessWidget {
     bool isCheck =
         element.querySelector("input")?.attributes.containsKey("checked") ??
             false;
+    bool isRight = element
+        .getElementsByClassName("icon fa fa-check text-success fa-fw")
+        .isNotEmpty;
+    bool isWrong = element
+        .getElementsByClassName("icon fa fa-remove text-danger fa-fw")
+        .isNotEmpty;
     return isCheck
         ? ListTile(
             tileColor: MoodleColors.blue_soft,
@@ -112,6 +118,17 @@ class OneChoiceTile extends StatelessWidget {
                 style: const TextStyle(color: MoodleColors.blueDark),
               ),
             ),
+            trailing: isRight == false && isWrong == false
+                ? null
+                : isRight
+                    ? const Icon(
+                        Icons.check,
+                        color: Colors.green,
+                      )
+                    : const Icon(
+                        Icons.close,
+                        color: Colors.red,
+                      ),
           )
         : ListTile(
             visualDensity: VisualDensity(horizontal: -4, vertical: -4),
