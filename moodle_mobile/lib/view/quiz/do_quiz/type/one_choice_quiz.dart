@@ -4,6 +4,7 @@ import 'package:html/parser.dart' show parse;
 import 'package:html/dom.dart' as dom;
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/view/common/content_item.dart';
+import 'package:moodle_mobile/view/viewer/image_viewer.dart';
 
 class OneChoiceDoQuiz extends StatefulWidget {
   final int uniqueId;
@@ -108,15 +109,27 @@ class _OneChoiceDoQuizState extends State<OneChoiceDoQuiz> {
             RichTextCard(text: question, style: {
               'p': Style(fontSize: const FontSize(16)),
             }, customData: {
-              "img": (RenderContext context, Widget child) {
-                final attrs = context.tree.element?.attributes;
-                return Image.network(
-                  (attrs?['src'] ?? "about:blank").replaceAll(
-                          "pluginfile.php", "webservice/pluginfile.php") +
-                      "?token=" +
-                      widget.token,
-                  width: double.infinity,
-                  fit: BoxFit.fitWidth,
+              "img": (RenderContext renderContext, Widget child) {
+                final attrs = renderContext.tree.element?.attributes;
+                final src = (attrs?['src'] ?? "about:blank").replaceAll(
+                        "pluginfile.php", "webservice/pluginfile.php") +
+                    "?token=" +
+                    widget.token;
+                return InkWell(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (_) => ImageViewer(
+                              title: 'Image',
+                              url: src,
+                            )));
+                  },
+                  child: Image.network(
+                    src,
+                    width: double.infinity,
+                    fit: BoxFit.fitWidth,
+                    errorBuilder: (context, error, stackTrace) =>
+                        const Text("Can't load image"),
+                  ),
                 );
               },
             }),
