@@ -9,6 +9,7 @@ class OneChoiceDoQuiz extends StatefulWidget {
   final int uniqueId;
   final int slot;
   final String html;
+  final String token;
   final int index;
   final int sequenceCheck;
   final Function(int, bool) setComplete;
@@ -22,6 +23,7 @@ class OneChoiceDoQuiz extends StatefulWidget {
     required this.setData,
     required this.sequenceCheck,
     required this.setComplete,
+    required this.token,
   }) : super(key: key);
 
   @override
@@ -109,7 +111,10 @@ class _OneChoiceDoQuizState extends State<OneChoiceDoQuiz> {
               "img": (RenderContext context, Widget child) {
                 final attrs = context.tree.element?.attributes;
                 return Image.network(
-                  attrs?['src'] ?? "about:blank",
+                  (attrs?['src'] ?? "about:blank").replaceAll(
+                          "pluginfile.php", "webservice/pluginfile.php") +
+                      "?token=" +
+                      widget.token,
                   width: double.infinity,
                   fit: BoxFit.fitWidth,
                 );
