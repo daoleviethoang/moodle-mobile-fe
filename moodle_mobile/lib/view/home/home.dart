@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/models/contant/contant_model.dart';
+import 'package:moodle_mobile/models/course/courses.dart';
 import 'package:moodle_mobile/view/common/select_course_filter.dart';
+import 'package:moodle_mobile/view/home/bottom_nav_bar.dart';
 import 'package:moodle_mobile/view/home/courses_view.dart';
 import 'package:moodle_mobile/view/course_category/index.dart';
 
@@ -17,6 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
   ContantModel statusTypeSelected = ContantExtension.courseStatusSelected;
   bool showOnlyStarSelected = false;
   bool isFilter = false;
+
   CategoryType categoryType = CategoryType.my;
 
   @override
@@ -149,10 +152,6 @@ class _HomeScreenState extends State<HomeScreen> {
       isFilter,
       (arrangeTypeSelected, statusTypeSelected, showOnlyStarSelected,
           isFilter) {
-        arrangeTypeSelected;
-        statusTypeSelected;
-        showOnlyStarSelected;
-        isFilter;
         setState(() {
           this.arrangeTypeSelected = arrangeTypeSelected;
           this.statusTypeSelected = statusTypeSelected;

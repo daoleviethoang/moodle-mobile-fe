@@ -7,6 +7,10 @@ class Wsfunction {
   static const String GET_COURSE_BY_FIELD = "core_course_get_courses_by_field";
   static const String GET_COURSE_CONTENTS = "core_course_get_contents";
   static const String TRIGGER_VIEW_COURSE = "core_course_view_course";
+  static const String SET_FAVOURITE_COURSE =
+      "core_course_set_favourite_courses";
+  static const String CORE_USER_UPDATE_USER_PREFERENCES =
+      "core_user_update_user_preferences";
 
   // module
   static const String GET_MODULE_BY_ID = "core_course_get_course_module";

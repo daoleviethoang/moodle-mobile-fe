@@ -40,6 +40,19 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
 
   bool isLoad = false;
   late UserStore _userStore;
+  final int _caseMore = 0;
+
+  callback(caseMore, int id, bool value) {
+    if (caseMore == 1) {
+      coursesOverview.firstWhere((element) => element.id == id).isfavourite =
+          value;
+    } else if (caseMore == 2) {
+      coursesOverview.firstWhere((element) => element.id == id).hidden = value;
+    } else if (caseMore == 3) {}
+    setState(() {
+      coursesOverview = coursesOverview;
+    });
+  }
 
   @override
   void initState() {
@@ -108,6 +121,8 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
                       course: coursesOverview[index],
                       animation: animation,
                       animationController: animationController,
+                      userStore: _userStore,
+                      callback: callback,
                     ),
                   );
                 },
@@ -161,9 +176,6 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
   }
 
   List<CourseOverview> filterCourseHomePage() {
-    setState(() {
-      isLoad = true;
-    });
     List<CourseOverview> coursesOverviewFilter = [];
     coursesOverviewFilter.addAll(coursesOverviewOld);
     DateTime currentPhoneDate = DateTime.now(); //DateTime
@@ -229,21 +241,25 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
           return 0;
       });
     }
-    setState(() {
-      isLoad = false;
-    });
     return coursesOverviewFilter;
   }
 }
 
 class CategoryView extends StatelessWidget {
-  const CategoryView(
-      {Key? key, this.course, this.animationController, this.animation})
+  CategoryView(
+      {Key? key,
+      this.course,
+      this.animationController,
+      this.animation,
+      this.userStore,
+      this.callback})
       : super(key: key);
 
   final CourseOverview? course;
   final AnimationController? animationController;
   final Animation<double>? animation;
+  final UserStore? userStore;
+  Function? callback;
 
   @override
   Widget build(BuildContext context) {
@@ -304,46 +320,76 @@ class CategoryView extends StatelessWidget {
                                 iconSize: 30,
                                 icon: const Icon(Icons.more_vert),
                                 color: MoodleColors.black,
-                                onPressed: () {},
+                                onPressed: () {
+                                  showModalBottomSheet(
+                                      context: context,
+                                      builder: (builder) =>
+                                          buildBottomDialog(course!, builder));
+                                },
                               ),
                             ],
                           ),
                         ),
-                        Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: List<Widget>.generate(
-                              course!.teacher.length,
-                              (int index) {
-                                final int count = course!.teacher.length;
-                                final Animation<double> animation =
-                                    Tween<double>(begin: 0.0, end: 1.0).animate(
-                                  CurvedAnimation(
-                                    parent: animationController!,
-                                    curve: Interval((1 / count) * index, 1.0,
-                                        curve: Curves.fastOutSlowIn),
+                        IntrinsicHeight(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Expanded(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: List<Widget>.generate(
+                                    course!.teacher.length,
+                                    (int index) {
+                                      final int count = course!.teacher.length;
+                                      final Animation<double> animation =
+                                          Tween<double>(begin: 0.0, end: 1.0)
+                                              .animate(
+                                        CurvedAnimation(
+                                          parent: animationController!,
+                                          curve: Interval(
+                                              (1 / count) * index, 1.0,
+                                              curve: Curves.fastOutSlowIn),
+                                        ),
+                                      );
+                                      animationController?.forward();
+                                      return Container(
+                                        padding: const EdgeInsets.only(
+                                            left: 0.0,
+                                            top: 0.0,
+                                            right: 0.0,
+                                            bottom: 8.0),
+                                        child: Text(
+                                          'Teacher: ' +
+                                              course!.teacher[index].fullname,
+                                          textAlign: TextAlign.left,
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.normal,
+                                              fontSize: 13,
+                                              letterSpacing: 0.27,
+                                              color: MoodleColors.black),
+                                        ),
+                                      );
+                                    },
                                   ),
-                                );
-                                animationController?.forward();
-                                return Container(
-                                  padding: const EdgeInsets.only(
-                                      left: 0.0,
-                                      top: 0.0,
-                                      right: 0.0,
-                                      bottom: 8.0),
-                                  child: Text(
-                                    'Teacher: ' +
-                                        course!.teacher[index].fullname,
-                                    textAlign: TextAlign.left,
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: 13,
-                                        letterSpacing: 0.27,
-                                        color: MoodleColors.black),
-                                  ),
-                                );
-                              },
-                            ))
+                                ),
+                              ),
+                              course!.isfavourite
+                                  ? const Padding(
+                                      padding: EdgeInsets.only(right: 10),
+                                      child: Align(
+                                        alignment: Alignment.bottomRight,
+                                        child: Icon(
+                                          Icons.star,
+                                          size: 30,
+                                          color: MoodleColors.yellow_icon,
+                                        ),
+                                      ),
+                                    )
+                                  : Container()
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -361,6 +407,232 @@ class CategoryView extends StatelessWidget {
       context,
       MaterialPageRoute<dynamic>(
         builder: (BuildContext context) => CourseDetailsScreen(courseId: id),
+      ),
+    );
+  }
+
+  Widget buildBottomDialog(CourseOverview course, BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.only(top: 8, bottom: 20, left: 10, right: 10),
+      decoration: const BoxDecoration(
+        color: MoodleColors.grey_bottom_bar,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+        ),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Container(
+            margin: EdgeInsets.only(bottom: 20),
+            height: 5,
+            width: 134,
+            decoration: const BoxDecoration(
+              color: MoodleColors.line_bottom_bar,
+              borderRadius: BorderRadius.all(Radius.circular(5)),
+            ),
+          ),
+          removeOrRestoreCourse(course, context),
+          starOrUnStarCourse(course, context),
+          downloadCourse(context),
+        ],
+      ),
+    );
+  }
+
+  Widget removeOrRestoreCourse(
+      CourseOverview courseSelectedMore, BuildContext context) {
+    return Container(
+      width: double.infinity,
+      decoration: const BoxDecoration(
+        color: MoodleColors.white,
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+      ),
+      child: courseSelectedMore.hidden
+          ? Padding(
+              padding:
+                  const EdgeInsets.only(left: 30, bottom: 5, top: 5, right: 30),
+              child: TextButton.icon(
+                onPressed: () async {
+                  await CourseService().setUnHiddenCourse(
+                    userStore!.user.token,
+                    courseSelectedMore.id,
+                  );
+                  callback!(2, courseSelectedMore.id, false);
+                  Navigator.pop(context);
+                },
+                icon: const Icon(
+                  Icons.restore_outlined,
+                  color: MoodleColors.black,
+                  size: 30,
+                ),
+                label: const Padding(
+                  padding: EdgeInsets.only(left: 20),
+                  child: Text(
+                    "Restore to view",
+                    style: TextStyle(color: MoodleColors.black, fontSize: 16),
+                  ),
+                ),
+                style: TextButton.styleFrom(
+                  alignment: Alignment.centerLeft,
+                  primary: MoodleColors.white,
+                ),
+              ),
+            )
+          : Padding(
+              padding:
+                  const EdgeInsets.only(left: 30, bottom: 5, top: 5, right: 30),
+              child: TextButton.icon(
+                onPressed: () async {
+                  await CourseService().setHiddenCourse(
+                    userStore!.user.token,
+                    courseSelectedMore.id,
+                  );
+                  callback!(2, courseSelectedMore.id, true);
+                  Navigator.pop(context);
+                },
+                icon: const Icon(
+                  Icons.remove_red_eye_outlined,
+                  color: MoodleColors.black,
+                  size: 30,
+                ),
+                label: const Padding(
+                  padding: EdgeInsets.only(left: 20),
+                  child: Text(
+                    "Remove from view",
+                    style: TextStyle(color: MoodleColors.black, fontSize: 16),
+                  ),
+                ),
+                style: TextButton.styleFrom(
+                  alignment: Alignment.centerLeft,
+                  primary: MoodleColors.white,
+                ),
+              ),
+            ),
+    );
+  }
+
+  Widget starOrUnStarCourse(
+      CourseOverview courseSelectedMore, BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(top: 13, bottom: 13),
+      width: double.infinity,
+      decoration: const BoxDecoration(
+        color: MoodleColors.white,
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+      ),
+      child: courseSelectedMore.isfavourite
+          ? Padding(
+              padding:
+                  const EdgeInsets.only(left: 28, bottom: 5, top: 5, right: 30),
+              child: TextButton.icon(
+                onPressed: () async {
+                  await CourseService().setFavouriteCourse(
+                    userStore!.user.token,
+                    courseSelectedMore.id,
+                    0,
+                  );
+                  callback!(1, courseSelectedMore.id, false);
+                  Navigator.pop(context);
+                },
+                icon: Container(
+                  decoration: const BoxDecoration(
+                      color: MoodleColors.border_star,
+                      borderRadius: BorderRadius.all(Radius.circular(50))),
+                  child: const Padding(
+                    padding: EdgeInsets.all(5),
+                    child: Icon(
+                      Icons.star,
+                      color: MoodleColors.red_error_message,
+                      size: 25,
+                    ),
+                  ),
+                ),
+                label: const Padding(
+                  padding: EdgeInsets.only(left: 20),
+                  child: Text(
+                    "Unstar this course",
+                    style: TextStyle(color: MoodleColors.black, fontSize: 16),
+                  ),
+                ),
+                style: TextButton.styleFrom(
+                  alignment: Alignment.centerLeft,
+                  primary: MoodleColors.white,
+                ),
+              ),
+            )
+          : Padding(
+              padding:
+                  const EdgeInsets.only(left: 28, bottom: 5, top: 5, right: 30),
+              child: TextButton.icon(
+                onPressed: () async {
+                  await CourseService().setFavouriteCourse(
+                    userStore!.user.token,
+                    courseSelectedMore.id,
+                    1,
+                  );
+                  callback!(1, courseSelectedMore.id, true);
+                  Navigator.pop(context);
+                },
+                icon: Container(
+                    decoration: const BoxDecoration(
+                        color: MoodleColors.border_star,
+                        borderRadius: BorderRadius.all(Radius.circular(50))),
+                    child: Padding(
+                      padding: EdgeInsets.all(5),
+                      child: Icon(
+                        Icons.star,
+                        color: MoodleColors.yellow_icon,
+                        size: 25,
+                      ),
+                    )),
+                label: Padding(
+                  padding: EdgeInsets.only(left: 20),
+                  child: Text(
+                    "Star this course",
+                    style: TextStyle(color: MoodleColors.black, fontSize: 16),
+                  ),
+                ),
+                style: TextButton.styleFrom(
+                  alignment: Alignment.centerLeft,
+                  primary: MoodleColors.white,
+                ),
+              ),
+            ),
+    );
+  }
+
+  Widget downloadCourse(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      decoration: const BoxDecoration(
+        color: MoodleColors.white,
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.only(left: 30, bottom: 5, top: 5, right: 30),
+        child: TextButton.icon(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(
+            Icons.file_download_outlined,
+            color: MoodleColors.black,
+            size: 30,
+          ),
+          label: Padding(
+            padding: EdgeInsets.only(left: 20),
+            child: Text(
+              "Download courses",
+              style: TextStyle(color: MoodleColors.black, fontSize: 16),
+            ),
+          ),
+          style: TextButton.styleFrom(
+            alignment: Alignment.centerLeft,
+            primary: MoodleColors.white,
+          ),
+        ),
       ),
     );
   }
