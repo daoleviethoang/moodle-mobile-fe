@@ -5,7 +5,6 @@ import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/models/course/courses.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/calendar/calendar.dart';
-import 'package:moodle_mobile/view/home/bottom_nav_bar.dart';
 import 'package:moodle_mobile/view/home/home.dart';
 import 'package:moodle_mobile/view/menu/menu_screen.dart';
 import 'package:moodle_mobile/view/notifications/notification_screen.dart';
