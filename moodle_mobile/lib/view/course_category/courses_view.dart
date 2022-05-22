@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moodle_mobile/models/course/courses.dart';
+import 'package:moodle_mobile/view/common/course_view.dart';
 import 'package:moodle_mobile/view/course_details.dart';
 import 'package:moodle_mobile/view/home/courses_view.dart';
 
@@ -62,10 +63,11 @@ class _CategoryCourseListViewState extends State<CategoryCourseListView>
                   animationController?.forward();
                   return Padding(
                     padding: const EdgeInsets.all(8),
-                    child: CategoryView(
-                      course: widget.courses[index],
-                      animation: animation,
-                      animationController: animationController,
+                    child: CourseView(
+                      widget.courses[index],
+                      animationController,
+                      animation,
+                      (selectedCourseMoreId) {},
                     ),
                   );
                 },

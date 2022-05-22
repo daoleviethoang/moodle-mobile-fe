@@ -28,4 +28,7 @@ class MoodleColors {
   static const Color grey_text = Color(0xff333333);
   static const Color grade_quiz_foreground = Color.fromARGB(223, 242, 210, 147);
   static const Color grade_quiz_text = Color.fromARGB(223, 245, 108, 10);
+  static const Color grey_bottom_bar = Color(0xfff1f4f8);
+  static const Color line_bottom_bar = Color(0xffB0C0D8);
+  static const Color border_star = Color(0xffFFF4E4);
 }

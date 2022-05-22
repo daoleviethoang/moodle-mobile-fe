@@ -5,6 +5,7 @@ import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/models/course/courses.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/calendar/calendar.dart';
+import 'package:moodle_mobile/view/home/bottom_nav_bar.dart';
 import 'package:moodle_mobile/view/home/home.dart';
 import 'package:moodle_mobile/view/menu/menu_screen.dart';
 import 'package:moodle_mobile/view/notifications/notification_screen.dart';
@@ -19,17 +20,13 @@ class DirectScreen extends StatefulWidget {
 }
 
 class _DirectScreenState extends State<DirectScreen> {
-  int _selectedIndex = 0;
+  late int _selectedIndex = 0;
   late UserStore _userStore;
+  CourseOverview? _courseSelectedMore;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static const List<Widget> _widgetOptions = <Widget>[
-    HomeScreen(),
-    CalendarScreen(),
-    MessageScreen(),
-    NotificationScreen(),
-    MenuScreen(),
-  ];
+  // ignore: prefer_final_fields
+  List<Widget> _widgetOptions = [];
   static const List<String> _widgetAppBarTitle = <String>[
     "Learning Management System",
     "Calendar",
@@ -37,6 +34,7 @@ class _DirectScreenState extends State<DirectScreen> {
     "Notifications",
     "Menu",
   ];
+  bool _isSelectedMoreOption = false;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -46,30 +44,67 @@ class _DirectScreenState extends State<DirectScreen> {
 
   @override
   void initState() {
-    _userStore = GetIt.instance<UserStore>();
     super.initState();
+    _userStore = GetIt.instance<UserStore>();
+
+    setState(() {
+      _widgetOptions = <Widget>[
+        HomeScreen(
+          isSelectedMoreOption: _isSelectedMoreOption,
+          onCourseMoreSelected: (courseSelectedMore) {
+            setState(() {
+              _courseSelectedMore = courseSelectedMore;
+            });
+          },
+        ),
+        const CalendarScreen(),
+        const MessageScreen(),
+        const NotificationScreen(),
+        const MenuScreen(),
+      ];
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    // if (_isSelectedMoreOption) {
+    //   setState(() {
+    //     _widgetOptions[0] = HomeScreen(
+    //       isSelectedMoreOption: _isSelectedMoreOption,
+    //       onCourseMoreSelected: (courseSelectedMore) {
+    //         setState(() {
+    //           _courseSelectedMore = courseSelectedMore;
+    //         });
+    //       },
+    //     );
+    //   });
+    // }
     return getRedirectUI();
   }
 
   Widget getRedirectUI() {
     return Scaffold(
+      extendBody: true,
       appBar: getAppBarUI(),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
-      bottomNavigationBar: getBottomNavBarUI(),
+      bottomNavigationBar: _courseSelectedMore == null
+          ? getBottomNavBarUI()
+          : HomeBottomBar(_courseSelectedMore!,
+              (courseSelectedMore, isSelectedMoreOption) {
+              setState(() {
+                _isSelectedMoreOption = isSelectedMoreOption!;
+                _courseSelectedMore = courseSelectedMore;
+              });
+            }, _isSelectedMoreOption),
     );
   }
 
   AppBar getAppBarUI() {
     return AppBar(
       title: Text(_widgetAppBarTitle.elementAt(_selectedIndex),
-          textAlign: TextAlign.left,
-          style: MoodleStyles.appBarTitleStyle),
+          textAlign: TextAlign.left, style: MoodleStyles.appBarTitleStyle),
       actions: <Widget>[
         SizedBox(
           width: 60,

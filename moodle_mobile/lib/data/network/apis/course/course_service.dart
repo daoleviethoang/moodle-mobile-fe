@@ -45,4 +45,25 @@ class CourseService {
       rethrow;
     }
   }
+
+  Future setFavouriteCourse(String token, int id, int value) async {
+    try {
+      Dio dio = Http().client;
+      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': Wsfunction.SET_FAVOURITE_COURSE,
+        'moodlewsrestformat': 'json',
+        'courses[0][id]': id,
+        'courses[0][favourite]': value
+      });
+
+      List<dynamic>? warnings = (res.data as Map)['warnings'];
+      if ((warnings ?? []).isNotEmpty) {
+        throw Exception(jsonEncode(warnings));
+      }
+    } catch (e) {
+      print('$e');
+      rethrow;
+    }
+  }
 }

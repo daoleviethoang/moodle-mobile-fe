@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/models/contant/contant_model.dart';
+import 'package:moodle_mobile/models/course/courses.dart';
 import 'package:moodle_mobile/view/common/select_course_filter.dart';
+import 'package:moodle_mobile/view/home/bottom_nav_bar.dart';
 import 'package:moodle_mobile/view/home/courses_view.dart';
 import 'package:moodle_mobile/view/course_category/index.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  final Function(CourseOverview courseSelected) onCourseMoreSelected;
+  final bool isSelectedMoreOption;
+
+  const HomeScreen(
+      {required this.onCourseMoreSelected,
+      required this.isSelectedMoreOption,
+      Key? key})
+      : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -17,10 +26,14 @@ class _HomeScreenState extends State<HomeScreen> {
   ContantModel statusTypeSelected = ContantExtension.courseStatusSelected;
   bool showOnlyStarSelected = false;
   bool isFilter = false;
+
   CategoryType categoryType = CategoryType.my;
 
   @override
   Widget build(BuildContext context) {
+    if (widget.isSelectedMoreOption) {
+      print("abc");
+    }
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: MoodleColors.white,
@@ -50,6 +63,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget getListCoursesUI() {
     return PopularCourseListView(
+        isSelectOption: widget.isSelectedMoreOption,
+        onCourseMoreSelected: widget.onCourseMoreSelected,
         arrangeTypeSelected: arrangeTypeSelected,
         statusTypeSelected: statusTypeSelected,
         showOnlyStarSelected: showOnlyStarSelected,
@@ -149,10 +164,6 @@ class _HomeScreenState extends State<HomeScreen> {
       isFilter,
       (arrangeTypeSelected, statusTypeSelected, showOnlyStarSelected,
           isFilter) {
-        arrangeTypeSelected;
-        statusTypeSelected;
-        showOnlyStarSelected;
-        isFilter;
         setState(() {
           this.arrangeTypeSelected = arrangeTypeSelected;
           this.statusTypeSelected = statusTypeSelected;

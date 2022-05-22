@@ -14,7 +14,9 @@ class SelectCourseFilter extends StatefulWidget {
       bool showOnlyStarSelected, bool isFilter) onOptionSelected;
 
   SelectCourseFilter(this.arrangeType, this.statusType,
-      this.showOnlyStarSelected, this.isFilter, this.onOptionSelected);
+      this.showOnlyStarSelected, this.isFilter, this.onOptionSelected,
+      {Key? key})
+      : super(key: key);
 
   @override
   _SelectCourseFilterState createState() => _SelectCourseFilterState(
@@ -363,15 +365,6 @@ class _SelectCourseFilterState extends State<SelectCourseFilter>
                     this.statusTypeSelected,
                     this.showOnlyStarSelected,
                     this.isFilter);
-                // if (arrangeTypeSelected.key ==
-                //         ContantExtension.CourseArrangeSelected.key &&
-                //     statusTypeSelected.key ==
-                //         ContantExtension.CourseStatusSelected.key &&
-                //     showOnlyStarSelected == false) {
-                //   setState(() {
-                //     this.isFilter = false;
-                //   });
-                // }
                 _runExpandCheck();
               },
               child: const Padding(
