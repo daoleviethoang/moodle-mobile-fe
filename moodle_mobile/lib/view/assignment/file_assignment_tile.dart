@@ -32,7 +32,6 @@ class FileAssignmentTile extends StatefulWidget {
 
 class _FileAssignmentTileState extends State<FileAssignmentTile> {
   late UserStore _userStore;
-  ReceivePort _port = ReceivePort();
   List<String> action = ['Rename...', 'Download', 'Delete...'];
   _showReNameDialog() {
     final RenameFileTiles _setListTiles = RenameFileTiles(
@@ -93,40 +92,14 @@ class _FileAssignmentTileState extends State<FileAssignmentTile> {
     }
   }
 
-  void _bindBackgroundIsolate() {
-    bool isSuccess = IsolateNameServer.registerPortWithName(
-        _port.sendPort, 'downloader_send_port');
-    if (!isSuccess) {
-      _unbindBackgroundIsolate();
-      _bindBackgroundIsolate();
-      return;
-    }
-  }
-
-  void _unbindBackgroundIsolate() {
-    IsolateNameServer.removePortNameMapping('downloader_send_port');
-  }
-
-  static void downloadCallback(
-      String id, DownloadTaskStatus status, int progress) {
-    final SendPort send =
-        IsolateNameServer.lookupPortByName('downloader_send_port')!;
-    send.send([id, status, progress]);
-  }
-
   @override
   void initState() {
     _userStore = GetIt.instance<UserStore>();
     super.initState();
-
-    _bindBackgroundIsolate();
-    FlutterDownloader.registerCallback(downloadCallback);
   }
 
   @override
   void dispose() {
-    _unbindBackgroundIsolate();
-
     super.dispose();
   }
 

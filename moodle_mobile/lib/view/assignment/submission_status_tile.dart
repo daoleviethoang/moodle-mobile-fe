@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:moodle_mobile/constants/colors.dart';
 
 class SubmissionStatusTile extends StatefulWidget {
   final String leftText;
@@ -11,8 +12,8 @@ class SubmissionStatusTile extends StatefulWidget {
   const SubmissionStatusTile(
       {Key? key,
       required this.leftText,
-      this.leftTextColor = Colors.black,
-      this.leftBackgroundColor = const Color.fromARGB(255, 217, 217, 217),
+      this.leftTextColor = MoodleColors.grey_text,
+      this.leftBackgroundColor = MoodleColors.submission_status_tile,
       required this.rightText,
       this.rightTextColor = Colors.grey,
       this.rightBackgroundColor = Colors.white})
@@ -26,13 +27,11 @@ class _SubmissionStatusTileState extends State<SubmissionStatusTile> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(left: 2, right: 2, top: 5, bottom: 5),
       decoration: BoxDecoration(
-        border: Border.all(width: 2, color: Colors.grey),
+        border: Border.all(width: 0.5, color: Colors.grey),
         borderRadius: BorderRadius.circular(6),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Container(
             padding:
@@ -40,6 +39,7 @@ class _SubmissionStatusTileState extends State<SubmissionStatusTile> {
             color: widget.leftBackgroundColor,
             child: Text(
               widget.leftText,
+              textScaleFactor: 1.1,
               style: TextStyle(color: widget.leftTextColor),
             ),
           ),
@@ -49,7 +49,6 @@ class _SubmissionStatusTileState extends State<SubmissionStatusTile> {
             child: Text(
               widget.rightText,
               style: TextStyle(
-                fontSize: 10,
                 color: widget.rightTextColor,
                 overflow: TextOverflow.clip,
               ),
