@@ -36,7 +36,9 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
   AttemptAssignment attempt = AttemptAssignment();
   bool isLoading = false;
   String dateDiff = "";
+  Color dateDiffColor = Colors.grey;
   late UserStore _userStore;
+  bool overDue = false;
 
   @override
   void initState() {
@@ -112,9 +114,8 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
       final dateTime = zero.add(duration.abs());
       int day = dateTime.day - 1;
       setState(() {
-        dateDiff = (dueDate.isAfter(DateTime.now())
-                ? "Assignment is due in "
-                : "Assignment is overdue by: ") +
+        dateDiff =
+            (dueDate.isAfter(DateTime.now()) ? "Due in " : "Overdue by: ") +
                 ((day > 0)
                     ? (duration.inDays.abs().toString() +
                         " days " +
@@ -126,6 +127,7 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                             dateTime.minute.toString() +
                             " minutes")
                         : dateTime.second.toString() + " seconds"));
+        overDue = dueDate.isAfter(DateTime.now()) ? false : true;
       });
       return;
     }
@@ -139,16 +141,17 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
       dateDiff = "Submitted " +
           ((day > 0)
               ? (duration.inDays.abs().toString() +
-              " days " +
-              dateTime.hour.toString() +
-              " hours")
+                  " days " +
+                  dateTime.hour.toString() +
+                  " hours")
               : ((duration.inMinutes.abs() > 0)
-              ? (dateTime.hour.toString() +
-              " hours " +
-              dateTime.minute.toString() +
-              " minutes")
-              : dateTime.second.toString() + " seconds")) +
+                  ? (dateTime.hour.toString() +
+                      " hours " +
+                      dateTime.minute.toString() +
+                      " minutes")
+                  : dateTime.second.toString() + " seconds")) +
           (duration.isNegative ? " late" : " early");
+      dateDiffColor = duration.isNegative ? Colors.red : Colors.green;
     });
   }
 
@@ -199,14 +202,21 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                         backgroundIconColor: Colors.greenAccent,
                       ),
                       const Divider(),
-                      Card(
-                        child: Html(
-                          data: assignment.intro ?? "",
-                          shrinkWrap: true,
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        child: Card(
+                          elevation: 5,
+                          child: Html(
+                            data: assignment.intro ?? "",
+                            shrinkWrap: true,
+                          ),
                         ),
                       ),
                       const SizedBox(
-                        height: 5,
+                        height: 20,
                       ),
                       const Text(
                         "Submission status",
@@ -215,21 +225,38 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                           fontSize: 20,
                         ),
                       ),
+                      const SizedBox(
+                        height: 20,
+                      ),
                       const SubmissionStatusTile(
                         leftText: "Submission status",
                         rightText: "Submitted for grading",
                       ),
-                      SubmissionStatusTile(
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      const SubmissionStatusTile(
                         leftText: "Grading status",
-                        rightText: attempt.gradingstatus ?? "Not graded",
+                        rightText: "Not graded",
+                      ),
+                      const SizedBox(
+                        height: 15,
                       ),
                       SubmissionStatusTile(
-                          leftText: "Time remaining", rightText: dateDiff),
+                          leftText: "Time remaining",
+                          rightText: dateDiff,
+                          rightTextColor: dateDiffColor),
+                      const SizedBox(
+                        height: 15,
+                      ),
                       SubmissionStatusTile(
                           leftText: "Last modified",
                           rightText: DateFormat("hh:mmaa, dd MMMM, yyyy")
                               .format(DateTime.fromMillisecondsSinceEpoch(
                                   attempt.submission?.timemodified ?? 0))),
+                      const SizedBox(
+                        height: 15,
+                      ),
                       SubmissionStatusTile(
                         leftText: "File submissions",
                         rightText: (attempt.submission?.plugins?[0]
@@ -240,50 +267,56 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                             " files",
                         rightTextColor: Colors.blue,
                       ),
+                      const SizedBox(
+                        height: 15,
+                      ),
                       const SubmissionStatusTile(
                         leftText: "Submission comments",
                         rightText: "0 comments...",
                         rightTextColor: Colors.blue,
                       ),
                       const SizedBox(
-                        height: 5,
+                        height: 15,
                       ),
-                      CustomButtonWidget(
-                        textButton: "View file submission",
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) {
-                                return FilesAssignmentScreen(
-                                  assignId: widget.assignInstanceId,
-                                  dueDate: assignment.duedate ?? 0,
-                                  canEdit: attempt.canedit ?? false,
-                                  maxByteSize: int.parse(
-                                      assignment.configs != null
-                                          ? assignment.configs!
-                                              .where((element) =>
-                                                  element.name ==
-                                                  "maxsubmissionsizebytes")
-                                              .first
-                                              .value
-                                          : "5242880"),
-                                  maxFileCount: int.parse(assignment.configs !=
-                                          null
-                                      ? assignment.configs!
-                                          .where((element) =>
-                                              element.name ==
-                                              "maxfilesubmissions")
-                                          .first
-                                          .value
-                                      : "1"),
-                                  attempt: attempt,
-                                  reload: loadAssignmentAttempt,
+                      overDue
+                          ? Container()
+                          : CustomButtonWidget(
+                              textButton: "View file submission",
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) {
+                                      return FilesAssignmentScreen(
+                                        assignId: widget.assignInstanceId,
+                                        dueDate: assignment.duedate ?? 0,
+                                        canEdit: attempt.canedit ?? false,
+                                        maxByteSize: int.parse(assignment
+                                                    .configs !=
+                                                null
+                                            ? assignment.configs!
+                                                .where((element) =>
+                                                    element.name ==
+                                                    "maxsubmissionsizebytes")
+                                                .first
+                                                .value
+                                            : "5242880"),
+                                        maxFileCount: int.parse(
+                                            assignment.configs != null
+                                                ? assignment.configs!
+                                                    .where((element) =>
+                                                        element.name ==
+                                                        "maxfilesubmissions")
+                                                    .first
+                                                    .value
+                                                : "1"),
+                                        attempt: attempt,
+                                        reload: loadAssignmentAttempt,
+                                      );
+                                    },
+                                  ),
                                 );
                               },
                             ),
-                          );
-                        },
-                      ),
                       SizedBox(
                         height: 20,
                       ),
