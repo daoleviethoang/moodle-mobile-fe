@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/models/course/courses.dart';
-import 'package:moodle_mobile/view/common/course_view.dart';
+import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/course_details.dart';
 import 'package:moodle_mobile/view/home/courses_view.dart';
 
@@ -15,10 +16,14 @@ class CategoryCourseListView extends StatefulWidget {
 class _CategoryCourseListViewState extends State<CategoryCourseListView>
     with TickerProviderStateMixin {
   AnimationController? animationController;
+  late UserStore _userStore;
+
   @override
   void initState() {
     animationController = AnimationController(
         duration: const Duration(milliseconds: 1200), vsync: this);
+    _userStore = GetIt.instance<UserStore>();
+
     super.initState();
   }
 
@@ -63,11 +68,11 @@ class _CategoryCourseListViewState extends State<CategoryCourseListView>
                   animationController?.forward();
                   return Padding(
                     padding: const EdgeInsets.all(8),
-                    child: CourseView(
-                      widget.courses[index],
-                      animationController,
-                      animation,
-                      (selectedCourseMoreId) {},
+                    child: CategoryView(
+                      course: widget.courses[index],
+                      animationController: animationController,
+                      animation: animation,
+                      userStore: _userStore,
                     ),
                   );
                 },

@@ -66,4 +66,37 @@ class CourseService {
       rethrow;
     }
   }
+
+  Future setHiddenCourse(String token, int id) async {
+    try {
+      Dio dio = Http().client;
+      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': Wsfunction.CORE_USER_UPDATE_USER_PREFERENCES,
+        'moodlewsrestformat': 'json',
+        'preferences[0][type]':
+            'block_myoverview_hidden_course_' + id.toString(),
+        'preferences[0][value]': 1
+      });
+    } catch (e) {
+      print('$e');
+      rethrow;
+    }
+  }
+
+  Future setUnHiddenCourse(String token, int id) async {
+    try {
+      Dio dio = Http().client;
+      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': Wsfunction.CORE_USER_UPDATE_USER_PREFERENCES,
+        'moodlewsrestformat': 'json',
+        'preferences[0][type]':
+            'block_myoverview_hidden_course_' + id.toString(),
+      });
+    } catch (e) {
+      print('$e');
+      rethrow;
+    }
+  }
 }

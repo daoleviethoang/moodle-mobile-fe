@@ -22,7 +22,6 @@ class DirectScreen extends StatefulWidget {
 class _DirectScreenState extends State<DirectScreen> {
   late int _selectedIndex = 0;
   late UserStore _userStore;
-  CourseOverview? _courseSelectedMore;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   // ignore: prefer_final_fields
@@ -34,7 +33,6 @@ class _DirectScreenState extends State<DirectScreen> {
     "Notifications",
     "Menu",
   ];
-  bool _isSelectedMoreOption = false;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -49,14 +47,7 @@ class _DirectScreenState extends State<DirectScreen> {
 
     setState(() {
       _widgetOptions = <Widget>[
-        HomeScreen(
-          isSelectedMoreOption: _isSelectedMoreOption,
-          onCourseMoreSelected: (courseSelectedMore) {
-            setState(() {
-              _courseSelectedMore = courseSelectedMore;
-            });
-          },
-        ),
+        const HomeScreen(),
         const CalendarScreen(),
         const MessageScreen(),
         const NotificationScreen(),
@@ -67,18 +58,6 @@ class _DirectScreenState extends State<DirectScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // if (_isSelectedMoreOption) {
-    //   setState(() {
-    //     _widgetOptions[0] = HomeScreen(
-    //       isSelectedMoreOption: _isSelectedMoreOption,
-    //       onCourseMoreSelected: (courseSelectedMore) {
-    //         setState(() {
-    //           _courseSelectedMore = courseSelectedMore;
-    //         });
-    //       },
-    //     );
-    //   });
-    // }
     return getRedirectUI();
   }
 
@@ -89,15 +68,7 @@ class _DirectScreenState extends State<DirectScreen> {
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
-      bottomNavigationBar: _courseSelectedMore == null
-          ? getBottomNavBarUI()
-          : HomeBottomBar(_courseSelectedMore!,
-              (courseSelectedMore, isSelectedMoreOption) {
-              setState(() {
-                _isSelectedMoreOption = isSelectedMoreOption!;
-                _courseSelectedMore = courseSelectedMore;
-              });
-            }, _isSelectedMoreOption),
+      bottomNavigationBar: getBottomNavBarUI(),
     );
   }
 
