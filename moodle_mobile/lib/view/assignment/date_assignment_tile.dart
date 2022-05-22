@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:moodle_mobile/constants/colors.dart';
 
 class DateAssignmentTile extends StatefulWidget {
   final int date;
@@ -31,7 +32,7 @@ class _DateAssignmentTileState extends State<DateAssignmentTile> {
                 MaterialButton(
                   shape: CircleBorder(),
                   color: widget.backgroundIconColor,
-                  padding: EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(10),
                   onPressed: () {},
                   child: Icon(
                     Icons.access_time,
@@ -50,6 +51,7 @@ class _DateAssignmentTileState extends State<DateAssignmentTile> {
                       children: <Widget>[
                         Text(
                           widget.title,
+                          textScaleFactor: 1.2,
                         ),
                         const SizedBox(
                           height: 6,
@@ -58,7 +60,8 @@ class _DateAssignmentTileState extends State<DateAssignmentTile> {
                           DateFormat("hh:mmaa, dd MMMM, yyyy").format(
                               DateTime.fromMillisecondsSinceEpoch(widget.date)),
                           style: const TextStyle(
-                              fontSize: 11, fontWeight: FontWeight.normal),
+                              fontWeight: FontWeight.normal,
+                              color: Colors.grey),
                         ),
                       ],
                     ),
