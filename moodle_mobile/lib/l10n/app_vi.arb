@@ -48,6 +48,8 @@
     "restrict_contact": "Danh bạ của tôi",
     "restrict_anyone": "Danh bạ và ai cùng khóa học với tôi",
 
+    "mail_subject": "[Moodle%20Mobile%20App%20-%20Báo%20cáo%20sự%20cố]",
+
     "err_load_noti_settings": "Tải cài đặt thông báo thất bại, vui lòng thử lại sau",
     "err_set_noti_settings": "Cập nhật cài đặt thông báo thất bại, vui lòng thử lại sau",
     "err_load_message_settings": "Tải cài đặt tin nhắn thất bại, vui lòng thử lại sau",

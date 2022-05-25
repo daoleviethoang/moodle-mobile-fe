@@ -11,6 +11,7 @@ import 'package:moodle_mobile/view/notification_preference/index.dart';
 import 'package:moodle_mobile/view/splash/splash_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({Key? key}) : super(key: key);
@@ -203,7 +204,13 @@ class _MenuScreenState extends State<MenuScreen> {
                         color: Colors.red,
                         icon: const Icon(Icons.campaign_rounded),
                         fullWidth: true,
-                        onPressed: () {},
+                        onPressed: () => launchUrl(Uri.parse(
+                            'mailto:18127044@student.hcmus.edu.vn'
+                            '?cc=18127053@student.hcmus.edu.vn,'
+                            '18127097@student.hcmus.edu.vn,'
+                            '18127101@student.hcmus.edu.vn,'
+                            '18127177@student.hcmus.edu.vn'
+                            '&subject=${AppLocalizations.of(context)!.mail_subject}')),
                       ),
                       const SizedBox(height: 8),
                       m.MenuItem(

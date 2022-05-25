@@ -70,6 +70,8 @@
     "restrict_contact": "My contacts only",
     "restrict_anyone": "My contacts and anyone in my courses",
 
+    "mail_subject": "[Moodle%20Mobile%20App%20-%20Report%20a%20problem]",
+
     "err_load_noti_settings": "Loading notification preferences fail, please try again later",
     "err_set_noti_settings": "Set notification preferences fail, please try again later",
     "err_load_message_settings": "Loading message settigns fail, please try again later",
