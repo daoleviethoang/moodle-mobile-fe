@@ -1,8 +1,89 @@
 {
-  "course": "Course",
-  "course_category": "Course category",
-  "load_category_fail": "Loading course category fail, please try again later",
   "online_just_now": "Online just now",
   "student": "Student",
   "teacher": "Teacher"
+    "load_category_fail": "Loading course category fail, please try again later",
+    "course_category": "Course category",
+    "course": "Course",
+
+    "dashboard": "Dashboard",
+    "calendar": "Calendar",
+    "messenger": "Messenger",
+    "notifications": "Notifications",
+    "menu": "Menu",
+
+    "home": "Home",
+    "announcement": "Announcements",
+    "discussion": "Discussion Forums",
+    "events": "Events",
+    "grades": "Grades",
+    "participants": "Participants",
+    "upcoming_events": "Upcoming events",
+
+    "my_courses": "My Courses",
+    "all_courses": "All Courses",
+
+    "jump_date": "Jump to date",
+    "jump": "Jump",
+    "events_on": "Events on {date}",
+    "@events_on": {
+        "description": "Day view header in Calendar.",
+        "placeholders": {
+            "date": {
+                "type": "String",
+                "example": "May 25"
+            }
+        }
+    },
+
+    "messages": "Messages",
+    "contacts": "Contacts",
+    "enter_message": "Enter message",
+
+    "noti_context": "<b>{article}</b><br/> in <b>{name}</b>",
+    "@noti_context": {
+        "description": "Notification context shown in notification card.",
+        "placeholders": {
+            "article": {
+                "type": "String",
+                "example": "Nguyễn Gia Hưng"
+            },
+            "name": {
+                "type": "String",
+                "example": "Lập trình ứng dụng di động nâng cao"
+            }
+        }
+    },
+
+    "news": "News & Info",
+    "settings": "Settings",
+    "account": "Account",
+    "noti_settings": "Notifications & Sounds",
+    "message_settings": "Messenger settings",
+    "moodle_settings": "Moodle settings",
+    "app_settings": "App settings",
+    "permissions": "Device permissions",
+    "change_password": "Change password",
+    "report": "Report a problem",
+    "logout": "Logout",
+
+    "disable_noti": "Disable notifications",
+
+    "restrict": "Who can message me",
+    "restrict_contact": "My contacts only",
+    "restrict_anyone": "My contacts and anyone in my courses",
+
+    "err_load_noti_settings": "Loading notification preferences fail, please try again later",
+    "err_set_noti_settings": "Set notification preferences fail, please try again later",
+    "err_load_message_settings": "Loading message settigns fail, please try again later",
+    "err_unknown_module": "Unsupported module name: {modname}",
+    "@err_unknown_module": {
+        "description": "Unsupported module in course details.",
+        "placeholders": {
+            "modname": {
+                "type": "String",
+                "example": "folder"
+            }
+        }
+    }
 }

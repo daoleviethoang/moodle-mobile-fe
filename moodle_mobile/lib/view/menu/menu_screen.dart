@@ -1,15 +1,16 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/content_item.dart';
+import 'package:moodle_mobile/view/common/image_view.dart';
 import 'package:moodle_mobile/view/common/menu_item.dart' as m;
 import 'package:moodle_mobile/view/menu/profile/profile.dart';
 import 'package:moodle_mobile/view/message_preference/index.dart';
 import 'package:moodle_mobile/view/notification_preference/index.dart';
 import 'package:moodle_mobile/view/splash/splash_screen.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({Key? key}) : super(key: key);
@@ -48,10 +49,10 @@ class _MenuScreenState extends State<MenuScreen> {
                 ),
               ),
               const SizedBox(height: 10),
-              const Padding(
-                padding: EdgeInsets.only(left: 8),
+              Padding(
+                padding: const EdgeInsets.only(left: 8),
                 child: Text(
-                  'News & Info',
+                  AppLocalizations.of(context)!.news,
                   style: MoodleStyles.sectionHeaderStyle,
                 ),
               ),
@@ -101,10 +102,10 @@ class _MenuScreenState extends State<MenuScreen> {
                 ),
               ),
               const SizedBox(height: 10),
-              const Padding(
-                padding: EdgeInsets.only(left: 8),
+              Padding(
+                padding: const EdgeInsets.only(left: 8),
                 child: Text(
-                  'Settings',
+                  AppLocalizations.of(context)!.settings,
                   style: MoodleStyles.sectionHeaderStyle,
                 ),
               ),
@@ -119,7 +120,7 @@ class _MenuScreenState extends State<MenuScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       m.MenuItem(
-                        title: 'Notifications & sounds',
+                        title: AppLocalizations.of(context)!.noti_settings,
                         color: Colors.amber,
                         icon: const Icon(Icons.notifications_rounded),
                         fullWidth: true,
@@ -132,7 +133,7 @@ class _MenuScreenState extends State<MenuScreen> {
                       ),
                       const SizedBox(height: 8),
                       m.MenuItem(
-                        title: 'Message notification',
+                        title: AppLocalizations.of(context)!.message_settings,
                         color: Colors.amber,
                         icon: const Icon(Icons.messenger_rounded),
                         fullWidth: true,
@@ -145,7 +146,7 @@ class _MenuScreenState extends State<MenuScreen> {
                       ),
                       const SizedBox(height: 8),
                       m.MenuItem(
-                        title: 'Moodle Settings',
+                        title: AppLocalizations.of(context)!.moodle_settings,
                         color: Colors.blueGrey,
                         icon: const Icon(Icons.school_rounded),
                         fullWidth: true,
@@ -153,7 +154,7 @@ class _MenuScreenState extends State<MenuScreen> {
                       ),
                       const SizedBox(height: 8),
                       m.MenuItem(
-                        title: 'App Theme',
+                        title: AppLocalizations.of(context)!.app_settings,
                         color: Colors.purple.shade200,
                         icon: const Icon(Icons.lightbulb_rounded),
                         fullWidth: true,
@@ -161,7 +162,7 @@ class _MenuScreenState extends State<MenuScreen> {
                       ),
                       const SizedBox(height: 8),
                       m.MenuItem(
-                        title: 'Device Permissions',
+                        title: AppLocalizations.of(context)!.permissions,
                         color: Colors.green,
                         icon: const Icon(Icons.lock_rounded),
                         fullWidth: true,
@@ -172,10 +173,10 @@ class _MenuScreenState extends State<MenuScreen> {
                 ),
               ),
               const SizedBox(height: 10),
-              const Padding(
-                padding: EdgeInsets.only(left: 8),
+              Padding(
+                padding: const EdgeInsets.only(left: 8),
                 child: Text(
-                  'Account',
+                  AppLocalizations.of(context)!.account,
                   style: MoodleStyles.sectionHeaderStyle,
                 ),
               ),
@@ -190,7 +191,7 @@ class _MenuScreenState extends State<MenuScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       m.MenuItem(
-                        title: 'Change password',
+                        title: AppLocalizations.of(context)!.change_password,
                         color: Colors.blue,
                         icon: const Icon(Icons.password_rounded),
                         fullWidth: true,
@@ -198,7 +199,7 @@ class _MenuScreenState extends State<MenuScreen> {
                       ),
                       const SizedBox(height: 8),
                       m.MenuItem(
-                        title: 'Report a problem',
+                        title: AppLocalizations.of(context)!.report,
                         color: Colors.red,
                         icon: const Icon(Icons.campaign_rounded),
                         fullWidth: true,
@@ -206,7 +207,7 @@ class _MenuScreenState extends State<MenuScreen> {
                       ),
                       const SizedBox(height: 8),
                       m.MenuItem(
-                        title: 'Logout',
+                        title: AppLocalizations.of(context)!.logout,
                         color: Colors.grey,
                         icon: const Icon(Icons.logout_rounded),
                         fullWidth: true,
@@ -252,9 +253,11 @@ class ProfileHeader extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const CircleAvatar(
-            radius: 23,
-          ),
+          CircleImageView(
+              fit: BoxFit.none,
+              imageUrl:
+                  _userStore.user.photo! + "&token=" + _userStore.user.token,
+              placeholder: CircularProgressIndicator()),
           const SizedBox(
             width: 10,
           ),

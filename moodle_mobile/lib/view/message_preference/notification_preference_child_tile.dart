@@ -103,9 +103,7 @@ class _MessagePreferenceChildTileState
         Text(
           widget.components.displayname ?? "",
         ),
-        ListView(
-          padding: EdgeInsets.only(top: 0),
-          shrinkWrap: true,
+        Column(
           children: widget.disable
               ? [
                   MergeSemantics(

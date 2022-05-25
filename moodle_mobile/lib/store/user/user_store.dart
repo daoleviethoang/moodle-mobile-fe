@@ -57,6 +57,7 @@ abstract class _UserStore with Store {
           token: token,
           baseUrl: _repository.baseUrl ?? "",
           username: username,
+          photo: user.photo,
         ));
       }
 

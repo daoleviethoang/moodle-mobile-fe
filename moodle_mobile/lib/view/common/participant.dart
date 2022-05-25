@@ -29,21 +29,29 @@ class ParticipantListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
+      padding: const EdgeInsets.all(10),
       child: ListTile(
-        leading: CircleAvatar(
-          radius: 20,
-          backgroundColor: MoodleColors.blue,
-          child: Icon(
-            Icons.person,
-            size: 25,
-            color: Colors.white,
+        leading: SizedBox(
+          width: 60,
+          height: 60,
+          child: CircleAvatar(
+            radius: 20,
+            backgroundColor: MoodleColors.blue,
+            child: Icon(
+              Icons.person,
+              size: 40,
+              color: Colors.white,
+            ),
           ),
         ),
         trailing: RoundedImageView(
-          color: Colors.white,
+          color: Colors.transparent,
           imageUrl: 'user-avatar-url',
-          placeholder: Image.asset('assets/image/Icon.png'),
+          placeholder: Image.asset(
+            'assets/image/Icon.png',
+            width: 50,
+            height: 50,
+          ),
           onClick: () => {print("123")},
           //  Icon(
           //   Icons.messenger_outline,
