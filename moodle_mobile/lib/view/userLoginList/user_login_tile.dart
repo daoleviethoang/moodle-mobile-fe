@@ -2,13 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
 import 'package:moodle_mobile/models/user_login.dart';
+import 'package:moodle_mobile/sqllite/sql.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
+import 'package:moodle_mobile/view/common/image_view.dart';
 import 'package:moodle_mobile/view/direct_page.dart';
 
 class UserLoginTile extends StatefulWidget {
   final UserLogin user;
   final UserStore userStore;
-  const UserLoginTile({Key? key, required this.user, required this.userStore})
+  final VoidCallback refresh;
+  const UserLoginTile(
+      {Key? key,
+      required this.user,
+      required this.userStore,
+      required this.refresh})
       : super(key: key);
 
   @override
@@ -37,34 +44,73 @@ class _UserLoginTileState extends State<UserLoginTile> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(
-          left: Dimens.default_padding,
-          right: Dimens.default_padding,
-          bottom: 20),
-      child: ListTile(
+    return InkWell(
         onTap: () async {
           await login();
         },
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(2.0),
-            side: BorderSide(width: 1, color: Colors.grey)),
-        leading: const CircleAvatar(
-          radius: 20,
-          backgroundColor: MoodleColors.blue,
-          child: Icon(
-            Icons.person,
-            size: 20,
-            color: Colors.white,
-          ),
-        ),
-        title: Text(
-          widget.user.baseUrl,
-          maxLines: 1,
-          overflow: TextOverflow.clip,
-        ),
-        subtitle: Text(widget.user.username),
-      ),
-    );
+        child: Padding(
+            padding: const EdgeInsets.only(
+                left: Dimens.default_padding,
+                right: Dimens.default_padding,
+                bottom: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    ClipRRect(
+                        borderRadius: BorderRadius.circular(1000),
+                        child: widget.user.photo != null
+                            ? Image.network(
+                                widget.user.photo! +
+                                    "&token=" +
+                                    widget.user.token,
+                                scale: 1.4,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    const Icon(
+                                      Icons.person,
+                                      size: 20,
+                                      color: Colors.white,
+                                    ))
+                            : const Icon(
+                                Icons.person,
+                                size: 20,
+                                color: Colors.white,
+                              )),
+                    SizedBox(width: 15),
+                    Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.user.username,
+                            maxLines: 1,
+                            overflow: TextOverflow.clip,
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                            textScaleFactor: 1.5,
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            widget.user.baseUrl.replaceAll("https://", ""),
+                            textScaleFactor: 1.1,
+                          ),
+                        ]),
+                  ],
+                ),
+                IconButton(
+                    onPressed: () async {
+                      await SQLHelper.deleteUserItem(
+                          widget.user.baseUrl, widget.user.username);
+                      widget.refresh();
+                    },
+                    icon: const Icon(
+                      Icons.delete,
+                      color: Colors.black87,
+                      size: 35,
+                    )),
+              ],
+            )));
   }
 }

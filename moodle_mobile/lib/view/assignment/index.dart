@@ -39,6 +39,7 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
   Color dateDiffColor = Colors.grey;
   late UserStore _userStore;
   bool overDue = false;
+  bool error = false;
 
   @override
   void initState() {
@@ -63,6 +64,9 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
       }
       return assign;
     } catch (e) {
+      setState(() {
+        error = true;
+      });
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(e.toString()), backgroundColor: Colors.red));
     }
@@ -79,6 +83,9 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
       }
       return assign;
     } catch (e) {
+      setState(() {
+        error = true;
+      });
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(e.toString()), backgroundColor: Colors.red));
     }
@@ -127,7 +134,8 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                             dateTime.minute.toString() +
                             " minutes")
                         : dateTime.second.toString() + " seconds"));
-        overDue = dueDate.isAfter(DateTime.now()) ? false : true;
+        overDue = (dueDate.isAfter(DateTime.now()) ? false : true) &&
+            (attempt.cansubmit == false || attempt.cansubmit == null);
       });
       return;
     }
@@ -181,127 +189,134 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
         ],
         body: isLoading
             ? const Center(child: CircularProgressIndicator())
-            : SingleChildScrollView(
-                child: Container(
-                  margin: const EdgeInsets.only(left: 10, right: 10, top: 20),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      DateAssignmentTile(
-                        date: (assignment.allowsubmissionsfromdate ?? 0) * 1000,
-                        title: "Opened",
-                        iconColor: Colors.grey,
-                        backgroundIconColor:
-                            const Color.fromARGB(255, 217, 217, 217),
-                      ),
-                      DateAssignmentTile(
-                        date: (assignment.duedate ?? 0) * 1000,
-                        title: "Due",
-                        iconColor: Colors.green,
-                        backgroundIconColor: Colors.greenAccent,
-                      ),
-                      const Divider(),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        child: Card(
-                          elevation: 5,
-                          child: Html(
-                            data: assignment.intro ?? "",
-                            shrinkWrap: true,
+            : error
+                ? const Center(
+                    child: Text("Error loading"),
+                  )
+                : SingleChildScrollView(
+                    child: Container(
+                      margin:
+                          const EdgeInsets.only(left: 10, right: 10, top: 20),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          DateAssignmentTile(
+                            date: (assignment.allowsubmissionsfromdate ?? 0) *
+                                1000,
+                            title: "Opened",
+                            iconColor: Colors.grey,
+                            backgroundIconColor:
+                                const Color.fromARGB(255, 217, 217, 217),
                           ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      const Text(
-                        "Submission status",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      const SubmissionStatusTile(
-                        leftText: "Submission status",
-                        rightText: "Submitted for grading",
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      const SubmissionStatusTile(
-                        leftText: "Grading status",
-                        rightText: "Not graded",
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      SubmissionStatusTile(
-                          leftText: "Time remaining",
-                          rightText: dateDiff,
-                          rightTextColor: dateDiffColor),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      SubmissionStatusTile(
-                          leftText: "Last modified",
-                          rightText: DateFormat("hh:mmaa, dd MMMM, yyyy")
-                              .format(DateTime.fromMillisecondsSinceEpoch(
-                                  attempt.submission?.timemodified ?? 0))),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      SubmissionStatusTile(
-                        leftText: "File submissions",
-                        rightText: (attempt.submission?.plugins?[0]
-                                        .fileareas?[0].files ??
-                                    [])
-                                .length
-                                .toString() +
-                            " files",
-                        rightTextColor: Colors.blue,
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      const SubmissionStatusTile(
-                        leftText: "Submission comments",
-                        rightText: "0 comments...",
-                        rightTextColor: Colors.blue,
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      overDue
-                          ? Container()
-                          : CustomButtonWidget(
-                              textButton: "View file submission",
-                              onPressed: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (_) {
-                                      return FilesAssignmentScreen(
-                                        assignId: widget.assignInstanceId,
-                                        dueDate: assignment.duedate ?? 0,
-                                        canEdit: attempt.canedit ?? false,
-                                        maxByteSize: int.parse(assignment
-                                                    .configs !=
-                                                null
-                                            ? assignment.configs!
-                                                .where((element) =>
-                                                    element.name ==
-                                                    "maxsubmissionsizebytes")
-                                                .first
-                                                .value
-                                            : "5242880"),
-                                        maxFileCount: int.parse(
-                                            assignment.configs != null
+                          DateAssignmentTile(
+                            date: (assignment.duedate ?? 0) * 1000,
+                            title: "Due",
+                            iconColor: Colors.green,
+                            backgroundIconColor: Colors.greenAccent,
+                          ),
+                          const Divider(),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width,
+                            child: Card(
+                              elevation: 5,
+                              child: Html(
+                                data: assignment.intro ?? "",
+                                shrinkWrap: true,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          const Text(
+                            "Submission status",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          const SubmissionStatusTile(
+                            leftText: "Submission status",
+                            rightText: "Submitted for grading",
+                          ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          const SubmissionStatusTile(
+                            leftText: "Grading status",
+                            rightText: "Not graded",
+                          ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          SubmissionStatusTile(
+                              leftText: "Time remaining",
+                              rightText: dateDiff,
+                              rightTextColor: dateDiffColor),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          SubmissionStatusTile(
+                              leftText: "Last modified",
+                              rightText: DateFormat("hh:mmaa, dd MMMM, yyyy")
+                                  .format(DateTime.fromMillisecondsSinceEpoch(
+                                      attempt.submission?.timemodified ?? 0))),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          SubmissionStatusTile(
+                            leftText: "File submissions",
+                            rightText: (attempt.submission?.plugins?[0]
+                                            .fileareas?[0].files ??
+                                        [])
+                                    .length
+                                    .toString() +
+                                " files",
+                            rightTextColor: Colors.blue,
+                          ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          const SubmissionStatusTile(
+                            leftText: "Submission comments",
+                            rightText: "0 comments...",
+                            rightTextColor: Colors.blue,
+                          ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          overDue
+                              ? Container()
+                              : CustomButtonWidget(
+                                  textButton: "View file submission",
+                                  onPressed: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (_) {
+                                          return FilesAssignmentScreen(
+                                            assignId: widget.assignInstanceId,
+                                            dueDate: assignment.duedate ?? 0,
+                                            canEdit: attempt.canedit ?? false,
+                                            maxByteSize: int.parse(assignment
+                                                        .configs !=
+                                                    null
+                                                ? assignment.configs!
+                                                    .where((element) =>
+                                                        element.name ==
+                                                        "maxsubmissionsizebytes")
+                                                    .first
+                                                    .value
+                                                : "5242880"),
+                                            maxFileCount: int.parse(assignment
+                                                        .configs !=
+                                                    null
                                                 ? assignment.configs!
                                                     .where((element) =>
                                                         element.name ==
@@ -309,21 +324,21 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                                                     .first
                                                     .value
                                                 : "1"),
-                                        attempt: attempt,
-                                        reload: loadAssignmentAttempt,
-                                      );
-                                    },
-                                  ),
-                                );
-                              },
-                            ),
-                      SizedBox(
-                        height: 20,
+                                            attempt: attempt,
+                                            reload: loadAssignmentAttempt,
+                                          );
+                                        },
+                                      ),
+                                    );
+                                  },
+                                ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              ),
       ),
     );
   }

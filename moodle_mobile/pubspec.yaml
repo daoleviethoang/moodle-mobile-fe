@@ -93,6 +93,9 @@ dependencies:
   #list scroll to index
   scrollable_positioned_list: ^0.2.2
 
+  #pick image camera or galery
+  image_picker: ^0.7.2+1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -137,9 +140,9 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: OpenSans
+    - family: SF
       fonts:
-        - asset: assets/fonts/OpenSans.ttf
+        - asset: assets/fonts/SF.ttf
           weight: 700
   #   - family: Trajan Pro
   #     fonts:

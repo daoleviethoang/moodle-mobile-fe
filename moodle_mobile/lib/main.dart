@@ -70,6 +70,7 @@ class MyApp extends StatelessWidget {
       builder: DevicePreview.appBuilder,
       title: 'Moodle App',
       theme: ThemeData(
+        fontFamily: 'SF',
         colorScheme: const ColorScheme(
           brightness: Brightness.light,
           primary: MoodleColors.blue,

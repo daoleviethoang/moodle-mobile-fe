@@ -4,6 +4,7 @@ import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/content_item.dart';
+import 'package:moodle_mobile/view/common/image_view.dart';
 import 'package:moodle_mobile/view/common/menu_item.dart' as m;
 import 'package:moodle_mobile/view/menu/profile/profile.dart';
 import 'package:moodle_mobile/view/message_preference/index.dart';
@@ -252,9 +253,11 @@ class ProfileHeader extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const CircleAvatar(
-            radius: 23,
-          ),
+          CircleImageView(
+              fit: BoxFit.none,
+              imageUrl:
+                  _userStore.user.photo! + "&token=" + _userStore.user.token,
+              placeholder: CircularProgressIndicator()),
           const SizedBox(
             width: 10,
           ),

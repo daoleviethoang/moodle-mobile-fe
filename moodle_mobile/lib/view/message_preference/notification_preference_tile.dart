@@ -35,9 +35,7 @@ class MessagePreferenceTile extends StatelessWidget {
           SizedBox(
             height: 10,
           ),
-          ListView(
-            padding: EdgeInsets.only(top: 0),
-            shrinkWrap: true,
+          Column(
             children: components.notifications
                     ?.map(
                       (e) => MessagePreferenceChildTile(
