@@ -49,7 +49,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   Widget _homeTab = Container();
   Widget _announcementsTab = Container();
   Widget _discussionsTab = Container();
-  Widget _upcomingTab = Container();
+  Widget _eventsTab = Container();
   Widget _gradesTab = Container();
   Widget _peopleTab = Container();
 
@@ -57,7 +57,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   late UserStore _userStore;
   CourseDetail? _course;
   List<CourseContent> _content = [];
-  List<Event> _upcoming = [];
+  List<Event> _events = [];
 
   @override
   void initState() {
@@ -69,15 +69,24 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   // region BODY
 
   void _initBody() {
+    _body.clear();
     try {
       _initHomeTab();
     } catch (e) {
       _homeTab = ErrorCard(text: '$e');
+    } finally {
+      if (_homeTab is! Container) {
+        _body.add(_homeTab);
+      }
     }
     try {
       _initAnnouncementsTab();
     } catch (e) {
       _announcementsTab = ErrorCard(text: '$e');
+    } finally {
+      if (_announcementsTab is! Container) {
+        _body.add(_announcementsTab);
+      }
     }
     try {
       _initDiscussionsTab();
@@ -85,46 +94,51 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
       _discussionsTab = ErrorCard(text: '$e');
     }
     try {
-      _initUpcomingTab();
+      _initEventsTab();
     } catch (e) {
-      _upcomingTab = ErrorCard(text: '$e');
+      _eventsTab = ErrorCard(text: '$e');
+    } finally {
+      if (_eventsTab is! Container) {
+        _body.add(_eventsTab);
+      }
     }
     try {
       _initGradesTab();
     } catch (e) {
       _gradesTab = ErrorCard(text: '$e');
+    } finally {
+      if (_gradesTab is! Container) {
+        _body.add(_gradesTab);
+      }
     }
     try {
       _initPeopleTab();
     } catch (e) {
       _peopleTab = ErrorCard(text: '$e');
+    } finally {
+      if (_peopleTab is! Container) {
+        _body.add(_peopleTab);
+      }
     }
     _initTabList();
-
-    _body = [
-      _homeTab,
-      _announcementsTab,
-      _discussionsTab,
-      _upcomingTab,
-      _gradesTab,
-      _peopleTab,
-    ];
   }
 
   void _initTabList() {
-    _tabs = [const Tab(child: Text('Home'))];
+    _tabs = [Tab(child: Text(AppLocalizations.of(context)!.home))];
     if (_announcementsTab is! Container) {
-      _tabs.add(const Tab(child: Text('Announcements')));
+      _tabs.add(Tab(child: Text(AppLocalizations.of(context)!.announcement)));
     }
     if (_discussionsTab is! Container) {
-      _tabs.add(const Tab(child: Text('Discussion Forums')));
+      _tabs.add(Tab(child: Text(AppLocalizations.of(context)!.discussion)));
     }
-    _tabs.add(const Tab(child: Text('Events')));
+    if (_eventsTab is! Container) {
+      _tabs.add(Tab(child: Text(AppLocalizations.of(context)!.events)));
+    }
     if (_gradesTab is! Container) {
-      _tabs.add(const Tab(child: Text('Grades')));
+      _tabs.add(Tab(child: Text(AppLocalizations.of(context)!.grades)));
     }
     if (_peopleTab is! Container) {
-      _tabs.add(const Tab(child: Text('Participants')));
+      _tabs.add(Tab(child: Text(AppLocalizations.of(context)!.participants)));
     }
 
     _tabController = TabController(
@@ -248,19 +262,19 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     );
   }
 
-  void _initUpcomingTab() {
-    if (_upcoming.isEmpty) {
-      _upcomingTab = Container();
+  void _initEventsTab() {
+    if (_events.isEmpty) {
+      _eventsTab = Container();
       return;
     }
-    _upcomingTab = Align(
+    _eventsTab = Align(
       alignment: Alignment.centerLeft,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text('Upcoming events', style: MoodleStyles.courseHeaderStyle),
           Container(height: 16),
-          ..._upcoming.map((e) {
+          ..._events.map((e) {
             final title = e.name ?? '';
             final epoch = (e.timestart ?? 0) * 1000;
             final dueDate = DateTime.fromMillisecondsSinceEpoch(epoch);
@@ -315,7 +329,6 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   }
 
   void _initPeopleTab() {
-    // TODO: Get participant list from API
     _peopleTab = ParticipantsInOneCourse(courseId: _courseId);
   }
 
@@ -353,7 +366,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
         _userStore.user.token,
         _courseId,
       );
-      _upcoming = await CalendarService().getUpcomingByCourse(
+      _events = await CalendarService().getUpcomingByCourse(
         _userStore.user.token,
         _courseId,
       );
