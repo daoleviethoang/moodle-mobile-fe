@@ -84,6 +84,7 @@ class _ForumScreenState extends State<ForumScreen> {
         ),
         ..._forumDiscussion.map((e) {
           return PostCard(
+            discussionId: e.discussion,
             title: e.name!,
             article: e.userfullname,
             relyNum: e.numreplies!,
@@ -96,15 +97,17 @@ class _ForumScreenState extends State<ForumScreen> {
 }
 
 class PostCard extends StatefulWidget {
+  final int? discussionId;
   final String title;
-  final String? article;
   final int relyNum;
+  final String? article;
   final DateTime? date;
   bool value;
   PostCard(
       {Key? key,
       this.article,
       this.date,
+      this.discussionId,
       required this.title,
       this.relyNum = 2,
       this.value = true})
@@ -119,8 +122,12 @@ class _PostCardState extends State<PostCard> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (builder) => ForumDetailScreen()));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (builder) => ForumDetailScreen(
+                      DiscussionId: widget.discussionId,
+                    )));
       },
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
