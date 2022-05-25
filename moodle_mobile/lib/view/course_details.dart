@@ -20,15 +20,12 @@ import 'package:moodle_mobile/models/module/module.dart';
 import 'package:moodle_mobile/models/module/module_course.dart';
 import 'package:moodle_mobile/view/common/content_item.dart';
 import 'package:moodle_mobile/view/common/data_card.dart';
-import 'package:moodle_mobile/view/common/image_view.dart';
-import 'package:moodle_mobile/view/common/menu_item.dart' as m;
 import 'package:moodle_mobile/view/enrol/enrol.dart';
 import 'package:moodle_mobile/view/forum/forum_screen.dart';
 import 'package:moodle_mobile/view/grade_in_one_course.dart';
 import 'package:moodle_mobile/view/participants_in_one_course.dart';
-import 'package:moodle_mobile/view/user_detail/user_detail.dart';
-import 'package:moodle_mobile/view/user_detail/user_detail_student.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CourseDetailsScreen extends StatefulWidget {
   final int courseId;
@@ -92,6 +89,10 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
       _initDiscussionsTab();
     } catch (e) {
       _discussionsTab = ErrorCard(text: '$e');
+    } finally {
+      if (_discussionsTab is! Container) {
+        _body.add(_discussionsTab);
+      }
     }
     try {
       _initEventsTab();
@@ -233,7 +234,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                 case ModuleName.zoom:
                   return Container();
                 default:
-                  throw Exception('Unknown module name: ${m.modname}');
+                  throw Exception(
+                      AppLocalizations.of(context)!.err_unknown_module(m.modname ?? ''));
               }
             } catch (e) {
               // FIXME: Assignment text is [] instead of string
@@ -272,7 +274,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Upcoming events', style: MoodleStyles.courseHeaderStyle),
+          Text(AppLocalizations.of(context)!.upcoming_events,
+              style: MoodleStyles.courseHeaderStyle),
           Container(height: 16),
           ..._events.map((e) {
             final title = e.name ?? '';
@@ -316,7 +319,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                       );
                     });
               default:
-                throw Exception('Unknown module name: ' + (e.modulename ?? ''));
+                throw Exception(
+                    AppLocalizations.of(context)!.err_unknown_module(e.modulename ?? ''));
             }
           }).toList(),
         ],

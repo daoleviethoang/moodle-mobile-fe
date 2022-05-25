@@ -1,5 +1,24 @@
 {
-    "load_category_fail":"Loading course category fail, please try again later",
-    "course_category":"Course category",
-    "course":"Course"
+    "load_category_fail": "Loading course category fail, please try again later",
+    "course_category": "Course category",
+    "course": "Course",
+
+    "home": "Home",
+    "announcement": "Announcements",
+    "discussion": "Discussion Forums",
+    "events": "Events",
+    "grades": "Grades",
+    "participants": "Participants",
+    "upcoming_events": "Upcoming events",
+
+    "err_unknown_module": "Unsupported module name: {modname}",
+    "@err_unknown_module": {
+        "description": "Unsupported module in course details.",
+        "placeholders": {
+            "modname": {
+                "type": "String",
+                "example": "folder"
+            }
+        }
+    }
 }

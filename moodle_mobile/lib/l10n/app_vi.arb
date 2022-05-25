@@ -1,5 +1,24 @@
 {
     "load_category_fail":"Lấy dữ liệu danh mục khóa học thất bại",
     "course_category":"Danh mục khóa học",
-    "course":"Khóa học"
+    "course":"Khóa học",
+
+    "home": "Trang chủ",
+    "announcement": "Thông báo",
+    "discussion": "Diễn đàn thảo luận",
+    "events": "Sự kiện",
+    "grades": "Điểm số",
+    "participants": "Thành viên",
+    "upcoming_events": "Sự kiện sắp tới",
+
+    "err_unknown_module": "Module chưa được hỗ trợ: {modname}",
+    "@err_unknown_module": {
+        "description": "Unsupported module in course details.",
+        "placeholders": {
+            "modname": {
+                "type": "String",
+                "example": "folder"
+            }
+        }
+    }
 }
