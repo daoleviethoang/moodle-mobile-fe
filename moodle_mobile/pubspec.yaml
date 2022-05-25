@@ -34,43 +34,23 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.4
-
-  # View calendar
   table_calendar: ^3.0.4
-
-  # Format DateTime into String
   intl: ^0.17.0
-
-  # Render HTML string
   flutter_html: ^2.2.1
-
-  # Mobx
   mobx: ^2.0.6+1
   flutter_mobx: ^2.0.4
-
-  # Network
   dio: ^4.0.4
   get_it: ^7.2.0
-
-  # Storage
   shared_preferences: ^2.0.13
-  cloud_firestore: ^3.1.15
+  
 
   # create encode and decode json
   json_annotation: ^4.4.0
-
-  # Launch urls
+  
   url_launcher: ^6.0.20
-
-  # View videos
   video_player: ^2.3.0
-
   flutter_slidable: ^1.2.0
-
-  # Show device frame
   device_preview: ^1.0.0
-
-  # Pick files from device
   file_picker: ^3.0.4
 
   #cache
@@ -86,6 +66,8 @@ dependencies:
   #auto complete text field
   autocomplete_textfield_ns: ^2.0.0
   auto_size_text: ^3.0.0
+
+  cloud_firestore: ^3.1.15
 
   #count down timer
   flutter_countdown_timer: ^4.1.0
