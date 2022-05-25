@@ -8,6 +8,11 @@ import 'package:moodle_mobile/data/network/constants/wsfunction_constants.dart';
 import 'package:moodle_mobile/data/network/dio_http.dart';
 import 'package:moodle_mobile/models/assignment/file_assignment.dart';
 import 'package:moodle_mobile/models/forum/forum_course.dart';
+<<<<<<< Updated upstream
+=======
+import 'package:moodle_mobile/models/forum/forum_discussion.dart';
+import 'package:moodle_mobile/models/forum/forum_post.dart';
+>>>>>>> Stashed changes
 
 class ForumApi {
   // injecting dio instance
@@ -39,6 +44,45 @@ class ForumApi {
     return null;
   }
 
+<<<<<<< Updated upstream
+=======
+  Future<List<ForumDiscussion>?> getForumDiscussion(
+      String token, int forumid) async {
+    try {
+      Dio dio = Http().client;
+      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': Wsfunction.MOD_FORUM_GET_FORUM_DISCUSSIONS,
+        'moodlewsrestformat': "json",
+        'forumid': forumid
+      });
+      var list = res.data["discussions"] as List;
+      List<ForumDiscussion> temp =
+          list.map((e) => ForumDiscussion.fromJson(e)).toList();
+      return temp;
+    } catch (e) {}
+    return null;
+  }
+
+  // get all post in dicussion
+  Future<List<ForumPost>?> getForumPost(String token, int discussionid) async {
+    try {
+      Dio dio = Http().client;
+      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': Wsfunction.MOD_FORUM_GET_DISCUSSION_POSTS,
+        'moodlewsrestformat': "json",
+        'discussionid': discussionid
+      });
+      var list = res.data['posts'] as List;
+      print(list);
+      List<ForumPost> temp = list.map((e) => ForumPost.fromJson(e)).toList();
+      return temp;
+    } catch (e) {}
+    return null;
+  }
+
+>>>>>>> Stashed changes
   // post 1 post in forum
   postAPost(String token, int forumId, String subject, String message,
       List<FileUpload> files) async {
@@ -124,5 +168,21 @@ class ForumApi {
     } catch (e) {
       rethrow;
     }
+  }
+
+  //Subscrible a discussion post
+  subscriblePost(String token, int forumId, int state, int discussionId) {
+    try {
+      Dio dio = Http().client;
+      var query = {
+        'wstoken': token,
+        'wsfunction': Wsfunction.MOD_FORUM_SET_SUBSCRIPTION,
+        'moodlewsrestformat': "json",
+        'forumid': forumId,
+        'targetstate': state,
+        'discussionid': discussionId,
+      };
+      return;
+    } catch (e) {}
   }
 }

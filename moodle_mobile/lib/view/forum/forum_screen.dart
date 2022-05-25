@@ -52,6 +52,7 @@ class _ForumScreenState extends State<ForumScreen> {
             ],
           ),
         ),
+<<<<<<< Updated upstream
         PostCard(
           title: 'How to use widgets in flutter',
           value: true,
@@ -61,6 +62,17 @@ class _ForumScreenState extends State<ForumScreen> {
           value: false,
           relyNum: 0,
         )
+=======
+        ..._forumDiscussion.map((e) {
+          return PostCard(
+            discussionId: e.discussion,
+            title: e.name!,
+            article: e.userfullname,
+            relyNum: e.numreplies!,
+            date: DateTime.fromMillisecondsSinceEpoch(e.created! * 1000),
+          );
+        }),
+>>>>>>> Stashed changes
       ],
     );
   }
@@ -69,9 +81,23 @@ class _ForumScreenState extends State<ForumScreen> {
 class PostCard extends StatefulWidget {
   final String title;
   final int relyNum;
+<<<<<<< Updated upstream
   bool value;
   PostCard(
       {Key? key, required this.title, this.relyNum = 2, required this.value})
+=======
+  final int? discussionId;
+  final DateTime? date;
+  bool value;
+  PostCard(
+      {Key? key,
+      this.article,
+      this.date,
+      this.discussionId,
+      required this.title,
+      this.relyNum = 2,
+      this.value = true})
+>>>>>>> Stashed changes
       : super(key: key);
 
   @override
@@ -83,8 +109,12 @@ class _PostCardState extends State<PostCard> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (builder) => ForumDetailScreen()));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (builder) => ForumDetailScreen(
+                      DiscussionId: widget.discussionId,
+                    )));
       },
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
