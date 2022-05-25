@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/data/network/apis/course_category/course_category_api.dart';
@@ -48,20 +49,21 @@ class _CourseCategoryFolderScreenState
         body: NestedScrollView(
       headerSliverBuilder: (context, innerBoxIsScrolled) => [
         SliverAppBar(
+          floating: true,
+          snap: true,
           title: Text(
             widget.data.name ?? "",
-            style: TextStyle(color: Colors.black),
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+            ),
           ),
-          backgroundColor: Colors.white,
-          elevation: 0,
-          iconTheme: IconThemeData(
-            color: Colors.white,
-          ),
-          leading: BackButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            color: Colors.black,
+          leading: TextButton(
+            style: TextButton.styleFrom(
+              primary: Colors.white,
+            ),
+            child: const Icon(CupertinoIcons.back),
+            onPressed: () => Navigator.pop(context),
           ),
         ),
       ],

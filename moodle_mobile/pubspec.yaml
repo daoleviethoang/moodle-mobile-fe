@@ -75,6 +75,9 @@ dependencies:
   #list scroll to index
   scrollable_positioned_list: ^0.2.2
 
+  #pick image camera or galery
+  image_picker: ^0.7.2+1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
