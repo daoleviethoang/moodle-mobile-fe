@@ -10,6 +10,7 @@ import 'package:moodle_mobile/view/message_preference/index.dart';
 import 'package:moodle_mobile/view/notification_preference/index.dart';
 import 'package:moodle_mobile/view/splash/splash_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({Key? key}) : super(key: key);
@@ -165,7 +166,7 @@ class _MenuScreenState extends State<MenuScreen> {
                         color: Colors.green,
                         icon: const Icon(Icons.lock_rounded),
                         fullWidth: true,
-                        onPressed: () {},
+                        onPressed: () => openAppSettings(),
                       ),
                     ],
                   ),
