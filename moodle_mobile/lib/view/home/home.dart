@@ -4,6 +4,7 @@ import 'package:moodle_mobile/models/contant/contant_model.dart';
 import 'package:moodle_mobile/view/common/select_course_filter.dart';
 import 'package:moodle_mobile/view/home/courses_view.dart';
 import 'package:moodle_mobile/view/course_category/index.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -94,9 +95,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget getButtonUI(CategoryType categoryTypeData, bool isSelected) {
     String txt = '';
     if (CategoryType.my == categoryTypeData) {
-      txt = 'My Courses';
+      txt = AppLocalizations.of(context)!.my_courses;
     } else if (CategoryType.all == categoryTypeData) {
-      txt = 'All Courses';
+      txt = AppLocalizations.of(context)!.all_courses;
     }
     return Expanded(
       child: Container(

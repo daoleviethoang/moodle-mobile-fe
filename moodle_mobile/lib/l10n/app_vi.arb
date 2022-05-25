@@ -17,6 +17,19 @@
     "participants": "Thành viên",
     "upcoming_events": "Sự kiện sắp tới",
 
+    "my_courses": "Khoá của tôi",
+    "all_courses": "Tất cả khoá",
+
+    "jump_date": "Chuyển ngày",
+    "jump": "Chuyển",
+    "events_on": "Sự kiện vào {date}",
+
+    "messages": "Tin nhắn",
+    "contacts": "Danh bạ",
+    "enter_message": "Nhập tin nhắn",
+
+    "noti_context": "<b>{article}</b><br/> trong <b>{name}</b>",
+
     "news": "Thông tin & Tin tức",
     "settings": "Cài đặt",
     "account": "Tài khoản",

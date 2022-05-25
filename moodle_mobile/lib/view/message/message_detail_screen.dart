@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
-
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -12,9 +10,10 @@ import 'package:moodle_mobile/store/conversation/conversation_store.dart';
 import 'package:moodle_mobile/store/conversation_detail/conversation_detail_store.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/data/repository.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MessageDetailScreen extends StatefulWidget {
-  MessageDetailScreen(
+  const MessageDetailScreen(
       {Key? key, required this.conversationId, required this.userFrom})
       : super(key: key);
   final int conversationId;
@@ -62,10 +61,10 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
-        leading: BackButton(color: Colors.white),
+        leading: const BackButton(color: Colors.white),
         title: Text(
           widget.userFrom,
-          style: TextStyle(color: Colors.white),
+          style: const TextStyle(color: Colors.white),
         ),
         //const Text("Messenger", style: TextStyle(color: Colors.white))
         centerTitle: false,
@@ -103,13 +102,13 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
                       Expanded(
                           child: CustomTextFieldWidget(
                         controller: _textEditingController,
-                        hintText: "Enter message",
+                        hintText: AppLocalizations.of(context)!.enter_message,
                         borderRadius: Dimens.default_border_radius * 2,
                       )),
                       OutlinedButton(
                         style: OutlinedButton.styleFrom(
-                          shape: CircleBorder(),
-                          side: BorderSide(color: Colors.white),
+                          shape: const CircleBorder(),
+                          side: const BorderSide(color: Colors.white),
                         ),
                         onPressed: () async {
                           await _conversationDetailStore.sentMessage(
@@ -121,11 +120,11 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
 
                           _scrollController.animateTo(
                             0,
-                            duration: Duration(seconds: 2),
+                            duration: const Duration(seconds: 2),
                             curve: Curves.fastOutSlowIn,
                           );
                         },
-                        child: Icon(Icons.send, size: 30),
+                        child: const Icon(Icons.send, size: 30),
                       ),
                     ],
                   ),
