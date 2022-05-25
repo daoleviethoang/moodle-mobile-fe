@@ -40,9 +40,9 @@ class CourseDetailsScreen extends StatefulWidget {
 class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     with TickerProviderStateMixin {
   TabController? _tabController;
-  late var _tabs = <Widget>[];
+  final _tabs = <Widget>[];
   var _index = 0;
-  late var _body = <Widget>[];
+  final _body = <Widget>[];
   Widget _homeTab = Container();
   Widget _announcementsTab = Container();
   Widget _discussionsTab = Container();
@@ -125,7 +125,10 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   }
 
   void _initTabList() {
-    _tabs = [Tab(child: Text(AppLocalizations.of(context)!.home))];
+    _tabs.clear();
+    if (_homeTab is! Container) {
+      _tabs.add(Tab(child: Text(AppLocalizations.of(context)!.home)));
+    }
     if (_announcementsTab is! Container) {
       _tabs.add(Tab(child: Text(AppLocalizations.of(context)!.announcement)));
     }

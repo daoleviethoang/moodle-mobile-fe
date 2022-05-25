@@ -3,6 +3,12 @@
     "course_category": "Course category",
     "course": "Course",
 
+    "dashboard": "Dashboard",
+    "calendar": "Calendar",
+    "messenger": "Messenger",
+    "notifications": "Notifications",
+    "menu": "Menu",
+
     "home": "Home",
     "announcement": "Announcements",
     "discussion": "Discussion Forums",
@@ -11,6 +17,27 @@
     "participants": "Participants",
     "upcoming_events": "Upcoming events",
 
+    "news": "News & Info",
+    "settings": "Settings",
+    "account": "Account",
+    "noti_settings": "Notifications & Sounds",
+    "message_settings": "Messenger settings",
+    "moodle_settings": "Moodle settings",
+    "app_settings": "App settings",
+    "permissions": "Device permissions",
+    "change_password": "Change password",
+    "report": "Report a problem",
+    "logout": "Logout",
+
+    "disable_noti": "Disable notifications",
+
+    "restrict": "Who can message me",
+    "restrict_contact": "My contacts only",
+    "restrict_anyone": "My contacts and anyone in my courses",
+
+    "err_load_noti_settings": "Loading notification preferences fail, please try again later",
+    "err_set_noti_settings": "Set notification preferences fail, please try again later",
+    "err_load_message_settings": "Loading message settigns fail, please try again later",
     "err_unknown_module": "Unsupported module name: {modname}",
     "@err_unknown_module": {
         "description": "Unsupported module in course details.",

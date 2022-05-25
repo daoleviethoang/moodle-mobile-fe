@@ -10,6 +10,7 @@ import 'package:moodle_mobile/view/menu/menu_screen.dart';
 import 'package:moodle_mobile/view/notifications/notification_screen.dart';
 import 'package:moodle_mobile/view/message/message_screen.dart';
 import 'package:moodle_mobile/view/search_course/search_course.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DirectScreen extends StatefulWidget {
   const DirectScreen({Key? key}) : super(key: key);
@@ -25,13 +26,7 @@ class _DirectScreenState extends State<DirectScreen> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   // ignore: prefer_final_fields
   List<Widget> _widgetOptions = [];
-  static const List<String> _widgetAppBarTitle = <String>[
-    "Learning Management System",
-    "Calendar",
-    "Messenger",
-    "Notifications",
-    "Menu",
-  ];
+  static late List<String> _widgetAppBarTitle;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -57,6 +52,14 @@ class _DirectScreenState extends State<DirectScreen> {
 
   @override
   Widget build(BuildContext context) {
+    _widgetAppBarTitle = [
+      "Learning Management System",
+      AppLocalizations.of(context)!.calendar,
+      AppLocalizations.of(context)!.messenger,
+      AppLocalizations.of(context)!.notifications,
+      AppLocalizations.of(context)!.menu,
+    ];
+
     return getRedirectUI();
   }
 
@@ -96,30 +99,30 @@ class _DirectScreenState extends State<DirectScreen> {
 
   BottomNavigationBar getBottomNavBarUI() {
     return BottomNavigationBar(
-      items: const <BottomNavigationBarItem>[
+      items:  <BottomNavigationBarItem>[
         BottomNavigationBarItem(
-          icon: Icon(Icons.home_outlined),
-          activeIcon: Icon(Icons.home_rounded),
-          label: 'Dashboard',
+          icon: const Icon(Icons.home_outlined),
+          activeIcon: const Icon(Icons.home_rounded),
+          label: AppLocalizations.of(context)!.dashboard,
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.event_outlined),
-          activeIcon: Icon(Icons.event_rounded),
-          label: 'Calendar',
+          icon: const Icon(Icons.event_outlined),
+          activeIcon: const Icon(Icons.event_rounded),
+          label: _widgetAppBarTitle[1],
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.messenger_outline_rounded),
-          activeIcon: Icon(Icons.messenger_rounded),
-          label: 'Messenger',
+          icon: const Icon(Icons.messenger_outline_rounded),
+          activeIcon: const Icon(Icons.messenger_rounded),
+          label: _widgetAppBarTitle[2],
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.notifications_outlined),
-          activeIcon: Icon(Icons.notifications),
-          label: 'Notification',
+          icon: const Icon(Icons.notifications_outlined),
+          activeIcon: const Icon(Icons.notifications),
+          label: _widgetAppBarTitle[3],
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.menu_rounded),
-          label: 'Menu',
+          icon: const Icon(Icons.menu_rounded),
+          label: _widgetAppBarTitle[4],
         ),
       ],
       currentIndex: _selectedIndex,
