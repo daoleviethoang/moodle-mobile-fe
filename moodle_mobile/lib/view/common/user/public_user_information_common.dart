@@ -19,9 +19,7 @@ class PublicInfomationCommonView extends StatelessWidget {
           decoration: BoxDecoration(
             color: const Color(0xff7c94b6),
             image: DecorationImage(
-              image: NetworkImage(imageUrl),
-              fit: BoxFit.cover,
-            ),
+                image: NetworkImage(imageUrl), fit: BoxFit.cover),
             borderRadius: BorderRadius.all(Radius.circular(90.0)),
             border: Border.all(
               color: MoodleColors.white,

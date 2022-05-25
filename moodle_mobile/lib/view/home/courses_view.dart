@@ -18,7 +18,7 @@ class PopularCourseListView extends StatefulWidget {
   final ContantModel arrangeTypeSelected;
   final ContantModel statusTypeSelected;
   final bool showOnlyStarSelected;
-  final bool isFilter;
+  bool isFilter;
 
   PopularCourseListView(
       {Key? key,

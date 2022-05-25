@@ -7,6 +7,7 @@ import 'package:moodle_mobile/data/network/constants/wsfunction_constants.dart';
 import 'package:moodle_mobile/data/network/dio_client.dart';
 import 'package:moodle_mobile/data/network/dio_http.dart';
 import 'package:moodle_mobile/models/user.dart';
+import 'package:moodle_mobile/models/user/user_overview.dart';
 
 class UserApi {
   // dio instance
@@ -54,6 +55,29 @@ class UserApi {
           username: res.data[0]['username'],
           fullname: res.data[0]['fullname'],
           email: res.data[0]['email']);
+    } catch (e) {
+      print("$e");
+      rethrow;
+    }
+  }
+
+  // Write a future return user info by id
+  Future<List<UserOverview>> getUserById(String token, int id) async {
+    try {
+      Dio dio = Http().client;
+      var res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': Wsfunction.CORE_USER_GET_USERS_BY_FIELD,
+        'moodlewsrestformat': 'json',
+        'field': 'id',
+        'values[0]': id
+      });
+
+      var list = res.data as List;
+      if (list.isEmpty) {
+        throw Exception('Cannot find this user !');
+      }
+      return list.map((e) => UserOverview.fromJson(e)).toList();
     } catch (e) {
       print("$e");
       rethrow;

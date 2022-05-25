@@ -71,7 +71,6 @@ class _SelectCourseFilterState extends State<SelectCourseFilter>
       onTap: () {
         isShow = !isShow;
         _runExpandCheck();
-        setState(() {});
       },
       child: Container(
         margin: const EdgeInsets.only(left: 8.0, right: 8.0),

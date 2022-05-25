@@ -5,17 +5,26 @@ import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
 import 'package:moodle_mobile/models/conversation/conversation_message.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/image_view.dart';
 import 'package:moodle_mobile/view/user_detail/user_detail.dart';
 import 'package:moodle_mobile/view/user_detail/user_detail_student.dart';
 
 class ParticipantListTile extends StatelessWidget {
   const ParticipantListTile(
-      {Key? key, required this.fullname, required this.index})
+      {Key? key,
+      required this.fullname,
+      required this.id,
+      required this.role,
+      required this.userStore,
+      required this.courseName})
       : super(key: key);
 
   final String fullname;
-  final int index;
+  final int id;
+  final int role;
+  final UserStore userStore;
+  final String? courseName;
 
   @override
   Widget build(BuildContext context) {
@@ -44,21 +53,13 @@ class ParticipantListTile extends StatelessWidget {
         ),
         title: Text(fullname),
         onTap: () => {
-          if (index == 0)
+          if (role != 5)
             {
               Navigator.push<dynamic>(
                 context,
                 MaterialPageRoute<dynamic>(
                   builder: (BuildContext context) => UserDetailsScreen(
-                    avatar:
-                        'https://meta.vn/Data/image/2021/08/17/con-vit-vang-tren-fb-la-gi-trend-anh-avatar-con-vit-vang-la-gi-3.jpg',
-                    role: 'Teacher',
-                    course: 'Đồ án tốt nghiệp',
-                    email: 'lqvu@fit.hcmus.edu.vn',
-                    location: 'TP.HCM, Vietnam',
-                    name: fullname,
-                    status: 'Last online 22 hours ago',
-                  ),
+                      id: id, userStore: userStore, courseName: courseName),
                 ),
               )
             }
@@ -68,15 +69,7 @@ class ParticipantListTile extends StatelessWidget {
                 context,
                 MaterialPageRoute<dynamic>(
                   builder: (BuildContext context) => UserDetailStudentScreen(
-                    avatar:
-                        'https://meta.vn/Data/image/2021/08/17/con-vit-vang-tren-fb-la-gi-trend-anh-avatar-con-vit-vang-la-gi-3.jpg',
-                    role: 'Student',
-                    course: 'Đồ án tốt nghiệp',
-                    email: '18127044@student.hcmus.edu.vn',
-                    location: 'TP.HCM, Vietnam',
-                    name: fullname,
-                    status: 'Online just now',
-                  ),
+                      id: id, userStore: userStore, courseName: courseName),
                 ),
               )
             }

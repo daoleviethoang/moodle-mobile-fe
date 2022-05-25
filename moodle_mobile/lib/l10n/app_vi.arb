@@ -1,5 +1,8 @@
 {
-    "load_category_fail":"Lấy dữ liệu danh mục khóa học thất bại",
-    "course_category":"Danh mục khóa học",
-    "course":"Khóa học"
+  "course": "Khóa học",
+  "course_category": "Danh mục khóa học",
+  "load_category_fail": "Lấy dữ liệu danh mục khóa học thất bại",
+  "online_just_now": "Đang hoạt động",
+  "student": "Học sinh",
+  "teacher": "Giáo viên"
 }

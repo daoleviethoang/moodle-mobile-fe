@@ -4,12 +4,13 @@ import 'package:moodle_mobile/constants/colors.dart';
 class DescriptionCommonView extends StatelessWidget {
   final String description;
 
-  const DescriptionCommonView({Key? key, required this.description})
+  DescriptionCommonView({Key? key, required this.description})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: MediaQuery.of(context).size.width - 10,
       margin: const EdgeInsets.only(bottom: 25),
       decoration: BoxDecoration(
         color: Colors.white,
