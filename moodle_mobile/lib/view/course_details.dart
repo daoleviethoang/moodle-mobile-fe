@@ -237,8 +237,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                 case ModuleName.zoom:
                   return Container();
                 default:
-                  throw Exception(
-                      AppLocalizations.of(context)!.err_unknown_module(m.modname ?? ''));
+                  throw Exception(AppLocalizations.of(context)!
+                      .err_unknown_module(m.modname ?? ''));
               }
             } catch (e) {
               // FIXME: Assignment text is [] instead of string
@@ -322,8 +322,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                       );
                     });
               default:
-                throw Exception(
-                    AppLocalizations.of(context)!.err_unknown_module(e.modulename ?? ''));
+                throw Exception(AppLocalizations.of(context)!
+                    .err_unknown_module(e.modulename ?? ''));
             }
           }).toList(),
         ],
@@ -336,7 +336,9 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   }
 
   void _initPeopleTab() {
-    _peopleTab = ParticipantsInOneCourse(courseId: _courseId);
+    // TODO: Get participant list from API
+    _peopleTab = ParticipantsInOneCourse(
+        courseId: _courseId, courseName: _course!.displayname);
   }
 
   // endregion

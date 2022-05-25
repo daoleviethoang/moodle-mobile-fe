@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 
@@ -38,8 +39,10 @@ class CourseCommonView extends StatelessWidget {
               ),
               Padding(
                   padding: const EdgeInsets.only(left: 8),
-                  child: Row(
-                    children: <Widget>[
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                       Text(
                         role + ' in the course ',
                         style: const TextStyle(
@@ -48,8 +51,12 @@ class CourseCommonView extends StatelessWidget {
                             letterSpacing: 0.27,
                             color: MoodleColors.black),
                       ),
+                      const SizedBox(
+                        height: 5,
+                      ),
                       Text(
                         course,
+                        softWrap: true,
                         style: const TextStyle(
                             fontWeight: FontWeight.normal,
                             fontSize: 13,

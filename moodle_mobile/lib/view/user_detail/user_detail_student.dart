@@ -1,55 +1,56 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:moodle_mobile/constants/colors.dart';
+import 'package:moodle_mobile/data/network/apis/user/user_api.dart';
+import 'package:moodle_mobile/data/network/dio_client.dart';
+import 'package:moodle_mobile/di/service_locator.dart';
+import 'package:moodle_mobile/models/user/user_overview.dart';
+import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/user/course_common.dart';
 import 'package:moodle_mobile/view/common/user/description_common.dart';
 import 'package:moodle_mobile/view/common/user/public_user_information_common.dart';
 import 'package:moodle_mobile/view/common/user/status_common.dart';
 import 'package:moodle_mobile/view/common/user/user_detail_common.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UserDetailStudentScreen extends StatefulWidget {
-  String avatar;
-  String name;
-  String status;
-  String course;
-  String role;
-  String email;
-  String location;
-
+  int id;
+  UserStore userStore;
+  String? courseName;
   UserDetailStudentScreen(
       {Key? key,
-      required this.avatar,
-      required this.name,
-      required this.status,
-      required this.role,
-      required this.course,
-      required this.email,
-      required this.location})
+      required this.id,
+      required this.userStore,
+      required this.courseName})
       : super(key: key);
-
   @override
-  _UserDetailStudentScreen createState() => _UserDetailStudentScreen(
-      avatar, name, status, role, course, email, location);
+  _UserDetailStudentScreen createState() =>
+      _UserDetailStudentScreen(id, userStore);
 }
 
 class _UserDetailStudentScreen extends State<UserDetailStudentScreen> {
-  String avatar;
-  String name;
-  String status;
-  String course;
-  String role;
-  String email;
-  String location;
+  int id;
+  late String avatar;
+  late String name;
+  late String status;
+  late String? course;
+  late String role;
+  late String email;
+  late String location;
+  late bool isOnline;
+  late String? description;
+  UserStore userStore;
 
-  _UserDetailStudentScreen(this.avatar, this.name, this.status, this.role,
-      this.course, this.email, this.location);
+  bool isLoad = false;
 
-  // int _selectedIndex = 0;
+  _UserDetailStudentScreen(this.id, this.userStore);
 
-  // void _onItemTapped(int index) {
-  //   setState(() {
-  //     _selectedIndex = index;
-  //   });
-  // }
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,35 +64,121 @@ class _UserDetailStudentScreen extends State<UserDetailStudentScreen> {
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(left: 20, right: 20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              PublicInfomationCommonView(
-                imageUrl: avatar,
-                name: name,
+      body: isLoad
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    PublicInfomationCommonView(
+                      imageUrl: avatar,
+                      name: name,
+                    ),
+                    StatusCommonView(
+                        status: status,
+                        color: isOnline
+                            ? MoodleColors.green_icon_status
+                            : MoodleColors.grey_icon_status),
+                    CourseCommonView(
+                      role: role,
+                      course: course!,
+                    ),
+                    UserDetailCommonView(
+                      email: email,
+                      location: location,
+                    ),
+                    DescriptionCommonView(
+                      description: description!,
+                    ),
+                  ],
+                ),
               ),
-              StatusCommonView(
-                  status: status, color: MoodleColors.green_icon_status),
-              CourseCommonView(
-                role: role,
-                course: course,
-              ),
-              UserDetailCommonView(
-                email: email,
-                location: location,
-              ),
-              const DescriptionCommonView(
-                description:
-                    'At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.',
-              ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
+  }
+
+  getData() async {
+    setState(() {
+      isLoad = true;
+    });
+    DateTime currentPhoneDate = DateTime.now(); //DateTime
+    int currentTimeStamp =
+        Timestamp.fromDate(currentPhoneDate).seconds; //To TimeStamp
+    try {
+      List<UserOverview> users = await UserApi(getIt<DioClient>())
+          .getUserById(userStore.user.token, id);
+      UserOverview user = users[0];
+      avatar = user.profileimageurl != null ? user.profileimageurl! : avatar;
+      name = user.fullname!;
+      int calTime = currentTimeStamp - user.lastaccess!;
+      if (calTime <= 300) {
+        status = AppLocalizations.of(context)!.online_just_now;
+        isOnline = true;
+      } else {
+        status = readTimestamp(user.lastaccess!);
+        isOnline = false;
+      }
+      course = widget.courseName;
+
+      role = AppLocalizations.of(context)!.student;
+
+      email = user.email!;
+      if (user.city != null || user.city != null) {
+        location = user.city! + ', ' + user.country!;
+      }
+      description = user.description;
+
+      setState(() {
+        avatar = avatar;
+        name = name;
+        status = status;
+        course = course;
+        role = role;
+        email = email;
+        location = location;
+        description = description;
+        isLoad = false;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString()), backgroundColor: Colors.red));
+    }
+  }
+
+  String readTimestamp(int timestamp) {
+    var now = DateTime.now();
+    var format = DateFormat('HH:mm a');
+    var date = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
+    var diff = now.difference(date);
+    var time = '';
+
+    if (diff.inSeconds <= 0 ||
+        diff.inSeconds > 0 && diff.inMinutes == 0 ||
+        diff.inMinutes > 0 && diff.inHours == 0 ||
+        diff.inHours > 0 && diff.inDays == 0) {
+      time = format.format(date);
+    } else if (diff.inDays > 0 && diff.inDays < 7) {
+      if (diff.inDays == 1) {
+        time = 'Last online ' + diff.inDays.toString() + ' days ago';
+      } else {
+        time = 'Last online ' + diff.inDays.toString() + ' days ago';
+      }
+    } else {
+      if (diff.inDays == 7) {
+        time =
+            'Last online ' + (diff.inDays / 7).floor().toString() + ' week ago';
+      } else {
+        time = 'Last online ' +
+            (diff.inDays / 7).floor().toString() +
+            ' weeks ago';
+      }
+    }
+
+    return time;
   }
 }

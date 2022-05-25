@@ -15,7 +15,9 @@ import 'package:moodle_mobile/view/user_detail/user_detail_student.dart';
 
 class ParticipantsInOneCourse extends StatefulWidget {
   final int courseId;
-  const ParticipantsInOneCourse({Key? key, required this.courseId})
+  final String? courseName;
+  const ParticipantsInOneCourse(
+      {Key? key, required this.courseId, required this.courseName})
       : super(key: key);
   @override
   State<ParticipantsInOneCourse> createState() =>
@@ -62,7 +64,11 @@ class _ParticipantsInOneCourseState extends State<ParticipantsInOneCourse> {
                     return participants[index].roles[0].roleID != 5
                         ? ParticipantListTile(
                             fullname: participants[index].fullname,
-                            index: index)
+                            id: participants[index].id,
+                            role: participants[index].roles[0].roleID,
+                            userStore: _userStore,
+                            courseName: widget.courseName,
+                          )
                         : Container();
                   },
                 ),
@@ -77,7 +83,11 @@ class _ParticipantsInOneCourseState extends State<ParticipantsInOneCourse> {
                     return participants[index].roles[0].roleID == 5
                         ? ParticipantListTile(
                             fullname: participants[index].fullname,
-                            index: index)
+                            id: participants[index].id,
+                            role: participants[index].roles[0].roleID,
+                            userStore: _userStore,
+                            courseName: widget.courseName,
+                          )
                         : Container();
                   },
                 ),
