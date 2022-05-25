@@ -183,9 +183,7 @@ class _MessagePreferenceScreenState extends State<MessagePreferenceScreen>
                       ),
                       Divider(),
                       _tabs.isNotEmpty
-                          ? ListView(
-                              padding: EdgeInsets.only(top: 0),
-                              shrinkWrap: true,
+                          ? Column(
                               children: messagePreference
                                       ?.preferences?.components
                                       ?.map((e) => MessagePreferenceTile(

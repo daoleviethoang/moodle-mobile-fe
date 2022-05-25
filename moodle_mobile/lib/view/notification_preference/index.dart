@@ -155,9 +155,7 @@ class _NotificationPreferenceScreenState
                       ),
                       Divider(),
                       _tabs.isNotEmpty
-                          ? ListView(
-                              padding: EdgeInsets.only(top: 0),
-                              shrinkWrap: true,
+                          ? Column(
                               children: notificationPreference?.components
                                       ?.map((e) => NotificationPreferenceTile(
                                           preferenceName:
@@ -169,7 +167,7 @@ class _NotificationPreferenceScreenState
                                       .toList() ??
                                   [],
                             )
-                          : Container()
+                          : Container(),
                     ],
                   ),
                 ),

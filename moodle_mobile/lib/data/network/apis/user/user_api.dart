@@ -53,6 +53,8 @@ class UserApi {
           baseUrl: Endpoints.baseUrl,
           username: res.data[0]['username'],
           fullname: res.data[0]['fullname'],
+          photo: (res.data[0]['profileimageurl'] as String?)
+              ?.replaceAll("pluginfile.php", "webservice/pluginfile.php"),
           email: res.data[0]['email']);
     } catch (e) {
       print("$e");

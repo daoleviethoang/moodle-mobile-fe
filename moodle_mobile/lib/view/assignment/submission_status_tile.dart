@@ -52,6 +52,7 @@ class _SubmissionStatusTileState extends State<SubmissionStatusTile> {
                 color: widget.rightTextColor,
                 overflow: TextOverflow.clip,
               ),
+              textScaleFactor: 0.95,
             ),
           ),
         ],
