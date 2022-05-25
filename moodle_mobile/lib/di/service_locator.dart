@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'package:moodle_mobile/data/network/apis/contact/contact_message.dart';
 import 'package:moodle_mobile/data/network/apis/conversation/conversation_api.dart';
 import 'package:moodle_mobile/data/network/apis/course/course_participants.dart';
 import 'package:moodle_mobile/data/network/apis/user/user_api.dart';
@@ -30,10 +31,15 @@ Future<void> setupLocator() async {
   getIt.registerSingleton(UserApi(getIt<DioClient>()));
   getIt.registerSingleton(ConversationApi(getIt<DioClient>()));
   getIt.registerSingleton(CourseParticipants());
+  getIt.registerSingleton(ContactOfMessage());
 
   // repository:----------------------------------------------------------------
-  getIt.registerSingleton(Repository(getIt<UserApi>(), getIt<ConversationApi>(),
-      getIt<SharedPreferenceHelper>(), getIt<CourseParticipants>()));
+  getIt.registerSingleton(Repository(
+      getIt<UserApi>(),
+      getIt<ConversationApi>(),
+      getIt<SharedPreferenceHelper>(),
+      getIt<CourseParticipants>(),
+      getIt<ContactOfMessage>()));
 
   // stores:--------------------------------------------------------------------
   getIt.registerSingleton(UserStore(getIt<Repository>()));

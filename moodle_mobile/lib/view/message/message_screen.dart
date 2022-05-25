@@ -1,9 +1,9 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/view/common/custom_button_short.dart';
+import 'package:moodle_mobile/view/common/message/contact_list.dart';
+import 'package:moodle_mobile/view/common/message/message_list.dart';
 import 'package:moodle_mobile/view/common/slidable_tile.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
@@ -22,46 +22,7 @@ class MessageScreen extends StatefulWidget {
 
 class _MessageScreenState extends State<MessageScreen> {
   // Tai day khai bao cac store ma ta se su dung
-  late ConversationStore _conversationStore;
-  late UserStore _userStore;
-  late ConversationDetailStore _conversationDetailStore;
-  late Timer _refreshTimer;
-
-  @override
-  void initState() {
-    super.initState();
-
-    // Store ta da khoi tao trong service_locator
-    // Tai day ta chi can goi store do ra de su dung
-    // Ta chi goi store trong cac ham initState hoac didChangeDependenices
-    // Cach thu goi store nhu sau
-    _conversationStore = GetIt.instance<ConversationStore>();
-    _userStore = GetIt.instance<UserStore>();
-    _conversationDetailStore =
-        ConversationDetailStore(GetIt.instance<Repository>());
-
-    // Sau khi goi store thanh cong, ta se thu goi
-    // action get list conversation info va xem ket qua
-    // Tai day can truyen vao token va user Id, 2 gia tri nay duoc luu tru
-    // trong user store, nen ta cung phai goi user store ra
-    _conversationStore.getListConversation(
-        _userStore.user.token, _userStore.user.id);
-
-    // Nhu vay la hoan tat
-
-    // Update message list
-    _refreshTimer = Timer.periodic(
-        const Duration(seconds: 5),
-        (t) => _conversationStore.getListConversation(
-            _userStore.user.token, _userStore.user.id));
-  }
-
-  @override
-  void dispose() {
-    _refreshTimer.cancel();
-    super.dispose();
-  }
-
+  int currentTab = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,86 +37,39 @@ class _MessageScreenState extends State<MessageScreen> {
                 Expanded(
                   child: CustomButtonShort(
                       text: "Message",
-                      textColor: MoodleColors.blue,
-                      bgColor: MoodleColors.brightGray,
+                      textColor:
+                          currentTab == 0 ? MoodleColors.blue : Colors.black,
+                      bgColor: currentTab == 0
+                          ? MoodleColors.brightGray
+                          : MoodleColors.white,
                       blurRadius: 3,
-                      onPressed: () {}),
+                      onPressed: () {
+                        setState(() {
+                          currentTab = 0;
+                        });
+                      }),
                 ),
                 Container(width: 12),
                 Expanded(
                   child: CustomButtonShort(
                       text: "Contact",
-                      textColor: Colors.black,
-                      bgColor: Colors.white,
+                      textColor:
+                          currentTab == 0 ? Colors.black : MoodleColors.blue,
+                      bgColor: currentTab == 0
+                          ? MoodleColors.white
+                          : MoodleColors.brightGray,
                       blurRadius: 3,
-                      onPressed: () {}),
+                      onPressed: () {
+                        setState(() {
+                          currentTab = 1;
+                        });
+                      }),
                 ),
                 Container(width: 12),
               ],
             ),
           ),
-          Observer(builder: (_) {
-            return Expanded(
-              child: AnimatedOpacity(
-                opacity: _conversationStore.listConversation.isEmpty ? 0 : 1,
-                duration: const Duration(milliseconds: 300),
-                child: ListView.builder(
-                      padding: EdgeInsets.all(Dimens.default_padding),
-                      itemCount: _conversationStore.listConversation.length,
-                      itemBuilder: (_, int index) {
-                        return Padding(
-                          padding:
-                              const EdgeInsets.only(top: Dimens.default_padding),
-                          child: Observer(builder: (_) {
-                            return SlidableTile(
-                                isNotification: !_conversationStore
-                                    .listConversation[index].isMuted,
-                                nameInfo: _conversationStore
-                                    .listConversation[index].members[0].fullname,
-                                message: _conversationStore
-                                    .listConversation[index].message,
-                                onDeletePress: () {
-                                  _conversationStore.deleteConversation(
-                                      _userStore.user.token,
-                                      _userStore.user.id,
-                                      _conversationStore
-                                          .listConversation[index].id);
-                                },
-                                onAlarmPress: () {
-                                  _conversationStore
-                                          .listConversation[index].isMuted
-                                      ? _conversationStore.unmuteOneConversation(
-                                          _userStore.user.token,
-                                          _userStore.user.id,
-                                          _conversationStore
-                                              .listConversation[index].id)
-                                      : _conversationStore.muteOneConversation(
-                                          _userStore.user.token,
-                                          _userStore.user.id,
-                                          _conversationStore
-                                              .listConversation[index].id);
-                                },
-                                onMessDetailPress: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => MessageDetailScreen(
-                                        conversationId: _conversationStore
-                                            .listConversation[index].id,
-                                        userFrom: _conversationStore
-                                            .listConversation[index]
-                                            .members[0]
-                                            .fullname,
-                                      ),
-                                    ),
-                                  );
-                                });
-                          }),
-                        );
-                      }),
-              ),
-            );
-          })
+          currentTab == 0 ? MessageList() : ContactList()
         ],
       ),
     );
