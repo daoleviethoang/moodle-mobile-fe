@@ -28,9 +28,7 @@ class ConversationApi {
       if (res.data['message'] != null) {
         throw Exception(res.data['message']);
       }
-      print("here iss resssssss api");
-      print(res);
-      print("STOP");
+
       List<ConversationModel> listConversation = [];
       for (var i = 0; i < res.data['conversations'].length; i++) {
         List<ConversationMemberModel> listConversationMember = [];

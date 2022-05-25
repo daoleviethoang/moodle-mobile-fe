@@ -81,4 +81,5 @@ class Wsfunction {
   //courses
   static const String CORE_COURSES_PARTICIPANT =
       "core_enrol_get_enrolled_users";
+  static const String CORE_USER_CONTACT = "core_message_get_user_contacts";
 }
