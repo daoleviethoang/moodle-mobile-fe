@@ -14,6 +14,7 @@ import 'package:moodle_mobile/view/common/content_item.dart';
 import 'package:moodle_mobile/view/common/custom_button.dart';
 import 'package:moodle_mobile/view/common/data_card.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({Key? key}) : super(key: key);
@@ -51,6 +52,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           focusedDay: _focusedDay,
 
           // Calendar style
+          locale: Localizations.localeOf(context).languageCode,
           sixWeekMonthsEnforced: true,
           headerStyle: const HeaderStyle(
               titleCentered: true,
@@ -130,9 +132,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(height: 20),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: Text('Jump to date', style: TextStyle(fontSize: 20)),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Text(AppLocalizations.of(context)!.jump_date,
+                    style: const TextStyle(fontSize: 20)),
               ),
               Container(height: 40),
               Padding(
@@ -155,7 +158,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     Navigator.pop(context);
                     _updateFocusedDay(_jumpDate, _jumpDate);
                   },
-                  textButton: 'Jump',
+                  textButton: AppLocalizations.of(context)!.jump,
                 ),
               ),
               Container(height: 20),
@@ -175,9 +178,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
           // Day view header
           Padding(
             padding: const EdgeInsets.only(bottom: 12),
-            child:
-                Text('Events on ' + DateFormat('MMMM dd').format(_selectedDay),
-                    style: MoodleStyles.sectionHeaderStyle),
+            child: Text(
+              AppLocalizations.of(context)!.events_on(
+                  DateFormat.MMMMd(Localizations.localeOf(context).languageCode)
+                      .format(_selectedDay)),
+              style: MoodleStyles.sectionHeaderStyle,
+            ),
           ),
 
           // Event list

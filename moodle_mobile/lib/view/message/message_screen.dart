@@ -1,17 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/view/common/custom_button_short.dart';
 import 'package:moodle_mobile/view/common/message/contact_list.dart';
 import 'package:moodle_mobile/view/common/message/message_list.dart';
-import 'package:moodle_mobile/view/common/slidable_tile.dart';
 import 'package:moodle_mobile/constants/colors.dart';
-import 'package:moodle_mobile/constants/dimens.dart';
-import 'package:moodle_mobile/data/repository.dart';
-import 'package:moodle_mobile/view/message/message_detail_screen.dart';
-import 'package:moodle_mobile/store/conversation/conversation_store.dart';
-import 'package:moodle_mobile/store/conversation_detail/conversation_detail_store.dart';
-import 'package:moodle_mobile/store/user/user_store.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MessageScreen extends StatefulWidget {
   const MessageScreen({Key? key}) : super(key: key);
@@ -36,7 +28,7 @@ class _MessageScreenState extends State<MessageScreen> {
                 Container(width: 12),
                 Expanded(
                   child: CustomButtonShort(
-                      text: "Message",
+                      text: AppLocalizations.of(context)!.messages,
                       textColor:
                           currentTab == 0 ? MoodleColors.blue : Colors.black,
                       bgColor: currentTab == 0
@@ -52,7 +44,7 @@ class _MessageScreenState extends State<MessageScreen> {
                 Container(width: 12),
                 Expanded(
                   child: CustomButtonShort(
-                      text: "Contact",
+                      text: AppLocalizations.of(context)!.contacts,
                       textColor:
                           currentTab == 0 ? Colors.black : MoodleColors.blue,
                       bgColor: currentTab == 0
@@ -69,7 +61,7 @@ class _MessageScreenState extends State<MessageScreen> {
               ],
             ),
           ),
-          currentTab == 0 ? MessageList() : ContactList()
+          currentTab == 0 ? const MessageList() : const ContactList()
         ],
       ),
     );
