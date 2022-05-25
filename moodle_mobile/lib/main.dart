@@ -62,7 +62,7 @@ class MyApp extends StatelessWidget {
       FlutterDownloader.registerCallback(downloadCallback);
     } catch (e) {}
 
-    return MaterialApp(
+    return  MaterialApp(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       useInheritedMediaQuery: true,

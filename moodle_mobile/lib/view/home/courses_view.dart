@@ -536,18 +536,10 @@ class CategoryView extends StatelessWidget {
                   callback!(1, courseSelectedMore.id, false);
                   Navigator.pop(context);
                 },
-                icon: Container(
-                  decoration: const BoxDecoration(
-                      color: MoodleColors.border_star,
-                      borderRadius: BorderRadius.all(Radius.circular(50))),
-                  child: const Padding(
-                    padding: EdgeInsets.all(5),
-                    child: Icon(
-                      Icons.star,
-                      color: MoodleColors.red_error_message,
-                      size: 25,
-                    ),
-                  ),
+                icon: Icon(
+                  Icons.star_border_rounded,
+                  color: MoodleColors.yellow_icon,
+                  size: 30,
                 ),
                 label: const Padding(
                   padding: EdgeInsets.only(left: 20),

@@ -5,6 +5,7 @@ import 'package:moodle_mobile/data/network/apis/notification_preference/notifica
 import 'package:moodle_mobile/models/message_preference/message_preference.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/message_preference/notification_preference_tile.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MessagePreferenceScreen extends StatefulWidget {
   const MessagePreferenceScreen({
@@ -76,9 +77,9 @@ class _MessagePreferenceScreenState extends State<MessagePreferenceScreen>
       });
       _initTabList();
     } catch (e) {
-      const snackBar = SnackBar(
+      final snackBar = SnackBar(
           content:
-              Text("Loading message preferences fail, please try again later"));
+              Text(AppLocalizations.of(context)!.err_load_message_settings));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
@@ -91,9 +92,9 @@ class _MessagePreferenceScreenState extends State<MessagePreferenceScreen>
         blockContact = !blockContact;
       });
     } catch (e) {
-      const snackBar = SnackBar(
+      final snackBar = SnackBar(
           content:
-              Text("Loading message preferences fail, please try again later"));
+              Text(AppLocalizations.of(context)!.err_load_message_settings));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
@@ -106,8 +107,8 @@ class _MessagePreferenceScreenState extends State<MessagePreferenceScreen>
           SliverAppBar(
             floating: true,
             snap: true,
-            title: const Text(
-              "Message notification",
+            title: Text(
+              AppLocalizations.of(context)!.message_settings,
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 20,
@@ -132,10 +133,10 @@ class _MessagePreferenceScreenState extends State<MessagePreferenceScreen>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "You can restrict who can message you",
+                        AppLocalizations.of(context)!.restrict,
                         textScaleFactor: 1.3,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       Wrap(
@@ -144,13 +145,13 @@ class _MessagePreferenceScreenState extends State<MessagePreferenceScreen>
                         children: [
                           Checkbox(
                               value: blockContact,
-                              shape: CircleBorder(),
+                              shape: const CircleBorder(),
                               activeColor: Colors.green,
                               onChanged: (value) async {
                                 await blockMessage();
                               }),
                           Text(
-                            "My contacts only",
+                            AppLocalizations.of(context)!.restrict_contact,
                             textScaleFactor: 1.2,
                           ),
                         ],
@@ -162,17 +163,17 @@ class _MessagePreferenceScreenState extends State<MessagePreferenceScreen>
                           Checkbox(
                               value: !blockContact,
                               activeColor: Colors.green,
-                              shape: CircleBorder(),
+                              shape: const CircleBorder(),
                               onChanged: (value) async {
                                 await blockMessage();
                               }),
                           Text(
-                            "My contacts and anyone in my courses",
+                            AppLocalizations.of(context)!.restrict_anyone,
                             textScaleFactor: 1.2,
                           ),
                         ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       TabBar(
@@ -181,7 +182,7 @@ class _MessagePreferenceScreenState extends State<MessagePreferenceScreen>
                         tabs: _tabs,
                         onTap: (value) => setState(() => _index = value),
                       ),
-                      Divider(),
+                      const Divider(),
                       _tabs.isNotEmpty
                           ? Column(
                               children: messagePreference

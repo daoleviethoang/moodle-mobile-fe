@@ -6,6 +6,7 @@ import 'package:moodle_mobile/data/network/apis/notification_preference/notifica
 import 'package:moodle_mobile/models/notification_preference/notification_preference.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/notification_preference/notification_preference_tile.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class NotificationPreferenceScreen extends StatefulWidget {
   const NotificationPreferenceScreen({
@@ -57,9 +58,8 @@ class _NotificationPreferenceScreenState
       });
       _initTabList();
     } catch (e) {
-      const snackBar = SnackBar(
-          content: Text(
-              "Loading notification preferences fail, please try again later"));
+      final snackBar = SnackBar(
+          content: Text(AppLocalizations.of(context)!.err_load_noti_settings));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
@@ -73,9 +73,8 @@ class _NotificationPreferenceScreenState
       });
     } catch (e) {
       print(e.toString());
-      const snackBar = SnackBar(
-          content: Text(
-              "Set notification preferences fail, please try again later"));
+      final snackBar = SnackBar(
+          content: Text(AppLocalizations.of(context)!.err_set_noti_settings));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
@@ -105,8 +104,8 @@ class _NotificationPreferenceScreenState
           SliverAppBar(
             floating: true,
             snap: true,
-            title: const Text(
-              "Notifications & sounds",
+            title: Text(
+              AppLocalizations.of(context)!.noti_settings,
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 20,
@@ -137,7 +136,8 @@ class _NotificationPreferenceScreenState
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: SwitchListTile(
-                          title: Text("Disable notifications"),
+                          title:
+                              Text(AppLocalizations.of(context)!.disable_noti),
                           value: disableAll,
                           onChanged: (value) async {
                             await setAllNotification();

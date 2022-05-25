@@ -1,8 +1,10 @@
+import 'package:moodle_mobile/data/network/apis/contact/contact_message.dart';
 import 'package:moodle_mobile/data/network/apis/conversation/conversation_api.dart';
 import 'package:moodle_mobile/data/network/apis/course/course_participants.dart';
 import 'package:moodle_mobile/data/network/apis/user/user_api.dart';
 import 'package:moodle_mobile/data/shared_reference/shared_preference_helper.dart';
 import 'package:moodle_mobile/models/conversation/conversation.dart';
+import 'package:moodle_mobile/models/conversation/conversation_member.dart';
 import 'package:moodle_mobile/models/conversation/conversation_message.dart';
 import 'package:moodle_mobile/models/course/course_participants.dart';
 import 'package:moodle_mobile/models/user.dart';
@@ -12,9 +14,14 @@ class Repository {
   final ConversationApi _conversationApi;
   final SharedPreferenceHelper _sharedPreferencesHelper;
   final CourseParticipants _courseParticipants;
+  final ContactOfMessage _contactOfMessage;
   // Constructor
-  Repository(this._userApi, this._conversationApi,
-      this._sharedPreferencesHelper, this._courseParticipants);
+  Repository(
+      this._userApi,
+      this._conversationApi,
+      this._sharedPreferencesHelper,
+      this._courseParticipants,
+      this._contactOfMessage);
 
   // AuthToken
   String? get authToken {
@@ -78,4 +85,6 @@ class Repository {
       _conversationApi.sentMessage(token, conversationId, text);
   Future<List<CourseParticipantsModel>> courseParticipant(token, courseId) =>
       _courseParticipants.getParticipantInCourse(token, courseId);
+  Future<List<ConversationMemberModel>> listcontactUser(token, userId) =>
+      _contactOfMessage.getUserContact(token, userId);
 }

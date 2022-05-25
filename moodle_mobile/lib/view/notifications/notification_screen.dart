@@ -10,6 +10,7 @@ import 'package:moodle_mobile/data/network/apis/notification/notification_api.da
 import 'package:moodle_mobile/models/course/course_detail.dart';
 import 'package:moodle_mobile/models/notification/notification.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({Key? key}) : super(key: key);
@@ -179,8 +180,8 @@ class NotificationPopupContainer extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Html(
-                      data: '<b>$article</b><br/>'
-                          ' in <b>${name ?? ''}</b>',
+                      data: AppLocalizations.of(context)!
+                          .noti_context(article ?? '', name ?? ''),
                       style: {'*': Style(fontSize: const FontSize(12))},
                     ),
                   ),
