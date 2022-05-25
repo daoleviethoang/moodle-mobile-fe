@@ -15,14 +15,14 @@ class ParticipantListTile extends StatelessWidget {
       {Key? key,
       required this.fullname,
       required this.id,
-      required this.role,
+      this.role,
       required this.userStore,
-      required this.courseName})
+      this.courseName})
       : super(key: key);
 
   final String fullname;
   final int id;
-  final int role;
+  final int? role;
   final UserStore userStore;
   final String? courseName;
 
