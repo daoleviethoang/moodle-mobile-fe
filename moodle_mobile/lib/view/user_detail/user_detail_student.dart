@@ -16,7 +16,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UserDetailStudentScreen extends StatefulWidget {
   int id;
-  UserStore userStore;
+  final UserStore userStore;
   String? courseName;
   UserDetailStudentScreen(
       {Key? key,
@@ -40,7 +40,7 @@ class _UserDetailStudentScreen extends State<UserDetailStudentScreen> {
   late String location;
   late bool isOnline;
   late String? description;
-  UserStore userStore;
+  final UserStore userStore;
 
   bool isLoad = false;
 
@@ -54,6 +54,7 @@ class _UserDetailStudentScreen extends State<UserDetailStudentScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(id);
     return Scaffold(
       backgroundColor: MoodleColors.white,
       appBar: AppBar(
@@ -78,6 +79,7 @@ class _UserDetailStudentScreen extends State<UserDetailStudentScreen> {
                     PublicInfomationCommonView(
                       imageUrl: avatar,
                       name: name,
+                      userStore: userStore,
                     ),
                     StatusCommonView(
                         status: status,
@@ -93,7 +95,7 @@ class _UserDetailStudentScreen extends State<UserDetailStudentScreen> {
                       location: location,
                     ),
                     DescriptionCommonView(
-                      description: description!,
+                      description: description != null ? description! : "",
                     ),
                   ],
                 ),
@@ -128,9 +130,9 @@ class _UserDetailStudentScreen extends State<UserDetailStudentScreen> {
       role = AppLocalizations.of(context)!.student;
 
       email = user.email!;
-      if (user.city != null || user.city != null) {
-        location = user.city! + ', ' + user.country!;
-      }
+      String city = user.city != null ? user.city! + ", " : "";
+      String country = user.country != null ? user.country! : "";
+      location = city + country;
       description = user.description;
 
       setState(() {

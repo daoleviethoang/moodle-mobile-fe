@@ -247,7 +247,8 @@ class ProfileHeader extends StatelessWidget {
       onTap: () => Navigator.push<dynamic>(
         context,
         MaterialPageRoute<dynamic>(
-          builder: (BuildContext context) => const ProfileScreen(),
+          builder: (BuildContext context) =>
+              ProfileScreen(userStore: _userStore),
         ),
       ),
       child: Row(

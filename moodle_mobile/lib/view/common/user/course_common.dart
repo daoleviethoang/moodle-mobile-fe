@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:moodle_mobile/constants/colors.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CourseCommonView extends StatelessWidget {
   final String role;
@@ -29,7 +30,7 @@ class CourseCommonView extends StatelessWidget {
         padding: const EdgeInsets.only(
             left: 20.0, top: 8.0, right: 0.0, bottom: 8.0),
         child: Padding(
-          padding: const EdgeInsets.only(top: 8, bottom: 8),
+          padding: const EdgeInsets.only(top: 5, bottom: 5),
           child: Row(
             children: <Widget>[
               const Icon(
@@ -44,10 +45,12 @@ class CourseCommonView extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        role + ' in the course ',
+                        role +
+                            " " +
+                            AppLocalizations.of(context)!.in_the_course,
                         style: const TextStyle(
                             fontWeight: FontWeight.normal,
-                            fontSize: 13,
+                            fontSize: 14,
                             letterSpacing: 0.27,
                             color: MoodleColors.black),
                       ),
@@ -59,7 +62,7 @@ class CourseCommonView extends StatelessWidget {
                         softWrap: true,
                         style: const TextStyle(
                             fontWeight: FontWeight.normal,
-                            fontSize: 13,
+                            fontSize: 14,
                             letterSpacing: 0.27,
                             color: MoodleColors.text_blue),
                       )
