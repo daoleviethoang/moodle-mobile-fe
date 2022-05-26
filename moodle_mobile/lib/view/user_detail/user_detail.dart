@@ -99,7 +99,7 @@ class _UserDetailsScreen extends State<UserDetailsScreen> {
                             : MoodleColors.grey_icon_status),
                     CourseCommonView(
                       role: role,
-                      course: course!,
+                      course: course,
                     ),
                     UserDetailCommonView(
                       email: email,
@@ -133,7 +133,6 @@ class _UserDetailsScreen extends State<UserDetailsScreen> {
         status = readTimestamp(user.lastaccess!);
         isOnline = false;
       }
-      course = widget.courseName;
       role = AppLocalizations.of(context)!.teacher;
 
       email = user.email!;
@@ -145,7 +144,7 @@ class _UserDetailsScreen extends State<UserDetailsScreen> {
         avatar = avatar;
         name = name;
         status = status;
-        course = course;
+        course = widget.courseName;
         role = role;
         email = email;
         location = location;

@@ -54,7 +54,6 @@ class _UserDetailStudentScreen extends State<UserDetailStudentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(id);
     return Scaffold(
       backgroundColor: MoodleColors.white,
       appBar: AppBar(
@@ -88,7 +87,7 @@ class _UserDetailStudentScreen extends State<UserDetailStudentScreen> {
                             : MoodleColors.grey_icon_status),
                     CourseCommonView(
                       role: role,
-                      course: course!,
+                      course: course,
                     ),
                     UserDetailCommonView(
                       email: email,
