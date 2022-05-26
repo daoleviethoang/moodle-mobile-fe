@@ -60,6 +60,10 @@ class _ContactListState extends State<ContactList> {
                       fullname: listContact[index].fullname,
                       id: listContact[index].id,
                       userStore: _userStore,
+                      avatar: listContact[index].profileImageURL.replaceAll(
+                              "pluginfile.php", "webservice/pluginfile.php") +
+                          "?token=" +
+                          _userStore.user.token,
                     );
                   },
                 ),

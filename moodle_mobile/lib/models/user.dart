@@ -6,6 +6,9 @@ class UserModel {
   String email;
   String baseUrl;
   String? photo;
+  String? city;
+  String? country;
+  String? description;
 
   UserModel(
       {required this.token,
@@ -14,5 +17,8 @@ class UserModel {
       this.photo,
       required this.username,
       required this.fullname,
-      required this.email});
+      required this.email,
+      this.city,
+      this.country,
+      this.description});
 }

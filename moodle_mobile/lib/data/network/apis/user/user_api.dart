@@ -56,7 +56,9 @@ class UserApi {
           fullname: res.data[0]['fullname'],
           photo: (res.data[0]['profileimageurl'] as String?)
               ?.replaceAll("pluginfile.php", "webservice/pluginfile.php"),
-          email: res.data[0]['email']);
+          email: res.data[0]['email'],
+          city: res.data[0]['city'],
+          country: res.data[0]['country']);
     } catch (e) {
       print("$e");
       rethrow;

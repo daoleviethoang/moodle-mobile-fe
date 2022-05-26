@@ -27,6 +27,8 @@ class ParticipantsInOneCourse extends StatefulWidget {
 class _ParticipantsInOneCourseState extends State<ParticipantsInOneCourse> {
   late Repository _repository;
   late UserStore _userStore;
+  bool isLoad = true;
+  List<CourseParticipantsModel> participants = [];
 
   @override
   void initState() {
@@ -34,19 +36,15 @@ class _ParticipantsInOneCourseState extends State<ParticipantsInOneCourse> {
 
     _repository = GetIt.instance<Repository>();
     _userStore = GetIt.instance<UserStore>();
+    getParticipantsInCourse();
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: getParticipantsInCourse(),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
-        }
-        if (snapshot.hasData) {
-          List<CourseParticipantsModel> participants = snapshot.data;
-          return SingleChildScrollView(
+    print(widget.courseId);
+    return isLoad
+        ? CircularProgressIndicator()
+        : SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -68,6 +66,7 @@ class _ParticipantsInOneCourseState extends State<ParticipantsInOneCourse> {
                             role: participants[index].roles[0].roleID,
                             userStore: _userStore,
                             courseName: widget.courseName,
+                            avatar: participants[index].avatar,
                           )
                         : Container();
                   },
@@ -87,6 +86,7 @@ class _ParticipantsInOneCourseState extends State<ParticipantsInOneCourse> {
                             role: participants[index].roles[0].roleID,
                             userStore: _userStore,
                             courseName: widget.courseName,
+                            avatar: participants[index].avatar,
                           )
                         : Container();
                   },
@@ -94,14 +94,19 @@ class _ParticipantsInOneCourseState extends State<ParticipantsInOneCourse> {
               ],
             ),
           );
-        }
-        return Container();
-      },
-    );
   }
 
-  Future getParticipantsInCourse() async {
-    return await _repository.courseParticipant(
-        _userStore.user.token, widget.courseId);
+  getParticipantsInCourse() async {
+    try {
+      List<CourseParticipantsModel> courseParticipants = await _repository
+          .courseParticipant(_userStore.user.token, widget.courseId);
+      setState(() {
+        participants = courseParticipants;
+        isLoad = false;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString()), backgroundColor: Colors.red));
+    }
   }
 }

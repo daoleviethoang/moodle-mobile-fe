@@ -1,10 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:intl/intl.dart';
-import 'package:moodle_mobile/constants/colors.dart';
-import 'package:moodle_mobile/constants/dimens.dart';
-import 'package:moodle_mobile/models/conversation/conversation_message.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/image_view.dart';
 import 'package:moodle_mobile/view/user_detail/user_detail.dart';
@@ -17,7 +11,8 @@ class ParticipantListTile extends StatelessWidget {
       required this.id,
       this.role,
       required this.userStore,
-      this.courseName})
+      this.courseName,
+      required this.avatar})
       : super(key: key);
 
   final String fullname;
@@ -25,6 +20,7 @@ class ParticipantListTile extends StatelessWidget {
   final int? role;
   final UserStore userStore;
   final String? courseName;
+  final String avatar;
 
   @override
   Widget build(BuildContext context) {
@@ -32,16 +28,12 @@ class ParticipantListTile extends StatelessWidget {
       padding: const EdgeInsets.all(10),
       child: ListTile(
         leading: SizedBox(
-          width: 60,
-          height: 60,
-          child: CircleAvatar(
-            radius: 20,
-            backgroundColor: MoodleColors.blue,
-            child: Icon(
-              Icons.person,
-              size: 40,
-              color: Colors.white,
-            ),
+          width: 60.0,
+          height: 60.0,
+          child: CircleImageView(
+            fit: BoxFit.cover,
+            imageUrl: avatar + "&token=" + userStore.user.token,
+            placeholder: CircularProgressIndicator(),
           ),
         ),
         trailing: RoundedImageView(
@@ -52,16 +44,11 @@ class ParticipantListTile extends StatelessWidget {
             width: 50,
             height: 50,
           ),
-          onClick: () => {print("123")},
-          //  Icon(
-          //   Icons.messenger_outline,
-          //   size: 36,
-          //   color: Colors.black,
-          // ),
+          onClick: () => {},
         ),
         title: Text(fullname),
         onTap: () => {
-          if (role != 5)
+          if (role != null && role != 5)
             {
               Navigator.push<dynamic>(
                 context,

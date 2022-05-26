@@ -20,7 +20,7 @@ class CourseParticipants {
         'moodlewsrestformat': 'json',
         'courseid': courseId,
         'options[0][name]': 'userfields',
-        'options[0][value]': 'id,roles'
+        'options[0][value]': 'id,roles,profileimageurl'
       });
 
       List<CourseParticipantsModel> listCourseParticipants = [];
@@ -34,10 +34,10 @@ class CourseParticipants {
         }
 
         listCourseParticipants.add(CourseParticipantsModel(
-          id: res.data[i]['id'],
-          fullname: res.data[i]['fullname'],
-          roles: listRoleParticipants,
-        ));
+            id: res.data[i]['id'],
+            fullname: res.data[i]['fullname'],
+            roles: listRoleParticipants,
+            avatar: res.data[i]['profileimageurl']));
       }
       return listCourseParticipants;
     } catch (e) {

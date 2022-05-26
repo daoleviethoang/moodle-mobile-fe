@@ -332,7 +332,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   }
 
   void _initGradesTab() {
-    _gradesTab = const GradeInOneCourse();
+    _gradesTab =
+        GradeInOneCourse(courseId: _courseId, courseName: _course!.displayname);
   }
 
   void _initPeopleTab() {

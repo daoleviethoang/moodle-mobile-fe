@@ -28,7 +28,7 @@ UserDetailsScreen(
 
 class UserDetailsScreen extends StatefulWidget {
   int id;
-  UserStore userStore;
+  final UserStore userStore;
   String? courseName;
 
   UserDetailsScreen(
@@ -52,7 +52,7 @@ class _UserDetailsScreen extends State<UserDetailsScreen> {
   late String email;
   late String location;
   late bool isOnline;
-  UserStore userStore;
+  final UserStore userStore;
 
   bool isLoad = false;
 
@@ -90,6 +90,7 @@ class _UserDetailsScreen extends State<UserDetailsScreen> {
                     PublicInfomationCommonView(
                       imageUrl: avatar,
                       name: name,
+                      userStore: userStore,
                     ),
                     StatusCommonView(
                         status: status,
@@ -98,7 +99,7 @@ class _UserDetailsScreen extends State<UserDetailsScreen> {
                             : MoodleColors.grey_icon_status),
                     CourseCommonView(
                       role: role,
-                      course: course!,
+                      course: course,
                     ),
                     UserDetailCommonView(
                       email: email,
@@ -129,22 +130,21 @@ class _UserDetailsScreen extends State<UserDetailsScreen> {
         status = AppLocalizations.of(context)!.online_just_now;
         isOnline = true;
       } else {
-        status = readTimestamp(calTime);
+        status = readTimestamp(user.lastaccess!);
         isOnline = false;
       }
-      course = widget.courseName;
       role = AppLocalizations.of(context)!.teacher;
 
       email = user.email!;
-      if (user.city != null || user.city != null) {
-        location = user.city! + ', ' + user.country!;
-      }
+      String city = user.city != null ? user.city! + ", " : "";
+      String country = user.country != null ? user.country! : "";
+      location = city + country;
 
       setState(() {
         avatar = avatar;
         name = name;
         status = status;
-        course = course;
+        course = widget.courseName;
         role = role;
         email = email;
         location = location;
@@ -181,7 +181,7 @@ class _UserDetailsScreen extends State<UserDetailsScreen> {
       } else {
         time = 'Last online ' +
             (diff.inDays / 7).floor().toString() +
-            ' weeks AGO';
+            ' weeks ago';
       }
     }
 

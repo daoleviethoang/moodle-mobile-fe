@@ -1,89 +1,82 @@
 {
+  "@err_unknown_module": {
+    "description": "Unsupported module in course details.",
+    "placeholders": {
+      "modname": {
+        "example": "folder",
+        "type": "String"
+      }
+    }
+  },
+  "@events_on": {
+    "description": "Day view header in Calendar.",
+    "placeholders": {
+      "date": {
+        "example": "May 25",
+        "type": "String"
+      }
+    }
+  },
+  "@noti_context": {
+    "description": "Notification context shown in notification card.",
+    "placeholders": {
+      "article": {
+        "example": "Nguyễn Gia Hưng",
+        "type": "String"
+      },
+      "name": {
+        "example": "Lập trình ứng dụng di động nâng cao",
+        "type": "String"
+      }
+    }
+  },
+  "account": "Account",
+  "all_courses": "All Courses",
+  "announcement": "Announcements",
+  "app_settings": "App settings",
+  "calendar": "Calendar",
+  "change_password": "Change password",
+  "contacts": "Contacts",
+  "course": "Course",
+  "course_category": "Course category",
+  "dashboard": "Dashboard",
+  "description": "Description",
+  "disable_noti": "Disable notifications",
+  "discussion": "Discussion Forums",
+  "enter_message": "Enter message",
+  "err_load_message_settings": "Loading message settigns fail, please try again later",
+  "err_load_noti_settings": "Loading notification preferences fail, please try again later",
+  "err_set_noti_settings": "Set notification preferences fail, please try again later",
+  "err_unknown_module": "Unsupported module name: {modname}",
+  "events": "Events",
+  "events_on": "Events on {date}",
+  "grades": "Grades",
+  "home": "Home",
+  "in_the_course": "in the course",
+  "jump": "Jump",
+  "jump_date": "Jump to date",
+  "load_category_fail": "Loading course category fail, please try again later",
+  "logout": "Logout",
+  "menu": "Menu",
+  "message_settings": "Messenger settings",
+  "messages": "Messages",
+  "messenger": "Messenger",
+  "moodle_settings": "Moodle settings",
+  "my_courses": "My Courses",
+  "news": "News & Info",
+  "noti_context": "<b>{article}</b><br/> in <b>{name}</b>",
+  "noti_settings": "Notifications & Sounds",
+  "notifications": "Notifications",
   "online_just_now": "Online just now",
+  "participants": "Participants",
+  "permissions": "Device permissions",
+  "report": "Report a problem",
+  "restrict": "Who can message me",
+  "restrict_anyone": "My contacts and anyone in my courses",
+  "restrict_contact": "My contacts only",
+  "settings": "Settings",
   "student": "Student",
   "teacher": "Teacher",
-    "load_category_fail": "Loading course category fail, please try again later",
-    "course_category": "Course category",
-    "course": "Course",
-
-    "dashboard": "Dashboard",
-    "calendar": "Calendar",
-    "messenger": "Messenger",
-    "notifications": "Notifications",
-    "menu": "Menu",
-
-    "home": "Home",
-    "announcement": "Announcements",
-    "discussion": "Discussion Forums",
-    "events": "Events",
-    "grades": "Grades",
-    "participants": "Participants",
-    "upcoming_events": "Upcoming events",
-
-    "my_courses": "My Courses",
-    "all_courses": "All Courses",
-
-    "jump_date": "Jump to date",
-    "jump": "Jump",
-    "events_on": "Events on {date}",
-    "@events_on": {
-        "description": "Day view header in Calendar.",
-        "placeholders": {
-            "date": {
-                "type": "String",
-                "example": "May 25"
-            }
-        }
-    },
-
-    "messages": "Messages",
-    "contacts": "Contacts",
-    "enter_message": "Enter message",
-
-    "noti_context": "<b>{article}</b><br/> in <b>{name}</b>",
-    "@noti_context": {
-        "description": "Notification context shown in notification card.",
-        "placeholders": {
-            "article": {
-                "type": "String",
-                "example": "Nguyễn Gia Hưng"
-            },
-            "name": {
-                "type": "String",
-                "example": "Lập trình ứng dụng di động nâng cao"
-            }
-        }
-    },
-
-    "news": "News & Info",
-    "settings": "Settings",
-    "account": "Account",
-    "noti_settings": "Notifications & Sounds",
-    "message_settings": "Messenger settings",
-    "moodle_settings": "Moodle settings",
-    "app_settings": "App settings",
-    "permissions": "Device permissions",
-    "change_password": "Change password",
-    "report": "Report a problem",
-    "logout": "Logout",
-
-    "disable_noti": "Disable notifications",
-
-    "restrict": "Who can message me",
-    "restrict_contact": "My contacts only",
-    "restrict_anyone": "My contacts and anyone in my courses",
-
-    "err_load_noti_settings": "Loading notification preferences fail, please try again later",
-    "err_set_noti_settings": "Set notification preferences fail, please try again later",
-    "err_load_message_settings": "Loading message settigns fail, please try again later",
-    "err_unknown_module": "Unsupported module name: {modname}",
-    "@err_unknown_module": {
-        "description": "Unsupported module in course details.",
-        "placeholders": {
-            "modname": {
-                "type": "String",
-                "example": "folder"
-            }
-        }
-    }
+  "upcoming_events": "Upcoming events",
+  "user_details": "User details"
 }
