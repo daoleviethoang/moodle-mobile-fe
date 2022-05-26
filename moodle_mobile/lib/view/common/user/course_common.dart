@@ -5,9 +5,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CourseCommonView extends StatelessWidget {
   final String role;
-  final String course;
+  final String? course;
 
-  const CourseCommonView({Key? key, required this.role, required this.course})
+  const CourseCommonView({Key? key, required this.role, this.course})
       : super(key: key);
 
   @override
@@ -38,36 +38,45 @@ class CourseCommonView extends StatelessWidget {
                 color: MoodleColors.iconGrey,
                 size: 24,
               ),
-              Padding(
-                  padding: const EdgeInsets.only(left: 8),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        role +
-                            " " +
-                            AppLocalizations.of(context)!.in_the_course,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.normal,
-                            fontSize: 14,
-                            letterSpacing: 0.27,
-                            color: MoodleColors.black),
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Text(
-                        course,
-                        softWrap: true,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.normal,
-                            fontSize: 14,
-                            letterSpacing: 0.27,
-                            color: MoodleColors.text_blue),
-                      )
-                    ],
-                  ))
+              course == null
+                  ? Text(
+                      role,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.normal,
+                          fontSize: 14,
+                          letterSpacing: 0.27,
+                          color: MoodleColors.black),
+                    )
+                  : Padding(
+                      padding: const EdgeInsets.only(left: 8),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            role +
+                                " " +
+                                AppLocalizations.of(context)!.in_the_course,
+                            style: const TextStyle(
+                                fontWeight: FontWeight.normal,
+                                fontSize: 14,
+                                letterSpacing: 0.27,
+                                color: MoodleColors.black),
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            course!,
+                            softWrap: true,
+                            style: const TextStyle(
+                                fontWeight: FontWeight.normal,
+                                fontSize: 14,
+                                letterSpacing: 0.27,
+                                color: MoodleColors.text_blue),
+                          )
+                        ],
+                      ))
             ],
           ),
         ),

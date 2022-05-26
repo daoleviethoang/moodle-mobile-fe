@@ -24,7 +24,9 @@ class ContactOfMessage {
       List<ConversationMemberModel> listUserContact = [];
       for (var i = 0; i < (res.data as List).length; i++) {
         listUserContact.add(ConversationMemberModel(
-            id: res.data[i]['id'], fullname: res.data[i]['fullname']));
+            id: res.data[i]['id'],
+            fullname: res.data[i]['fullname'],
+            profileImageURL: res.data[i]['profileimageurl']));
       }
       return listUserContact;
     } catch (e) {
