@@ -43,6 +43,10 @@ class Wsfunction {
       "mod_forum_add_discussion_post";
   static const String MOD_FORUM_GET_FORUM_DISCUSSIONS =
       "mod_forum_get_forum_discussions";
+  static const String MOD_FORUM_GET_DISCUSSION_POSTS =
+      'mod_forum_get_discussion_posts';
+  static const String MOD_FORUM_SET_SUBSCRIPTION =
+      'mod_forum_set_subscription_state';
 
   // message
   static const String CORE_MESSAGE_SEND_MESSAGES_TO_CONVERSATION =
