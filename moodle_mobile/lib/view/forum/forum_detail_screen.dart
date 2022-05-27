@@ -18,6 +18,7 @@ class ForumDetailScreen extends StatefulWidget {
 }
 
 class _ForumDetailScreenState extends State<ForumDetailScreen> {
+  bool isLoading = false;
   List<ForumPost> _forumPost = [];
   late UserStore _userStore;
 
@@ -25,8 +26,8 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
   void initState() {
     _userStore = GetIt.instance();
     // TODO: implement initState
-    fetch();
     super.initState();
+    fetch();
   }
 
   fetch() async {
@@ -35,6 +36,7 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
         .then((value) {
       setState(() {
         _forumPost = value!;
+        isLoading = !isLoading;
       });
     });
   }
@@ -42,131 +44,138 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
   @override
   Widget build(BuildContext context) {
     int len = _forumPost.length;
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-          title: Text(
-        _forumPost[len - 1].subject!,
-        maxLines: 2,
-      )),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
-          child: Column(
-            children: [
-              SizedBox(
-                height: 20,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+    return !isLoading
+        ? const Center(
+            child: CircularProgressIndicator(),
+          )
+        : Scaffold(
+            backgroundColor: Colors.white,
+            appBar: AppBar(
+                title: Text(
+              _forumPost[len - 1].subject!,
+              maxLines: 2,
+            )),
+            body: SingleChildScrollView(
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+                child: Column(
                   children: [
+                    SizedBox(
+                      height: 20,
+                    ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 5),
-                      child: CircleImageView(
-                        imageUrl: '',
-                        height: 60,
-                        width: 60,
-                        placeholder: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Icon(
-                            Icons.person,
-                            size: 35,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    SizedBox(
-                      height: 60,
-                      child: Column(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          Text(
-                            _forumPost[len - 1].author!.fullname!,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blue),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: CircleImageView(
+                              imageUrl: '',
+                              height: 60,
+                              width: 60,
+                              placeholder: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Icon(
+                                  Icons.person,
+                                  size: 35,
+                                ),
+                              ),
+                            ),
                           ),
-                          //SizedBox(height: 20),
-                          Text(
-                            DateFormat('hh:mm dd-MM-yyyy')
-                                .format(DateTime.fromMillisecondsSinceEpoch(
-                                    _forumPost[len - 1].timecreated! * 1000))
-                                .toString(),
-                            style: TextStyle(fontSize: 10),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          SizedBox(
+                            height: 60,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Text(
+                                  _forumPost[len - 1].author!.fullname!,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blue),
+                                ),
+                                //SizedBox(height: 20),
+                                Text(
+                                  DateFormat('hh:mm dd-MM-yyyy')
+                                      .format(
+                                          DateTime.fromMillisecondsSinceEpoch(
+                                              _forumPost[len - 1].timecreated! *
+                                                  1000))
+                                      .toString(),
+                                  style: TextStyle(fontSize: 10),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
                     ),
+                    Html(
+                      data: _forumPost[len - 1].message,
+                      // data: "<div>"
+                      //     "<h1>Demo Page</h1>"
+                      //     "<p>This is a fantastic product that you should buy!</p>"
+                      //     "<h3>Features</h3>"
+                      //     "<ul>"
+                      //     "<li>It actually works</li>"
+                      //     "<li>It exists</li>"
+                      //     "<li>It doesn't cost much!</li>"
+                      //     "</ul>"
+                      //     "</div>",
+                      // style: {
+                      //   'h1': Style(fontSize: const FontSize(19)),
+                      //   'h2': Style(fontSize: const FontSize(17.5)),
+                      //   'h3': Style(fontSize: const FontSize(16)),
+                      // },
+                    ),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            child: AttachmentItem(
+                                title: 'Example.zip', attachmentUrl: ''),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            child: AttachmentItem(
+                                title: '18127044.pdf', attachmentUrl: ''),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Divider(),
+                    ListView.builder(
+                        padding: EdgeInsets.only(bottom: 30),
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: _forumPost.length - 1,
+                        itemBuilder: (BuildContext, index) {
+                          bool checkReply;
+                          if (_forumPost[len - 2 - index].parentid ==
+                              _forumPost[len - 1].id)
+                            checkReply = false;
+                          else
+                            checkReply = true;
+                          return ReplyCard(
+                            isReply: checkReply,
+                            name: _forumPost[len - 2 - index].author!.fullname,
+                            message: _forumPost[len - 2 - index].message,
+                            subject: _forumPost[len - 2 - index].subject,
+                          );
+                        })
                   ],
                 ),
               ),
-              Html(
-                data: _forumPost[len - 1].message,
-                // data: "<div>"
-                //     "<h1>Demo Page</h1>"
-                //     "<p>This is a fantastic product that you should buy!</p>"
-                //     "<h3>Features</h3>"
-                //     "<ul>"
-                //     "<li>It actually works</li>"
-                //     "<li>It exists</li>"
-                //     "<li>It doesn't cost much!</li>"
-                //     "</ul>"
-                //     "</div>",
-                // style: {
-                //   'h1': Style(fontSize: const FontSize(19)),
-                //   'h2': Style(fontSize: const FontSize(17.5)),
-                //   'h3': Style(fontSize: const FontSize(16)),
-                // },
-              ),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: AttachmentItem(
-                          title: 'Example.zip', attachmentUrl: ''),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: AttachmentItem(
-                          title: '18127044.pdf', attachmentUrl: ''),
-                    ),
-                  ],
-                ),
-              ),
-              Divider(),
-              ListView.builder(
-                  padding: EdgeInsets.only(bottom: 30),
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemCount: _forumPost.length - 1,
-                  itemBuilder: (BuildContext, index) {
-                    bool checkReply;
-                    if (_forumPost[len - 2 - index].parentid ==
-                        _forumPost[len - 1].id)
-                      checkReply = false;
-                    else
-                      checkReply = true;
-                    return ReplyCard(
-                      isReply: checkReply,
-                      name: _forumPost[len - 2 - index].author!.fullname,
-                      message: _forumPost[len - 2 - index].message,
-                      subject: _forumPost[len - 2 - index].subject,
-                    );
-                  })
-            ],
-          ),
-        ),
-      ),
-    );
+            ),
+          );
   }
 }
 
