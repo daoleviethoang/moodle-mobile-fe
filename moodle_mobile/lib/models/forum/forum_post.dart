@@ -23,7 +23,8 @@ class ForumPost {
   //Urls? urls;
   List<ForumAttachment>? attachments;
   List<Null>? tags;
-  //Html? html;
+  //Html? htm
+  //l;
 
   ForumPost({
     this.id,
