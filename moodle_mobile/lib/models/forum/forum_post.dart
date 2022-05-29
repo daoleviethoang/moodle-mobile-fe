@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:moodle_mobile/models/forum/forum_attachment.dart';
 
 class ForumPost {
   int? id;
@@ -20,7 +21,7 @@ class ForumPost {
   int? charcount;
   //Capabilities? capabilities;
   //Urls? urls;
-  List<Null>? attachments;
+  List<ForumAttachment>? attachments;
   List<Null>? tags;
   //Html? html;
 
@@ -72,19 +73,20 @@ class ForumPost {
     //     ? new Capabilities.fromJson(json['capabilities'])
     //     : null;
     // urls = json['urls'] != null ? new Urls.fromJson(json['urls']) : null;
-    // if (json['attachments'] != null) {
-    //   attachments = <Null>[];
-    //   json['attachments'].forEach((v) {
-    //     attachments!.add(new Null.fromJson(v));
-    //   });
-    // }
-    // if (json['tags'] != null) {
-    //   tags = <Null>[];
-    //   json['tags'].forEach((v) {
-    //     tags!.add(new Null.fromJson(v));
-    //   });
-    // }
-    //html = json['html'] != null ? new Html.fromJson(json['html']) : null;
+    if (json['attachments'] != null) {
+      attachments = <ForumAttachment>[];
+      json['attachments'].forEach((v) {
+        attachments!.add(new ForumAttachment.fromJson(v));
+      });
+      // }
+      // if (json['tags'] != null) {
+      //   tags = <Null>[];
+      //   json['tags'].forEach((v) {
+      //     tags!.add(new Null.fromJson(v));
+      //   });
+      // }
+      //html = json['html'] != null ? new Html.fromJson(json['html']) : null;
+    }
   }
 
   Map<String, dynamic> toJson() {
