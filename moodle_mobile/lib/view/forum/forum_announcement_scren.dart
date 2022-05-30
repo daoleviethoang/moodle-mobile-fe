@@ -2,23 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:moodle_mobile/data/network/apis/forum/forum_api.dart';
+import 'package:moodle_mobile/data/network/apis/notification/notification_api.dart';
 import 'package:moodle_mobile/models/forum/forum_discussion.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/image_view.dart';
 import 'package:moodle_mobile/view/forum/add_post/add_post_screen.dart';
 import 'package:moodle_mobile/view/forum/forum_detail_screen.dart';
 
-class ForumDiscussionScreen extends StatefulWidget {
+class ForumAnnouncementScreen extends StatefulWidget {
   final int? forumId;
   final int? courseId;
-  ForumDiscussionScreen({Key? key, this.forumId, this.courseId})
+  ForumAnnouncementScreen({Key? key, this.forumId, this.courseId})
       : super(key: key);
 
   @override
-  State<ForumDiscussionScreen> createState() => _ForumDiscussionScreenState();
+  State<ForumAnnouncementScreen> createState() =>
+      _ForumAnnouncementScreenState();
 }
 
-class _ForumDiscussionScreenState extends State<ForumDiscussionScreen> {
+class _ForumAnnouncementScreenState extends State<ForumAnnouncementScreen> {
   late UserStore _userStore;
   List<ForumDiscussion> _forumDiscussion = [];
 
@@ -66,20 +68,6 @@ class _ForumDiscussionScreenState extends State<ForumDiscussionScreen> {
                       icon: Icon(Icons.arrow_downward),
                       onPressed: Sort,
                     ),
-              Spacer(),
-              IconButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (builder) => AddPostScreen(
-                                  forumInstanceId: widget.forumId!,
-                                  courseId: widget.courseId!,
-                                ))).then((_) {
-                      fetch();
-                    });
-                  },
-                  icon: Icon(Icons.add)),
             ],
           ),
         ),

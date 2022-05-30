@@ -21,6 +21,7 @@ import 'package:moodle_mobile/models/module/module_course.dart';
 import 'package:moodle_mobile/view/common/content_item.dart';
 import 'package:moodle_mobile/view/common/data_card.dart';
 import 'package:moodle_mobile/view/enrol/enrol.dart';
+import 'package:moodle_mobile/view/forum/forum_announcement_scren.dart';
 import 'package:moodle_mobile/view/forum/forum_screen.dart';
 import 'package:moodle_mobile/view/grade_in_one_course.dart';
 import 'package:moodle_mobile/view/participants_in_one_course.dart';
@@ -253,7 +254,14 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
 
   void _initAnnouncementsTab() {
     // TODO: Parse module from API
-    _announcementsTab = const Center(child: Text('Announcements'));
+    if (_content.isEmpty) {
+      _announcementsTab = Container();
+      return;
+    }
+    _announcementsTab = ForumAnnouncementScreen(
+      forumId: _content[0].modules[0].instance ?? 0,
+      courseId: _courseId,
+    );
   }
 
   void _initDiscussionsTab() {
@@ -261,7 +269,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
       _discussionsTab = Container();
       return;
     }
-    _discussionsTab = ForumScreen(
+    _discussionsTab = ForumDiscussionScreen(
       forumId: _content[0].modules[1].instance ?? 0,
       courseId: _courseId,
     );
