@@ -255,7 +255,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   void _initAnnouncementsTab() {
     // TODO: Parse module from API
     if (_content.isEmpty) {
-      _announcementsTab = const Center(child: Text('Announcements'));
+      _announcementsTab = Container();
       return;
     }
     _announcementsTab = ForumAnnouncementScreen(
