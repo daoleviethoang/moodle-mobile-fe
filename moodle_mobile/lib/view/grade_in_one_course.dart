@@ -3,7 +3,10 @@ import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
 import 'package:moodle_mobile/data/network/apis/assignment/assignment_api.dart';
+import 'package:moodle_mobile/data/network/apis/quiz/quiz_api.dart';
 import 'package:moodle_mobile/models/assignment/assignment.dart';
+import 'package:moodle_mobile/models/assignment/feedback.dart';
+import 'package:moodle_mobile/models/quiz/quiz.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 
 class GradeInOneCourse extends StatefulWidget {
@@ -20,6 +23,9 @@ class GradeInOneCourse extends StatefulWidget {
 class _GradeInOneCourseState extends State<GradeInOneCourse> {
   late UserStore _userStore;
   List<Assignment> assignments = [];
+  List<String?> gradesAssign = [];
+  List<Quiz> quizs = [];
+  List<double?> gradesQuiz = [];
   bool isLoad = true;
 
   @override
@@ -54,7 +60,7 @@ class _GradeInOneCourseState extends State<GradeInOneCourse> {
                       color: Colors.orangeAccent,
                       borderRadius: BorderRadius.all(
                           Radius.circular(Dimens.default_border_radius * 3))),
-                  child: Text("_",
+                  child: Text("-",
                       style: TextStyle(
                           fontSize: 18,
                           letterSpacing: 1,
@@ -71,6 +77,7 @@ class _GradeInOneCourseState extends State<GradeInOneCourse> {
                 thickness: 2,
               ),
               ListView(
+                  padding: EdgeInsets.only(top: 0),
                   shrinkWrap: true, //height is fit to children
                   physics: NeverScrollableScrollPhysics(),
                   children: List<Widget>.generate(
@@ -79,7 +86,20 @@ class _GradeInOneCourseState extends State<GradeInOneCourse> {
                       onTap: () {},
                       leading: const Icon(Icons.description),
                       title: Text(assignments[index].name!),
-                      trailing: Text("-"),
+                      trailing: Text(gradesAssign[index] ?? "-"),
+                    ),
+                  )),
+              ListView(
+                  padding: EdgeInsets.only(top: 0),
+                  shrinkWrap: true, //height is fit to children
+                  physics: NeverScrollableScrollPhysics(),
+                  children: List<Widget>.generate(
+                    quizs.length,
+                    (int index) => ListTile(
+                      onTap: () {},
+                      leading: const Icon(Icons.description),
+                      title: Text(quizs[index].name!),
+                      trailing: Text(gradesQuiz[index]?.toString() ?? "-"),
                     ),
                   )),
             ]),
@@ -91,8 +111,28 @@ class _GradeInOneCourseState extends State<GradeInOneCourse> {
       List<Assignment> getAssignments = await AssignmentApi()
           .getAssignments(_userStore.user.token, 0, widget.courseId);
 
+      for (var item in getAssignments) {
+        FeedBack feedBack = await AssignmentApi()
+            .getAssignmentFeedbackAndGrade(_userStore.user.token, item.id ?? 0);
+        setState(() {
+          gradesAssign.add(feedBack.grade?.grade);
+        });
+      }
+
+      List<Quiz> getQuizs =
+          await QuizApi().getQuizs(_userStore.user.token, widget.courseId);
+
+      for (var item in getQuizs) {
+        double? grade =
+            await QuizApi().getGrade(_userStore.user.token, item.id ?? 0);
+        setState(() {
+          gradesQuiz.add(grade);
+        });
+      }
+
       setState(() {
         assignments = getAssignments;
+        quizs = getQuizs;
         isLoad = false;
       });
     } catch (e) {
