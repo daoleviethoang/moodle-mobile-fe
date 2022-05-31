@@ -9,6 +9,7 @@ import 'package:moodle_mobile/models/forum/forum_course.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/chipTitle.dart';
 import 'package:moodle_mobile/view/common/custom_button_short.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AddPostScreen extends StatefulWidget {
   final int forumInstanceId;
@@ -105,13 +106,13 @@ class _AddPostScreenState extends State<AddPostScreen> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Overwrite same name file!'),
+            title: Text(AppLocalizations.of(context)!.override_file),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: Text("Cancel"),
+                child: Text(AppLocalizations.of(context)!.cancel),
               ),
               TextButton(
                 onPressed: () {
@@ -126,7 +127,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                   // break dialog
                   Navigator.pop(context);
                 },
-                child: Text("Ok"),
+                child: Text(AppLocalizations.of(context)!.ok),
               ),
             ],
           );
@@ -147,8 +148,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
             snap: true,
             title: Text(
               widget.relyPostId == null
-                  ? "Add new discussion"
-                  : "Rely discussion",
+                  ? AppLocalizations.of(context)!.add_new_discussion
+                  : AppLocalizations.of(context)!.rely_discussion,
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 20,
@@ -189,8 +190,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                     top: 20,
                                     right: 15,
                                   ),
-                                  child: const Text(
-                                    "Subject",
+                                  child: Text(
+                                    AppLocalizations.of(context)!.subject,
                                     style:
                                         TextStyle(fontWeight: FontWeight.bold),
                                   ),
@@ -214,7 +215,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                             BorderRadius.circular(10.0),
                                         borderSide: BorderSide(width: 1),
                                       ),
-                                      hintText: "Subject",
+                                      hintText:
+                                          AppLocalizations.of(context)!.subject,
                                     ),
                                   ),
                                 ),
@@ -236,8 +238,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                     top: 20,
                                     right: 15,
                                   ),
-                                  child: const Text(
-                                    "Content",
+                                  child: Text(
+                                    AppLocalizations.of(context)!.content,
                                     style:
                                         TextStyle(fontWeight: FontWeight.bold),
                                   ),
@@ -259,7 +261,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                             BorderRadius.circular(10.0),
                                         borderSide: BorderSide(width: 1),
                                       ),
-                                      hintText: "Content",
+                                      hintText:
+                                          AppLocalizations.of(context)!.content,
                                     ),
                                   ),
                                 ),
@@ -295,7 +298,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                 width: 10,
                               ),
                               Text(
-                                "Advance",
+                                AppLocalizations.of(context)!.advance,
                                 style: TextStyle(
                                   fontSize: 15,
                                 ),
@@ -347,7 +350,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 CustomButtonShort(
-                                    text: "Add file",
+                                    text:
+                                        AppLocalizations.of(context)!.add_file,
                                     textColor: Colors.white,
                                     bgColor: MoodleColors.blue,
                                     blurRadius: 1,
@@ -359,9 +363,10 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                         // check size more than condition
                                         if (file.size + caculateByteSize() >
                                             (forumCourse?.maxbytes ?? 0)) {
-                                          const snackBar = SnackBar(
+                                          var snackBar = SnackBar(
                                               content: Text(
-                                                  "File's size is bigger"));
+                                                  AppLocalizations.of(context)!
+                                                      .file_size_bigger));
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(snackBar);
                                           return;
@@ -370,9 +375,10 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                         if (files.length ==
                                             (forumCourse?.maxattachments ??
                                                 0)) {
-                                          const snackBar = SnackBar(
-                                              content:
-                                                  Text("Number file is full"));
+                                          var snackBar = SnackBar(
+                                              content: Text(
+                                                  AppLocalizations.of(context)!
+                                                      .number_file_full));
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(snackBar);
                                           return;
@@ -397,11 +403,14 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                   height: 10,
                                 ),
                                 Text(
-                                  "Kích cỡ tối đa đối với các tập tin mới : ${(forumCourse?.maxbytes ?? 0) / 1024 / 1024} MB.",
+                                  AppLocalizations.of(context)!.max_file_size +
+                                      "${(forumCourse?.maxbytes ?? 0) / 1024 / 1024} MB.",
                                   maxLines: 3,
                                 ),
                                 Text(
-                                  "Mặc đinh tối đa :${forumCourse?.maxattachments ?? 0} file.",
+                                  AppLocalizations.of(context)!
+                                          .default_num_file +
+                                      "${forumCourse?.maxattachments ?? 0} file.",
                                 ),
                               ],
                             ),

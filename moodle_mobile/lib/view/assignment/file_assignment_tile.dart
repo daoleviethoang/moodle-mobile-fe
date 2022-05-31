@@ -1,14 +1,13 @@
 import 'dart:isolate';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:flutter_html/shims/dart_ui_real.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:moodle_mobile/data/network/apis/file/file_api.dart';
 import 'package:moodle_mobile/models/assignment/file_assignment.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/assignment/rename_dialog.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 typedef Int2VoidFunc = void Function(int);
 typedef Int2StringVoidFunc = void Function(int, String);
@@ -32,7 +31,7 @@ class FileAssignmentTile extends StatefulWidget {
 
 class _FileAssignmentTileState extends State<FileAssignmentTile> {
   late UserStore _userStore;
-  List<String> action = ['Rename...', 'Download', 'Delete...'];
+  List<String> action = [];
   _showReNameDialog() {
     final RenameFileTiles _setListTiles = RenameFileTiles(
       filename: widget.file.filename,
@@ -41,7 +40,7 @@ class _FileAssignmentTileState extends State<FileAssignmentTile> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Rename your file!'),
+          title: Text(AppLocalizations.of(context)!.rename_file),
           content: SingleChildScrollView(
             child: Column(
               children: [
@@ -54,7 +53,7 @@ class _FileAssignmentTileState extends State<FileAssignmentTile> {
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text("Cancel"),
+              child: Text(AppLocalizations.of(context)!.cancel),
             ),
             TextButton(
               onPressed: () {
@@ -65,7 +64,7 @@ class _FileAssignmentTileState extends State<FileAssignmentTile> {
                 // break dialog
                 Navigator.pop(context);
               },
-              child: Text("Ok"),
+              child: Text(AppLocalizations.of(context)!.ok),
             ),
           ],
         );
@@ -79,14 +78,14 @@ class _FileAssignmentTileState extends State<FileAssignmentTile> {
   }
 
   void handleClick(String value) {
-    switch (value) {
-      case 'Rename...':
+    switch (action.indexOf(value)) {
+      case 0:
         _showReNameDialog();
         break;
-      case 'Download':
+      case 1:
         downloadFile();
         break;
-      case 'Delete...':
+      case 2:
         widget.delete(widget.index);
         break;
     }
@@ -96,6 +95,17 @@ class _FileAssignmentTileState extends State<FileAssignmentTile> {
   void initState() {
     _userStore = GetIt.instance<UserStore>();
     super.initState();
+    WidgetsBinding.instance!.addPostFrameCallback(
+      (_) => setState(
+        () {
+          action = [
+            AppLocalizations.of(context)!.rename,
+            AppLocalizations.of(context)!.download,
+            AppLocalizations.of(context)!.delete,
+          ];
+        },
+      ),
+    );
   }
 
   @override
@@ -152,7 +162,7 @@ class _FileAssignmentTileState extends State<FileAssignmentTile> {
                   onSelected: handleClick,
                   itemBuilder: (BuildContext context) {
                     if (widget.file.fileUrl == "") {
-                      action.remove('Download');
+                      action.remove(AppLocalizations.of(context)!.download);
                     }
                     return action.map((String choice) {
                       return PopupMenuItem<String>(

@@ -1,12 +1,13 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:moodle_mobile/data/network/constants/endpoints.dart';
 import 'package:moodle_mobile/data/network/constants/wsfunction_constants.dart';
 import 'package:moodle_mobile/data/network/dio_http.dart';
 import 'package:moodle_mobile/models/assignment/assignment.dart';
 import 'package:moodle_mobile/models/assignment/attemp_assignment.dart';
+import 'package:moodle_mobile/models/assignment/feedback.dart';
 
 class AssignmentApi {
   saveAssignment(String token, int assignid, int itemid) async {
@@ -59,6 +60,33 @@ class AssignmentApi {
       return assigns;
     } catch (e) {
       throw "Can't get list assignment";
+    }
+  }
+
+  Future<FeedBack> getAssignmentFeedbackAndGrade(
+      String token, int assignInstanceId) async {
+    try {
+      Dio dio = Http().client;
+      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': Wsfunction.MOD_ASSIGN_GET_SUBMISSION_STATUS,
+        "moodlewsrestformat": "json",
+        'assignid': assignInstanceId,
+      });
+
+      if (res.data["exception"] != null) {
+        throw res.data["exception"];
+      }
+      if (res.data["feedback"] == null) {
+        return FeedBack();
+      }
+
+      FeedBack feedback = FeedBack.fromJson(res.data["feedback"]);
+
+      return feedback;
+    } catch (e) {
+      print(e.toString());
+      throw "Can't get feedback";
     }
   }
 

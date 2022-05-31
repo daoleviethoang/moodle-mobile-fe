@@ -1,19 +1,18 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' as rootBundle;
 import 'package:flutter_html/flutter_html.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:moodle_mobile/data/network/apis/assignment/assignment_api.dart';
 import 'package:moodle_mobile/models/assignment/assignment.dart';
 import 'package:moodle_mobile/models/assignment/attemp_assignment.dart';
+import 'package:moodle_mobile/models/assignment/feedback.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/assignment/date_assignment_tile.dart';
 import 'package:moodle_mobile/view/assignment/files_assignment.dart';
 import 'package:moodle_mobile/view/assignment/submission_status_tile.dart';
 import 'package:moodle_mobile/view/common/custom_button.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AssignmentScreen extends StatefulWidget {
   final int assignInstanceId;
@@ -40,16 +39,13 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
   late UserStore _userStore;
   bool overDue = false;
   bool error = false;
+  FeedBack feedback = FeedBack();
 
   @override
   void initState() {
     _userStore = GetIt.instance<UserStore>();
     super.initState();
-    isLoading = true;
     loadAssignment();
-    setState(() {
-      isLoading = false;
-    });
   }
 
   Future<Assignment> ReadData(int assignInstanceId, int courseId) async {
@@ -92,13 +88,32 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
     return AttemptAssignment();
   }
 
+  Future<FeedBack> readFeedBack(int assignInstanceId) async {
+    try {
+      FeedBack feedBack = await AssignmentApi().getAssignmentFeedbackAndGrade(
+          _userStore.user.token, assignInstanceId);
+      return feedBack;
+    } catch (e) {
+      setState(() {
+        error = true;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString()), backgroundColor: Colors.red));
+    }
+    return FeedBack();
+  }
+
   void loadAssignment() async {
-    isLoading = true;
+    setState(() {
+      isLoading = true;
+    });
     Assignment temp = await ReadData(widget.assignInstanceId, widget.courseId);
     AttemptAssignment temp2 = await ReadData2(widget.assignInstanceId);
+    FeedBack temp3 = await readFeedBack(widget.assignInstanceId);
     setState(() {
       assignment = temp;
       attempt = temp2;
+      feedback = temp3;
       isLoading = false;
     });
     dateDiffSubmit();
@@ -121,19 +136,29 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
       final dateTime = zero.add(duration.abs());
       int day = dateTime.day - 1;
       setState(() {
-        dateDiff =
-            (dueDate.isAfter(DateTime.now()) ? "Due in " : "Overdue by: ") +
-                ((day > 0)
-                    ? (duration.inDays.abs().toString() +
-                        " days " +
-                        dateTime.hour.toString() +
-                        " hours")
-                    : ((duration.inMinutes.abs() > 0)
-                        ? (dateTime.hour.toString() +
-                            " hours " +
-                            dateTime.minute.toString() +
-                            " minutes")
-                        : dateTime.second.toString() + " seconds"));
+        dateDiff = (dueDate.isAfter(DateTime.now())
+                ? AppLocalizations.of(context)!.due_in
+                : AppLocalizations.of(context)!.overdue_by) +
+            " " +
+            ((day > 0)
+                ? (duration.inDays.abs().toString() +
+                    " " +
+                    AppLocalizations.of(context)!.days +
+                    " " +
+                    dateTime.hour.toString() +
+                    " " +
+                    AppLocalizations.of(context)!.hours)
+                : ((duration.inMinutes.abs() > 0)
+                    ? (dateTime.hour.toString() +
+                        " " +
+                        AppLocalizations.of(context)!.hours +
+                        " " +
+                        dateTime.minute.toString() +
+                        " " +
+                        AppLocalizations.of(context)!.minutes)
+                    : dateTime.second.toString() +
+                        " " +
+                        AppLocalizations.of(context)!.seconds));
         overDue = (dueDate.isAfter(DateTime.now()) ? false : true) &&
             (attempt.cansubmit == false || attempt.cansubmit == null);
       });
@@ -146,19 +171,31 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
     final dateTime = zero.add(duration.abs());
     int day = dateTime.day - 1;
     setState(() {
-      dateDiff = "Submitted " +
+      dateDiff = AppLocalizations.of(context)!.submitted +
+          " " +
           ((day > 0)
               ? (duration.inDays.abs().toString() +
-                  " days " +
+                  " " +
+                  AppLocalizations.of(context)!.days +
+                  " " +
                   dateTime.hour.toString() +
-                  " hours")
+                  " " +
+                  AppLocalizations.of(context)!.hours)
               : ((duration.inMinutes.abs() > 0)
                   ? (dateTime.hour.toString() +
-                      " hours " +
+                      " " +
+                      AppLocalizations.of(context)!.hours +
+                      " " +
                       dateTime.minute.toString() +
-                      " minutes")
-                  : dateTime.second.toString() + " seconds")) +
-          (duration.isNegative ? " late" : " early");
+                      " " +
+                      AppLocalizations.of(context)!.minutes)
+                  : dateTime.second.toString() +
+                      " " +
+                      AppLocalizations.of(context)!.seconds)) +
+          " " +
+          (duration.isNegative
+              ? AppLocalizations.of(context)!.late
+              : AppLocalizations.of(context)!.early);
       dateDiffColor = duration.isNegative ? Colors.red : Colors.green;
     });
   }
@@ -177,6 +214,7 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                 color: Colors.white,
                 fontSize: 20,
               ),
+              overflow: TextOverflow.clip,
             ),
             leading: TextButton(
               style: TextButton.styleFrom(
@@ -204,14 +242,14 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                           DateAssignmentTile(
                             date: (assignment.allowsubmissionsfromdate ?? 0) *
                                 1000,
-                            title: "Opened",
+                            title: AppLocalizations.of(context)!.opened,
                             iconColor: Colors.grey,
                             backgroundIconColor:
                                 const Color.fromARGB(255, 217, 217, 217),
                           ),
                           DateAssignmentTile(
                             date: (assignment.duedate ?? 0) * 1000,
-                            title: "Due",
+                            title: AppLocalizations.of(context)!.due,
                             iconColor: Colors.green,
                             backgroundIconColor: Colors.greenAccent,
                           ),
@@ -232,8 +270,8 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                           const SizedBox(
                             height: 20,
                           ),
-                          const Text(
-                            "Submission status",
+                          Text(
+                            AppLocalizations.of(context)!.submission_status,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 20,
@@ -242,29 +280,35 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                           const SizedBox(
                             height: 20,
                           ),
-                          const SubmissionStatusTile(
-                            leftText: "Submission status",
-                            rightText: "Submitted for grading",
-                          ),
-                          const SizedBox(
-                            height: 15,
-                          ),
-                          const SubmissionStatusTile(
-                            leftText: "Grading status",
-                            rightText: "Not graded",
+                          SubmissionStatusTile(
+                            leftText:
+                                AppLocalizations.of(context)!.submission_status,
+                            rightText:
+                                AppLocalizations.of(context)!.submit_for_grade,
                           ),
                           const SizedBox(
                             height: 15,
                           ),
                           SubmissionStatusTile(
-                              leftText: "Time remaining",
+                            leftText:
+                                AppLocalizations.of(context)!.grading_status,
+                            rightText: feedback.grade?.grade ??
+                                AppLocalizations.of(context)!.not_graded,
+                          ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          SubmissionStatusTile(
+                              leftText:
+                                  AppLocalizations.of(context)!.time_remain,
                               rightText: dateDiff,
                               rightTextColor: dateDiffColor),
                           const SizedBox(
                             height: 15,
                           ),
                           SubmissionStatusTile(
-                              leftText: "Last modified",
+                              leftText:
+                                  AppLocalizations.of(context)!.last_modified,
                               rightText: DateFormat("hh:mmaa, dd MMMM, yyyy")
                                   .format(DateTime.fromMillisecondsSinceEpoch(
                                       attempt.submission?.timemodified ?? 0))),
@@ -272,7 +316,8 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                             height: 15,
                           ),
                           SubmissionStatusTile(
-                            leftText: "File submissions",
+                            leftText:
+                                AppLocalizations.of(context)!.file_submission,
                             rightText: (attempt.submission?.plugins?[0]
                                             .fileareas?[0].files ??
                                         [])
@@ -284,9 +329,14 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                           const SizedBox(
                             height: 15,
                           ),
-                          const SubmissionStatusTile(
-                            leftText: "Submission comments",
-                            rightText: "0 comments...",
+                          SubmissionStatusTile(
+                            leftText: AppLocalizations.of(context)!
+                                .submission_comments,
+                            rightText:
+                                (feedback.plugins?.length ?? 0).toString() +
+                                    " " +
+                                    AppLocalizations.of(context)!.comments +
+                                    "...",
                             rightTextColor: Colors.blue,
                           ),
                           const SizedBox(
@@ -295,7 +345,8 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                           overDue
                               ? Container()
                               : CustomButtonWidget(
-                                  textButton: "View file submission",
+                                  textButton: AppLocalizations.of(context)!
+                                      .view_file_submission,
                                   onPressed: () {
                                     Navigator.of(context).push(
                                       MaterialPageRoute(
