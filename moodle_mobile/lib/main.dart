@@ -68,7 +68,11 @@ class MyApp extends StatelessWidget {
     try {
       _bindBackgroundIsolate();
       FlutterDownloader.registerCallback(downloadCallback);
-    } catch (e) {}
+    } catch (e) {
+      if (kDebugMode) {
+        print('!!!!!!!!!!$e');
+      }
+    }
 
     return MaterialApp(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
