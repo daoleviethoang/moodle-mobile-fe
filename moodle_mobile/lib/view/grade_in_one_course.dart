@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
 import 'package:moodle_mobile/data/network/apis/assignment/assignment_api.dart';
+import 'package:moodle_mobile/data/network/apis/course/course_service.dart';
 import 'package:moodle_mobile/data/network/apis/quiz/quiz_api.dart';
 import 'package:moodle_mobile/models/assignment/assignment.dart';
 import 'package:moodle_mobile/models/assignment/feedback.dart';
@@ -22,6 +23,7 @@ class GradeInOneCourse extends StatefulWidget {
 
 class _GradeInOneCourseState extends State<GradeInOneCourse> {
   late UserStore _userStore;
+  String? courseGrade;
   List<Assignment> assignments = [];
   List<String?> gradesAssign = [];
   List<Quiz> quizs = [];
@@ -60,7 +62,7 @@ class _GradeInOneCourseState extends State<GradeInOneCourse> {
                       color: Colors.orangeAccent,
                       borderRadius: BorderRadius.all(
                           Radius.circular(Dimens.default_border_radius * 3))),
-                  child: Text("-",
+                  child: Text(courseGrade ?? "-",
                       style: TextStyle(
                           fontSize: 18,
                           letterSpacing: 1,
@@ -108,6 +110,13 @@ class _GradeInOneCourseState extends State<GradeInOneCourse> {
 
   getData() async {
     try {
+      String? getGrade = await CourseService()
+          .getGrade(_userStore.user.token, widget.courseId);
+
+      setState(() {
+        courseGrade = getGrade;
+      });
+
       List<Assignment> getAssignments = await AssignmentApi()
           .getAssignments(_userStore.user.token, 0, widget.courseId);
 
