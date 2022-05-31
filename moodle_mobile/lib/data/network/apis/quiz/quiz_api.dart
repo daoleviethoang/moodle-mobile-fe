@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 import 'package:moodle_mobile/data/network/constants/endpoints.dart';
+import 'package:moodle_mobile/data/network/constants/wsfunction_constants.dart';
 import 'package:moodle_mobile/data/network/dio_http.dart';
 import 'package:moodle_mobile/models/quiz/attempt.dart';
-import 'package:moodle_mobile/models/quiz/question.dart';
 import 'package:moodle_mobile/models/quiz/quiz.dart';
 import 'package:moodle_mobile/models/quiz/quizData.dart';
 
@@ -14,7 +14,7 @@ class QuizApi {
       Dio dio = Http().client;
       final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
         'wstoken': token,
-        'wsfunction': 'mod_quiz_get_quizzes_by_courses',
+        'wsfunction': Wsfunction.MOD_QUIZ_GET_QUIZZES_BY_COURSES,
         'moodlewsrestformat': 'json',
         'courseids[]': [courseId]
       });
@@ -34,7 +34,7 @@ class QuizApi {
       Dio dio = Http().client;
       final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
         'wstoken': token,
-        'wsfunction': 'mod_quiz_get_user_attempts',
+        'wsfunction': Wsfunction.MOD_QUIZ_GET_USER_ATTEMPTS,
         'moodlewsrestformat': 'json',
         'quizid': quizId,
         'status': "all",
@@ -55,7 +55,7 @@ class QuizApi {
       Dio dio = Http().client;
       final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
         'wstoken': token,
-        'wsfunction': 'mod_quiz_start_attempt',
+        'wsfunction': Wsfunction.MOD_QUIZ_START_ATTEMPT,
         'moodlewsrestformat': 'json',
         'quizid': quizId,
       });
@@ -74,7 +74,7 @@ class QuizApi {
       Dio dio = Http().client;
       final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
         'wstoken': token,
-        'wsfunction': 'mod_quiz_process_attempt',
+        'wsfunction': Wsfunction.MOD_QUIZ_PROCESS_ATTEMPT,
         'moodlewsrestformat': 'json',
         'attemptid': attemptid,
         'finishattempt': 1,
@@ -98,7 +98,7 @@ class QuizApi {
       while (true) {
         final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
           'wstoken': token,
-          'wsfunction': 'mod_quiz_get_attempt_data',
+          'wsfunction': Wsfunction.MOD_QUIZ_GET_ATTEMPT_DATA,
           'moodlewsrestformat': 'json',
           'attemptid': attemptid,
           'page': page
@@ -134,7 +134,7 @@ class QuizApi {
       Dio dio = Http().client;
       var map = {
         'wstoken': token,
-        'wsfunction': 'mod_quiz_process_attempt',
+        'wsfunction': Wsfunction.MOD_QUIZ_PROCESS_ATTEMPT,
         'moodlewsrestformat': 'json',
         'attemptid': attemptid,
       };
@@ -165,7 +165,7 @@ class QuizApi {
       Dio dio = Http().client;
       final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
         'wstoken': token,
-        'wsfunction': 'mod_quiz_get_attempt_review',
+        'wsfunction': Wsfunction.MOD_QUIZ_GET_ATTEMPT_REVIEW,
         'moodlewsrestformat': 'json',
         'attemptid': attemptid,
       });
@@ -183,7 +183,7 @@ class QuizApi {
       Dio dio = Http().client;
       final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
         'wstoken': token,
-        'wsfunction': 'mod_quiz_get_user_best_grade',
+        'wsfunction': Wsfunction.MOD_QUIZ_GET_USER_BEST_GRADE,
         'moodlewsrestformat': 'json',
         'quizid': quizId,
       });

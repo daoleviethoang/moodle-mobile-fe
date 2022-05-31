@@ -7,6 +7,7 @@ import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/custom_button.dart';
 import 'package:moodle_mobile/view/common/custom_text_field.dart';
 import 'package:moodle_mobile/view/course_details.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EnrolScreen extends StatefulWidget {
   final int courseId;
@@ -36,8 +37,8 @@ class _EnrolScreenState extends State<EnrolScreen> {
         ),
       );
     } else {
-      const snackBar = SnackBar(content: Text("Enrol key not correct"));
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(AppLocalizations.of(context)!.enrol_key_not_correct)));
     }
   }
 
@@ -66,7 +67,7 @@ class _EnrolScreenState extends State<EnrolScreen> {
             floating: true,
             snap: true,
             title: Text(
-              "Enrol",
+              AppLocalizations.of(context)!.enrol,
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 20,
@@ -93,15 +94,15 @@ class _EnrolScreenState extends State<EnrolScreen> {
                   runAlignment: WrapAlignment.center,
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
-                    const Text(
-                      "You are not a participant of this course.",
+                    Text(
+                      AppLocalizations.of(context)!.not_participant_course,
                       textScaleFactor: 1.4,
                     ),
                     havePass != true ? Container() : const SizedBox(height: 40),
                     havePass != true
                         ? Container()
                         : CustomTextFieldWidget(
-                            hintText: "Enrol pass",
+                            hintText: AppLocalizations.of(context)!.enrol_pass,
                             hidePass: true,
                             controller: enrollController,
                             prefixIcon: Icons.lock,
@@ -111,12 +112,12 @@ class _EnrolScreenState extends State<EnrolScreen> {
                         ? const SizedBox(height: 20)
                         : const SizedBox(height: 60),
                     havePass == null
-                        ? const Text(
-                            "Course can't enrol",
+                        ? Text(
+                            AppLocalizations.of(context)!.course_can_not_enrol,
                             textScaleFactor: 1.3,
                           )
                         : CustomButtonWidget(
-                            textButton: "Enrol",
+                            textButton: AppLocalizations.of(context)!.enrol,
                             onPressed: () async {
                               await enroll();
                             },

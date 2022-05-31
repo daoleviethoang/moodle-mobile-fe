@@ -11,6 +11,8 @@ class Wsfunction {
       "core_course_set_favourite_courses";
   static const String CORE_USER_UPDATE_USER_PREFERENCES =
       "core_user_update_user_preferences";
+  static const String GRADEREPORT_COURSE_GRADES =
+      "gradereport_overview_get_course_grades";
 
   // module
   static const String GET_MODULE_BY_ID = "core_course_get_course_module";
@@ -86,4 +88,16 @@ class Wsfunction {
   static const String CORE_COURSES_PARTICIPANT =
       "core_enrol_get_enrolled_users";
   static const String CORE_USER_CONTACT = "core_message_get_user_contacts";
+
+  //quiz
+  static const String MOD_QUIZ_GET_QUIZZES_BY_COURSES =
+      "mod_quiz_get_quizzes_by_courses";
+  static const String MOD_QUIZ_GET_USER_ATTEMPTS = "mod_quiz_get_user_attempts";
+  static const String MOD_QUIZ_START_ATTEMPT = "mod_quiz_start_attempt";
+  static const String MOD_QUIZ_PROCESS_ATTEMPT = "mod_quiz_process_attempt";
+  static const String MOD_QUIZ_GET_ATTEMPT_DATA = "mod_quiz_get_attempt_data";
+  static const String MOD_QUIZ_GET_ATTEMPT_REVIEW =
+      "mod_quiz_get_attempt_review";
+  static const String MOD_QUIZ_GET_USER_BEST_GRADE =
+      "mod_quiz_get_user_best_grade";
 }

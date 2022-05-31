@@ -12,6 +12,7 @@ import 'package:moodle_mobile/view/assignment/date_assignment_tile.dart';
 import 'package:moodle_mobile/view/common/custom_button_short.dart';
 import 'package:moodle_mobile/view/quiz/do_quiz/do_quiz.dart';
 import 'package:moodle_mobile/view/quiz/preview/preview_quiz.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class QuizScreen extends StatefulWidget {
   final int quizInstanceId;
@@ -65,7 +66,7 @@ class _QuizScreenState extends State<QuizScreen> {
       setState(() {
         numAttempt = attemps.length;
       });
-      //print(attemps.length);
+
       if (attemps.isNotEmpty) {
         Attempt temp = attemps.first;
         for (var item in attemps) {
@@ -127,14 +128,14 @@ class _QuizScreenState extends State<QuizScreen> {
                     children: [
                       DateAssignmentTile(
                         date: (quiz.timeopen ?? 0) * 1000,
-                        title: "Opened",
+                        title: AppLocalizations.of(context)!.opened,
                         iconColor: Colors.grey,
                         backgroundIconColor:
                             const Color.fromARGB(255, 217, 217, 217),
                       ),
                       DateAssignmentTile(
                         date: (quiz.timeclose ?? 0) * 1000,
-                        title: "Due",
+                        title: AppLocalizations.of(context)!.due,
                         iconColor: Colors.green,
                         backgroundIconColor: Colors.greenAccent,
                       ),
@@ -148,12 +149,14 @@ class _QuizScreenState extends State<QuizScreen> {
                             const SizedBox(
                               height: 15,
                             ),
-                            Text('Attempts allowed: ${quiz.attempts ?? 0}'),
+                            Text(AppLocalizations.of(context)!.attempt_allow +
+                                " ${quiz.attempts ?? 0}"),
                             const SizedBox(
                               height: 20,
                             ),
-                            Text(
-                                "Time limit: ${(quiz.timelimit ?? 0) / 60} mins"),
+                            Text(AppLocalizations.of(context)!.time_limit +
+                                " ${(quiz.timelimit ?? 0) / 60} " +
+                                AppLocalizations.of(context)!.minutes),
                           ],
                         ),
                       ),
@@ -169,8 +172,8 @@ class _QuizScreenState extends State<QuizScreen> {
                       const SizedBox(
                         height: 5,
                       ),
-                      const Text(
-                        "Summary of your previous attempts",
+                      Text(
+                        AppLocalizations.of(context)!.summary_attempt,
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 22),
                       ),
@@ -185,17 +188,17 @@ class _QuizScreenState extends State<QuizScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
-                          children: const [
+                          children: [
                             Expanded(
                                 child: Text(
-                              "State",
+                              AppLocalizations.of(context)!.state,
                               style: TextStyle(fontWeight: FontWeight.bold),
                               textScaleFactor: 1.1,
                             )),
                             Expanded(
                               child: Center(
                                 child: Text(
-                                  "Grade/10",
+                                  AppLocalizations.of(context)!.grade + "/10",
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                   textScaleFactor: 1.1,
                                 ),
@@ -222,8 +225,8 @@ class _QuizScreenState extends State<QuizScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.stretch,
                                     children: [
-                                      const Text(
-                                        "Finished",
+                                      Text(
+                                        AppLocalizations.of(context)!.finished,
                                         style: TextStyle(
                                             color: MoodleColors.blue,
                                             fontWeight: FontWeight.bold),
@@ -232,7 +235,9 @@ class _QuizScreenState extends State<QuizScreen> {
                                         height: 5,
                                       ),
                                       lastAttempt.id != null
-                                          ? Text("Submitted " +
+                                          ? Text(AppLocalizations.of(context)!
+                                                  .submitted +
+                                              " " +
                                               dayOfWeek.format(DateTime
                                                   .fromMillisecondsSinceEpoch(
                                                       (lastAttempt.timefinish ??
@@ -253,10 +258,11 @@ class _QuizScreenState extends State<QuizScreen> {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.stretch,
-                                    children: const [
+                                    children: [
                                       Text(""),
                                       Text(
-                                        "Unfinished",
+                                        AppLocalizations.of(context)!
+                                            .unfinished,
                                         style: TextStyle(
                                             color: MoodleColors.blue,
                                             fontWeight: FontWeight.bold),
@@ -270,7 +276,8 @@ class _QuizScreenState extends State<QuizScreen> {
                             Expanded(
                                 child: Center(
                                     child: Text(grade?.toStringAsFixed(2) ??
-                                        "Not Grade"))),
+                                        AppLocalizations.of(context)!
+                                            .not_graded))),
                           ],
                         ),
                       ),
@@ -286,7 +293,8 @@ class _QuizScreenState extends State<QuizScreen> {
                               lastAttempt.preview == 0
                           ? Center(
                               child: CustomButtonShort(
-                                text: "Preview last",
+                                text:
+                                    AppLocalizations.of(context)!.preview_last,
                                 onPressed: () {
                                   Navigator.of(context)
                                       .push(MaterialPageRoute(builder: (_) {
@@ -309,7 +317,8 @@ class _QuizScreenState extends State<QuizScreen> {
                               (quiz.attempts ?? 0) > numAttempt
                           ? Center(
                               child: CustomButtonShort(
-                                text: "Attempt quiz now",
+                                text:
+                                    AppLocalizations.of(context)!.start_attempt,
                                 onPressed: () async {
                                   Attempt attempt = await QuizApi().startQuiz(
                                       _userStore.user.token,
@@ -340,7 +349,8 @@ class _QuizScreenState extends State<QuizScreen> {
                       lastAttempt.state == "inprogress"
                           ? Center(
                               child: CustomButtonShort(
-                                text: "Continue attempt",
+                                text: AppLocalizations.of(context)!
+                                    .continue_attempt,
                                 onPressed: () async {
                                   Navigator.of(context)
                                       .push(MaterialPageRoute(builder: (_) {

@@ -26,6 +26,28 @@ class CourseService {
     }
   }
 
+  Future<String?> getGrade(String token, int courseId) async {
+    try {
+      Dio dio = Http().client;
+      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': Wsfunction.GRADEREPORT_COURSE_GRADES,
+        "moodlewsrestformat": "json",
+      });
+
+      var list = res.data["grades"] as List;
+
+      for (var item in list) {
+        if (item["courseid"] == courseId) {
+          return item["grade"];
+        }
+      }
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
+
   Future triggerViewCourse(String token, int id) async {
     try {
       Dio dio = Http().client;
