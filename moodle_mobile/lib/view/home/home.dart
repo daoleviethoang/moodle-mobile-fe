@@ -122,6 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
             borderRadius: const BorderRadius.all(Radius.circular(5.0)),
             onTap: () {
               setState(() {
+                isFilter = false;
                 categoryType = categoryTypeData;
               });
             },

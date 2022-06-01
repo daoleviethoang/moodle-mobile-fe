@@ -1,13 +1,6 @@
 import 'package:moodle_mobile/models/contant/contant_model.dart';
 
-enum CourseStatus {
-  in_progress,
-  future,
-  past,
-  removed_from_view,
-  all_expand,
-  all
-}
+enum CourseStatus { in_progress, future, past, removed_from_view, all }
 
 extension CourseStatusExtension on CourseStatus {
   String get name {
@@ -20,8 +13,6 @@ extension CourseStatusExtension on CourseStatus {
         return 'Past';
       case CourseStatus.removed_from_view:
         return 'Removed from view';
-      case CourseStatus.all_expand:
-        return 'All (except remove from view)';
       case CourseStatus.all:
         return 'All';
       default:

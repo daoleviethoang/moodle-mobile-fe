@@ -67,16 +67,26 @@ class _SelectCourseFilterState extends State<SelectCourseFilter>
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        isShow = !isShow;
-        _runExpandCheck();
-      },
-      child: Container(
-        margin: const EdgeInsets.only(left: 10.0, right: 10.0),
-        child: Column(
-          children: <Widget>[
-            Container(
+    return Container(
+      margin: const EdgeInsets.only(left: 10.0, right: 10.0),
+      child: Column(
+        children: <Widget>[
+          GestureDetector(
+            onTap: () {
+              if (isShow == true) {
+                setState(() {
+                  this.isFilter = true;
+                });
+                widget.onOptionSelected(
+                    this.arrangeTypeSelected,
+                    this.statusTypeSelected,
+                    this.showOnlyStarSelected,
+                    this.isFilter);
+              }
+              isShow = !isShow;
+              _runExpandCheck();
+            },
+            child: Container(
               margin: const EdgeInsets.only(bottom: 8),
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
               decoration: new BoxDecoration(
@@ -115,26 +125,27 @@ class _SelectCourseFilterState extends State<SelectCourseFilter>
                 ],
               ),
             ),
-            SizeTransition(
-                axisAlignment: 1.0,
-                sizeFactor: animation,
-                child: Container(
-                    margin: const EdgeInsets.only(bottom: 10),
-                    padding: const EdgeInsets.only(bottom: 10),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: MoodleColors.grey),
-                      borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      color: Colors.white,
-                      boxShadow: const [
-                        BoxShadow(
-                            blurRadius: 4,
-                            color: Colors.black26,
-                            offset: Offset(0, 2))
-                      ],
-                    ),
-                    child: _buildDropListOptions(context))),
-          ],
-        ),
+          ),
+          SizeTransition(
+            axisAlignment: 1.0,
+            sizeFactor: animation,
+            child: Container(
+                margin: const EdgeInsets.only(bottom: 10),
+                padding: const EdgeInsets.only(bottom: 10),
+                decoration: BoxDecoration(
+                  border: Border.all(color: MoodleColors.grey),
+                  borderRadius: const BorderRadius.all(Radius.circular(10)),
+                  color: Colors.white,
+                  boxShadow: const [
+                    BoxShadow(
+                        blurRadius: 4,
+                        color: Colors.black26,
+                        offset: Offset(0, 2))
+                  ],
+                ),
+                child: _buildDropListOptions(context)),
+          ),
+        ],
       ),
     );
   }
