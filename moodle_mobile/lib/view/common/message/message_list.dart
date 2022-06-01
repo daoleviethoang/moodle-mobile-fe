@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -20,6 +22,7 @@ class _MessageListState extends State<MessageList> {
   late ConversationStore _conversationStore;
   late UserStore _userStore;
   late ConversationDetailStore _conversationDetailStore;
+  late Timer _refreshTimer;
 
   @override
   void initState() {
@@ -32,6 +35,12 @@ class _MessageListState extends State<MessageList> {
 
     _conversationStore.getListConversation(
         _userStore.user.token, _userStore.user.id);
+
+    // Update message list
+    _refreshTimer = Timer.periodic(
+        const Duration(seconds: 5),
+            (t) => _conversationStore.getListConversation(
+        _userStore.user.token, _userStore.user.id));
   }
 
   @override
