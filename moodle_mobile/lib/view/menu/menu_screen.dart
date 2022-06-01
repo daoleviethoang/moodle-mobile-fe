@@ -258,7 +258,12 @@ class ProfileHeader extends StatelessWidget {
               fit: BoxFit.none,
               imageUrl:
                   _userStore.user.photo! + "&token=" + _userStore.user.token,
-              placeholder: CircularProgressIndicator()),
+              placeholder: const FittedBox(
+                child: Padding(
+                  padding: EdgeInsets.all(8),
+                  child: Icon(Icons.person),
+                ),
+              )),
           const SizedBox(
             width: 10,
           ),
