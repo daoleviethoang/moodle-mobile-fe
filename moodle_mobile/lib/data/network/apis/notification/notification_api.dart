@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:moodle_mobile/data/network/constants/endpoints.dart';
 import 'package:moodle_mobile/data/network/constants/wsfunction_constants.dart';
 import 'package:moodle_mobile/data/network/dio_http.dart';
@@ -20,6 +21,10 @@ class NotificationApi {
       });
       var popup = NotificationPopup.fromJson(res.data);
       return popup;
-    } catch (e) {}
+    } catch (e) {
+      if (kDebugMode) {
+        print('!!!!!!!!!!$e');
+      }
+    }
   }
 }
