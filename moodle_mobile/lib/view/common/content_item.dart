@@ -82,7 +82,10 @@ class DocumentItem extends StatelessWidget {
         final uri = Uri.parse(documentUrl);
         var ableLaunch = await canLaunchUrl(uri);
         if (ableLaunch) {
-          await launchUrl(uri);
+          await launchUrl(
+            uri,
+            mode: LaunchMode.externalApplication,
+          );
         } else {
           print("URL can't be launched.");
         }
@@ -143,7 +146,10 @@ class UrlItem extends StatelessWidget {
         final uri = Uri.parse(url);
         var ableLaunch = await canLaunchUrl(uri);
         if (ableLaunch) {
-          await launchUrl(uri);
+          await launchUrl(
+            uri,
+            mode: LaunchMode.externalApplication,
+          );
         } else {
           print("URL can't be launched.");
         }
@@ -370,7 +376,10 @@ class RichTextCard extends StatelessWidget {
                   TextButton(
                     onPressed: () async {
                       Navigator.pop(context);
-                      await launchUrl(Uri.parse(url ?? ''));
+                      await launchUrl(
+                        Uri.parse(url ?? ''),
+                        mode: LaunchMode.externalApplication,
+                      );
                     },
                     child: const Text('Open'),
                   ),
