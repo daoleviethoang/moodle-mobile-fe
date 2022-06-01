@@ -5,6 +5,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:moodle_mobile/constants/styles.dart';
+import 'package:moodle_mobile/constants/vars.dart';
 import 'package:moodle_mobile/data/network/apis/course/course_detail_service.dart';
 import 'package:moodle_mobile/data/network/apis/notification/notification_api.dart';
 import 'package:moodle_mobile/models/course/course_detail.dart';
@@ -37,7 +38,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
     // Update notification list
     _refreshTimer =
-        Timer.periodic(const Duration(seconds: 5), (t) => getData());
+        Timer.periodic(Vars.refreshInterval, (t) => getData());
   }
 
   @override

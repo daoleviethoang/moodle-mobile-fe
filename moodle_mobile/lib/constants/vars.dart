@@ -3,6 +3,9 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 
 class Vars {
+  /// The time waiting before calling refresh data again
+  static const Duration refreshInterval = Duration(seconds: 5);
+
   /// Return dart version number for this build
   /// (to be used for compatibility between different versions of Flutter)
   static double get dartVersion {

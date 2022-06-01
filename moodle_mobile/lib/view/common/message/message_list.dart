@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
+import 'package:moodle_mobile/constants/vars.dart';
 import 'package:moodle_mobile/data/repository.dart';
 import 'package:moodle_mobile/store/conversation/conversation_store.dart';
 import 'package:moodle_mobile/store/conversation_detail/conversation_detail_store.dart';
@@ -38,9 +39,9 @@ class _MessageListState extends State<MessageList> {
 
     // Update message list
     _refreshTimer = Timer.periodic(
-        const Duration(seconds: 5),
-            (t) => _conversationStore.getListConversation(
-        _userStore.user.token, _userStore.user.id));
+        Vars.refreshInterval,
+        (t) => _conversationStore.getListConversation(
+            _userStore.user.token, _userStore.user.id));
   }
 
   @override
