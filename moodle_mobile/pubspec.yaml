@@ -78,6 +78,7 @@ dependencies:
   #pick image camera or galery
   image_picker: ^0.7.2+1
   flutter_background_service: ^2.1.2
+  flutter_local_notifications: ^9.1.4
 
 dev_dependencies:
   flutter_test:
