@@ -27,8 +27,9 @@ class PublicInfomationCommonView extends StatelessWidget {
               fit: BoxFit.cover,
               imageUrl: imageUrl + "&token=" + userStore.user.token,
               placeholder: const Icon(
-                Icons.person_outline,
-                size: 60,
+                Icons.person,
+                size: 80,
+                color: Colors.white,
               )),
         ),
         const SizedBox(

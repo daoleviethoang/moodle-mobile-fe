@@ -34,8 +34,9 @@ class ParticipantListTile extends StatelessWidget {
             fit: BoxFit.cover,
             imageUrl: avatar + "&token=" + userStore.user.token,
             placeholder: const Icon(
-              Icons.person_outline,
+              Icons.person,
               size: 32,
+              color: Colors.white,
             ),
           ),
         ),

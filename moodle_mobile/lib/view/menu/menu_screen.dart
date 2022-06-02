@@ -270,8 +270,9 @@ class ProfileHeader extends StatelessWidget {
                 placeholder: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: const Icon(
-                    Icons.person_outline,
+                    Icons.person,
                     size: 32,
+                    color: Colors.white,
                   ),
                 )),
             const SizedBox(
