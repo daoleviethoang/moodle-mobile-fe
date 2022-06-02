@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -40,12 +42,24 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
   bool overDue = false;
   bool error = false;
   FeedBack feedback = FeedBack();
+  late Timer _timer;
 
   @override
   void initState() {
     _userStore = GetIt.instance<UserStore>();
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        dateDiffSubmit();
+      });
+    });
     super.initState();
     loadAssignment();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _timer.cancel();
   }
 
   Future<Assignment> ReadData(int assignInstanceId, int courseId) async {
@@ -234,7 +248,7 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                 : SingleChildScrollView(
                     child: Container(
                       margin:
-                          const EdgeInsets.only(left: 10, right: 10, top: 20),
+                          const EdgeInsets.only(left: 10, right: 10, top: 16),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -257,19 +271,21 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                           const SizedBox(
                             height: 5,
                           ),
-                          Container(
-                            width: MediaQuery.of(context).size.width,
-                            child: Card(
-                              elevation: 5,
-                              child: Html(
-                                data: assignment.intro ?? "",
-                                shrinkWrap: true,
+                          if (assignment.intro?.isNotEmpty == true) ...[
+                            Container(
+                              width: MediaQuery.of(context).size.width,
+                              child: Card(
+                                elevation: 5,
+                                child: Html(
+                                  data: assignment.intro ?? "",
+                                  shrinkWrap: true,
+                                ),
                               ),
                             ),
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                          ],
                           Text(
                             AppLocalizations.of(context)!.submission_status,
                             style: TextStyle(

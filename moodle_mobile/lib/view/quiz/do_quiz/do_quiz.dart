@@ -295,64 +295,66 @@ class _QuizDoScreenState extends State<QuizDoScreen> {
         child: Center(
           child: isLoading
               ? const Center(child: CircularProgressIndicator())
-              : Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    ...quizData?.questions?.map((e) {
-                          int index = quizData!.questions!.indexOf(e);
-                          return ListTile(
-                            leading: InkWell(
-                              onTap: () {
-                                itemScrollController.scrollTo(
-                                  index: index,
-                                  duration: Duration(milliseconds: 1),
-                                );
-                              },
-                              child: Stack(
-                                children: [
-                                  MaterialButton(
-                                    shape: CircleBorder(
-                                        side: BorderSide(
-                                            color: Colors.black, width: 2)),
-                                    onPressed: () {
-                                      itemScrollController.scrollTo(
-                                        index: index,
-                                        duration: Duration(milliseconds: 1),
-                                      );
-                                    },
-                                    child: Text(
-                                      (e.number ?? 1).toString(),
-                                      textScaleFactor: 1.1,
+              : SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      ...quizData?.questions?.map((e) {
+                            int index = quizData!.questions!.indexOf(e);
+                            return ListTile(
+                              leading: InkWell(
+                                onTap: () {
+                                  itemScrollController.scrollTo(
+                                    index: index,
+                                    duration: Duration(milliseconds: 1),
+                                  );
+                                },
+                                child: Stack(
+                                  children: [
+                                    MaterialButton(
+                                      shape: CircleBorder(
+                                          side: BorderSide(
+                                              color: Colors.black, width: 2)),
+                                      onPressed: () {
+                                        itemScrollController.scrollTo(
+                                          index: index,
+                                          duration: Duration(milliseconds: 1),
+                                        );
+                                      },
+                                      child: Text(
+                                        (e.number ?? 1).toString(),
+                                        textScaleFactor: 1.1,
+                                      ),
                                     ),
-                                  ),
-                                  complete[index]
-                                      ? Positioned(
-                                          bottom: 6,
-                                          right: 15,
-                                          child: CircleAvatar(
-                                            backgroundColor: Color.fromARGB(
-                                                255, 42, 185, 49),
-                                            radius: 10,
-                                            child: Icon(
-                                              Icons.check,
-                                              size: 10,
-                                              color: Color.fromARGB(
-                                                  204, 197, 242, 199),
+                                    complete[index]
+                                        ? Positioned(
+                                            bottom: 6,
+                                            right: 15,
+                                            child: CircleAvatar(
+                                              backgroundColor: Color.fromARGB(
+                                                  255, 42, 185, 49),
+                                              radius: 10,
+                                              child: Icon(
+                                                Icons.check,
+                                                size: 10,
+                                                color: Color.fromARGB(
+                                                    204, 197, 242, 199),
+                                              ),
                                             ),
+                                          )
+                                        : Container(
+                                            height: 10,
+                                            width: 10,
                                           ),
-                                        )
-                                      : Container(
-                                          height: 10,
-                                          width: 10,
-                                        ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
-                            title: Text(points[index].toString() + " points"),
-                          );
-                        }).toList() ??
-                        []
-                  ],
+                              title: Text(points[index].toString() + " points"),
+                            );
+                          }).toList() ??
+                          []
+                    ],
+                  ),
                 ),
         ),
       ),

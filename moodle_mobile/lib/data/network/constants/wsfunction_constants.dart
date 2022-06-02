@@ -20,6 +20,7 @@ class Wsfunction {
 
   //user
   static const String GET_COURSE_GET_CATEGORIES = "core_course_get_categories";
+  static const String CORE_USER_UPDATE_PRICTURE = "core_user_update_picture";
 
   // calendar
   static const String GET_CALENDAR_MONTHLY =

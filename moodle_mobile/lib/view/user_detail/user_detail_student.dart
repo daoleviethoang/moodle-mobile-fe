@@ -79,6 +79,7 @@ class _UserDetailStudentScreen extends State<UserDetailStudentScreen> {
                       imageUrl: avatar,
                       name: name,
                       userStore: userStore,
+                      canEditAvatar: false,
                     ),
                     StatusCommonView(
                         status: status,
@@ -114,7 +115,15 @@ class _UserDetailStudentScreen extends State<UserDetailStudentScreen> {
       List<UserOverview> users = await UserApi(getIt<DioClient>())
           .getUserById(userStore.user.token, id);
       UserOverview user = users[0];
-      avatar = user.profileimageurl != null ? user.profileimageurl! : avatar;
+      if (user.profileimageurl != null) {
+        user.profileimageurl = user.profileimageurl!
+            .replaceAll("pluginfile.php", "webservice/pluginfile.php");
+      }
+      if (user.profileimageurl!.contains("?")) {
+        avatar = user.profileimageurl! + "&token=" + userStore.user.token;
+      } else {
+        avatar = user.profileimageurl! + "?token=" + userStore.user.token;
+      }
       name = user.fullname!;
       int calTime = currentTimeStamp - user.lastaccess!;
       if (calTime <= 300) {

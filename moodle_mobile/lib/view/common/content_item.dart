@@ -140,10 +140,9 @@ class UrlItem extends StatelessWidget {
       fullWidth: true,
       onPressed: () async {
         // Go to webpage in browser
-        final uri = Uri.parse(url);
-        var ableLaunch = await canLaunchUrl(uri);
+        var ableLaunch = await canLaunch(url);
         if (ableLaunch) {
-          await launchUrl(uri);
+          await launch(url);
         } else {
           print("URL can't be launched.");
         }

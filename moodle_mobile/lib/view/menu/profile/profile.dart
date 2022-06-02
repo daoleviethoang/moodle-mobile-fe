@@ -28,6 +28,12 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var avatar = "";
+    if (userStore.user.photo!.contains("?")) {
+      avatar = userStore.user.photo! + "&token=" + userStore.user.token;
+    } else {
+      avatar = userStore.user.photo! + "?token=" + userStore.user.token;
+    }
     return Scaffold(
       backgroundColor: MoodleColors.white,
       appBar: AppBar(
@@ -45,10 +51,10 @@ class ProfileScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               PublicInfomationCommonView(
-                imageUrl:
-                    userStore.user.photo! + "&token=" + userStore.user.token,
+                imageUrl: avatar,
                 name: userStore.user.fullname,
                 userStore: userStore,
+                canEditAvatar: true,
               ),
               UserDetailCommonView(
                 email: userStore.user.email,
