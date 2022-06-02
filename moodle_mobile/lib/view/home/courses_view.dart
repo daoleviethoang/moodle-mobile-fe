@@ -58,7 +58,7 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
   @override
   void initState() {
     animationController = AnimationController(
-        duration: const Duration(milliseconds: 2000), vsync: this);
+        duration: const Duration(milliseconds: 1000), vsync: this);
     _userStore = GetIt.instance<UserStore>();
     super.initState();
     getData();

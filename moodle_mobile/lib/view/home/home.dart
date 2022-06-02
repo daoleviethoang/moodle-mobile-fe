@@ -26,11 +26,13 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: MoodleColors.white,
-      body: Column(
-        children: <Widget>[
-          getCategoryUI(),
-          getScreenTabUI(categoryType),
-        ],
+      body: SafeArea(
+        child: Column(
+          children: <Widget>[
+            getCategoryUI(),
+            getScreenTabUI(categoryType),
+          ],
+        ),
       ),
     );
   }
