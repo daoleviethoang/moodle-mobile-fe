@@ -87,4 +87,25 @@ class UserApi {
       rethrow;
     }
   }
+
+  // upload avatar
+  Future<bool> uploadAvatar(String token, int itemId) async {
+    try {
+      Dio dio = Http().client;
+      var res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': Wsfunction.CORE_USER_UPDATE_PRICTURE,
+        'moodlewsrestformat': 'json',
+        'draftitemid': itemId,
+      });
+
+      if (res.data["exception"] != null) {
+        throw res.data["exception"];
+      }
+
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 }

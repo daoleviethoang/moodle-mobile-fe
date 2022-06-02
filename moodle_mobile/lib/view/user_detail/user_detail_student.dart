@@ -79,6 +79,7 @@ class _UserDetailStudentScreen extends State<UserDetailStudentScreen> {
                       imageUrl: avatar,
                       name: name,
                       userStore: userStore,
+                      canEditAvatar: false,
                     ),
                     StatusCommonView(
                         status: status,

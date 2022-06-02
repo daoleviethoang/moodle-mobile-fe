@@ -337,41 +337,45 @@ class _FilesAssignmentScreenState extends State<FilesAssignmentScreen> {
         onPressed: disable
             ? null
             : () async {
-                FilePickerResult? result =
-                    await FilePicker.platform.pickFiles();
-                if (result != null) {
-                  PlatformFile file = result.files.first;
-                  // check size more than condition
-                  if (file.size + caculateByteSize() > widget.maxByteSize) {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text(
-                            AppLocalizations.of(context)!.file_size_bigger),
-                        backgroundColor: Colors.red));
-                    return;
-                  }
-                  // check number file more than condition
-                  if (files.length == widget.maxFileCount) {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text(
-                            AppLocalizations.of(context)!.number_file_full),
-                        backgroundColor: Colors.red));
-                    return;
-                  }
-                  // check file same name
-                  bool check = checkOverwrite(file);
-                  if (check == true) return;
-                  // add file
-                  files.add(FileUpload(
-                      filename: file.name,
-                      filepath: file.path ?? "",
-                      timeModified: DateTime.now(),
-                      filesize: file.size));
-                  setState(() {
-                    files.sort(((a, b) => a.filename.compareTo(b.filename)));
-                    if (sortASC == false) {
-                      files.reversed;
+                try {
+                  FilePickerResult? result =
+                      await FilePicker.platform.pickFiles();
+                  if (result != null) {
+                    PlatformFile file = result.files.first;
+                    // check size more than condition
+                    if (file.size + caculateByteSize() > widget.maxByteSize) {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(
+                              AppLocalizations.of(context)!.file_size_bigger),
+                          backgroundColor: Colors.red));
+                      return;
                     }
-                  });
+                    // check number file more than condition
+                    if (files.length == widget.maxFileCount) {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(
+                              AppLocalizations.of(context)!.number_file_full),
+                          backgroundColor: Colors.red));
+                      return;
+                    }
+                    // check file same name
+                    bool check = checkOverwrite(file);
+                    if (check == true) return;
+                    // add file
+                    files.add(FileUpload(
+                        filename: file.name,
+                        filepath: file.path ?? "",
+                        timeModified: DateTime.now(),
+                        filesize: file.size));
+                    setState(() {
+                      files.sort(((a, b) => a.filename.compareTo(b.filename)));
+                      if (sortASC == false) {
+                        files.reversed;
+                      }
+                    });
+                  }
+                } catch (error) {
+                  print(error.toString());
                 }
               },
       ),

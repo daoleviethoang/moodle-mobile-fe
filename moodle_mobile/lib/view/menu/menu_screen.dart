@@ -24,7 +24,7 @@ class _MenuScreenState extends State<MenuScreen> {
 
   @override
   void initState() {
-    _userStore = GetIt.instance();
+    _userStore = GetIt.instance<UserStore>();
     super.initState();
   }
 
@@ -39,7 +39,9 @@ class _MenuScreenState extends State<MenuScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 20),
-                ProfileHeader(userStore: _userStore),
+                ProfileHeader(
+                  userStore: _userStore,
+                ),
                 const SizedBox(height: 10),
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10),
@@ -255,8 +257,9 @@ class ProfileHeader extends StatelessWidget {
       onTap: () => Navigator.push<dynamic>(
         context,
         MaterialPageRoute<dynamic>(
-          builder: (BuildContext context) =>
-              ProfileScreen(userStore: _userStore),
+          builder: (BuildContext context) => ProfileScreen(
+            userStore: _userStore,
+          ),
         ),
       ),
       child: Padding(

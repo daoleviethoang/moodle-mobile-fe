@@ -54,6 +54,7 @@ class ProfileScreen extends StatelessWidget {
                 imageUrl: avatar,
                 name: userStore.user.fullname,
                 userStore: userStore,
+                canEditAvatar: true,
               ),
               UserDetailCommonView(
                 email: userStore.user.email,

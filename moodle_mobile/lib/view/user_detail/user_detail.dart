@@ -91,6 +91,7 @@ class _UserDetailsScreen extends State<UserDetailsScreen> {
                       imageUrl: avatar,
                       name: name,
                       userStore: userStore,
+                      canEditAvatar: false,
                     ),
                     StatusCommonView(
                         status: status,

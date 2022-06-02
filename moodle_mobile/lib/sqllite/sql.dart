@@ -61,4 +61,15 @@ class SQLHelper {
       debugPrint("Something went wrong when deleting an item: $err");
     }
   }
+
+  static Future<void> updateUserPhoto(UserLogin user) async {
+    final db = await SQLHelper.db();
+    try {
+      await db.update("users", {"photo": user.photo},
+          where: "baseUrl = ? and username = ?",
+          whereArgs: [user.baseUrl, user.username]);
+    } catch (err) {
+      debugPrint("Something went wrong when update an item: $err");
+    }
+  }
 }
