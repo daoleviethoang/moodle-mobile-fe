@@ -129,9 +129,9 @@ class _UserDetailsScreen extends State<UserDetailsScreen> {
       }
 
       if (user.profileimageurl!.contains("?")) {
-        avatar = userStore.user.photo! + "&token=" + userStore.user.token;
+        avatar = user.profileimageurl! + "&token=" + userStore.user.token;
       } else {
-        avatar = userStore.user.photo! + "?token=" + userStore.user.token;
+        avatar = user.profileimageurl! + "?token=" + userStore.user.token;
       }
 
       name = user.fullname!;

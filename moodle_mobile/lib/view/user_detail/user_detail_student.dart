@@ -119,9 +119,9 @@ class _UserDetailStudentScreen extends State<UserDetailStudentScreen> {
             .replaceAll("pluginfile.php", "webservice/pluginfile.php");
       }
       if (user.profileimageurl!.contains("?")) {
-        avatar = userStore.user.photo! + "&token=" + userStore.user.token;
+        avatar = user.profileimageurl! + "&token=" + userStore.user.token;
       } else {
-        avatar = userStore.user.photo! + "?token=" + userStore.user.token;
+        avatar = user.profileimageurl! + "?token=" + userStore.user.token;
       }
       name = user.fullname!;
       int calTime = currentTimeStamp - user.lastaccess!;
