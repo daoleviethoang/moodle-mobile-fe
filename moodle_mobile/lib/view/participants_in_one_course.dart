@@ -1,17 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
-import 'package:moodle_mobile/constants/dimens.dart';
 import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/data/repository.dart';
 import 'package:moodle_mobile/models/course/course_participants.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
-import 'package:moodle_mobile/view/common/image_view.dart';
-import 'package:moodle_mobile/view/common/menu_item.dart';
 import 'package:moodle_mobile/view/common/participant.dart';
-import 'package:moodle_mobile/view/common/slidable_tile.dart';
-import 'package:moodle_mobile/view/user_detail/user_detail.dart';
-import 'package:moodle_mobile/view/user_detail/user_detail_student.dart';
 
 class ParticipantsInOneCourse extends StatefulWidget {
   final int courseId;
@@ -66,7 +59,12 @@ class _ParticipantsInOneCourseState extends State<ParticipantsInOneCourse> {
                             role: participants[index].roles[0].roleID,
                             userStore: _userStore,
                             courseName: widget.courseName,
-                            avatar: participants[index].avatar,
+                            avatar: participants[index].avatar.replaceAll(
+                                    "pluginfile.php",
+                                    "webservice/pluginfile.php") +
+                                (participants[index].avatar.contains("?")
+                                    ? "&token=" + _userStore.user.token
+                                    : "?token=" + _userStore.user.token),
                           )
                         : Container();
                   },
@@ -86,7 +84,12 @@ class _ParticipantsInOneCourseState extends State<ParticipantsInOneCourse> {
                             role: participants[index].roles[0].roleID,
                             userStore: _userStore,
                             courseName: widget.courseName,
-                            avatar: participants[index].avatar,
+                            avatar: participants[index].avatar.replaceAll(
+                                    "pluginfile.php",
+                                    "webservice/pluginfile.php") +
+                                (participants[index].avatar.contains("?")
+                                    ? "&token=" + _userStore.user.token
+                                    : "?token=" + _userStore.user.token),
                           )
                         : Container();
                   },

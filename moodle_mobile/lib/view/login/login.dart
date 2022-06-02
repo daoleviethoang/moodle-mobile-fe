@@ -189,7 +189,7 @@ class _LoginScreenState extends State<LoginScreen> {
             TextButton(
               onPressed: forgotPass,
               child: const Text(
-                "Forgotten your username or password ?",
+                "Forgot your username or password ?",
                 style: TextStyle(fontSize: 14),
               ),
               style: ButtonStyle(

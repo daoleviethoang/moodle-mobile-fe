@@ -26,7 +26,10 @@ class PublicInfomationCommonView extends StatelessWidget {
           child: CircleImageView(
               fit: BoxFit.cover,
               imageUrl: imageUrl + "&token=" + userStore.user.token,
-              placeholder: CircularProgressIndicator()),
+              placeholder: const Icon(
+                Icons.person_outline,
+                size: 60,
+              )),
         ),
         const SizedBox(
           height: 12,
