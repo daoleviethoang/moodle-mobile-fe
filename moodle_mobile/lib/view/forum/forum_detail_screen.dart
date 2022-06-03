@@ -138,16 +138,20 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 15),
-                            child: AttachmentItem(
-                                title: 'Example.zip', attachmentUrl: ''),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 15),
-                            child: AttachmentItem(
-                                title: '18127044.pdf', attachmentUrl: ''),
-                          ),
+                          ...List.generate(
+                              _forumPost[len - 1].attachments!.length, (index) {
+                            var temp = _forumPost[len - 1].attachments![index];
+                            print(temp.fileurl);
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 15),
+                              child: AttachmentItem(
+                                title: temp != null ? temp.filename! : ' ',
+                                attachmentUrl:
+                                    temp.fileurl != null ? temp.fileurl : null,
+                              ),
+                            );
+                          }),
                         ],
                       ),
                     ),
@@ -166,6 +170,7 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                             checkReply = true;
                           return ReplyCard(
                             isReply: checkReply,
+                            date: _forumPost[len - 2 - index].timecreated,
                             name: _forumPost[len - 2 - index].author!.fullname,
                             message: _forumPost[len - 2 - index].message,
                             subject: _forumPost[len - 2 - index].subject,
@@ -182,10 +187,16 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
 class ReplyCard extends StatelessWidget {
   final bool? isReply;
   final String? subject;
+  final int? date;
   final String? name;
   final String? message;
   const ReplyCard(
-      {Key? key, this.isReply, this.message, this.name, this.subject})
+      {Key? key,
+      this.isReply,
+      this.date,
+      this.message,
+      this.name,
+      this.subject})
       : super(key: key);
 
   @override
@@ -231,7 +242,10 @@ class ReplyCard extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      '(04:30PM, 19 January, 2022)',
+                      DateFormat('hh:mm dd-MM-yyyy')
+                          .format(
+                              DateTime.fromMillisecondsSinceEpoch(date! * 1000))
+                          .toString(),
                       style: TextStyle(color: Colors.grey, fontSize: 10),
                     ),
                   ),

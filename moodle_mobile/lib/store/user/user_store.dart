@@ -74,6 +74,16 @@ abstract class _UserStore with Store {
     }
   }
 
+  @action
+  Future reGetUserInfo(String token, String username) async {
+    try {
+      print("setUserStore");
+      user = await _repository.getUserInfo(token, username);
+    } catch (e) {
+      print("re get user info error");
+    }
+  }
+
   void setBaseUrl(String baseUrl) {
     _repository.saveBaseUrl(baseUrl);
   }

@@ -38,6 +38,9 @@ class CourseCommonView extends StatelessWidget {
                 color: MoodleColors.iconGrey,
                 size: 24,
               ),
+              SizedBox(
+                width: 8,
+              ),
               course == null
                   ? Text(
                       role,
@@ -47,36 +50,39 @@ class CourseCommonView extends StatelessWidget {
                           letterSpacing: 0.27,
                           color: MoodleColors.black),
                     )
-                  : Padding(
-                      padding: const EdgeInsets.only(left: 8),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            role +
-                                " " +
-                                AppLocalizations.of(context)!.in_the_course,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.normal,
-                                fontSize: 14,
-                                letterSpacing: 0.27,
-                                color: MoodleColors.black),
-                          ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            course!,
-                            softWrap: true,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.normal,
-                                fontSize: 14,
-                                letterSpacing: 0.27,
-                                color: MoodleColors.text_blue),
-                          )
-                        ],
-                      ))
+                  : Flexible(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 8),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              role +
+                                  " " +
+                                  AppLocalizations.of(context)!.in_the_course,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 14,
+                                  letterSpacing: 0.27,
+                                  color: MoodleColors.black),
+                            ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              course!,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 14,
+                                  letterSpacing: 0.27,
+                                  color: MoodleColors.text_blue),
+                            )
+                          ],
+                        ),
+                      ),
+                    )
             ],
           ),
         ),

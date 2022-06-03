@@ -80,6 +80,9 @@ dependencies:
   flutter_background_service: ^2.1.2
   flutter_local_notifications: ^9.1.4
 
+  #icon app
+  flutter_launcher_icons: ^0.9.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -96,6 +99,10 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^1.0.0
 
+flutter_icons:
+  image_path: "assets/image/logo2.png" 
+  android: true
+  ios: true
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

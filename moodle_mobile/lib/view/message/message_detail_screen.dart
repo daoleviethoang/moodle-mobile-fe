@@ -60,6 +60,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         automaticallyImplyLeading: true,
         leading: const BackButton(color: Colors.white),
