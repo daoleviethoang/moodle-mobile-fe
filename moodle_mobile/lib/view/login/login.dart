@@ -8,6 +8,7 @@ import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/custom_button.dart';
 import 'package:moodle_mobile/view/common/custom_text_field.dart';
 import 'package:moodle_mobile/view/direct_page.dart';
+import 'package:moodle_mobile/view/forget_pass/forget_pass_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -225,6 +226,13 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void forgotPass() {
-    print("Forgot Password");
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) {
+          return const ForgotPassScreen();
+        },
+      ),
+    );
   }
 }
