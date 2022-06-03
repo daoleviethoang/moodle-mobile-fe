@@ -230,25 +230,27 @@ class QuizItem extends StatelessWidget {
 }
 
 class AttachmentItem extends StatelessWidget {
-  final String title;
-  final String attachmentUrl;
+  final String? title;
+  final String? attachmentUrl;
 
   const AttachmentItem({
     Key? key,
-    required this.title,
-    required this.attachmentUrl,
+    this.title,
+    this.attachmentUrl,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return m.MenuItem(
-      icon: const Icon(CupertinoIcons.doc),
-      color: Colors.grey,
-      title: title,
-      onPressed: () {
-        // TODO: Download this document from link
-      },
-    );
+    return attachmentUrl == null
+        ? Container()
+        : m.MenuItem(
+            icon: const Icon(CupertinoIcons.doc),
+            color: Colors.grey,
+            title: title!,
+            onPressed: () {
+              // TODO: Download this document from link
+            },
+          );
   }
 }
 

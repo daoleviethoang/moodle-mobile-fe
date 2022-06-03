@@ -141,12 +141,14 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                           ...List.generate(
                               _forumPost[len - 1].attachments!.length, (index) {
                             var temp = _forumPost[len - 1].attachments![index];
+                            print(temp.fileurl);
                             return Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 15),
                               child: AttachmentItem(
                                 title: temp != null ? temp.filename! : ' ',
-                                attachmentUrl: '',
+                                attachmentUrl:
+                                    temp.fileurl != null ? temp.fileurl : null,
                               ),
                             );
                           }),
