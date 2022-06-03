@@ -39,11 +39,17 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
     bool check = await ForgotPassApi()
         .forgotPass(_userStore.user.token, usernameControler.text);
     if (check) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Email sended")));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Email sended"),
+        backgroundColor: Colors.green,
+      ));
     } else {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Error")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Error"),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 
