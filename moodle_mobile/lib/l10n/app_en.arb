@@ -1,4 +1,13 @@
 {
+  "@err_unknown_module": {
+    "description": "Unsupported module in course details.",
+    "placeholders": {
+      "modname": {
+        "type": "String",
+        "example": "folder"
+      }
+    }
+  },
   "@events_on": {
     "description": "Day view header in Calendar.",
     "placeholders": {
