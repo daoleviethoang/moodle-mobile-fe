@@ -253,7 +253,6 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   }
 
   void _initAnnouncementsTab() {
-    // TODO: Parse module from API
     if (_content.isEmpty) {
       _announcementsTab = Container();
       return;
@@ -345,7 +344,6 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   }
 
   void _initPeopleTab() {
-    // TODO: Get participant list from API
     _peopleTab = ParticipantsInOneCourse(
         courseId: _courseId, courseName: _course!.displayname);
   }

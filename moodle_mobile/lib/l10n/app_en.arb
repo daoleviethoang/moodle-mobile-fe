@@ -3,8 +3,8 @@
     "description": "Unsupported module in course details.",
     "placeholders": {
       "modname": {
-        "example": "folder",
-        "type": "String"
+        "type": "String",
+        "example": "folder"
       }
     }
   },
@@ -85,6 +85,7 @@
   "late": "late",
   "load_category_fail": "Loading course category fail, please try again later",
   "logout": "Logout",
+  "mail_subject": "[Moodle%20Mobile%20App%20-%20Report%20a%20problem]",
   "max_file_size": "Maximum files size :",
   "menu": "Menu",
   "message_settings": "Messenger settings",
