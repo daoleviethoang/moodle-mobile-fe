@@ -93,6 +93,12 @@ dependencies:
   #list scroll to index
   scrollable_positioned_list: ^0.2.2
 
+  #pick image camera or galery
+  image_picker: ^0.7.2+1
+
+  #icon app
+  flutter_launcher_icons: ^0.9.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -109,6 +115,10 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^1.0.0
 
+flutter_icons:
+  image_path: "assets/image/logo2.png" 
+  android: true
+  ios: true
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -137,9 +147,9 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: OpenSans
+    - family: SF
       fonts:
-        - asset: assets/fonts/OpenSans.ttf
+        - asset: assets/fonts/SF.ttf
           weight: 700
   #   - family: Trajan Pro
   #     fonts:

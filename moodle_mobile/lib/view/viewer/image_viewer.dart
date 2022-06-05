@@ -2,6 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:moodle_mobile/data/network/apis/file/file_api.dart';
+import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:photo_view/photo_view.dart';
 
 class ImageViewer extends StatefulWidget {
@@ -25,9 +28,11 @@ class _ImageViewerState extends State<ImageViewer> {
   late String _url;
   late String _base64;
   late Widget _body;
+  late UserStore _userStore;
 
   @override
   void initState() {
+    _userStore = GetIt.instance<UserStore>();
     super.initState();
     _title = widget.title;
     _url = widget.url;
@@ -44,6 +49,18 @@ class _ImageViewerState extends State<ImageViewer> {
             : NetworkImage(_url),
       ),
     );
+  }
+
+  downloadFile() async {
+    String fileName = "";
+    if (_url.isNotEmpty) {
+      List<String> list = _url.split('/');
+      fileName = list.length > 1 ? list.last : _title;
+    } else {
+      fileName = DateTime.now().microsecondsSinceEpoch.toString() + ".png";
+    }
+
+    await FileApi().downloadFile(_userStore.user.token, _url, fileName);
   }
 
   @override
@@ -65,15 +82,19 @@ class _ImageViewerState extends State<ImageViewer> {
         ),
         title: Text(_title),
         actions: [
-          TextButton(
-            style: TextButton.styleFrom(
-              primary: Colors.white,
-              padding: EdgeInsets.zero,
-              shape: const CircleBorder(),
-            ),
-            child: const Icon(Icons.download),
-            onPressed: () {},
-          ),
+          _base64.isNotEmpty
+              ? Container()
+              : TextButton(
+                  style: TextButton.styleFrom(
+                    primary: Colors.white,
+                    padding: EdgeInsets.zero,
+                    shape: const CircleBorder(),
+                  ),
+                  child: const Icon(Icons.download),
+                  onPressed: () async {
+                    await downloadFile();
+                  },
+                ),
         ],
       ),
       body: _body,

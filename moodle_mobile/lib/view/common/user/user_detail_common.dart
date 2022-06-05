@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moodle_mobile/constants/colors.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UserDetailCommonView extends StatelessWidget {
   final String email;
@@ -31,11 +32,11 @@ class UserDetailCommonView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            const Text(
-              'User details',
+            Text(
+              AppLocalizations.of(context)!.user_details,
               style: TextStyle(
                   fontWeight: FontWeight.w900,
-                  fontSize: 13,
+                  fontSize: 15,
                   letterSpacing: 0.27,
                   color: MoodleColors.black),
             ),
@@ -51,7 +52,7 @@ class UserDetailCommonView extends StatelessWidget {
                       email,
                       style: TextStyle(
                           fontWeight: FontWeight.normal,
-                          fontSize: 13,
+                          fontSize: 14,
                           letterSpacing: 0.27,
                           color: MoodleColors.text_blue),
                     ),
@@ -72,7 +73,7 @@ class UserDetailCommonView extends StatelessWidget {
                     location,
                     style: const TextStyle(
                         fontWeight: FontWeight.normal,
-                        fontSize: 13,
+                        fontSize: 14,
                         letterSpacing: 0.27,
                         color: MoodleColors.black),
                   ),

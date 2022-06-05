@@ -4,10 +4,32 @@ part 'user_overview.g.dart';
 
 @JsonSerializable()
 class UserOverview {
-  UserOverview({this.id = 0, this.name = ''});
+  int? id;
+  String? fullname;
+  String? email;
+  int? firstaccess;
+  int? lastaccess;
+  bool? suspended;
+  String? description;
+  int? descriptionformat;
+  String? profileimageurlsmall;
+  String? profileimageurl;
+  String? city;
+  String? country;
 
-  int id;
-  String name;
+  UserOverview(
+      {this.id,
+      this.fullname,
+      this.email,
+      this.firstaccess,
+      this.lastaccess,
+      this.suspended,
+      this.description,
+      this.descriptionformat,
+      this.profileimageurlsmall,
+      this.profileimageurl,
+      this.city,
+      this.country});
 
   factory UserOverview.fromJson(Map<String, dynamic> json) =>
       _$UserOverviewFromJson(json);

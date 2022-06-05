@@ -23,51 +23,49 @@ class _DateAssignmentTileState extends State<DateAssignmentTile> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.only(top: 10, bottom: 10),
+      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
       child: Row(
         children: <Widget>[
+          Container(
+            //visualDensity: VisualDensity(horizontal: -3, vertical: -3),
+            // shape: CircleBorder(),
+            // color: widget.backgroundIconColor,
+            padding: const EdgeInsets.all(12),
+            // onPressed: () {},
+            decoration: BoxDecoration(
+              color: widget.backgroundIconColor,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.access_time,
+              size: 20,
+              color: widget.iconColor,
+            ),
+          ),
+          const SizedBox(
+            width: 10,
+          ),
           Expanded(
-            child: Row(
-              children: <Widget>[
-                MaterialButton(
-                  shape: CircleBorder(),
-                  color: widget.backgroundIconColor,
-                  padding: const EdgeInsets.all(10),
-                  onPressed: () {},
-                  child: Icon(
-                    Icons.access_time,
-                    size: 20,
-                    color: widget.iconColor,
+            child: Container(
+              color: Colors.transparent,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    widget.title,
+                    textScaleFactor: 1.2,
                   ),
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  child: Container(
-                    color: Colors.transparent,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          widget.title,
-                          textScaleFactor: 1.2,
-                        ),
-                        const SizedBox(
-                          height: 6,
-                        ),
-                        Text(
-                          DateFormat("hh:mmaa, dd MMMM, yyyy").format(
-                              DateTime.fromMillisecondsSinceEpoch(widget.date)),
-                          style: const TextStyle(
-                              fontWeight: FontWeight.normal,
-                              color: Colors.grey),
-                        ),
-                      ],
-                    ),
+                  const SizedBox(
+                    height: 6,
                   ),
-                ),
-              ],
+                  Text(
+                    DateFormat("hh:mmaa, dd MMMM, yyyy").format(
+                        DateTime.fromMillisecondsSinceEpoch(widget.date)),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.normal, color: Colors.grey),
+                  ),
+                ],
+              ),
             ),
           ),
         ],

@@ -57,7 +57,14 @@ class _ContactListState extends State<ContactList> {
                   listContact.length,
                   (index) {
                     return ParticipantListTile(
-                        fullname: listContact[index].fullname, index: index);
+                      fullname: listContact[index].fullname,
+                      id: listContact[index].id,
+                      userStore: _userStore,
+                      avatar: listContact[index].profileImageURL.replaceAll(
+                              "pluginfile.php", "webservice/pluginfile.php") +
+                          "?token=" +
+                          _userStore.user.token,
+                    );
                   },
                 ),
               ],

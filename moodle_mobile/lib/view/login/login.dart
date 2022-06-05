@@ -8,6 +8,7 @@ import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/custom_button.dart';
 import 'package:moodle_mobile/view/common/custom_text_field.dart';
 import 'package:moodle_mobile/view/direct_page.dart';
+import 'package:moodle_mobile/view/forget_pass/forget_pass_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -47,6 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(),
       body: Center(
         child: Column(
@@ -188,7 +190,7 @@ class _LoginScreenState extends State<LoginScreen> {
             TextButton(
               onPressed: forgotPass,
               child: const Text(
-                "Forgotten your username or password ?",
+                "Forgot your username or password ?",
                 style: TextStyle(fontSize: 14),
               ),
               style: ButtonStyle(
@@ -224,6 +226,13 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void forgotPass() {
-    print("Forgot Password");
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) {
+          return const ForgotPassScreen();
+        },
+      ),
+    );
   }
 }

@@ -5,11 +5,11 @@ import 'package:sqflite/sqflite.dart' as sql;
 class SQLHelper {
   static Future<void> createTables(sql.Database database) async {
     await database.execute(
-        'CREATE TABLE users(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,baseUrl TEXT,token TEXT, username TEXT)');
+        'CREATE TABLE users(baseUrl TEXT NOT NULL, username TEXT NOT NULL, token TEXT, photo TEXT, PRIMARY KEY(baseUrl,username))');
   }
 
   static Future<void> removeTables(sql.Database database) async {
-    await database.execute('DROP TABLE IF EXISTS items');
+    await database.execute('DROP TABLE IF EXISTS users');
   }
 
   static Future<sql.Database> db() async {
@@ -35,6 +35,7 @@ class SQLHelper {
       'baseUrl': user.baseUrl,
       'token': user.token,
       'username': user.username,
+      'photo': user.photo,
     };
     final id = await db.insert('users', data,
         conflictAlgorithm: sql.ConflictAlgorithm.replace);
@@ -43,17 +44,32 @@ class SQLHelper {
 
   static Future<List<UserLogin>> getUserItems() async {
     final db = await SQLHelper.db();
-    var list = await db.query('users', orderBy: "id");
+    var list = await db.query('users');
+
+    print(list.toString());
 
     return list.map((e) => UserLogin.fromJson(e)).toList();
   }
 
-  static Future<void> deleteUserItem(int id) async {
+  static Future<void> deleteUserItem(String baseUrl, String username) async {
     final db = await SQLHelper.db();
     try {
-      await db.delete("users", where: "id = ?", whereArgs: [id]);
+      await db.delete("users",
+          where: "baseUrl = ? and username = ?",
+          whereArgs: [baseUrl, username]);
     } catch (err) {
       debugPrint("Something went wrong when deleting an item: $err");
+    }
+  }
+
+  static Future<void> updateUserPhoto(UserLogin user) async {
+    final db = await SQLHelper.db();
+    try {
+      await db.update("users", {"photo": user.photo},
+          where: "baseUrl = ? and username = ?",
+          whereArgs: [user.baseUrl, user.username]);
+    } catch (err) {
+      debugPrint("Something went wrong when update an item: $err");
     }
   }
 }

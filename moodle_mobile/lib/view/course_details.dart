@@ -21,6 +21,7 @@ import 'package:moodle_mobile/models/module/module_course.dart';
 import 'package:moodle_mobile/view/common/content_item.dart';
 import 'package:moodle_mobile/view/common/data_card.dart';
 import 'package:moodle_mobile/view/enrol/enrol.dart';
+import 'package:moodle_mobile/view/forum/forum_announcement_scren.dart';
 import 'package:moodle_mobile/view/forum/forum_screen.dart';
 import 'package:moodle_mobile/view/grade_in_one_course.dart';
 import 'package:moodle_mobile/view/participants_in_one_course.dart';
@@ -237,8 +238,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                 case ModuleName.zoom:
                   return Container();
                 default:
-                  throw Exception(
-                      AppLocalizations.of(context)!.err_unknown_module(m.modname ?? ''));
+                  throw Exception(AppLocalizations.of(context)!
+                      .err_unknown_module(m.modname ?? ''));
               }
             } catch (e) {
               // FIXME: Assignment text is [] instead of string
@@ -253,7 +254,14 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
 
   void _initAnnouncementsTab() {
     // TODO: Parse module from API
-    _announcementsTab = const Center(child: Text('Announcements'));
+    if (_content.isEmpty) {
+      _announcementsTab = Container();
+      return;
+    }
+    _announcementsTab = ForumAnnouncementScreen(
+      forumId: _content[0].modules[0].instance ?? 0,
+      courseId: _courseId,
+    );
   }
 
   void _initDiscussionsTab() {
@@ -261,7 +269,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
       _discussionsTab = Container();
       return;
     }
-    _discussionsTab = ForumScreen(
+    _discussionsTab = ForumDiscussionScreen(
       forumId: _content[0].modules[1].instance ?? 0,
       courseId: _courseId,
     );
@@ -322,8 +330,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                       );
                     });
               default:
-                throw Exception(
-                    AppLocalizations.of(context)!.err_unknown_module(e.modulename ?? ''));
+                throw Exception(AppLocalizations.of(context)!
+                    .err_unknown_module(e.modulename ?? ''));
             }
           }).toList(),
         ],
@@ -332,11 +340,13 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   }
 
   void _initGradesTab() {
-    _gradesTab = const GradeInOneCourse();
+    _gradesTab =
+        GradeInOneCourse(courseId: _courseId, courseName: _course!.displayname);
   }
 
   void _initPeopleTab() {
-    _peopleTab = ParticipantsInOneCourse(courseId: _courseId);
+    _peopleTab = ParticipantsInOneCourse(
+        courseId: _courseId, courseName: _course!.displayname);
   }
 
   // endregion

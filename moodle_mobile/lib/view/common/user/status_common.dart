@@ -19,7 +19,7 @@ class StatusCommonView extends StatelessWidget {
           Icon(
             Icons.circle,
             color: color,
-            size: 10,
+            size: 12,
           ),
           Padding(
             padding: EdgeInsets.only(left: 8),
@@ -27,7 +27,7 @@ class StatusCommonView extends StatelessWidget {
               status,
               style: const TextStyle(
                   fontWeight: FontWeight.normal,
-                  fontSize: 13,
+                  fontSize: 14,
                   letterSpacing: 0.27,
                   color: MoodleColors.black),
             ),

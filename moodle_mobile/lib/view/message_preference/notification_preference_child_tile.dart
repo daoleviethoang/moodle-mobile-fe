@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/data/network/apis/notification_preference/notification_preference_api.dart';
 import 'package:moodle_mobile/models/message_preference/message_preference.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MessagePreferenceChildTile extends StatefulWidget {
   bool disable;
@@ -103,9 +104,7 @@ class _MessagePreferenceChildTileState
         Text(
           widget.components.displayname ?? "",
         ),
-        ListView(
-          padding: EdgeInsets.only(top: 0),
-          shrinkWrap: true,
+        Column(
           children: widget.disable
               ? [
                   MergeSemantics(
@@ -118,7 +117,7 @@ class _MessagePreferenceChildTileState
                           ),
                           Icon(Icons.help, color: Colors.blue),
                         ]),
-                        trailing: Text("Vô hiệu hoá"),
+                        trailing: Text(AppLocalizations.of(context)!.unable),
                       ),
                     ),
                   ),
@@ -132,7 +131,7 @@ class _MessagePreferenceChildTileState
                           ),
                           Icon(Icons.help, color: Colors.blue),
                         ]),
-                        trailing: Text("Vô hiệu hoá"),
+                        trailing: Text(AppLocalizations.of(context)!.unable),
                       ),
                     ),
                   )

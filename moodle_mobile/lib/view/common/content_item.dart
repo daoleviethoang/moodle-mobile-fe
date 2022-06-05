@@ -140,10 +140,9 @@ class UrlItem extends StatelessWidget {
       fullWidth: true,
       onPressed: () async {
         // Go to webpage in browser
-        final uri = Uri.parse(url);
-        var ableLaunch = await canLaunchUrl(uri);
+        var ableLaunch = await canLaunch(url);
         if (ableLaunch) {
-          await launchUrl(uri);
+          await launch(url);
         } else {
           print("URL can't be launched.");
         }
@@ -231,25 +230,27 @@ class QuizItem extends StatelessWidget {
 }
 
 class AttachmentItem extends StatelessWidget {
-  final String title;
-  final String attachmentUrl;
+  final String? title;
+  final String? attachmentUrl;
 
   const AttachmentItem({
     Key? key,
-    required this.title,
-    required this.attachmentUrl,
+    this.title,
+    this.attachmentUrl,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return m.MenuItem(
-      icon: const Icon(CupertinoIcons.doc),
-      color: Colors.grey,
-      title: title,
-      onPressed: () {
-        // TODO: Download this document from link
-      },
-    );
+    return attachmentUrl == null
+        ? Container()
+        : m.MenuItem(
+            icon: const Icon(CupertinoIcons.doc),
+            color: Colors.grey,
+            title: title!,
+            onPressed: () {
+              // TODO: Download this document from link
+            },
+          );
   }
 }
 

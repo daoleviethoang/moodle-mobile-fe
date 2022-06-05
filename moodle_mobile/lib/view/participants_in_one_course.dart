@@ -1,21 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
-import 'package:moodle_mobile/constants/dimens.dart';
 import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/data/repository.dart';
 import 'package:moodle_mobile/models/course/course_participants.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
-import 'package:moodle_mobile/view/common/image_view.dart';
-import 'package:moodle_mobile/view/common/menu_item.dart';
 import 'package:moodle_mobile/view/common/participant.dart';
-import 'package:moodle_mobile/view/common/slidable_tile.dart';
-import 'package:moodle_mobile/view/user_detail/user_detail.dart';
-import 'package:moodle_mobile/view/user_detail/user_detail_student.dart';
 
 class ParticipantsInOneCourse extends StatefulWidget {
   final int courseId;
-  const ParticipantsInOneCourse({Key? key, required this.courseId})
+  final String? courseName;
+  const ParticipantsInOneCourse(
+      {Key? key, required this.courseId, required this.courseName})
       : super(key: key);
   @override
   State<ParticipantsInOneCourse> createState() =>
@@ -25,6 +20,8 @@ class ParticipantsInOneCourse extends StatefulWidget {
 class _ParticipantsInOneCourseState extends State<ParticipantsInOneCourse> {
   late Repository _repository;
   late UserStore _userStore;
+  bool isLoad = true;
+  List<CourseParticipantsModel> participants = [];
 
   @override
   void initState() {
@@ -32,19 +29,15 @@ class _ParticipantsInOneCourseState extends State<ParticipantsInOneCourse> {
 
     _repository = GetIt.instance<Repository>();
     _userStore = GetIt.instance<UserStore>();
+    getParticipantsInCourse();
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: getParticipantsInCourse(),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
-        }
-        if (snapshot.hasData) {
-          List<CourseParticipantsModel> participants = snapshot.data;
-          return SingleChildScrollView(
+    print(widget.courseId);
+    return isLoad
+        ? CircularProgressIndicator()
+        : SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -62,7 +55,17 @@ class _ParticipantsInOneCourseState extends State<ParticipantsInOneCourse> {
                     return participants[index].roles[0].roleID != 5
                         ? ParticipantListTile(
                             fullname: participants[index].fullname,
-                            index: index)
+                            id: participants[index].id,
+                            role: participants[index].roles[0].roleID,
+                            userStore: _userStore,
+                            courseName: widget.courseName,
+                            avatar: participants[index].avatar.replaceAll(
+                                    "pluginfile.php",
+                                    "webservice/pluginfile.php") +
+                                (participants[index].avatar.contains("?")
+                                    ? "&token=" + _userStore.user.token
+                                    : "?token=" + _userStore.user.token),
+                          )
                         : Container();
                   },
                 ),
@@ -77,21 +80,36 @@ class _ParticipantsInOneCourseState extends State<ParticipantsInOneCourse> {
                     return participants[index].roles[0].roleID == 5
                         ? ParticipantListTile(
                             fullname: participants[index].fullname,
-                            index: index)
+                            id: participants[index].id,
+                            role: participants[index].roles[0].roleID,
+                            userStore: _userStore,
+                            courseName: widget.courseName,
+                            avatar: participants[index].avatar.replaceAll(
+                                    "pluginfile.php",
+                                    "webservice/pluginfile.php") +
+                                (participants[index].avatar.contains("?")
+                                    ? "&token=" + _userStore.user.token
+                                    : "?token=" + _userStore.user.token),
+                          )
                         : Container();
                   },
                 ),
               ],
             ),
           );
-        }
-        return Container();
-      },
-    );
   }
 
-  Future getParticipantsInCourse() async {
-    return await _repository.courseParticipant(
-        _userStore.user.token, widget.courseId);
+  getParticipantsInCourse() async {
+    try {
+      List<CourseParticipantsModel> courseParticipants = await _repository
+          .courseParticipant(_userStore.user.token, widget.courseId);
+      setState(() {
+        participants = courseParticipants;
+        isLoad = false;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString()), backgroundColor: Colors.red));
+    }
   }
 }

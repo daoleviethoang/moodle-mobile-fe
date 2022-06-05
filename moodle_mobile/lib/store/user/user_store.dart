@@ -57,6 +57,7 @@ abstract class _UserStore with Store {
           token: token,
           baseUrl: _repository.baseUrl ?? "",
           username: username,
+          photo: user.photo,
         ));
       }
 
@@ -65,6 +66,16 @@ abstract class _UserStore with Store {
       print("Login error: " + e.toString());
       isLoginFailed = true;
       isLogin = false;
+    }
+  }
+
+  @action
+  Future reGetUserInfo(String token, String username) async {
+    try {
+      print("setUserStore");
+      user = await _repository.getUserInfo(token, username);
+    } catch (e) {
+      print("re get user info error");
     }
   }
 

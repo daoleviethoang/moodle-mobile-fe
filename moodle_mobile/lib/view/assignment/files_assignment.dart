@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' as rootBundle;
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/constants/colors.dart';
@@ -14,6 +13,7 @@ import 'package:moodle_mobile/models/assignment/files_assignment.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/assignment/file_assignment_tile.dart';
 import 'package:moodle_mobile/view/common/custom_button.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class FilesAssignmentScreen extends StatefulWidget {
   final int maxByteSize;
@@ -76,13 +76,13 @@ class _FilesAssignmentScreenState extends State<FilesAssignmentScreen> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Overwrite same name file!'),
+            title: Text(AppLocalizations.of(context)!.override_file),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: const Text("Cancel"),
+                child: Text(AppLocalizations.of(context)!.cancel),
               ),
               TextButton(
                 onPressed: () {
@@ -97,7 +97,7 @@ class _FilesAssignmentScreenState extends State<FilesAssignmentScreen> {
                   // break dialog
                   Navigator.pop(context);
                 },
-                child: const Text("Ok"),
+                child: Text(AppLocalizations.of(context)!.ok),
               ),
             ],
           );
@@ -160,8 +160,8 @@ class _FilesAssignmentScreenState extends State<FilesAssignmentScreen> {
           SliverAppBar(
             floating: true,
             snap: true,
-            title: const Text(
-              "Submission",
+            title: Text(
+              AppLocalizations.of(context)!.submission,
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 20,
@@ -194,8 +194,8 @@ class _FilesAssignmentScreenState extends State<FilesAssignmentScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
-                                  const Text(
-                                    "Submission size",
+                                  Text(
+                                    AppLocalizations.of(context)!.max_file_size,
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
@@ -225,8 +225,9 @@ class _FilesAssignmentScreenState extends State<FilesAssignmentScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
-                                  const Text(
-                                    "Submission count",
+                                  Text(
+                                    AppLocalizations.of(context)!
+                                        .default_num_file,
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
@@ -255,7 +256,7 @@ class _FilesAssignmentScreenState extends State<FilesAssignmentScreen> {
                       ),
                       InkWell(
                         child: Row(children: [
-                          const Text("Name"),
+                          Text(AppLocalizations.of(context)!.name),
                           Icon(sortASC == true
                               ? Icons.arrow_drop_down
                               : Icons.arrow_drop_up),
@@ -284,7 +285,8 @@ class _FilesAssignmentScreenState extends State<FilesAssignmentScreen> {
                         height: 10,
                       ),
                       CustomButtonWidget(
-                        textButton: "Save submission",
+                        textButton:
+                            AppLocalizations.of(context)!.save_submission,
                         onPressed: disable
                             ? null
                             : () async {
@@ -298,15 +300,18 @@ class _FilesAssignmentScreenState extends State<FilesAssignmentScreen> {
                                         widget.assignId,
                                         itemId);
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(
-                                            content: Text("Submit success"),
+                                        SnackBar(
+                                            content: Text(
+                                                AppLocalizations.of(context)!
+                                                    .submit_success),
                                             backgroundColor: Colors.green));
                                     widget.reload();
                                   } else {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(
-                                            content:
-                                                Text("Can't found any file"),
+                                        SnackBar(
+                                            content: Text(
+                                                AppLocalizations.of(context)!
+                                                    .can_not_found_file),
                                             backgroundColor: Colors.red));
                                   }
                                 } catch (e) {
@@ -332,41 +337,45 @@ class _FilesAssignmentScreenState extends State<FilesAssignmentScreen> {
         onPressed: disable
             ? null
             : () async {
-                FilePickerResult? result =
-                    await FilePicker.platform.pickFiles();
-                if (result != null) {
-                  PlatformFile file = result.files.first;
-                  // check size more than condition
-                  if (file.size + caculateByteSize() > widget.maxByteSize) {
-                    const snackBar = SnackBar(
-                        content: Text("File's size is bigger"),
-                        backgroundColor: Colors.red);
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                    return;
-                  }
-                  // check number file more than condition
-                  if (files.length == widget.maxFileCount) {
-                    const snackBar = SnackBar(
-                        content: Text("Number file is full"),
-                        backgroundColor: Colors.red);
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                    return;
-                  }
-                  // check file same name
-                  bool check = checkOverwrite(file);
-                  if (check == true) return;
-                  // add file
-                  files.add(FileUpload(
-                      filename: file.name,
-                      filepath: file.path ?? "",
-                      timeModified: DateTime.now(),
-                      filesize: file.size));
-                  setState(() {
-                    files.sort(((a, b) => a.filename.compareTo(b.filename)));
-                    if (sortASC == false) {
-                      files.reversed;
+                try {
+                  FilePickerResult? result =
+                      await FilePicker.platform.pickFiles();
+                  if (result != null) {
+                    PlatformFile file = result.files.first;
+                    // check size more than condition
+                    if (file.size + caculateByteSize() > widget.maxByteSize) {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(
+                              AppLocalizations.of(context)!.file_size_bigger),
+                          backgroundColor: Colors.red));
+                      return;
                     }
-                  });
+                    // check number file more than condition
+                    if (files.length == widget.maxFileCount) {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(
+                              AppLocalizations.of(context)!.number_file_full),
+                          backgroundColor: Colors.red));
+                      return;
+                    }
+                    // check file same name
+                    bool check = checkOverwrite(file);
+                    if (check == true) return;
+                    // add file
+                    files.add(FileUpload(
+                        filename: file.name,
+                        filepath: file.path ?? "",
+                        timeModified: DateTime.now(),
+                        filesize: file.size));
+                    setState(() {
+                      files.sort(((a, b) => a.filename.compareTo(b.filename)));
+                      if (sortASC == false) {
+                        files.reversed;
+                      }
+                    });
+                  }
+                } catch (error) {
+                  print(error.toString());
                 }
               },
       ),

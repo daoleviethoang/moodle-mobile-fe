@@ -1,19 +1,20 @@
-import 'dart:convert';
+import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' as rootBundle;
 import 'package:flutter_html/flutter_html.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:moodle_mobile/data/network/apis/assignment/assignment_api.dart';
 import 'package:moodle_mobile/models/assignment/assignment.dart';
 import 'package:moodle_mobile/models/assignment/attemp_assignment.dart';
+import 'package:moodle_mobile/models/assignment/feedback.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/assignment/date_assignment_tile.dart';
 import 'package:moodle_mobile/view/assignment/files_assignment.dart';
 import 'package:moodle_mobile/view/assignment/submission_status_tile.dart';
 import 'package:moodle_mobile/view/common/custom_button.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AssignmentScreen extends StatefulWidget {
   final int assignInstanceId;
@@ -39,16 +40,26 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
   Color dateDiffColor = Colors.grey;
   late UserStore _userStore;
   bool overDue = false;
+  bool error = false;
+  FeedBack feedback = FeedBack();
+  late Timer _timer;
 
   @override
   void initState() {
     _userStore = GetIt.instance<UserStore>();
-    super.initState();
-    isLoading = true;
-    loadAssignment();
-    setState(() {
-      isLoading = false;
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        dateDiffSubmit();
+      });
     });
+    super.initState();
+    loadAssignment();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _timer.cancel();
   }
 
   Future<Assignment> ReadData(int assignInstanceId, int courseId) async {
@@ -63,6 +74,9 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
       }
       return assign;
     } catch (e) {
+      setState(() {
+        error = true;
+      });
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(e.toString()), backgroundColor: Colors.red));
     }
@@ -79,19 +93,41 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
       }
       return assign;
     } catch (e) {
+      setState(() {
+        error = true;
+      });
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(e.toString()), backgroundColor: Colors.red));
     }
     return AttemptAssignment();
   }
 
+  Future<FeedBack> readFeedBack(int assignInstanceId) async {
+    try {
+      FeedBack feedBack = await AssignmentApi().getAssignmentFeedbackAndGrade(
+          _userStore.user.token, assignInstanceId);
+      return feedBack;
+    } catch (e) {
+      setState(() {
+        error = true;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString()), backgroundColor: Colors.red));
+    }
+    return FeedBack();
+  }
+
   void loadAssignment() async {
-    isLoading = true;
+    setState(() {
+      isLoading = true;
+    });
     Assignment temp = await ReadData(widget.assignInstanceId, widget.courseId);
     AttemptAssignment temp2 = await ReadData2(widget.assignInstanceId);
+    FeedBack temp3 = await readFeedBack(widget.assignInstanceId);
     setState(() {
       assignment = temp;
       attempt = temp2;
+      feedback = temp3;
       isLoading = false;
     });
     dateDiffSubmit();
@@ -114,20 +150,31 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
       final dateTime = zero.add(duration.abs());
       int day = dateTime.day - 1;
       setState(() {
-        dateDiff =
-            (dueDate.isAfter(DateTime.now()) ? "Due in " : "Overdue by: ") +
-                ((day > 0)
-                    ? (duration.inDays.abs().toString() +
-                        " days " +
-                        dateTime.hour.toString() +
-                        " hours")
-                    : ((duration.inMinutes.abs() > 0)
-                        ? (dateTime.hour.toString() +
-                            " hours " +
-                            dateTime.minute.toString() +
-                            " minutes")
-                        : dateTime.second.toString() + " seconds"));
-        overDue = dueDate.isAfter(DateTime.now()) ? false : true;
+        dateDiff = (dueDate.isAfter(DateTime.now())
+                ? AppLocalizations.of(context)!.due_in
+                : AppLocalizations.of(context)!.overdue_by) +
+            " " +
+            ((day > 0)
+                ? (duration.inDays.abs().toString() +
+                    " " +
+                    AppLocalizations.of(context)!.days +
+                    " " +
+                    dateTime.hour.toString() +
+                    " " +
+                    AppLocalizations.of(context)!.hours)
+                : ((duration.inMinutes.abs() > 0)
+                    ? (dateTime.hour.toString() +
+                        " " +
+                        AppLocalizations.of(context)!.hours +
+                        " " +
+                        dateTime.minute.toString() +
+                        " " +
+                        AppLocalizations.of(context)!.minutes)
+                    : dateTime.second.toString() +
+                        " " +
+                        AppLocalizations.of(context)!.seconds));
+        overDue = (dueDate.isAfter(DateTime.now()) ? false : true) &&
+            (attempt.cansubmit == false || attempt.cansubmit == null);
       });
       return;
     }
@@ -138,19 +185,31 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
     final dateTime = zero.add(duration.abs());
     int day = dateTime.day - 1;
     setState(() {
-      dateDiff = "Submitted " +
+      dateDiff = AppLocalizations.of(context)!.submitted +
+          " " +
           ((day > 0)
               ? (duration.inDays.abs().toString() +
-                  " days " +
+                  " " +
+                  AppLocalizations.of(context)!.days +
+                  " " +
                   dateTime.hour.toString() +
-                  " hours")
+                  " " +
+                  AppLocalizations.of(context)!.hours)
               : ((duration.inMinutes.abs() > 0)
                   ? (dateTime.hour.toString() +
-                      " hours " +
+                      " " +
+                      AppLocalizations.of(context)!.hours +
+                      " " +
                       dateTime.minute.toString() +
-                      " minutes")
-                  : dateTime.second.toString() + " seconds")) +
-          (duration.isNegative ? " late" : " early");
+                      " " +
+                      AppLocalizations.of(context)!.minutes)
+                  : dateTime.second.toString() +
+                      " " +
+                      AppLocalizations.of(context)!.seconds)) +
+          " " +
+          (duration.isNegative
+              ? AppLocalizations.of(context)!.late
+              : AppLocalizations.of(context)!.early);
       dateDiffColor = duration.isNegative ? Colors.red : Colors.green;
     });
   }
@@ -169,6 +228,7 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                 color: Colors.white,
                 fontSize: 20,
               ),
+              overflow: TextOverflow.clip,
             ),
             leading: TextButton(
               style: TextButton.styleFrom(
@@ -181,127 +241,149 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
         ],
         body: isLoading
             ? const Center(child: CircularProgressIndicator())
-            : SingleChildScrollView(
-                child: Container(
-                  margin: const EdgeInsets.only(left: 10, right: 10, top: 20),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      DateAssignmentTile(
-                        date: (assignment.allowsubmissionsfromdate ?? 0) * 1000,
-                        title: "Opened",
-                        iconColor: Colors.grey,
-                        backgroundIconColor:
-                            const Color.fromARGB(255, 217, 217, 217),
-                      ),
-                      DateAssignmentTile(
-                        date: (assignment.duedate ?? 0) * 1000,
-                        title: "Due",
-                        iconColor: Colors.green,
-                        backgroundIconColor: Colors.greenAccent,
-                      ),
-                      const Divider(),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        child: Card(
-                          elevation: 5,
-                          child: Html(
-                            data: assignment.intro ?? "",
-                            shrinkWrap: true,
+            : error
+                ? const Center(
+                    child: Text("Error loading"),
+                  )
+                : SingleChildScrollView(
+                    child: Container(
+                      margin:
+                          const EdgeInsets.only(left: 10, right: 10, top: 16),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          DateAssignmentTile(
+                            date: (assignment.allowsubmissionsfromdate ?? 0) *
+                                1000,
+                            title: AppLocalizations.of(context)!.opened,
+                            iconColor: Colors.grey,
+                            backgroundIconColor:
+                                const Color.fromARGB(255, 217, 217, 217),
                           ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      const Text(
-                        "Submission status",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      const SubmissionStatusTile(
-                        leftText: "Submission status",
-                        rightText: "Submitted for grading",
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      const SubmissionStatusTile(
-                        leftText: "Grading status",
-                        rightText: "Not graded",
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      SubmissionStatusTile(
-                          leftText: "Time remaining",
-                          rightText: dateDiff,
-                          rightTextColor: dateDiffColor),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      SubmissionStatusTile(
-                          leftText: "Last modified",
-                          rightText: DateFormat("hh:mmaa, dd MMMM, yyyy")
-                              .format(DateTime.fromMillisecondsSinceEpoch(
-                                  attempt.submission?.timemodified ?? 0))),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      SubmissionStatusTile(
-                        leftText: "File submissions",
-                        rightText: (attempt.submission?.plugins?[0]
-                                        .fileareas?[0].files ??
-                                    [])
-                                .length
-                                .toString() +
-                            " files",
-                        rightTextColor: Colors.blue,
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      const SubmissionStatusTile(
-                        leftText: "Submission comments",
-                        rightText: "0 comments...",
-                        rightTextColor: Colors.blue,
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      overDue
-                          ? Container()
-                          : CustomButtonWidget(
-                              textButton: "View file submission",
-                              onPressed: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (_) {
-                                      return FilesAssignmentScreen(
-                                        assignId: widget.assignInstanceId,
-                                        dueDate: assignment.duedate ?? 0,
-                                        canEdit: attempt.canedit ?? false,
-                                        maxByteSize: int.parse(assignment
-                                                    .configs !=
-                                                null
-                                            ? assignment.configs!
-                                                .where((element) =>
-                                                    element.name ==
-                                                    "maxsubmissionsizebytes")
-                                                .first
-                                                .value
-                                            : "5242880"),
-                                        maxFileCount: int.parse(
-                                            assignment.configs != null
+                          DateAssignmentTile(
+                            date: (assignment.duedate ?? 0) * 1000,
+                            title: AppLocalizations.of(context)!.due,
+                            iconColor: Colors.green,
+                            backgroundIconColor: Colors.greenAccent,
+                          ),
+                          const Divider(),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          if (assignment.intro?.isNotEmpty == true) ...[
+                            Container(
+                              width: MediaQuery.of(context).size.width,
+                              child: Card(
+                                elevation: 5,
+                                child: Html(
+                                  data: assignment.intro ?? "",
+                                  shrinkWrap: true,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                          ],
+                          Text(
+                            AppLocalizations.of(context)!.submission_status,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          SubmissionStatusTile(
+                            leftText:
+                                AppLocalizations.of(context)!.submission_status,
+                            rightText:
+                                AppLocalizations.of(context)!.submit_for_grade,
+                          ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          SubmissionStatusTile(
+                            leftText:
+                                AppLocalizations.of(context)!.grading_status,
+                            rightText: feedback.grade?.grade ??
+                                AppLocalizations.of(context)!.not_graded,
+                          ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          SubmissionStatusTile(
+                              leftText:
+                                  AppLocalizations.of(context)!.time_remain,
+                              rightText: dateDiff,
+                              rightTextColor: dateDiffColor),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          SubmissionStatusTile(
+                              leftText:
+                                  AppLocalizations.of(context)!.last_modified,
+                              rightText: DateFormat("hh:mmaa, dd MMMM, yyyy")
+                                  .format(DateTime.fromMillisecondsSinceEpoch(
+                                      attempt.submission?.timemodified ?? 0))),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          SubmissionStatusTile(
+                            leftText:
+                                AppLocalizations.of(context)!.file_submission,
+                            rightText: (attempt.submission?.plugins?[0]
+                                            .fileareas?[0].files ??
+                                        [])
+                                    .length
+                                    .toString() +
+                                " files",
+                            rightTextColor: Colors.blue,
+                          ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          SubmissionStatusTile(
+                            leftText: AppLocalizations.of(context)!
+                                .submission_comments,
+                            rightText:
+                                (feedback.plugins?.length ?? 0).toString() +
+                                    " " +
+                                    AppLocalizations.of(context)!.comments +
+                                    "...",
+                            rightTextColor: Colors.blue,
+                          ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          overDue
+                              ? Container()
+                              : CustomButtonWidget(
+                                  textButton: AppLocalizations.of(context)!
+                                      .view_file_submission,
+                                  onPressed: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (_) {
+                                          return FilesAssignmentScreen(
+                                            assignId: widget.assignInstanceId,
+                                            dueDate: assignment.duedate ?? 0,
+                                            canEdit: attempt.canedit ?? false,
+                                            maxByteSize: int.parse(assignment
+                                                        .configs !=
+                                                    null
+                                                ? assignment.configs!
+                                                    .where((element) =>
+                                                        element.name ==
+                                                        "maxsubmissionsizebytes")
+                                                    .first
+                                                    .value
+                                                : "5242880"),
+                                            maxFileCount: int.parse(assignment
+                                                        .configs !=
+                                                    null
                                                 ? assignment.configs!
                                                     .where((element) =>
                                                         element.name ==
@@ -309,21 +391,21 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                                                     .first
                                                     .value
                                                 : "1"),
-                                        attempt: attempt,
-                                        reload: loadAssignmentAttempt,
-                                      );
-                                    },
-                                  ),
-                                );
-                              },
-                            ),
-                      SizedBox(
-                        height: 20,
+                                            attempt: attempt,
+                                            reload: loadAssignmentAttempt,
+                                          );
+                                        },
+                                      ),
+                                    );
+                                  },
+                                ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              ),
       ),
     );
   }

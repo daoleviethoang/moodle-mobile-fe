@@ -43,14 +43,17 @@ class _SubmissionStatusTileState extends State<SubmissionStatusTile> {
               style: TextStyle(color: widget.leftTextColor),
             ),
           ),
-          Container(
-            padding: const EdgeInsets.only(top: 4, bottom: 4, left: 5),
-            color: widget.rightBackgroundColor,
-            child: Text(
-              widget.rightText,
-              style: TextStyle(
-                color: widget.rightTextColor,
-                overflow: TextOverflow.clip,
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.only(top: 4, bottom: 4, left: 5),
+              color: widget.rightBackgroundColor,
+              child: Text(
+                widget.rightText,
+                style: TextStyle(
+                  color: widget.rightTextColor,
+                  overflow: TextOverflow.clip,
+                ),
+                textScaleFactor: 0.95,
               ),
             ),
           ),

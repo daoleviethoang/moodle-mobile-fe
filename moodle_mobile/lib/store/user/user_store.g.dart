@@ -81,6 +81,15 @@ mixin _$UserStore on _UserStore, Store {
         .run(() => super.login(username, password, rememberAccount));
   }
 
+  late final _$reGetUserInfoAsyncAction =
+      AsyncAction('_UserStore.reGetUserInfo', context: context);
+
+  @override
+  Future<dynamic> reGetUserInfo(String token, String username) {
+    return _$reGetUserInfoAsyncAction
+        .run(() => super.reGetUserInfo(token, username));
+  }
+
   late final _$setUserAsyncAction =
       AsyncAction('_UserStore.setUser', context: context);
 
