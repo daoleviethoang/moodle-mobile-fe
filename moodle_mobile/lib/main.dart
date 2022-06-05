@@ -13,11 +13,14 @@ import 'package:moodle_mobile/di/service_locator.dart';
 import 'package:moodle_mobile/view/splash/splash_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'data/notifications/notification_helper.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await setupLocator();
   await initDownloader();
   await BgService.initBackgroundService();
+  await NotificationHelper.initNotificationService();
   runApp(
     DevicePreview(
       enabled: kDebugMode && kIsWeb,
