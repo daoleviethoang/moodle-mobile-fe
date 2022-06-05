@@ -208,8 +208,9 @@ class _MenuScreenState extends State<MenuScreen> {
                         icon: const Icon(Icons.campaign_rounded),
                         fullWidth: true,
                         onPressed: () => launchUrl(Uri.parse(
-                            'mailto:18127044@student.hcmus.edu.vn'
-                            '?cc=18127053@student.hcmus.edu.vn,'
+                            'mailto:prj.covid@fit.hcmus.edu.vn'
+                            '?cc=18127044@student.hcmus.edu.vn,'
+                            '18127053@student.hcmus.edu.vn,'
                             '18127097@student.hcmus.edu.vn,'
                             '18127101@student.hcmus.edu.vn,'
                             '18127177@student.hcmus.edu.vn'
