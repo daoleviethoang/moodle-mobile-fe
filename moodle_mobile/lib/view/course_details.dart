@@ -344,7 +344,6 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   }
 
   void _initPeopleTab() {
-    // TODO: Get participant list from API
     _peopleTab = ParticipantsInOneCourse(
         courseId: _courseId, courseName: _course!.displayname);
   }

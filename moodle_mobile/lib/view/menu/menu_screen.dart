@@ -11,6 +11,7 @@ import 'package:moodle_mobile/view/message_preference/index.dart';
 import 'package:moodle_mobile/view/notification_preference/index.dart';
 import 'package:moodle_mobile/view/splash/splash_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({Key? key}) : super(key: key);
@@ -203,11 +204,18 @@ class _MenuScreenState extends State<MenuScreen> {
                         const SizedBox(height: 8),
                         m.MenuItem(
                           title: AppLocalizations.of(context)!.report,
-                          color: Colors.red,
-                          icon: const Icon(Icons.campaign_rounded),
-                          fullWidth: true,
-                          onPressed: () {},
-                        ),
+                        color: Colors.red,
+                        icon: const Icon(Icons.campaign_rounded),
+                        fullWidth: true,
+                        onPressed: () => launchUrl(Uri.parse(
+                            'mailto:prj.covid@fit.hcmus.edu.vn'
+                            '?cc=18127044@student.hcmus.edu.vn,'
+                            '18127053@student.hcmus.edu.vn,'
+                            '18127097@student.hcmus.edu.vn,'
+                            '18127101@student.hcmus.edu.vn,'
+                            '18127177@student.hcmus.edu.vn'
+                            '&subject=${AppLocalizations.of(context)!.mail_subject}')),
+                      ),
                         const SizedBox(height: 8),
                         m.MenuItem(
                           title: AppLocalizations.of(context)!.logout,
@@ -262,40 +270,45 @@ class ProfileHeader extends StatelessWidget {
           ),
         ),
       ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CircleImageView(
-              fit: BoxFit.none,
-              imageUrl: avatar,
-              placeholder: const FittedBox(
-                child: Padding(
-                  padding: EdgeInsets.all(8),
-                  child: Icon(Icons.person, color: Colors.white),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CircleImageView(
+                fit: BoxFit.none,
+                imageUrl: avatar,
+                placeholder: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Icon(
+                    Icons.person,
+                    size: 32,
+                    color: Colors.white,
+                  ),
+                )),
+            const SizedBox(
+              width: 10,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  _userStore.user.fullname,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
                 ),
-              )),
-          const SizedBox(
-            width: 10,
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(
-                _userStore.user.fullname,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
+                const SizedBox(height: 6),
+                Text(
+                  _userStore.user.email,
+                  style: const TextStyle(color: Colors.grey),
                 ),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                _userStore.user.email,
-                style: const TextStyle(color: Colors.grey),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
