@@ -1,59 +1,4 @@
 {
-    "load_category_fail":"Lấy dữ liệu danh mục khóa học thất bại",
-    "course_category":"Danh mục khóa học",
-    "course":"Khóa học",
-
-    "dashboard": "Trang của tôi",
-    "calendar": "Lịch",
-    "messenger": "Tin nhắn",
-    "notifications": "Thông báo",
-    "menu": "Menu",
-
-    "home": "Trang chủ",
-    "announcement": "Thông báo",
-    "discussion": "Diễn đàn thảo luận",
-    "events": "Sự kiện",
-    "grades": "Điểm số",
-    "participants": "Thành viên",
-    "upcoming_events": "Sự kiện sắp tới",
-
-    "my_courses": "Khoá của tôi",
-    "all_courses": "Tất cả khoá",
-
-    "jump_date": "Chuyển ngày",
-    "jump": "Chuyển",
-    "events_on": "Sự kiện vào {date}",
-
-    "messages": "Tin nhắn",
-    "contacts": "Danh bạ",
-    "enter_message": "Nhập tin nhắn",
-
-    "noti_context": "<b>{article}</b><br/> trong <b>{name}</b>",
-
-    "news": "Thông tin & Tin tức",
-    "settings": "Cài đặt",
-    "account": "Tài khoản",
-    "noti_settings": "Thông báo & Âm thanh",
-    "message_settings": "Cài đặt tin nhắn",
-    "moodle_settings": "Cài đặt Moodle",
-    "app_settings": "Cài đặt ứng dụng",
-    "permissions": "Quyền truy cập",
-    "change_password": "Đổi mật khẩu",
-    "report": "Báo cáo sự cố",
-    "logout": "Đăng xuất",
-
-    "disable_noti": "Tắt thông báo",
-
-    "restrict": "Người có thể gửi tin nhắn cho tôi",
-    "restrict_contact": "Danh bạ của tôi",
-    "restrict_anyone": "Danh bạ và ai cùng khóa học với tôi",
-
-    "mail_subject": "[Moodle%20Mobile%20App%20-%20Báo%20cáo%20sự%20cố]",
-
-    "err_load_noti_settings": "Tải cài đặt thông báo thất bại, vui lòng thử lại sau",
-    "err_set_noti_settings": "Cập nhật cài đặt thông báo thất bại, vui lòng thử lại sau",
-    "err_load_message_settings": "Tải cài đặt tin nhắn thất bại, vui lòng thử lại sau",
-    "err_unknown_module": "Module chưa được hỗ trợ: {modname}"
   "account": "Tài khoản",
   "add_file": "Thêm file",
   "add_new_discussion": "Thêm 1 bài đăng",
@@ -109,6 +54,7 @@
   "late": "trễ",
   "load_category_fail": "Lấy dữ liệu danh mục khóa học thất bại",
   "logout": "Đăng xuất",
+  "mail_subject": "[Moodle%20Mobile%20App%20-%20Báo%20cáo%20sự%20cố]",
   "max_file_size": "Kích cỡ tối đa đối với các tập tin mới :",
   "menu": "Menu",
   "message_settings": "Cài đặt tin nhắn",
