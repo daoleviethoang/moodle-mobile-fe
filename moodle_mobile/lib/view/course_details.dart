@@ -253,7 +253,6 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   }
 
   void _initAnnouncementsTab() {
-    // TODO: Parse module from API
     if (_content.isEmpty) {
       _announcementsTab = Container();
       return;
