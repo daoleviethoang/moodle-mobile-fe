@@ -99,6 +99,7 @@
   "not_graded": "Not graded",
   "not_participant_course": "You are not a participant of this course.",
   "noti_context": "<b>{article}</b><br/> in <b>{name}</b>",
+  "noti_permission": "Notification permission has been denied, some functions will not be able to work",
   "noti_settings": "Notifications & Sounds",
   "notifications": "Notifications",
   "number_file_full": "Number file is full",

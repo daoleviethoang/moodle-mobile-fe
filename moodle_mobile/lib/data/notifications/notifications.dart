@@ -1,9 +1,25 @@
+import 'dart:convert';
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:moodle_mobile/models/calendar/event.dart';
 import 'package:moodle_mobile/models/conversation/conversation.dart';
 import 'package:moodle_mobile/models/notification/notification.dart';
 
 import 'channels.dart';
+
+class TextNotification {
+  final String data;
+  final Map<String, dynamic>? attachment;
+  final details = const ImportantChannel();
+
+  TextNotification(this.data, [this.attachment]) : super();
+
+  Future show(FlutterLocalNotificationsPlugin localNotifications) async {
+    int id = DateTime.now().millisecondsSinceEpoch ~/ 1000 ~/ 60;
+    localNotifications.show(id, 'Moodle', data, details,
+        payload: '${details.android?.channelId},$id,${jsonEncode(attachment)}');
+  }
+}
 
 class CalendarNotification {
   final Event data;

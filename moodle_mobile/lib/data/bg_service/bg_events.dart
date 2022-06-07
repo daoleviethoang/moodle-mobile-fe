@@ -8,11 +8,11 @@ import 'package:moodle_mobile/store/conversation/conversation_store.dart';
 
 /// A preset of events that can be listened for by BgService
 abstract class BgEvent {
-  String event;
-  void Function(Map<String, dynamic>? event)? onData;
-  Function(Object error)? onError;
-  void Function()? onDone;
-  bool? cancelOnError;
+  final String event;
+  final void Function(Map<String, dynamic>? event)? onData;
+  final Function(Object error)? onError;
+  final void Function()? onDone;
+  final bool? cancelOnError;
 
   BgEvent({
     required this.event,

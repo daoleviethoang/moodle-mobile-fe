@@ -6,6 +6,9 @@ class Vars {
   /// The time waiting before calling refresh data again
   static const Duration refreshInterval = Duration(seconds: 5);
 
+  /// Get app info
+  // static Future<PackageInfo> get packageInfo => PackageInfo.fromPlatform();
+
   /// Return dart version number for this build
   /// (to be used for compatibility between different versions of Flutter)
   static double get dartVersion {

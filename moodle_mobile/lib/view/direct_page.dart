@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:moodle_mobile/constants/styles.dart';
+import 'package:moodle_mobile/data/firebase/messaging/messaging_helper.dart';
 import 'package:moodle_mobile/models/course/courses.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/calendar/calendar.dart';
@@ -52,6 +53,9 @@ class _DirectScreenState extends State<DirectScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Check notification permission for FCM
+    MessagingHelper.checkPermission(context);
+
     _widgetAppBarTitle = [
       "Learning Management System",
       AppLocalizations.of(context)!.calendar,

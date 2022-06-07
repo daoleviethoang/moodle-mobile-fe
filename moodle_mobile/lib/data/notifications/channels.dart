@@ -1,5 +1,15 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+class ImportantChannel extends NotificationDetails {
+  const ImportantChannel()
+      : super(
+          android: const AndroidNotificationDetails('imp', 'Important',
+              channelDescription: 'Important messages sent from server',
+              priority: Priority.high),
+          iOS: const IOSNotificationDetails(),
+        );
+}
+
 class CalendarChannel extends NotificationDetails {
   const CalendarChannel()
       : super(
