@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
+import 'package:moodle_mobile/constants/vars.dart';
 import 'package:moodle_mobile/view/common/custom_text_field.dart';
 import 'package:moodle_mobile/view/common/custom_text_field_message_detail.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
@@ -45,7 +46,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
 
     // Update message list
     _refreshTimer = Timer.periodic(
-        const Duration(seconds: 5),
+        Vars.refreshInterval,
         (t) => _conversationDetailStore.getListMessage(
             _userStore.user.token, _userStore.user.id, widget.conversationId));
   }

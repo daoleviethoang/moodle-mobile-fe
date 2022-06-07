@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:isolate';
 import 'dart:ui';
 
@@ -7,25 +8,37 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:moodle_mobile/constants/colors.dart';
+import 'package:moodle_mobile/data/bg_service/bg_service.dart';
+import 'package:moodle_mobile/data/firebase/firebase_helper.dart';
 import 'package:moodle_mobile/di/service_locator.dart';
 import 'package:moodle_mobile/view/splash/splash_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'data/notifications/notification_helper.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  try {
-    // optional: set false to disable printing logs to console
-    await FlutterDownloader.initialize(debug: kDebugMode);
-  } catch (e) {}
-
   await setupLocator();
-
+  await initDownloader();
+  await FirebaseHelper.initFirebase();
+  // await BgService.initBackgroundService();
+  await NotificationHelper.initNotificationService();
   runApp(
     DevicePreview(
       enabled: kDebugMode && kIsWeb,
       builder: (context) => const MyApp(), // Wrap your app
     ),
   );
+}
+
+Future<void> initDownloader() async {
+  try {
+    await FlutterDownloader.initialize(debug: kDebugMode);
+  } catch (e) {
+    if (kDebugMode) {
+      print('!!!!!!!!!!$e');
+    }
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -60,9 +73,13 @@ class MyApp extends StatelessWidget {
     try {
       _bindBackgroundIsolate();
       FlutterDownloader.registerCallback(downloadCallback);
-    } catch (e) {}
+    } catch (e) {
+      if (kDebugMode) {
+        print('!!!!!!!!!!$e');
+      }
+    }
 
-    return  MaterialApp(
+    return MaterialApp(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       useInheritedMediaQuery: true,

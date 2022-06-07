@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:moodle_mobile/data/network/apis/file/file_api.dart';
 import 'package:moodle_mobile/data/network/constants/endpoints.dart';
 import 'package:moodle_mobile/data/network/constants/wsfunction_constants.dart';
@@ -36,7 +37,11 @@ class ForumApi {
         }
       }
       return null;
-    } catch (e) {}
+    } catch (e) {
+      if (kDebugMode) {
+        print('!!!!!!!!!!$e');
+      }
+    }
     return null;
   }
 
@@ -54,7 +59,11 @@ class ForumApi {
       List<ForumDiscussion> temp =
           list.map((e) => ForumDiscussion.fromJson(e)).toList();
       return temp;
-    } catch (e) {}
+    } catch (e) {
+      if (kDebugMode) {
+        print('!!!!!!!!!!$e');
+      }
+    }
     return null;
   }
 
@@ -72,7 +81,11 @@ class ForumApi {
       print(list);
       List<ForumPost> temp = list.map((e) => ForumPost.fromJson(e)).toList();
       return temp;
-    } catch (e) {}
+    } catch (e) {
+      if (kDebugMode) {
+        print('!!!!!!!!!!$e');
+      }
+    }
     return null;
   }
 
@@ -176,6 +189,10 @@ class ForumApi {
         'discussionid': discussionId,
       };
       return;
-    } catch (e) {}
+    } catch (e) {
+      if (kDebugMode) {
+        print('!!!!!!!!!!$e');
+      }
+    }
   }
 }

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:moodle_mobile/data/sharedpref/constant/preferences.dart';
+import 'package:moodle_mobile/data/shared_reference/constants/preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferenceHelper {

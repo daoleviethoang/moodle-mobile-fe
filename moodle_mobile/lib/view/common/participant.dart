@@ -33,11 +33,8 @@ class ParticipantListTile extends StatelessWidget {
           child: CircleImageView(
             fit: BoxFit.cover,
             imageUrl: avatar + "&token=" + userStore.user.token,
-            placeholder: const Icon(
-              Icons.person,
-              size: 32,
-              color: Colors.white,
-            ),
+            placeholder:
+                const FittedBox(child: Icon(Icons.person, color: Colors.white)),
           ),
         ),
         trailing: RoundedImageView(

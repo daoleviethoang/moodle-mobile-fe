@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1058338810622",
+    "project_id": "moodle-mobile-58061",
+    "storage_bucket": "moodle-mobile-58061.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1058338810622:android:d84eb981f8f1dd068113af",
+        "android_client_info": {
+          "package_name": "vn.edu.hcmus.moodle_mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1058338810622-cqrvkh2l7a4qvphph44fi3199u3gbtfh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAIY28dYC823SaNtaICsUhBbv7vejsLrDw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1058338810622-cqrvkh2l7a4qvphph44fi3199u3gbtfh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

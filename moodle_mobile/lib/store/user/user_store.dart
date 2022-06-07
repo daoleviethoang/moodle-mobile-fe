@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:mobx/mobx.dart';
 import 'package:moodle_mobile/data/repository.dart';
 import 'package:moodle_mobile/models/user.dart';
@@ -43,7 +44,9 @@ abstract class _UserStore with Store {
       String token =
           await _repository.login(username, password, 'moodle_mobile_app');
       user = await _repository.getUserInfo(token, username);
-      print("here userstore");
+      if (kDebugMode) {
+        print("here userstore");
+      }
 
       if (rememberAccount) {
         // Save to shared references
@@ -63,7 +66,9 @@ abstract class _UserStore with Store {
 
       isLogin = true;
     } catch (e) {
-      print("Login error: " + e.toString());
+      if (kDebugMode) {
+        print("Login error: " + e.toString());
+      }
       isLoginFailed = true;
       isLogin = false;
     }
@@ -101,7 +106,9 @@ abstract class _UserStore with Store {
       isLogin = true;
       isLoading = false;
     } catch (e) {
-      print("Check is login error: " + e.toString());
+      if (kDebugMode) {
+        print("Check is login error: " + e.toString());
+      }
       isLogin = false;
       isLoading = false;
     }
@@ -119,11 +126,15 @@ abstract class _UserStore with Store {
       _repository.saveUsername(username);
 
       user = await _repository.getUserInfo(token, username);
-      print("here userstore");
+      if (kDebugMode) {
+        print("here userstore");
+      }
 
       isLogin = true;
     } catch (e) {
-      print("Set user error: " + e.toString());
+      if (kDebugMode) {
+        print("Set user error: " + e.toString());
+      }
       isLoginFailed = true;
       isLogin = false;
     }

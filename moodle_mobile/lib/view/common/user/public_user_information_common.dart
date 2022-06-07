@@ -78,11 +78,11 @@ class PublicInfomationCommonView extends StatelessWidget {
                 CircleImageView(
                   fit: BoxFit.cover,
                   imageUrl: imageUrl + "&token=" + userStore.user.token,
-                  placeholder: const Icon(
-                    Icons.person,
-                    size: 80,
-                    color: Colors.white,
-                  ),
+                  placeholder: const FittedBox(
+                      child: Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Icon(Icons.person),
+                      )),
                 ),
                 canEditAvatar
                     ? const Positioned(
