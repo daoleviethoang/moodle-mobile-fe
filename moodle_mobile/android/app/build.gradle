@@ -51,8 +51,8 @@ android {
         applicationId "vn.edu.hcmus.moodle_mobile"
         minSdkVersion 19
         targetSdkVersion 30
-        versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName
+        versionCode 2
+        versionName "2.0"
         multiDexEnabled true
     }
 
