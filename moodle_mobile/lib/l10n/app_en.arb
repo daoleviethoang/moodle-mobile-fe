@@ -3,8 +3,8 @@
     "description": "Unsupported module in course details.",
     "placeholders": {
       "modname": {
-        "type": "String",
-        "example": "folder"
+        "example": "folder",
+        "type": "String"
       }
     }
   },
@@ -94,7 +94,7 @@
   "minutes": "minutes",
   "moodle_settings": "Moodle settings",
   "my_courses": "My Courses",
-  "name": "name",
+  "name": "Name",
   "news": "News & Info",
   "not_graded": "Not graded",
   "not_participant_course": "You are not a participant of this course.",

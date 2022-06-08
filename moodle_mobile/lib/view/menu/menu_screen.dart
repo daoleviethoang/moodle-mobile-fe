@@ -137,19 +137,6 @@ class _MenuScreenState extends State<MenuScreen> {
                         ),
                         const SizedBox(height: 8),
                         m.MenuItem(
-                          title: AppLocalizations.of(context)!.message_settings,
-                          color: Colors.amber,
-                          icon: const Icon(Icons.messenger_rounded),
-                          fullWidth: true,
-                          onPressed: () {
-                            Navigator.of(context)
-                                .push(MaterialPageRoute(builder: (_) {
-                              return const MessagePreferenceScreen();
-                            }));
-                          },
-                        ),
-                        const SizedBox(height: 8),
-                        m.MenuItem(
                           title: AppLocalizations.of(context)!.moodle_settings,
                           color: Colors.blueGrey,
                           icon: const Icon(Icons.school_rounded),
@@ -204,18 +191,18 @@ class _MenuScreenState extends State<MenuScreen> {
                         const SizedBox(height: 8),
                         m.MenuItem(
                           title: AppLocalizations.of(context)!.report,
-                        color: Colors.red,
-                        icon: const Icon(Icons.campaign_rounded),
-                        fullWidth: true,
-                        onPressed: () => launchUrl(Uri.parse(
-                            'mailto:prj.covid@fit.hcmus.edu.vn'
-                            '?cc=18127044@student.hcmus.edu.vn,'
-                            '18127053@student.hcmus.edu.vn,'
-                            '18127097@student.hcmus.edu.vn,'
-                            '18127101@student.hcmus.edu.vn,'
-                            '18127177@student.hcmus.edu.vn'
-                            '&subject=${AppLocalizations.of(context)!.mail_subject}')),
-                      ),
+                          color: Colors.red,
+                          icon: const Icon(Icons.campaign_rounded),
+                          fullWidth: true,
+                          onPressed: () => launchUrl(Uri.parse(
+                              'mailto:prj.covid@fit.hcmus.edu.vn'
+                              '?cc=18127044@student.hcmus.edu.vn,'
+                              '18127053@student.hcmus.edu.vn,'
+                              '18127097@student.hcmus.edu.vn,'
+                              '18127101@student.hcmus.edu.vn,'
+                              '18127177@student.hcmus.edu.vn'
+                              '&subject=${AppLocalizations.of(context)!.mail_subject}')),
+                        ),
                         const SizedBox(height: 8),
                         m.MenuItem(
                           title: AppLocalizations.of(context)!.logout,

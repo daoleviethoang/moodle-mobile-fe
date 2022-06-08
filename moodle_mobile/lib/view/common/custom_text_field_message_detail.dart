@@ -26,16 +26,21 @@ class CustomTextFieldLeft extends StatelessWidget {
               ),
             ),
           ),
-          Container(
-            padding: const EdgeInsets.all(Dimens.default_padding_double),
-            child: Html(data: messageText),
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(
-                Radius.circular(Dimens.default_border_radius * 3),
-              ),
-              color: MoodleColors.brightGray,
-            ),
-          )
+          ConstrainedBox(
+              constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width * 2 / 3),
+              child: Container(
+                padding: const EdgeInsets.only(
+                    left: Dimens.default_padding,
+                    right: Dimens.default_padding),
+                child: Html(data: messageText),
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(Dimens.default_border_radius * 3),
+                  ),
+                  color: MoodleColors.brightGray,
+                ),
+              )),
         ],
       ),
     );
@@ -59,7 +64,8 @@ class CustomTextFieldRight extends StatelessWidget {
             constraints: BoxConstraints(
                 maxWidth: MediaQuery.of(context).size.width * 2 / 3),
             child: Container(
-              padding: const EdgeInsets.all(Dimens.default_padding_double),
+              padding: const EdgeInsets.only(
+                  left: Dimens.default_padding, right: Dimens.default_padding),
               child: Html(data: messageText),
               decoration: const BoxDecoration(
                 borderRadius: BorderRadius.all(

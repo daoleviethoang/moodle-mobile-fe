@@ -8,6 +8,7 @@ import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/calendar/calendar.dart';
 import 'package:moodle_mobile/view/home/home.dart';
 import 'package:moodle_mobile/view/menu/menu_screen.dart';
+import 'package:moodle_mobile/view/message_preference/index.dart';
 import 'package:moodle_mobile/view/notifications/notification_screen.dart';
 import 'package:moodle_mobile/view/message/message_screen.dart';
 import 'package:moodle_mobile/view/search_course/search_course.dart';
@@ -83,27 +84,45 @@ class _DirectScreenState extends State<DirectScreen> {
       title: Text(_widgetAppBarTitle.elementAt(_selectedIndex),
           textAlign: TextAlign.left, style: MoodleStyles.appBarTitleStyle),
       actions: <Widget>[
-        SizedBox(
-          width: 60,
-          height: 60,
-          child: IconButton(
-              iconSize: 28,
-              icon: const Icon(Icons.search),
-              color: MoodleColors.white,
-              onPressed: () async {
-                await showSearch<CourseOverview?>(
-                  context: context,
-                  delegate: CoursesSearch(token: _userStore.user.token),
-                );
-              }),
-        )
+        _selectedIndex == 0
+            ? SizedBox(
+                width: 60,
+                height: 60,
+                child: IconButton(
+                    iconSize: 28,
+                    icon: const Icon(Icons.search),
+                    color: MoodleColors.white,
+                    onPressed: () async {
+                      await showSearch<CourseOverview?>(
+                        context: context,
+                        delegate: CoursesSearch(token: _userStore.user.token),
+                      );
+                    }),
+              )
+            : Container(),
+        _selectedIndex == 2
+            ? SizedBox(
+                width: 60,
+                height: 60,
+                child: IconButton(
+                    iconSize: 28,
+                    icon: const Icon(Icons.settings),
+                    color: MoodleColors.white,
+                    onPressed: () async {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (_) {
+                        return const MessagePreferenceScreen();
+                      }));
+                    }),
+              )
+            : Container()
       ],
     );
   }
 
   BottomNavigationBar getBottomNavBarUI() {
     return BottomNavigationBar(
-      items:  <BottomNavigationBarItem>[
+      items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: const Icon(Icons.home_outlined),
           activeIcon: const Icon(Icons.home_rounded),

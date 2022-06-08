@@ -5,7 +5,7 @@ import 'package:moodle_mobile/data/network/constants/endpoints.dart';
 import 'package:moodle_mobile/data/network/dio_http.dart';
 
 class ForgotPassApi {
-  Future<bool> forgotPass(String token, String username) async {
+  Future<String> forgotPass(String username) async {
     try {
       Dio dio = Http().client;
 
@@ -17,10 +17,17 @@ class ForgotPassApi {
         }
       ]);
 
-      return true;
+      if (res.data is Map<String, dynamic> && res.data["error"] != null) {
+        throw res.data["error"];
+      }
+
+      if (res.data is List && res.data[0]["data"]["notice"] != null) {
+        return res.data[0]["data"]["notice"];
+      }
+
+      return "Email sended";
     } catch (e) {
-      print(e.toString());
-      return false;
+      rethrow;
     }
   }
 }
