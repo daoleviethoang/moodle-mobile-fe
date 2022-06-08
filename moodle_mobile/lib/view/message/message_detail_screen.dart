@@ -111,6 +111,14 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
                           side: const BorderSide(color: Colors.white),
                         ),
                         onPressed: () async {
+                          if (_textEditingController.text.isEmpty) {
+                            return;
+                          }
+                          if (_textEditingController.text.split(" ").length ==
+                              _textEditingController.text.length + 1) {
+                            _textEditingController.clear();
+                            return;
+                          }
                           await _conversationDetailStore.sentMessage(
                               _userStore.user.token,
                               widget.conversationId,
