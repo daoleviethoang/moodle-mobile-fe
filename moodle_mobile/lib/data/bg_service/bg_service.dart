@@ -11,6 +11,7 @@ import 'package:moodle_mobile/constants/vars.dart';
 import 'package:moodle_mobile/data/notifications/notification_helper.dart';
 import 'package:moodle_mobile/di/service_locator.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 import 'bg_events.dart';
@@ -23,7 +24,7 @@ class BgService {
     await BackgroundFetch.registerHeadlessTask(bgHeadlessTask);
   }
 
-  static void bgHeadlessTask(HeadlessTask task) async {
+  static bgHeadlessTask(HeadlessTask task) async {
     String taskId = task.taskId;
     bool isTimeout = task.timeout;
     if (isTimeout) {
@@ -32,7 +33,7 @@ class BgService {
     onFetch(taskId);
   }
 
-  static Future initPlatformState() async {
+  static initPlatformState() async {
     int status = await BackgroundFetch.configure(
       BackgroundFetchConfig(
         minimumFetchInterval: 1,
@@ -43,7 +44,9 @@ class BgService {
       onFetch,
       onTimeOut,
     );
+    if (kDebugMode) {
       print('[BackgroundFetch] configure success: $status');
+    }
     await BackgroundFetch.scheduleTask(TaskConfig(
       taskId: '${FetchMessage()}',
       delay: 5000,
@@ -56,9 +59,13 @@ class BgService {
   }
 
   static onFetch(String taskId) async {
+    if (kDebugMode) {
       print("[BackgroundFetch] Event received $taskId");
+    }
     if (taskId == '${FetchMessage()}') {
-      print('FETCH Message!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+      if (kDebugMode) {
+        print('FETCH Message!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+      }
     }
     BackgroundFetch.finish(taskId);
   }
