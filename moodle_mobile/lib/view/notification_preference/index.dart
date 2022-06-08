@@ -32,14 +32,8 @@ class _NotificationPreferenceScreenState
   void initState() {
     _userStore = GetIt.instance<UserStore>();
     super.initState();
-    setState(() {
-      isLoading = true;
-    });
     _initTabList();
     loadData();
-    setState(() {
-      isLoading = false;
-    });
   }
 
   @override
@@ -49,6 +43,9 @@ class _NotificationPreferenceScreenState
   }
 
   loadData() async {
+    setState(() {
+      isLoading = true;
+    });
     NotificationPreference? temp;
     try {
       temp = await NotificationPreferenceApi().getData(_userStore.user.token);
@@ -62,6 +59,9 @@ class _NotificationPreferenceScreenState
           content: Text(AppLocalizations.of(context)!.err_load_noti_settings));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   setAllNotification() async {
@@ -120,58 +120,54 @@ class _NotificationPreferenceScreenState
             ),
           ),
         ],
-        body: isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : SingleChildScrollView(
-                child: Container(
-                  margin: const EdgeInsets.only(left: 10, right: 10, top: 10),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                              width: 2, color: MoodleColors.grey_soft),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: SwitchListTile(
-                          title:
-                              Text(AppLocalizations.of(context)!.disable_noti),
-                          value: disableAll,
-                          onChanged: (value) async {
-                            await setAllNotification();
-                          },
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      TabBar(
+        body: SingleChildScrollView(
+          child: Container(
+            margin: const EdgeInsets.only(left: 10, right: 10, top: 10),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(width: 2, color: MoodleColors.grey_soft),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: SwitchListTile(
+                    title: Text(AppLocalizations.of(context)!.disable_noti),
+                    value: disableAll,
+                    onChanged: (value) async {
+                      await setAllNotification();
+                    },
+                  ),
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : TabBar(
                         isScrollable: true,
                         controller: _tabController,
                         tabs: _tabs,
                         onTap: (value) => setState(() => _index = value),
                       ),
-                      Divider(),
-                      _tabs.isNotEmpty
-                          ? Column(
-                              children: notificationPreference?.components
-                                      ?.map((e) => NotificationPreferenceTile(
-                                          preferenceName:
-                                              notificationPreference!
-                                                  .processors![_index]
-                                                  .displayname!,
-                                          disable: disableAll,
-                                          components: e))
-                                      .toList() ??
-                                  [],
-                            )
-                          : Container(),
-                    ],
-                  ),
-                ),
-              ),
+                Divider(),
+                _tabs.isNotEmpty
+                    ? Column(
+                        children: notificationPreference?.components
+                                ?.map((e) => NotificationPreferenceTile(
+                                    preferenceName: notificationPreference!
+                                        .processors![_index].displayname!,
+                                    disable: disableAll,
+                                    components: e))
+                                .toList() ??
+                            [],
+                      )
+                    : Container(),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
