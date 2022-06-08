@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:moodle_mobile/data/network/constants/endpoints.dart';
 import 'package:moodle_mobile/data/network/constants/wsfunction_constants.dart';
 import 'package:moodle_mobile/data/network/dio_http.dart';
@@ -63,7 +64,9 @@ class CourseService {
         throw Exception(jsonEncode(warnings));
       }
     } catch (e) {
-      print('$e');
+      if (kDebugMode) {
+        print('$e');
+      }
       rethrow;
     }
   }
@@ -84,7 +87,9 @@ class CourseService {
         throw Exception(jsonEncode(warnings));
       }
     } catch (e) {
-      print('$e');
+      if (kDebugMode) {
+        print('$e');
+      }
       rethrow;
     }
   }
@@ -101,7 +106,9 @@ class CourseService {
         'preferences[0][value]': 1
       });
     } catch (e) {
-      print('$e');
+      if (kDebugMode) {
+        print('$e');
+      }
       rethrow;
     }
   }
@@ -117,7 +124,9 @@ class CourseService {
             'block_myoverview_hidden_course_' + id.toString(),
       });
     } catch (e) {
-      print('$e');
+      if (kDebugMode) {
+        print('$e');
+      }
       rethrow;
     }
   }

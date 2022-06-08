@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/constants/colors.dart';
@@ -39,8 +40,9 @@ class _ListUserLoginScreenState extends State<ListUserLoginScreen> {
         users = temp;
       });
     } catch (e) {
-      print(e.toString());
-      print("error sql lite");
+      if (kDebugMode) {
+        print("error sql lite: $e");
+      }
     }
     if (users.isEmpty) {
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) {
@@ -62,7 +64,9 @@ class _ListUserLoginScreenState extends State<ListUserLoginScreen> {
         users = temp;
       });
     } catch (e) {
-      print("error sql lite");
+      if (kDebugMode) {
+        print("error sql lite: $e");
+      }
     }
     setState(() {
       isLoading = false;

@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:get_it/get_it.dart';
@@ -49,7 +50,9 @@ class _QuizDoScreenState extends State<QuizDoScreen> {
             list[index].answers, list[index].values);
         return true;
       } catch (e) {
-        print("Can't save quiz" + list[index].values.toString());
+        if (kDebugMode) {
+          print("Can't save quiz: ${list[index].values}");
+        }
       }
     }
     return false;
@@ -62,7 +65,9 @@ class _QuizDoScreenState extends State<QuizDoScreen> {
         widget.attemptId,
       );
     } catch (e) {
-      print("Can't end quiz");
+      if (kDebugMode) {
+        print("Can't end quiz");
+      }
     }
   }
 

@@ -60,7 +60,6 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         automaticallyImplyLeading: true,
         leading: const BackButton(color: Colors.white),
@@ -99,7 +98,6 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(Dimens.default_padding),
                   child: Row(
-                    mainAxisSize: MainAxisSize.max,
                     children: [
                       Expanded(
                           child: CustomTextFieldWidget(
