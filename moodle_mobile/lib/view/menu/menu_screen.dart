@@ -231,7 +231,7 @@ class _MenuScreenState extends State<MenuScreen> {
   }
 }
 
-class ProfileHeader extends StatelessWidget {
+class ProfileHeader extends StatefulWidget {
   const ProfileHeader({
     Key? key,
     required UserStore userStore,
@@ -240,6 +240,19 @@ class ProfileHeader extends StatelessWidget {
 
   final UserStore _userStore;
 
+  @override
+  State<ProfileHeader> createState() => _ProfileHeaderState();
+}
+
+class _ProfileHeaderState extends State<ProfileHeader> {
+  late UserStore _userStore;
+
+  @override
+  initState() {
+    super.initState();
+    _userStore = widget._userStore;
+  }
+  
   @override
   Widget build(BuildContext context) {
     var avatar = "";
@@ -256,7 +269,9 @@ class ProfileHeader extends StatelessWidget {
             userStore: _userStore,
           ),
         ),
-      ),
+      ).then((value) {
+        setState(() {});
+      }),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: Row(

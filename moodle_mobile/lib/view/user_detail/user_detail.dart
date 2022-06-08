@@ -87,7 +87,7 @@ class _UserDetailsScreen extends State<UserDetailsScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    PublicInfomationCommonView(
+                    PublicInformationCommonView(
                       imageUrl: avatar,
                       name: name,
                       userStore: userStore,

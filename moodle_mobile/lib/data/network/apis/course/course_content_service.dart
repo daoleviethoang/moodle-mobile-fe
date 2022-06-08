@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:moodle_mobile/data/network/constants/endpoints.dart';
 import 'package:moodle_mobile/data/network/constants/wsfunction_constants.dart';
 import 'package:moodle_mobile/data/network/dio_http.dart';
@@ -26,7 +27,9 @@ class CourseContentService {
 
       return list.map((e) => CourseContent.fromJson(e)).toList();
     } catch (e) {
-      print('$e');
+      if (kDebugMode) {
+        print('$e');
+      }
       rethrow;
     }
   }

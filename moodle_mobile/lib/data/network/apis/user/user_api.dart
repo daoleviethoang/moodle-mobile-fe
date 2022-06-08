@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:moodle_mobile/data/network/constants/endpoints.dart';
 import 'package:moodle_mobile/data/network/constants/wsfunction_constants.dart';
 import 'package:moodle_mobile/data/network/dio_client.dart';
@@ -32,6 +33,9 @@ class UserApi {
 
       return res.data['token'];
     } catch (e) {
+      if (kDebugMode) {
+        print('$e');
+      }
       rethrow;
     }
   }
@@ -60,7 +64,9 @@ class UserApi {
           city: res.data[0]['city'],
           country: res.data[0]['country']);
     } catch (e) {
-      print("$e");
+      if (kDebugMode) {
+        print('$e');
+      }
       rethrow;
     }
   }
@@ -83,7 +89,9 @@ class UserApi {
       }
       return list.map((e) => UserOverview.fromJson(e)).toList();
     } catch (e) {
-      print("$e");
+      if (kDebugMode) {
+        print('$e');
+      }
       rethrow;
     }
   }
@@ -105,6 +113,9 @@ class UserApi {
 
       return true;
     } catch (e) {
+      if (kDebugMode) {
+        print('$e');
+      }
       return false;
     }
   }

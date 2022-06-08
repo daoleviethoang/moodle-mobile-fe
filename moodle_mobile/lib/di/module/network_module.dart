@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:moodle_mobile/data/network/constants/endpoints.dart';
 import 'package:moodle_mobile/data/shared_reference/shared_preference_helper.dart';
 
@@ -30,7 +31,9 @@ abstract class NetworkModule {
             if (token != null) {
               options.headers.putIfAbsent('Authorization', () => token);
             } else {
-              print('Auth token is null');
+              if (kDebugMode) {
+                print('Auth token is null');
+              }
             }
 
             return handler.next(options);
