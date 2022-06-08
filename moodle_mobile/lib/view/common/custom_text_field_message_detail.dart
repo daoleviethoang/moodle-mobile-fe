@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:moodle_mobile/view/common/content_item.dart';
 
 class CustomTextFieldLeft extends StatelessWidget {
   const CustomTextFieldLeft({Key? key, required this.messageText})
@@ -9,10 +10,6 @@ class CustomTextFieldLeft extends StatelessWidget {
   final String messageText;
   @override
   Widget build(BuildContext context) {
-    String messageContent = "";
-    if (messageText != null) {
-      messageContent = HtmlParser.parseHTML(messageText).documentElement!.text;
-    }
     return Padding(
       padding: const EdgeInsets.all(Dimens.default_padding),
       child: Row(
@@ -31,10 +28,7 @@ class CustomTextFieldLeft extends StatelessWidget {
           ),
           Container(
             padding: const EdgeInsets.all(Dimens.default_padding_double),
-            child: Text(
-              messageContent,
-              style: TextStyle(fontSize: 16),
-            ),
+            child: Html(data: messageText),
             decoration: const BoxDecoration(
               borderRadius: BorderRadius.all(
                 Radius.circular(Dimens.default_border_radius * 3),
@@ -55,10 +49,6 @@ class CustomTextFieldRight extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String messageContent = "";
-    if (messageText != null) {
-      messageContent = HtmlParser.parseHTML(messageText).documentElement!.text;
-    }
     return Padding(
       padding: const EdgeInsets.all(Dimens.default_padding),
       child: Row(
@@ -70,10 +60,7 @@ class CustomTextFieldRight extends StatelessWidget {
                 maxWidth: MediaQuery.of(context).size.width * 2 / 3),
             child: Container(
               padding: const EdgeInsets.all(Dimens.default_padding_double),
-              child: Text(
-                messageContent,
-                style: TextStyle(fontSize: 16, color: Colors.white),
-              ),
+              child: Html(data: messageText),
               decoration: const BoxDecoration(
                 borderRadius: BorderRadius.all(
                   Radius.circular(Dimens.default_border_radius * 3),
