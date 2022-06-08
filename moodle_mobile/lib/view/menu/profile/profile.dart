@@ -50,7 +50,7 @@ class ProfileScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              PublicInfomationCommonView(
+              PublicInformationCommonView(
                 imageUrl: avatar,
                 name: userStore.user.fullname,
                 userStore: userStore,

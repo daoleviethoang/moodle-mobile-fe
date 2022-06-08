@@ -11,13 +11,13 @@ import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/image_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class PublicInfomationCommonView extends StatefulWidget {
+class PublicInformationCommonView extends StatefulWidget {
   final String imageUrl;
   final String name;
   final UserStore userStore;
   final bool canEditAvatar;
 
-  const PublicInfomationCommonView(
+  const PublicInformationCommonView(
       {Key? key,
       required this.imageUrl,
       required this.name,
@@ -26,10 +26,10 @@ class PublicInfomationCommonView extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<PublicInfomationCommonView> createState() => _PublicInfomationCommonViewState();
+  State<PublicInformationCommonView> createState() => _PublicInformationCommonViewState();
 }
 
-class _PublicInfomationCommonViewState extends State<PublicInfomationCommonView> {
+class _PublicInformationCommonViewState extends State<PublicInformationCommonView> {
   late String _imageUrl;
   late String _name;
   late UserStore _userStore;
