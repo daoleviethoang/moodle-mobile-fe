@@ -11,13 +11,13 @@ import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/image_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class PublicInfomationCommonView extends StatelessWidget {
+class PublicInformationCommonView extends StatefulWidget {
   final String imageUrl;
   final String name;
   final UserStore userStore;
   final bool canEditAvatar;
 
-  const PublicInfomationCommonView(
+  const PublicInformationCommonView(
       {Key? key,
       required this.imageUrl,
       required this.name,
@@ -25,7 +25,26 @@ class PublicInfomationCommonView extends StatelessWidget {
       required this.canEditAvatar})
       : super(key: key);
 
-  pickAndUploadImage(BuildContext context) async {
+  @override
+  State<PublicInformationCommonView> createState() => _PublicInformationCommonViewState();
+}
+
+class _PublicInformationCommonViewState extends State<PublicInformationCommonView> {
+  late String _imageUrl;
+  late String _name;
+  late UserStore _userStore;
+  late bool _canEditAvatar;
+  
+  @override
+  void initState() {
+    super.initState();
+    _imageUrl = widget.imageUrl;
+    _name = widget.name;
+    _userStore = widget.userStore;
+    _canEditAvatar = widget.canEditAvatar;
+  }
+  
+  Future<String?> pickAndUploadImage(BuildContext context) async {
     try {
       FilePickerResult? result =
           await FilePicker.platform.pickFiles(type: FileType.image);
@@ -33,18 +52,18 @@ class PublicInfomationCommonView extends StatelessWidget {
         PlatformFile file = result.files.first;
         if (file.path != null) {
           int itemId = await FileApi()
-              .uploadFile(userStore.user.token, file.path!, null, null);
+              .uploadFile(_userStore.user.token, file.path!, null, null);
           bool check = await UserApi(DioClient(Dio()))
-              .uploadAvatar(userStore.user.token, itemId);
+              .uploadAvatar(_userStore.user.token, itemId);
           if (check) {
-            await userStore.reGetUserInfo(
-                userStore.user.token, userStore.user.username);
+            await _userStore.reGetUserInfo(
+                _userStore.user.token, _userStore.user.username);
             SQLHelper.updateUserPhoto(UserLogin(
-                token: userStore.user.token,
-                baseUrl: userStore.user.baseUrl,
-                username: userStore.user.username,
-                photo: userStore.user.photo));
-            Navigator.pop(context);
+                token: _userStore.user.token,
+                baseUrl: _userStore.user.baseUrl,
+                username: _userStore.user.username,
+                photo: _userStore.user.photo));
+            return _userStore.user.photo;
           } else {
             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                 content: Text("Upload avatar fail"),
@@ -57,6 +76,7 @@ class PublicInfomationCommonView extends StatelessWidget {
         SnackBar(content: Text(error.toString()), backgroundColor: Colors.red),
       );
     }
+    return null;
   }
 
   @override
@@ -67,9 +87,14 @@ class PublicInfomationCommonView extends StatelessWidget {
           width: 159.0,
           height: 159.0,
           child: InkWell(
-            onTap: canEditAvatar
+            onTap: _canEditAvatar
                 ? () async {
-                    await pickAndUploadImage(context);
+                    final newUrl = await pickAndUploadImage(context);
+                    if (newUrl != null) {
+                      setState(() {
+                        _imageUrl = newUrl;
+                      });
+                    }
                   }
                 : null,
             child: Stack(
@@ -77,14 +102,14 @@ class PublicInfomationCommonView extends StatelessWidget {
               children: [
                 CircleImageView(
                   fit: BoxFit.cover,
-                  imageUrl: imageUrl + "&token=" + userStore.user.token,
+                  imageUrl: _imageUrl + "&token=" + _userStore.user.token,
                   placeholder: const FittedBox(
                       child: Padding(
                         padding: EdgeInsets.all(8),
                         child: Icon(Icons.person),
                       )),
                 ),
-                canEditAvatar
+                _canEditAvatar
                     ? const Positioned(
                         bottom: 10,
                         right: 10,
@@ -105,7 +130,7 @@ class PublicInfomationCommonView extends StatelessWidget {
           height: 12,
         ),
         Text(
-          name,
+          _name,
           style: const TextStyle(
               fontSize: 24.0,
               color: MoodleColors.black,

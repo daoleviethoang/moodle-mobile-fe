@@ -14,9 +14,9 @@ import 'package:moodle_mobile/view/common/user/user_detail_common.dart';
 // }
 
 class ProfileScreen extends StatelessWidget {
-  UserStore userStore;
+  final UserStore userStore;
 
-  ProfileScreen({Key? key, required this.userStore}) : super(key: key);
+  const ProfileScreen({Key? key, required this.userStore}) : super(key: key);
 
   // int _selectedIndex = 0;
 
@@ -35,12 +35,12 @@ class ProfileScreen extends StatelessWidget {
       avatar = userStore.user.photo! + "?token=" + userStore.user.token;
     }
     return Scaffold(
-      backgroundColor: MoodleColors.white,
       appBar: AppBar(
-        backgroundColor: MoodleColors.white,
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        foregroundColor: Theme.of(context).colorScheme.onSurface,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
@@ -50,7 +50,7 @@ class ProfileScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              PublicInfomationCommonView(
+              PublicInformationCommonView(
                 imageUrl: avatar,
                 name: userStore.user.fullname,
                 userStore: userStore,

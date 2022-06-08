@@ -75,7 +75,7 @@ class _UserDetailStudentScreen extends State<UserDetailStudentScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    PublicInfomationCommonView(
+                    PublicInformationCommonView(
                       imageUrl: avatar,
                       name: name,
                       userStore: userStore,
