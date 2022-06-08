@@ -87,6 +87,7 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
                     contentPadding:
                         EdgeInsets.all(Dimens.default_padding_double),
                     hintText: "BaseUrl",
+                    labelText: "BaseUrl",
                     prefixIcon: Icon(Icons.language),
                     hintStyle: TextStyle(fontSize: 16),
                     border: OutlineInputBorder(
