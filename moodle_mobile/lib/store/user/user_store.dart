@@ -67,7 +67,7 @@ abstract class _UserStore with Store {
       isLogin = true;
     } catch (e) {
       if (kDebugMode) {
-        print("Login error: " + e.toString());
+        print("Login error: $e");
       }
       isLoginFailed = true;
       isLogin = false;
@@ -77,10 +77,14 @@ abstract class _UserStore with Store {
   @action
   Future reGetUserInfo(String token, String username) async {
     try {
-      print("setUserStore");
+      if (kDebugMode) {
+        print("setUserStore");
+      }
       user = await _repository.getUserInfo(token, username);
     } catch (e) {
-      print("re get user info error");
+      if (kDebugMode) {
+        print("re get user info error: $e");
+      }
     }
   }
 
@@ -107,7 +111,7 @@ abstract class _UserStore with Store {
       isLoading = false;
     } catch (e) {
       if (kDebugMode) {
-        print("Check is login error: " + e.toString());
+        print("Check is login error: $e");
       }
       isLogin = false;
       isLoading = false;
@@ -133,7 +137,7 @@ abstract class _UserStore with Store {
       isLogin = true;
     } catch (e) {
       if (kDebugMode) {
-        print("Set user error: " + e.toString());
+        print("Set user error: $e");
       }
       isLoginFailed = true;
       isLogin = false;

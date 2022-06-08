@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:html/parser.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -87,7 +88,9 @@ class DocumentItem extends StatelessWidget {
             mode: LaunchMode.externalApplication,
           );
         } else {
-          print("URL can't be launched.");
+          if (kDebugMode) {
+            print("URL can't be launched.");
+          }
         }
       },
     );
@@ -151,7 +154,9 @@ class UrlItem extends StatelessWidget {
             mode: LaunchMode.externalApplication,
           );
         } else {
-          print("URL can't be launched.");
+          if (kDebugMode) {
+            print("URL can't be launched.");
+          }
         }
       },
     );

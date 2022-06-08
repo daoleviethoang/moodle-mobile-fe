@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:mobx/mobx.dart';
 import 'package:moodle_mobile/data/repository.dart';
 import 'package:moodle_mobile/models/conversation/conversation.dart';
@@ -57,7 +58,9 @@ abstract class _ConversationStore with Store {
       isLoading = false;
     } catch (e) {
       // In loi neu trong qua trinh xu ly co loi xay ra
-      print("Get conversations error: " + e.toString());
+      if (kDebugMode) {
+        print("Get conversations error: $e");
+      }
     }
   }
 
@@ -83,7 +86,9 @@ abstract class _ConversationStore with Store {
         }
       }
     } catch (e) {
-      print("Mute conversation error: " + e.toString());
+      if (kDebugMode) {
+        print("Mute conversation error: $e");
+      }
     }
   }
 
@@ -104,7 +109,9 @@ abstract class _ConversationStore with Store {
         }
       }
     } catch (e) {
-      print("Mute conversation error: " + e.toString());
+      if (kDebugMode) {
+        print("Mute conversation error: $e");
+      }
     }
   }
 
@@ -119,7 +126,9 @@ abstract class _ConversationStore with Store {
         listConversation.removeWhere((element) => element.id == conversationId);
       }
     } catch (e) {
-      print("Delete conversation error: " + e.toString());
+      if (kDebugMode) {
+        print("Delete conversation error: $e");
+      }
     }
   }
 }

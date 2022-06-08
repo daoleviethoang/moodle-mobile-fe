@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:moodle_mobile/view/common/custom_button_short.dart';
 import 'package:moodle_mobile/view/common/message/contact_list.dart';
@@ -68,6 +69,8 @@ class _MessageScreenState extends State<MessageScreen> {
   }
 
   void onSearchContact() {
-    print("Search is on");
+    if (kDebugMode) {
+      print("Search is on");
+    }
   }
 }

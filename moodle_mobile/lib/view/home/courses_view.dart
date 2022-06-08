@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/data/network/apis/contact/contact_service.dart';
@@ -92,7 +93,9 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
           ],
         ));
       } else {
-        print("zo5");
+        if (kDebugMode) {
+          print("zo5");
+        }
         coursesOverview = newCourseOverview;
       }
     }

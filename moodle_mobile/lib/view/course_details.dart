@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/constants/colors.dart';
@@ -243,7 +244,9 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
               }
             } catch (e) {
               // FIXME: Assignment text is [] instead of string
-              print('$m');
+              if (kDebugMode) {
+                print('$m');
+              }
               return ErrorCard(text: '$e');
             }
           }).toList(),

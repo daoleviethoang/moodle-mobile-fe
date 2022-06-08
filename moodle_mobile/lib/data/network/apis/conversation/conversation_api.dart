@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:moodle_mobile/data/network/constants/endpoints.dart';
 import 'package:moodle_mobile/data/network/constants/wsfunction_constants.dart';
 import 'package:moodle_mobile/data/network/dio_client.dart';
@@ -70,6 +71,9 @@ class ConversationApi {
 
       return listConversation;
     } catch (e) {
+      if (kDebugMode) {
+        print('$e');
+      }
       rethrow;
     }
   }
@@ -85,12 +89,16 @@ class ConversationApi {
         'conversationids[0]': conversationId,
         'userid': userId,
       });
-      print("as as saaasss");
-      print(res);
+      if (kDebugMode) {
+        print("as as saaasss");
+        print(res);
+      }
 
       return res.data;
     } catch (e) {
-      print("API error: " + e.toString());
+      if (kDebugMode) {
+        print("API error: $e");
+      }
       rethrow;
     }
   }
@@ -109,7 +117,9 @@ class ConversationApi {
 
       return res.data;
     } catch (e) {
-      print("API error: " + e.toString());
+      if (kDebugMode) {
+        print("API error: $e");
+      }
       rethrow;
     }
   }
@@ -128,7 +138,9 @@ class ConversationApi {
 
       return res.data;
     } catch (e) {
-      print("API error: " + e.toString());
+      if (kDebugMode) {
+        print("API error: $e");
+      }
       rethrow;
     }
   }
@@ -158,7 +170,9 @@ class ConversationApi {
 
       return listMessageDetail;
     } catch (e) {
-      print("API error: " + e.toString());
+      if (kDebugMode) {
+        print("API error: $e");
+      }
       rethrow;
     }
   }
@@ -182,7 +196,9 @@ class ConversationApi {
           text: text,
           timeCreated: res.data[0]['timecreated']);
     } catch (e) {
-      print("Sent message Api error" + e.toString());
+      if (kDebugMode) {
+        print("Sent message Api error: $e");
+      }
       rethrow;
     }
   }

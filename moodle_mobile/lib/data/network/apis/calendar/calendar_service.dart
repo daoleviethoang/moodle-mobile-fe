@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:moodle_mobile/data/network/constants/endpoints.dart';
 import 'package:moodle_mobile/data/network/constants/wsfunction_constants.dart';
@@ -68,7 +69,9 @@ class CalendarService {
       }
       return events;
     } catch (e) {
-      print('$e');
+      if (kDebugMode) {
+        print('$e');
+      }
       rethrow;
     }
   }

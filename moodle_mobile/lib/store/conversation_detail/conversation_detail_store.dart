@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:mobx/mobx.dart';
 import 'package:moodle_mobile/data/repository.dart';
 import 'package:moodle_mobile/models/conversation/conversation_message.dart';
@@ -21,9 +22,13 @@ abstract class _ConversationDetailStore with Store {
           token, userId, conversationId, 0, 50));
       listMessages = ObservableList.of(listMessages.reversed);
 
-      print("Get list message success: " + listMessages.length.toString());
+      if (kDebugMode) {
+        print("Get list message success: ${listMessages.length}");
+      }
     } catch (e) {
-      print("Get message error: " + e.toString());
+      if (kDebugMode) {
+        print("Get message error: $e");
+      }
     }
   }
 
@@ -33,7 +38,9 @@ abstract class _ConversationDetailStore with Store {
       ConversationMessageModel message =
           await _repository.sentMessage(token, conversationId, text);
     } catch (e) {
-      print("Sent message error" + e.toString());
+      if (kDebugMode) {
+        print("Sent message error: $e");
+      }
     }
   }
 }
