@@ -7,12 +7,14 @@ import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/data/network/apis/calendar/calendar_service.dart';
+import 'package:moodle_mobile/data/network/apis/contact/contact_service.dart';
 import 'package:moodle_mobile/data/network/apis/course/course_content_service.dart';
 import 'package:moodle_mobile/data/network/apis/course/course_detail_service.dart';
 import 'package:moodle_mobile/data/network/apis/course/course_service.dart';
 import 'package:moodle_mobile/data/network/apis/lti/lti_service.dart';
 import 'package:moodle_mobile/data/network/apis/module/module_service.dart';
 import 'package:moodle_mobile/models/calendar/event.dart';
+import 'package:moodle_mobile/models/contact/contact.dart';
 import 'package:moodle_mobile/models/course/course_content.dart';
 import 'package:moodle_mobile/models/course/course_detail.dart';
 import 'package:moodle_mobile/models/lti/lti.dart';
@@ -57,11 +59,24 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   List<CourseContent> _content = [];
   List<Event> _events = [];
 
+  bool isTeacher = false;
+
   @override
   void initState() {
     super.initState();
     _courseId = widget.courseId;
     _userStore = GetIt.instance<UserStore>();
+    checkIsTeacher();
+  }
+
+  checkIsTeacher() async {
+    List<Contact> contacts = await ContactService()
+        .getContacts(_userStore.user.token, widget.courseId);
+    if (contacts.any((element) => element.id == _userStore.user.id)) {
+      setState(() {
+        isTeacher = true;
+      });
+    }
   }
 
   // region BODY
