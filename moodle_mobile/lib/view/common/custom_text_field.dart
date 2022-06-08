@@ -26,6 +26,7 @@ class CustomTextFieldWidget extends StatelessWidget {
         contentPadding: EdgeInsets.all(Dimens.default_padding_double),
         prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
         hintText: hintText,
+        labelText: hintText,
         hintStyle: const TextStyle(fontSize: 16),
         border: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(borderRadius))),
