@@ -32,7 +32,6 @@ abstract class _ConversationDetailStore with Store {
     try {
       ConversationMessageModel message =
           await _repository.sentMessage(token, conversationId, text);
-      listMessages.insert(0, message);
     } catch (e) {
       print("Sent message error" + e.toString());
     }
