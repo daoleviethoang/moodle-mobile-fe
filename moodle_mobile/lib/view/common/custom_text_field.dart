@@ -8,6 +8,7 @@ class CustomTextFieldWidget extends StatelessWidget {
   final int? maxLines;
   final double borderRadius;
   final IconData? prefixIcon; // ? accept null value
+  final bool haveLabel;
 
   const CustomTextFieldWidget(
       {Key? key,
@@ -15,6 +16,7 @@ class CustomTextFieldWidget extends StatelessWidget {
       this.hidePass = false,
       this.prefixIcon,
       this.maxLines = 1,
+      this.haveLabel = true,
       required this.controller,
       required this.borderRadius})
       : super(key: key);
@@ -29,7 +31,7 @@ class CustomTextFieldWidget extends StatelessWidget {
         contentPadding: EdgeInsets.all(Dimens.default_padding_double),
         prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
         hintText: hintText,
-        labelText: hintText,
+        labelText: haveLabel ? hintText : null,
         isDense: true,
         hintStyle: const TextStyle(fontSize: 16),
         border: OutlineInputBorder(

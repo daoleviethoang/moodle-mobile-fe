@@ -108,6 +108,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
                         hintText: AppLocalizations.of(context)!.enter_message,
                         borderRadius: Dimens.default_border_radius * 2,
                         maxLines: null,
+                        haveLabel: false,
                       )),
                       OutlinedButton(
                         style: OutlinedButton.styleFrom(
