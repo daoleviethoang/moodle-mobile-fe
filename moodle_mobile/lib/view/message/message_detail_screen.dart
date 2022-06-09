@@ -60,6 +60,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         automaticallyImplyLeading: true,
         leading: const BackButton(color: Colors.white),
@@ -94,7 +95,9 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
                   },
                 ),
               ),
-              Expanded(
+              ConstrainedBox(
+                constraints:
+                    const BoxConstraints(minHeight: 70, maxHeight: 150),
                 child: Padding(
                   padding: const EdgeInsets.all(Dimens.default_padding),
                   child: Row(
@@ -104,6 +107,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
                         controller: _textEditingController,
                         hintText: AppLocalizations.of(context)!.enter_message,
                         borderRadius: Dimens.default_border_radius * 2,
+                        maxLines: null,
                       )),
                       OutlinedButton(
                         style: OutlinedButton.styleFrom(

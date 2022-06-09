@@ -66,7 +66,9 @@ class CustomTextFieldRight extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.only(
                   left: Dimens.default_padding, right: Dimens.default_padding),
-              child: Html(data: messageText),
+              child: Html(
+                  data: messageText,
+                  style: {"p": Style(color: MoodleColors.white)}),
               decoration: const BoxDecoration(
                 borderRadius: BorderRadius.all(
                   Radius.circular(Dimens.default_border_radius * 3),
