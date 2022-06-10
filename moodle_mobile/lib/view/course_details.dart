@@ -21,6 +21,7 @@ import 'package:moodle_mobile/models/course/course_detail.dart';
 import 'package:moodle_mobile/models/lti/lti.dart';
 import 'package:moodle_mobile/models/module/module.dart';
 import 'package:moodle_mobile/models/module/module_course.dart';
+import 'package:moodle_mobile/view/activity/activity_screen.dart';
 import 'package:moodle_mobile/view/common/content_item.dart';
 import 'package:moodle_mobile/view/common/data_card.dart';
 import 'package:moodle_mobile/view/enrol/enrol.dart';
@@ -48,6 +49,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   var _index = 0;
   final _body = <Widget>[];
   Widget _homeTab = Container();
+  Widget _activityTab = Container();
   Widget _announcementsTab = Container();
   Widget _discussionsTab = Container();
   Widget _eventsTab = Container();
@@ -91,6 +93,15 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     } finally {
       if (_homeTab is! Container) {
         _body.add(_homeTab);
+      }
+    }
+    try {
+      _initActivityTab();
+    } catch (e) {
+      _activityTab = ErrorCard(text: '$e');
+    } finally {
+      if (_activityTab is! Container) {
+        _body.add(_activityTab);
       }
     }
     try {
@@ -145,6 +156,9 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     _tabs.clear();
     if (_homeTab is! Container) {
       _tabs.add(Tab(child: Text(AppLocalizations.of(context)!.home)));
+    }
+    if (_activityTab is! Container) {
+      _tabs.add(Tab(child: Text(AppLocalizations.of(context)!.activity)));
     }
     if (_announcementsTab is! Container) {
       _tabs.add(Tab(child: Text(AppLocalizations.of(context)!.announcement)));
@@ -268,6 +282,31 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
         );
       }).toList(),
     );
+  }
+
+  void _initActivityTab() {
+    var activityList = _content.where((element) => element.name == "Activity");
+    if (activityList.isNotEmpty) {
+      int index = _content.indexOf(activityList.first);
+      _activityTab = ActivityScreen(
+        sectionIndex: index,
+        isTeacher: isTeacher,
+        content: _content[index],
+        reGetContent: reGetContent,
+      );
+    } else {
+      // add section
+
+      reGetContent(false);
+      // add tos activity screen
+      int index = _content.indexOf(activityList.first);
+      _activityTab = ActivityScreen(
+        sectionIndex: index,
+        isTeacher: isTeacher,
+        content: _content[index],
+        reGetContent: reGetContent,
+      );
+    }
   }
 
   void _initAnnouncementsTab() {
@@ -409,6 +448,34 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
         _courseId,
       );
       _initBody();
+    } catch (e) {
+      if (e.toString() == "errorcoursecontextnotvalid") {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) {
+          return EnrolScreen(
+            courseId: widget.courseId,
+          );
+        }));
+      }
+      rethrow;
+    }
+  }
+
+  Future reGetContent(bool isSetState) async {
+    try {
+      if (isSetState) {
+        var contentResponse = await CourseContentService().getCourseContent(
+          _userStore.user.token,
+          _courseId,
+        );
+        setState(() {
+          _content = contentResponse;
+        });
+      } else {
+        _content = await CourseContentService().getCourseContent(
+          _userStore.user.token,
+          _courseId,
+        );
+      }
     } catch (e) {
       if (e.toString() == "errorcoursecontextnotvalid") {
         Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) {
