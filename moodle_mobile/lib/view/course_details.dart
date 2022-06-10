@@ -299,7 +299,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
 
       reGetContent(false);
       // add tos activity screen
-      int index = _content.indexOf(activityList.first);
+      int index = 0;
+      // _content.indexOf(activityList.first);
       _activityTab = ActivityScreen(
         sectionIndex: index,
         isTeacher: isTeacher,

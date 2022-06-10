@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/models/course/course_content.dart';
 import 'package:moodle_mobile/view/activity/album_tile.dart';
 
@@ -29,9 +30,33 @@ class _ActivityScreenState extends State<ActivityScreen> {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Padding(
           padding: EdgeInsets.only(top: 20, bottom: 20),
-          child: Text("Classroom Acitivities ")),
+          child: Text(
+            "Classroom Acitivities",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: MoodleColors.black80,
+            ),
+            textScaleFactor: 1.5,
+          )),
       Column(
-        children: albums.map((e) => const AlbumTile()).toList(),
+        children: albums
+            .map((e) => const AlbumTile(
+                  images: [
+                    "https://miro.medium.com/max/1400/1*PblQquEXxZ6U1BmBNlEprA.jpeg",
+                    "https://miro.medium.com/max/1400/1*PblQquEXxZ6U1BmBNlEprA.jpeg",
+                    "https://miro.medium.com/max/1400/1*PblQquEXxZ6U1BmBNlEprA.jpeg",
+                    "https://miro.medium.com/max/1400/1*PblQquEXxZ6U1BmBNlEprA.jpeg",
+                    "https://miro.medium.com/max/1400/1*PblQquEXxZ6U1BmBNlEprA.jpeg",
+                    "https://miro.medium.com/max/1400/1*PblQquEXxZ6U1BmBNlEprA.jpeg",
+                    "https://miro.medium.com/max/1400/1*PblQquEXxZ6U1BmBNlEprA.jpeg",
+                    "https://miro.medium.com/max/1400/1*PblQquEXxZ6U1BmBNlEprA.jpeg",
+                    "https://miro.medium.com/max/1400/1*PblQquEXxZ6U1BmBNlEprA.jpeg",
+                    "https://miro.medium.com/max/1400/1*PblQquEXxZ6U1BmBNlEprA.jpeg",
+                    "https://miro.medium.com/max/1400/1*PblQquEXxZ6U1BmBNlEprA.jpeg",
+                    "https://miro.medium.com/max/1400/1*PblQquEXxZ6U1BmBNlEprA.jpeg",
+                  ],
+                ))
+            .toList(),
       )
     ]);
   }
