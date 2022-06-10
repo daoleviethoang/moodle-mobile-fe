@@ -110,5 +110,11 @@
   "unfinished": "Chưa hoàn thành",
   "upcoming_events": "Sự kiện sắp tới",
   "user_details": "Thông tin chi tiết",
-  "view_file_submission": "Xem file đã nộp"
+  "view_file_submission": "Xem file đã nộp",
+  "forum_by": "bởi ",
+  "reply_post":"Trả lời",
+  "forum_name": "Tên ",
+  "forum_subscrible": "Đăng ký",
+  "forum_replies": " phản hồi",
+  "forum_started": "Bắt đầu bởi "
 }

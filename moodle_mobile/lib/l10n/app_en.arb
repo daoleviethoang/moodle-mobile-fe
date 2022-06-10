@@ -141,5 +141,11 @@
   "unfinished": "Unfinished",
   "upcoming_events": "Upcoming events",
   "user_details": "User details",
-  "view_file_submission": "View file submission"
+  "view_file_submission": "View file submission",
+  "forum_by": "by ",
+  "reply_post":"Reply",
+  "forum_name": "Name ",
+  "forum_subscrible": "Subscrible",
+  "forum_replies": " replies",
+  "forum_started": "Started by "
 }
