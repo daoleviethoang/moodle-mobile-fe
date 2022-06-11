@@ -9,6 +9,7 @@ import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/content_item.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:moodle_mobile/view/common/image_view.dart';
+import 'package:moodle_mobile/view/forum/reply_post/reply_post_screen.dart';
 
 class ForumDetailScreen extends StatefulWidget {
   final int? DiscussionId;
@@ -157,6 +158,40 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                       ),
                     ),
                     Divider(),
+                    Center(
+                      child: Container(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (builder) {
+                                return ReplyPostScreen(
+                                  relyPostId: _forumPost[len - 1].id,
+                                  subject: "Re:" + _forumPost[len - 1].subject!,
+                                  article: _forumPost[len - 1].author!.fullname,
+                                  timeCreated: _forumPost[len - 1].timecreated,
+                                  content: _forumPost[len - 1].message,
+                                );
+                              })).then((_) {
+                                isLoading = !isLoading;
+                                fetch();
+                              });
+                            },
+                            child: Row(
+                              children: [
+                                Icon(Icons.message),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text(AppLocalizations.of(context)!.reply_post),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Divider(),
                     ListView.builder(
                         padding: EdgeInsets.only(bottom: 30),
                         scrollDirection: Axis.vertical,
@@ -171,10 +206,29 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                             checkReply = true;
                           return ReplyCard(
                             isReply: checkReply,
+                            postId: _forumPost[len - 2 - index].id,
                             date: _forumPost[len - 2 - index].timecreated,
                             name: _forumPost[len - 2 - index].author!.fullname,
                             message: _forumPost[len - 2 - index].message,
                             subject: _forumPost[len - 2 - index].subject,
+                            function: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (builder) {
+                                return ReplyPostScreen(
+                                  relyPostId: _forumPost[len - 2 - index].id,
+                                  subject: _forumPost[len - 2 - index].subject,
+                                  article: _forumPost[len - 2 - index]
+                                      .author!
+                                      .fullname,
+                                  timeCreated:
+                                      _forumPost[len - 2 - index].timecreated,
+                                  content: _forumPost[len - 2 - index].message,
+                                );
+                              })).then((_) {
+                                isLoading = !isLoading;
+                                fetch();
+                              });
+                            },
                           );
                         })
                   ],
@@ -190,13 +244,17 @@ class ReplyCard extends StatelessWidget {
   final String? subject;
   final int? date;
   final String? name;
+  final int? postId;
   final String? message;
+  final VoidCallback? function;
   const ReplyCard(
       {Key? key,
       this.isReply,
       this.date,
+      this.function,
       this.message,
       this.name,
+      this.postId,
       this.subject})
       : super(key: key);
 
@@ -241,30 +299,37 @@ class ReplyCard extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      DateFormat('hh:mm dd-MM-yyyy')
-                          .format(
-                              DateTime.fromMillisecondsSinceEpoch(date! * 1000))
-                          .toString(),
-                      style: TextStyle(color: Colors.grey, fontSize: 10),
-                    ),
-                  ),
-                  Padding(
                     padding: const EdgeInsets.all(5.0),
                     child: Html(data: message!),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        Icon(Icons.message),
-                        SizedBox(
-                          width: 5,
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          DateFormat('hh:mm dd-MM-yyyy')
+                              .format(DateTime.fromMillisecondsSinceEpoch(
+                                  date! * 1000))
+                              .toString(),
+                          style: TextStyle(color: Colors.grey, fontSize: 10),
                         ),
-                        Text(AppLocalizations.of(context)!.reply_post),
-                      ],
-                    ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: GestureDetector(
+                          onTap: function,
+                          child: Row(
+                            children: [
+                              Icon(Icons.message),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(AppLocalizations.of(context)!.reply_post),
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
                   )
                 ],
               ),

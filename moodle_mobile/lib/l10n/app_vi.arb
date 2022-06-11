@@ -117,5 +117,7 @@
   "forum_subscrible": "Đăng ký",
   "forum_replies": " phản hồi",
   "forum_started": "Bắt đầu bởi ",
-  "participant_list": "Thành viên trong môn học"
+  "participant_list": "Thành viên trong môn học",
+  "text_reply": "Nhập phản hồi của bạn",
+  "replying": "Phản hồi về bình luận "
 }
