@@ -147,5 +147,7 @@
   "forum_name": "Name ",
   "forum_subscrible": "Subscrible",
   "forum_replies": " replies",
-  "forum_started": "Started by "
+  "forum_started": "Started by ",
+  "participant_list": "People in this course"
+
 }
