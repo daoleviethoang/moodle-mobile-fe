@@ -32,14 +32,8 @@ class _MessagePreferenceScreenState extends State<MessagePreferenceScreen>
   void initState() {
     _userStore = GetIt.instance<UserStore>();
     super.initState();
-    setState(() {
-      isLoading = true;
-    });
     _initTabList();
     loadData();
-    setState(() {
-      isLoading = false;
-    });
   }
 
   @override
@@ -66,6 +60,9 @@ class _MessagePreferenceScreenState extends State<MessagePreferenceScreen>
   }
 
   loadData() async {
+    setState(() {
+      isLoading = true;
+    });
     MessagePreference? temp;
     try {
       temp = await NotificationPreferenceApi()
@@ -82,6 +79,9 @@ class _MessagePreferenceScreenState extends State<MessagePreferenceScreen>
               Text(AppLocalizations.of(context)!.err_load_message_settings));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   blockMessage() async {
@@ -123,85 +123,84 @@ class _MessagePreferenceScreenState extends State<MessagePreferenceScreen>
             ),
           ),
         ],
-        body: isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : SingleChildScrollView(
-                child: Container(
-                  margin: const EdgeInsets.only(left: 10, right: 10, top: 10),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        AppLocalizations.of(context)!.restrict,
-                        textScaleFactor: 1.3,
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Wrap(
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        runAlignment: WrapAlignment.center,
-                        children: [
-                          Checkbox(
-                              value: blockContact,
-                              shape: const CircleBorder(),
-                              activeColor: Colors.green,
-                              onChanged: (value) async {
-                                await blockMessage();
-                              }),
-                          Text(
-                            AppLocalizations.of(context)!.restrict_contact,
-                            textScaleFactor: 1.2,
-                          ),
-                        ],
-                      ),
-                      Wrap(
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        runAlignment: WrapAlignment.center,
-                        children: [
-                          Checkbox(
-                              value: !blockContact,
-                              activeColor: Colors.green,
-                              shape: const CircleBorder(),
-                              onChanged: (value) async {
-                                await blockMessage();
-                              }),
-                          Text(
-                            AppLocalizations.of(context)!.restrict_anyone,
-                            textScaleFactor: 1.2,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      TabBar(
+        body: SingleChildScrollView(
+          child: Container(
+            margin: const EdgeInsets.only(left: 10, right: 10, top: 10),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  AppLocalizations.of(context)!.restrict,
+                  textScaleFactor: 1.3,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Wrap(
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  runAlignment: WrapAlignment.center,
+                  children: [
+                    Checkbox(
+                        value: blockContact,
+                        shape: const CircleBorder(),
+                        activeColor: Colors.green,
+                        onChanged: (value) async {
+                          await blockMessage();
+                        }),
+                    Text(
+                      AppLocalizations.of(context)!.restrict_contact,
+                      textScaleFactor: 1.2,
+                    ),
+                  ],
+                ),
+                Wrap(
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  runAlignment: WrapAlignment.center,
+                  children: [
+                    Checkbox(
+                        value: !blockContact,
+                        activeColor: Colors.green,
+                        shape: const CircleBorder(),
+                        onChanged: (value) async {
+                          await blockMessage();
+                        }),
+                    Text(
+                      AppLocalizations.of(context)!.restrict_anyone,
+                      textScaleFactor: 1.2,
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : TabBar(
                         isScrollable: true,
                         controller: _tabController,
                         tabs: _tabs,
                         onTap: (value) => setState(() => _index = value),
                       ),
-                      const Divider(),
-                      _tabs.isNotEmpty
-                          ? Column(
-                              children: messagePreference
-                                      ?.preferences?.components
-                                      ?.map((e) => MessagePreferenceTile(
-                                          preferenceName: messagePreference!
-                                              .preferences!
-                                              .processors![_index]
-                                              .displayname!,
-                                          disable: disableAll,
-                                          components: e))
-                                      .toList() ??
-                                  [],
-                            )
-                          : Container()
-                    ],
-                  ),
-                ),
-              ),
+                const Divider(),
+                _tabs.isNotEmpty
+                    ? Column(
+                        children: messagePreference?.preferences?.components
+                                ?.map((e) => MessagePreferenceTile(
+                                    preferenceName: messagePreference!
+                                        .preferences!
+                                        .processors![_index]
+                                        .displayname!,
+                                    disable: disableAll,
+                                    components: e))
+                                .toList() ??
+                            [],
+                      )
+                    : Container()
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

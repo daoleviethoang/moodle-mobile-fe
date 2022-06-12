@@ -7,6 +7,7 @@ import 'package:moodle_mobile/data/network/apis/forum/forum_api.dart';
 import 'package:moodle_mobile/models/forum/forum_post.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/content_item.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:moodle_mobile/view/common/image_view.dart';
 
 class ForumDetailScreen extends StatefulWidget {
@@ -231,7 +232,7 @@ class ReplyCard extends StatelessWidget {
                     padding: const EdgeInsets.only(left: 8.0),
                     child: Row(
                       children: [
-                        Text('by '),
+                        Text(AppLocalizations.of(context)!.forum_by),
                         Text(
                           name!,
                           style: TextStyle(color: Colors.blue),
@@ -261,7 +262,7 @@ class ReplyCard extends StatelessWidget {
                         SizedBox(
                           width: 5,
                         ),
-                        Text('Reply'),
+                        Text(AppLocalizations.of(context)!.reply_post),
                       ],
                     ),
                   )

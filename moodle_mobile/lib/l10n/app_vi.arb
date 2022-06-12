@@ -33,6 +33,8 @@
   "enrol_key_not_correct": "Mã không đúng",
   "enrol_pass": "Mã",
   "enter_message": "Nhập tin nhắn",
+  "err_get_calendar": "Tải dữ liệu lịch không thành công, vui lòng thử lại sau",
+  "err_get_courses": "Tải thông tin các khoá học không thành công, vui lòng thử lại sau",
   "err_load_message_settings": "Tải cài đặt tin nhắn thất bại, vui lòng thử lại sau",
   "err_load_noti_settings": "Tải cài đặt thông báo thất bại, vui lòng thử lại sau",
   "err_set_noti_settings": "Cập nhật cài đặt thông báo thất bại, vui lòng thử lại sau",
@@ -108,5 +110,12 @@
   "unfinished": "Chưa hoàn thành",
   "upcoming_events": "Sự kiện sắp tới",
   "user_details": "Thông tin chi tiết",
-  "view_file_submission": "Xem file đã nộp"
+  "view_file_submission": "Xem file đã nộp",
+  "forum_by": "bởi ",
+  "reply_post":"Trả lời",
+  "forum_name": "Tên ",
+  "forum_subscrible": "Đăng ký",
+  "forum_replies": " phản hồi",
+  "forum_started": "Bắt đầu bởi ",
+  "participant_list": "Thành viên trong môn học"
 }

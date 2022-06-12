@@ -12,6 +12,7 @@ import 'package:moodle_mobile/models/course/courses.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/course_details.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../constants/colors.dart';
 
@@ -181,8 +182,12 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
       }
       coursesOverviewOld.addAll(coursesOverview);
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString()), backgroundColor: Colors.red));
+      if (kDebugMode) {
+        print('$e');
+      }
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(AppLocalizations.of(context)!.err_get_courses),
+          backgroundColor: Colors.red));
     }
     setState(() {
       isLoad = false;

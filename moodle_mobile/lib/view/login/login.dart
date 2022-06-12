@@ -76,6 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     hintText: "BaseUrl",
                     prefixIcon: Icon(Icons.language),
                     hintStyle: TextStyle(fontSize: 16),
+                    labelText: "BaseUrl",
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(
                             Radius.circular(Dimens.default_border_radius))),

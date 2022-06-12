@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
@@ -269,7 +270,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
         future: queryData(),
         builder: (context, data) {
           if (data.hasError) {
-            return ErrorCard(text: '${data.error}');
+            if (kDebugMode) {
+              print('${data.error}');
+            }
+            return ErrorCard(
+                text: AppLocalizations.of(context)!.err_get_calendar);
           }
           return SingleChildScrollView(
             child: Padding(

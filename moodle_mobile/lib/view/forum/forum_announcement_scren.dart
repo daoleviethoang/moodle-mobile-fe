@@ -8,6 +8,7 @@ import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/image_view.dart';
 import 'package:moodle_mobile/view/forum/add_post/add_post_screen.dart';
 import 'package:moodle_mobile/view/forum/forum_detail_screen.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ForumAnnouncementScreen extends StatefulWidget {
   final int? forumId;
@@ -58,7 +59,7 @@ class _ForumAnnouncementScreenState extends State<ForumAnnouncementScreen> {
           child: Row(
             mainAxisSize: MainAxisSize.max,
             children: [
-              Text('Name'),
+              Text(AppLocalizations.of(context)!.forum_name),
               sortDesc != true
                   ? IconButton(
                       icon: Icon(Icons.arrow_upward),
@@ -165,7 +166,7 @@ class _PostCardState extends State<PostCard> {
                           Row(
                             children: [
                               Text(
-                                'Started by ',
+                                AppLocalizations.of(context)!.forum_started,
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                               Text(
@@ -201,9 +202,10 @@ class _PostCardState extends State<PostCard> {
                         });
                       },
                     ),
-                    Text('Subscribe'),
+                    Text(AppLocalizations.of(context)!.forum_subscrible),
                     Spacer(),
-                    Text(widget.relyNum.toString() + ' replies'),
+                    Text(widget.relyNum.toString() +
+                        AppLocalizations.of(context)!.forum_replies),
                   ],
                 ),
               )

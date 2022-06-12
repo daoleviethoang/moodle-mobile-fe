@@ -36,17 +36,16 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
 
   sendLinkForgotPass() async {
     _userStore.setBaseUrl(baseUrlController.text);
-    bool check = await ForgotPassApi()
-        .forgotPass(_userStore.user.token, usernameControler.text);
-    if (check) {
+    try {
+      String check = await ForgotPassApi().forgotPass(usernameControler.text);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("Email sended"),
+        content: Text(check),
         backgroundColor: Colors.green,
       ));
-    } else {
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Error"),
+          content: Text(e.toString()),
           backgroundColor: Colors.red,
         ),
       );
@@ -88,6 +87,7 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
                     contentPadding:
                         EdgeInsets.all(Dimens.default_padding_double),
                     hintText: "BaseUrl",
+                    labelText: "BaseUrl",
                     prefixIcon: Icon(Icons.language),
                     hintStyle: TextStyle(fontSize: 16),
                     border: OutlineInputBorder(
