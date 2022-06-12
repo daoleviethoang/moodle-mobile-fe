@@ -16,6 +16,7 @@ class CourseCategoryScreen extends StatefulWidget {
 
 class _CourseCategoryScreenState extends State<CourseCategoryScreen> {
   late UserStore _userStore;
+
   Future<List<CourseCategory>> readData() async {
     // read json file
     List<CourseCategory> categories = [];
@@ -33,11 +34,11 @@ class _CourseCategoryScreenState extends State<CourseCategoryScreen> {
 
       // get max depth
       int maxDepth = 0;
-      categories.forEach((element) {
+      for (CourseCategory element in categories) {
         if (element.depth! > maxDepth) {
           maxDepth = element.depth ?? 0;
         }
-      });
+      }
 
       // group folder
       for (var i = maxDepth - 1; i >= 0; i--) {
@@ -78,28 +79,35 @@ class _CourseCategoryScreenState extends State<CourseCategoryScreen> {
             if (data.hasError) {
               return const Center(child: Text("Error"));
             }
-            List<CourseCategory> categorys = [];
+            List<CourseCategory> categories = [];
             if (data.hasData) {
-              categorys = data.data as List<CourseCategory>;
+              categories = data.data as List<CourseCategory>;
             } else {
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             }
 
-            return SingleChildScrollView(
-                child: Container(
-                    child: ListView(
-              primary: false,
-              shrinkWrap: true,
-              children: categorys
-                  .map((e) => CourseCategoryListTile(
+            final tilePadVert = MediaQuery.of(context).size.height * 0.01;
+            final tilePadHoz = MediaQuery.of(context).size.height * 0.02;
+            return RefreshIndicator(
+              onRefresh: () async => readData(),
+              child: ListView(
+                primary: false,
+                shrinkWrap: true,
+                physics: const AlwaysScrollableScrollPhysics(),
+                children: [
+                  Container(height: 2),
+                  ...categories.map(
+                    (e) => CourseCategoryListTile(
                         data: e,
-                        margin: EdgeInsets.only(
-                            top: MediaQuery.of(context).size.height * 0.02,
-                            left: MediaQuery.of(context).size.width * 0.02,
-                            right: MediaQuery.of(context).size.width * 0.02),
-                      ))
-                  .toList(),
-            )));
+                        margin: EdgeInsets.symmetric(
+                          vertical: tilePadVert,
+                          horizontal: tilePadHoz,
+                        )),
+                  ).toList(),
+                  Container(height: 2),
+                ],
+              ),
+            );
           }),
     );
   }

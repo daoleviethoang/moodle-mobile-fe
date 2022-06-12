@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/data/network/apis/contact/contact_service.dart';
 import 'package:moodle_mobile/data/network/apis/course/course_service.dart';
@@ -80,12 +81,12 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
             child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: const <Widget>[
-            Icon(Icons.notifications_none, size: 50),
-            Padding(padding: EdgeInsets.all(20)),
+          children: [
+            const Icon(Icons.notifications_none, size: 50),
+            const Padding(padding: EdgeInsets.all(20)),
             Text(
-              "Your search didn't match any courses.",
-              style: TextStyle(
+              AppLocalizations.of(context)!.search_empty,
+              style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
                   letterSpacing: 0.27,
@@ -107,38 +108,41 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
           )
         : Padding(
             padding: const EdgeInsets.only(left: 0, top: 50),
-            child: ListView(
-              padding: const EdgeInsets.all(8),
-              physics: const BouncingScrollPhysics(),
-              scrollDirection: Axis.vertical,
-              children: List<Widget>.generate(
-                coursesOverview.length,
-                (int index) {
-                  final int count = coursesOverview.length;
-                  final Animation<double> animation =
-                      Tween<double>(begin: 0.0, end: 1.0).animate(
-                    CurvedAnimation(
-                      parent: animationController!,
-                      curve: Interval((1 / count) * index, 1.0,
-                          curve: Curves.fastOutSlowIn),
-                    ),
-                  );
-                  animationController?.forward();
-                  return coursesOverview[index].hidden == false ||
-                          widget.statusTypeSelected.key ==
-                              CourseStatus.removed_from_view
-                      ? Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: CategoryView(
-                            course: coursesOverview[index],
-                            animation: animation,
-                            animationController: animationController,
-                            userStore: _userStore,
-                            callback: callback,
-                          ),
-                        )
-                      : Container();
-                },
+            child: RefreshIndicator(
+              onRefresh: () => getData(),
+              child: ListView(
+                padding: const EdgeInsets.all(8),
+                physics: const BouncingScrollPhysics(),
+                scrollDirection: Axis.vertical,
+                children: List.generate(
+                  coursesOverview.length,
+                  (int index) {
+                    final int count = coursesOverview.length;
+                    final Animation<double> animation =
+                        Tween<double>(begin: 0.0, end: 1.0).animate(
+                      CurvedAnimation(
+                        parent: animationController!,
+                        curve: Interval((1 / count) * index, 1.0,
+                            curve: Curves.fastOutSlowIn),
+                      ),
+                    );
+                    animationController?.forward();
+                    return coursesOverview[index].hidden == false ||
+                            widget.statusTypeSelected.key ==
+                                CourseStatus.removed_from_view
+                        ? Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: CategoryView(
+                              course: coursesOverview[index],
+                              animation: animation,
+                              animationController: animationController,
+                              userStore: _userStore,
+                              callback: callback,
+                            ),
+                          )
+                        : Container();
+                  },
+                ),
               ),
             ),
           );
@@ -446,7 +450,7 @@ class CategoryView extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Container(
-            margin: EdgeInsets.only(bottom: 20),
+            margin: const EdgeInsets.only(bottom: 20),
             height: 5,
             width: 134,
             decoration: const BoxDecoration(
@@ -537,7 +541,7 @@ class CategoryView extends StatelessWidget {
   Widget starOrUnStarCourse(
       CourseOverview courseSelectedMore, BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: 13, bottom: 13),
+      margin: const EdgeInsets.only(top: 13, bottom: 13),
       width: double.infinity,
       decoration: const BoxDecoration(
         color: MoodleColors.white,
@@ -557,7 +561,7 @@ class CategoryView extends StatelessWidget {
                   callback!(1, courseSelectedMore.id, false);
                   Navigator.pop(context);
                 },
-                icon: Icon(
+                icon: const Icon(
                   Icons.star_border_rounded,
                   color: MoodleColors.yellow_icon,
                   size: 30,
@@ -592,7 +596,7 @@ class CategoryView extends StatelessWidget {
                     decoration: const BoxDecoration(
                         color: MoodleColors.border_star,
                         borderRadius: BorderRadius.all(Radius.circular(50))),
-                    child: Padding(
+                    child: const Padding(
                       padding: EdgeInsets.all(5),
                       child: Icon(
                         Icons.star,
@@ -600,11 +604,11 @@ class CategoryView extends StatelessWidget {
                         size: 25,
                       ),
                     )),
-                label: Padding(
+                label: const Padding(
                   padding: EdgeInsets.only(left: 20),
-                  child: Text(
+                  child: const Text(
                     "Star this course",
-                    style: TextStyle(color: MoodleColors.black, fontSize: 16),
+                    style: const TextStyle(color: MoodleColors.black, fontSize: 16),
                   ),
                 ),
                 style: TextButton.styleFrom(
@@ -634,9 +638,9 @@ class CategoryView extends StatelessWidget {
             color: MoodleColors.black,
             size: 30,
           ),
-          label: Padding(
-            padding: EdgeInsets.only(left: 20),
-            child: Text(
+          label: const Padding(
+            padding: const EdgeInsets.only(left: 20),
+            child: const Text(
               "Download courses",
               style: TextStyle(color: MoodleColors.black, fontSize: 16),
             ),

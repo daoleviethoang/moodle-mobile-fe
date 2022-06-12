@@ -124,6 +124,7 @@
   "restrict_anyone": "My contacts and anyone in my courses",
   "restrict_contact": "My contacts only",
   "save_submission": "Save submission",
+  "search_empty": "Your search didn't match any courses.",
   "seconds": "seconds",
   "settings": "Settings",
   "start_attempt": "Attempt quiz now",
