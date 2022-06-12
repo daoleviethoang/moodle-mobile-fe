@@ -68,6 +68,7 @@
   "my_courses": "Khoá của tôi",
   "name": "tên",
   "news": "Thông tin & Tin tức",
+  "no_events": "Không có sự kiện.",
   "not_graded": "Chưa có điểm",
   "not_participant_course": "Bạn chưa tham gia môn này",
   "noti_context": "<b>{article}</b><br/> trong <b>{name}</b>",

@@ -99,6 +99,7 @@
   "my_courses": "My Courses",
   "name": "Name",
   "news": "News & Info",
+  "no_events": "No events.",
   "not_graded": "Not graded",
   "not_participant_course": "You are not a participant of this course.",
   "noti_context": "<b>{article}</b><br/> in <b>{name}</b>",

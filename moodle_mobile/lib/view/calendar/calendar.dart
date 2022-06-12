@@ -188,6 +188,16 @@ class _CalendarScreenState extends State<CalendarScreen> {
           ),
 
           // Event list
+          if (_selectedEvents.isEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Opacity(
+                opacity: .5,
+                child: Center(
+                  child: Text(AppLocalizations.of(context)!.no_events),
+                ),
+              ),
+            ),
           ..._selectedEvents.map((e) {
             final title = e.name ?? '';
             final epoch = (e.timestart ?? 0) * 1000;
@@ -276,36 +286,39 @@ class _CalendarScreenState extends State<CalendarScreen> {
             return ErrorCard(
                 text: AppLocalizations.of(context)!.err_get_calendar);
           }
-          return SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                children: [
-                  Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      AnimatedOpacity(
-                        opacity: (_events.isEmpty) ? .5 : 1,
-                        duration: const Duration(milliseconds: 300),
-                        child: IgnorePointer(
-                          ignoring: _events.isEmpty,
-                          child: _monthView,
-                        ),
-                      ),
-                      AnimatedOpacity(
-                          opacity: (_events.isEmpty) ? 1 : 0,
+          return RefreshIndicator(
+            onRefresh: () async => setState(() => _events.clear()),
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  children: [
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        AnimatedOpacity(
+                          opacity: (_events.isEmpty) ? .5 : 1,
                           duration: const Duration(milliseconds: 300),
-                          child: const CircularProgressIndicator.adaptive()),
-                    ],
-                  ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 12, left: 12),
-                      child: _dayView,
+                          child: IgnorePointer(
+                            ignoring: _events.isEmpty,
+                            child: _monthView,
+                          ),
+                        ),
+                        AnimatedOpacity(
+                            opacity: (_events.isEmpty) ? 1 : 0,
+                            duration: const Duration(milliseconds: 300),
+                            child: const CircularProgressIndicator.adaptive()),
+                      ],
                     ),
-                  ),
-                ],
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 12, left: 12),
+                        child: _dayView,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           );
