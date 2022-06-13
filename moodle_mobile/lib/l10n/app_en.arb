@@ -102,6 +102,7 @@
   "no_events": "No events.",
   "not_graded": "Not graded",
   "not_participant_course": "You are not a participant of this course.",
+  "nothing_yet": "Nothing here yet.",
   "noti_context": "<b>{article}</b><br/> in <b>{name}</b>",
   "noti_permission": "Notification permission has been denied, some functions will not be able to work",
   "noti_settings": "Notifications & Sounds",

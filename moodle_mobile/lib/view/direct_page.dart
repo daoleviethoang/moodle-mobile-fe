@@ -73,7 +73,10 @@ class _DirectScreenState extends State<DirectScreen> {
       extendBody: true,
       appBar: getAppBarUI(),
       body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
+        child: IndexedStack(
+          children: _widgetOptions,
+          index: _selectedIndex,
+        ),
       ),
       bottomNavigationBar: getBottomNavBarUI(),
     );

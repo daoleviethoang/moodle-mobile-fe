@@ -37,8 +37,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
     super.initState();
 
     // Update notification list
-    _refreshTimer =
-        Timer.periodic(Vars.refreshInterval, (t) => getData());
+    _refreshTimer = Timer.periodic(Vars.refreshInterval, (t) => getData());
   }
 
   @override
@@ -87,44 +86,62 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final notifications = _notificationPopup?.notificationDetail ?? [];
     return Scaffold(
-      body: AnimatedOpacity(
-        opacity: (_notificationPopup?.notificationDetail ?? []).isEmpty ? 0 : 1,
-        duration: const Duration(milliseconds: 300),
-        child: ListView(
-          children: [
-            ...List.generate(
-                _notificationPopup?.notificationDetail?.length ?? 0, (index) {
-              NotificationDetail temp =
-                  _notificationPopup!.notificationDetail![index];
+      body: RefreshIndicator(
+        onRefresh: () => getData(),
+        child: CustomScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          slivers: [
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: Column(
+                children: [
+                  if (notifications.isEmpty)
+                    Expanded(
+                      child: Opacity(
+                        opacity: .5,
+                        child: Center(
+                          child: Text(
+                            AppLocalizations.of(context)!.nothing_yet,
+                          ),
+                        ),
+                      ),
+                    ),
 
-              //get subject
-              String subject = temp.subject!;
-              subject = subject.substring(0, subject.indexOf(':'));
+                  ...List.generate(notifications.length, (index) {
+                    final temp = notifications[index];
 
-              //get article
-              String article = temp.smallmessage!;
-              article = article.substring(0, article.indexOf('posted'));
+                    //get subject
+                    String subject = temp.subject!;
+                    subject = subject.substring(0, subject.indexOf(':'));
 
-              //get date
-              String date = DateFormat("dd-MM-yyyy")
-                  .format(DateTime.fromMillisecondsSinceEpoch(
-                      temp.timecreated! * 1000))
-                  .toString();
-              //DateTime now = new DateTime.now();
-              // int duraDay = int.parse(date.substring(0, date.indexOf('days')));
-              // print(duraDay);
+                    //get article
+                    String article = temp.smallmessage!;
+                    article = article.substring(0, article.indexOf('posted'));
 
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: NotificationPopupContainer(
-                    name: name![index],
-                    article: article,
-                    subject: subject,
-                    title: temp.contexturlname,
-                    date: date),
-              );
-            })
+                    //get date
+                    String date = DateFormat("dd-MM-yyyy")
+                        .format(DateTime.fromMillisecondsSinceEpoch(
+                            temp.timecreated! * 1000))
+                        .toString();
+                    //DateTime now = new DateTime.now();
+                    // int duraDay = int.parse(date.substring(0, date.indexOf('days')));
+                    // print(duraDay);
+
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: NotificationPopupContainer(
+                          name: name![index],
+                          article: article,
+                          subject: subject,
+                          title: temp.contexturlname,
+                          date: date),
+                    );
+                  })
+                ],
+              ),
+            ),
           ],
         ),
       ),
