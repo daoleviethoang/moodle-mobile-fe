@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/models/course/course_content.dart';
 import 'package:moodle_mobile/view/activity/album_tile.dart';
+import 'package:moodle_mobile/view/common/custom_button.dart';
 
 class ActivityScreen extends StatefulWidget {
   final int sectionIndex;
-  final CourseContent content;
+  final CourseContent? content;
   final bool isTeacher;
   final Function(bool) reGetContent;
   const ActivityScreen(
@@ -38,26 +39,53 @@ class _ActivityScreenState extends State<ActivityScreen> {
             ),
             textScaleFactor: 1.5,
           )),
-      Column(
-        children: albums
-            .map((e) => const AlbumTile(
-                  images: [
-                    "https://miro.medium.com/max/1400/1*PblQquEXxZ6U1BmBNlEprA.jpeg",
-                    "https://miro.medium.com/max/1400/1*PblQquEXxZ6U1BmBNlEprA.jpeg",
-                    "https://miro.medium.com/max/1400/1*PblQquEXxZ6U1BmBNlEprA.jpeg",
-                    "https://miro.medium.com/max/1400/1*PblQquEXxZ6U1BmBNlEprA.jpeg",
-                    "https://miro.medium.com/max/1400/1*PblQquEXxZ6U1BmBNlEprA.jpeg",
-                    "https://miro.medium.com/max/1400/1*PblQquEXxZ6U1BmBNlEprA.jpeg",
-                    "https://miro.medium.com/max/1400/1*PblQquEXxZ6U1BmBNlEprA.jpeg",
-                    "https://miro.medium.com/max/1400/1*PblQquEXxZ6U1BmBNlEprA.jpeg",
-                    "https://miro.medium.com/max/1400/1*PblQquEXxZ6U1BmBNlEprA.jpeg",
-                    "https://miro.medium.com/max/1400/1*PblQquEXxZ6U1BmBNlEprA.jpeg",
-                    "https://miro.medium.com/max/1400/1*PblQquEXxZ6U1BmBNlEprA.jpeg",
-                    "https://miro.medium.com/max/1400/1*PblQquEXxZ6U1BmBNlEprA.jpeg",
+      widget.content == null
+          ? Center(
+              child: CustomButtonWidget(
+              textButton: "Create activity section",
+              onPressed: () async {},
+            ))
+          : (widget.content?.modules.isEmpty ?? true)
+              ? const Center(
+                  child: Text("Empty"),
+                )
+              : Column(
+                  children: [
+                    SingleChildScrollView(
+                      child: Column(
+                        children: albums
+                            .map((e) => const AlbumTile(
+                                  images: [
+                                    "https://miro.medium.com/max/1400/1*PblQquEXxZ6U1BmBNlEprA.jpeg",
+                                    "https://miro.medium.com/max/1400/1*PblQquEXxZ6U1BmBNlEprA.jpeg",
+                                    "https://miro.medium.com/max/1400/1*PblQquEXxZ6U1BmBNlEprA.jpeg",
+                                    "https://miro.medium.com/max/1400/1*PblQquEXxZ6U1BmBNlEprA.jpeg",
+                                    "https://miro.medium.com/max/1400/1*PblQquEXxZ6U1BmBNlEprA.jpeg",
+                                    "https://miro.medium.com/max/1400/1*PblQquEXxZ6U1BmBNlEprA.jpeg",
+                                    "https://miro.medium.com/max/1400/1*PblQquEXxZ6U1BmBNlEprA.jpeg",
+                                    "https://miro.medium.com/max/1400/1*PblQquEXxZ6U1BmBNlEprA.jpeg",
+                                    "https://miro.medium.com/max/1400/1*PblQquEXxZ6U1BmBNlEprA.jpeg",
+                                    "https://miro.medium.com/max/1400/1*PblQquEXxZ6U1BmBNlEprA.jpeg",
+                                    "https://miro.medium.com/max/1400/1*PblQquEXxZ6U1BmBNlEprA.jpeg",
+                                    "https://miro.medium.com/max/1400/1*PblQquEXxZ6U1BmBNlEprA.jpeg",
+                                  ],
+                                ))
+                            .toList(),
+                      ),
+                    ),
+                    Align(
+                        alignment: Alignment.bottomRight,
+                        child: FloatingActionButton(
+                          child: const Icon(
+                            Icons.add,
+                            color: Colors.white,
+                          ),
+                          foregroundColor: MoodleColors.blue,
+                          backgroundColor: MoodleColors.blue,
+                          onPressed: () {},
+                        ))
                   ],
-                ))
-            .toList(),
-      )
+                ),
     ]);
   }
 }

@@ -13,13 +13,13 @@ class ImageAlbumTile extends StatelessWidget {
         children: [
           Container(
             decoration: BoxDecoration(
-              border: Border.all(width: 0.5),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Image.network(
               src,
               height: 100,
-              fit: BoxFit.fitHeight,
+              width: 100,
+              fit: BoxFit.scaleDown,
             ),
           ),
           SizedBox(height: 5),

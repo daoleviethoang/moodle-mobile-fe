@@ -292,20 +292,14 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
         sectionIndex: index,
         isTeacher: isTeacher,
         content: _content[index],
-        reGetContent: reGetContent,
+        reGetContent: reGetContentForActivityTab,
       );
     } else {
-      // add section
-
-      reGetContent(false);
-      // add tos activity screen
-      int index = 0;
-      // _content.indexOf(activityList.first);
       _activityTab = ActivityScreen(
-        sectionIndex: index,
+        sectionIndex: 0,
         isTeacher: isTeacher,
-        content: _content[index],
-        reGetContent: reGetContent,
+        content: null,
+        reGetContent: reGetContentForActivityTab,
       );
     }
   }
@@ -461,7 +455,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     }
   }
 
-  Future reGetContent(bool isSetState) async {
+  Future reGetContentForActivityTab(bool isSetState) async {
     try {
       if (isSetState) {
         var contentResponse = await CourseContentService().getCourseContent(
@@ -471,6 +465,19 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
         setState(() {
           _content = contentResponse;
         });
+        var activityList =
+            _content.where((element) => element.name == "Activity");
+        if (activityList.isNotEmpty) {
+          int index = _content.indexOf(activityList.first);
+          setState(() {
+            _activityTab = ActivityScreen(
+              sectionIndex: index,
+              isTeacher: isTeacher,
+              content: _content[index],
+              reGetContent: reGetContentForActivityTab,
+            );
+          });
+        }
       } else {
         _content = await CourseContentService().getCourseContent(
           _userStore.user.token,

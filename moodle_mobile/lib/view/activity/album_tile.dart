@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/view/activity/album_screen.dart';
-import 'package:moodle_mobile/view/activity/image_tile.dart';
+import 'package:moodle_mobile/view/activity/image_album_tile.dart';
 
 class AlbumTile extends StatelessWidget {
   final List<String> images;
