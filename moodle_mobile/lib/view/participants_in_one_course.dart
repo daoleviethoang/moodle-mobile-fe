@@ -5,6 +5,7 @@ import 'package:moodle_mobile/data/repository.dart';
 import 'package:moodle_mobile/models/course/course_participants.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/participant.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ParticipantsInOneCourse extends StatefulWidget {
   final int courseId;
@@ -42,11 +43,11 @@ class _ParticipantsInOneCourseState extends State<ParticipantsInOneCourse> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(height: 16),
-                const Text('People in this course',
+                Text(AppLocalizations.of(context)!.participant_list,
                     style: MoodleStyles.courseHeaderStyle),
                 Container(height: 16),
-                const Text(
-                  'Teacher',
+                Text(
+                  AppLocalizations.of(context)!.teacher,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17.5),
                 ),
                 ...List.generate(
@@ -70,8 +71,8 @@ class _ParticipantsInOneCourseState extends State<ParticipantsInOneCourse> {
                   },
                 ),
                 Container(height: 16),
-                const Text(
-                  'Student',
+                Text(
+                  AppLocalizations.of(context)!.student,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17.5),
                 ),
                 ...List.generate(
