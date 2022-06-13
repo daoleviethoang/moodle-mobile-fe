@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:moodle_mobile/constants/colors.dart';
+import 'dart:io';
 
 class ImageAlbumDetailTile extends StatelessWidget {
   final String src;
+  final String name;
   final bool isChoose;
   final Function(bool) setLongPress;
+  final String? filePath;
   const ImageAlbumDetailTile(
       {Key? key,
       required this.src,
       required this.isChoose,
-      required this.setLongPress})
+      required this.setLongPress,
+      required this.name,
+      this.filePath})
       : super(key: key);
 
   @override
@@ -36,16 +40,25 @@ class ImageAlbumDetailTile extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: Image.network(
-                  src,
-                  height: 100,
-                  fit: BoxFit.fitHeight,
-                ),
+                child: filePath != null
+                    ? Image.file(
+                        File(filePath!),
+                        width: (MediaQuery.of(context).size.width - 3) / 2,
+                        fit: BoxFit.fitWidth,
+                        errorBuilder: (context, exception, stackTrace) {
+                          return Text("error");
+                        },
+                      )
+                    : Image.network(
+                        src,
+                        width: (MediaQuery.of(context).size.width - 3) / 2,
+                        fit: BoxFit.fitWidth,
+                      ),
               ),
               SizedBox(height: 5),
               Container(
                 padding: EdgeInsets.only(left: 5),
-                child: Text("Ảnh",
+                child: Text(name,
                     style: const TextStyle(
                       fontWeight: FontWeight.w900,
                     )),

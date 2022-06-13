@@ -1,15 +1,36 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
+import 'package:moodle_mobile/data/network/apis/custom_api/custom_api.dart';
+import 'package:moodle_mobile/data/network/apis/file/file_api.dart';
+import 'package:moodle_mobile/models/assignment/file_assignment.dart';
+import 'package:moodle_mobile/models/module/module.dart';
+import 'package:moodle_mobile/models/module/module_content.dart';
+import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/activity/image_album_detail_tile.dart';
 import 'package:moodle_mobile/view/common/custom_text_field.dart';
 
 class AlbumScreen extends StatefulWidget {
-  final List<String> images;
-  final String title;
-  const AlbumScreen({Key? key, required this.images, required this.title})
-      : super(key: key);
+  final Module module;
+  final int sectionIndex;
+  final bool isTeacher;
+  final int courseId;
+  final UserStore userStore;
+  final Function(bool) reGetContent;
+  final List<ModuleContent> images;
+  const AlbumScreen({
+    Key? key,
+    required this.module,
+    required this.sectionIndex,
+    required this.isTeacher,
+    required this.courseId,
+    required this.userStore,
+    required this.reGetContent,
+    required this.images,
+  }) : super(key: key);
 
   @override
   State<AlbumScreen> createState() => _AlbumScreenState();
@@ -19,11 +40,43 @@ class _AlbumScreenState extends State<AlbumScreen> {
   List<bool> chooseImages = [];
   bool canSave = false;
   bool isRemove = false;
+  late Module _module;
+  late List<ModuleContent> _images;
+  List<FileUpload> files = [];
   TextEditingController nameController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    _module = widget.module;
+    _images = widget.images;
+    nameController = TextEditingController(text: _module.name ?? "");
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
+      for (var item in _images) {
+        var file = await DefaultCacheManager().getSingleFile(
+            item.fileurl! + "?token=" + widget.userStore.user.token);
+        setState(() {
+          files.add(FileUpload(
+              filename: item.filename ?? "",
+              filepath: file.path,
+              filesize: item.filesize ?? 0,
+              timeModified: DateTime.fromMillisecondsSinceEpoch(
+                  item.timemodified! * 1000),
+              fileUrl: item.fileurl ?? ""));
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    DefaultCacheManager().emptyCache();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    while (chooseImages.length < widget.images.length) {
+    while (chooseImages.length < files.length) {
       chooseImages.add(false);
     }
     return Scaffold(
@@ -43,18 +96,6 @@ class _AlbumScreenState extends State<AlbumScreen> {
                   onPressed: () async {},
                 ),
               ),
-              canSave
-                  ? SizedBox(
-                      width: 60,
-                      height: 60,
-                      child: IconButton(
-                        iconSize: 28,
-                        icon: const Icon(Icons.save),
-                        color: MoodleColors.white,
-                        onPressed: () async {},
-                      ),
-                    )
-                  : Container(),
             ],
             title: TextButton(
               onPressed: () {
@@ -118,7 +159,22 @@ class _AlbumScreenState extends State<AlbumScreen> {
                           ),
                           Expanded(
                             child: TextButton(
-                              onPressed: () {
+                              onPressed: () async {
+                                try {
+                                  await CustomApi().changeNameModule(
+                                      widget.userStore.user.token,
+                                      widget.module.id ?? 0,
+                                      nameController.text);
+                                  widget.reGetContent(true);
+                                  setState(() {
+                                    _module.name = nameController.text;
+                                  });
+                                } catch (e) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content: Text(e.toString()),
+                                          backgroundColor: Colors.red));
+                                }
                                 Navigator.pop(context);
                               },
                               child: Text("Save",
@@ -143,7 +199,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                 );
               },
               child: Text(
-                widget.title,
+                _module.name ?? "",
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 20,
@@ -162,18 +218,21 @@ class _AlbumScreenState extends State<AlbumScreen> {
         ],
         body: GridView(
           padding: EdgeInsets.only(left: 5, right: 5),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            mainAxisSpacing: 5,
-            crossAxisSpacing: 5,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            childAspectRatio: 0.43333,
+            mainAxisSpacing: 1,
+            crossAxisSpacing: 1,
           ),
-          children: widget.images
+          children: files
               .map((e) => ImageAlbumDetailTile(
-                    src: e,
-                    isChoose: chooseImages[widget.images.indexOf(e)],
+                    src: e.fileUrl,
+                    name: "",
+                    filePath: null, //e.filepath,
+                    isChoose: chooseImages[files.indexOf(e)],
                     setLongPress: (bool value) {
                       setState(() {
-                        chooseImages[widget.images.indexOf(e)] = value;
+                        chooseImages[files.indexOf(e)] = value;
                       });
                     },
                   ))
@@ -188,7 +247,29 @@ class _AlbumScreenState extends State<AlbumScreen> {
               ),
               foregroundColor: MoodleColors.white,
               backgroundColor: MoodleColors.white,
-              onPressed: () {},
+              onPressed: () async {
+                List<FileUpload> tempFiles = [];
+                for (var i = 0; i < chooseImages.length; i++) {
+                  if (chooseImages[i] == false) {
+                    tempFiles.add(files[i]);
+                  }
+                }
+                try {
+                  int? itemId = await FileApi().uploadMultipleFile(
+                      widget.userStore.user.token, tempFiles);
+                  if (itemId != null) {
+                    await CustomApi().changeFileInFolderCourse(
+                        widget.userStore.user.token, _module.id ?? 0, itemId);
+                    setState(() {
+                      files = tempFiles;
+                    });
+                  }
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(e.toString()),
+                      backgroundColor: Colors.red));
+                }
+              },
             )
           : FloatingActionButton(
               child: const Icon(
@@ -197,7 +278,40 @@ class _AlbumScreenState extends State<AlbumScreen> {
               ),
               foregroundColor: MoodleColors.blue,
               backgroundColor: MoodleColors.blue,
-              onPressed: () {},
+              onPressed: () async {
+                try {
+                  FilePickerResult? result =
+                      await FilePicker.platform.pickFiles(type: FileType.image);
+                  if (result != null && result.files.isNotEmpty) {
+                    var file = result.files.first;
+                    var tempFiles = files;
+                    setState(() {
+                      tempFiles.add(FileUpload(
+                        filename: file.name,
+                        filepath: file.path ?? "",
+                        filesize: file.size,
+                        timeModified: DateTime.now(),
+                      ));
+                    });
+
+                    int? itemId = await FileApi().uploadMultipleFile(
+                        widget.userStore.user.token, tempFiles);
+
+                    if (itemId != null) {
+                      await CustomApi().changeFileInFolderCourse(
+                          widget.userStore.user.token, _module.id ?? 0, itemId);
+                      await widget.reGetContent(true);
+                      setState(() {
+                        files = tempFiles;
+                      });
+                    }
+                  }
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(e.toString()),
+                      backgroundColor: Colors.red));
+                }
+              },
             ),
     );
   }

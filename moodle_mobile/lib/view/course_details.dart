@@ -292,6 +292,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
         sectionIndex: index,
         isTeacher: isTeacher,
         content: _content[index],
+        courseId: widget.courseId,
         reGetContent: reGetContentForActivityTab,
       );
     } else {
@@ -299,6 +300,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
         sectionIndex: 0,
         isTeacher: isTeacher,
         content: null,
+        courseId: widget.courseId,
         reGetContent: reGetContentForActivityTab,
       );
     }
@@ -474,6 +476,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
               sectionIndex: index,
               isTeacher: isTeacher,
               content: _content[index],
+              courseId: widget.courseId,
               reGetContent: reGetContentForActivityTab,
             );
           });

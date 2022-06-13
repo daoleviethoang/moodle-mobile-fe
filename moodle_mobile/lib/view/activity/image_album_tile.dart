@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 
 class ImageAlbumTile extends StatelessWidget {
   final String src;
-  const ImageAlbumTile({Key? key, required this.src}) : super(key: key);
+  final String name;
+  const ImageAlbumTile({
+    Key? key,
+    required this.src,
+    required this.name,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,15 +22,14 @@ class ImageAlbumTile extends StatelessWidget {
             ),
             child: Image.network(
               src,
-              height: 100,
-              width: 100,
-              fit: BoxFit.scaleDown,
+              width: 200,
+              fit: BoxFit.fitWidth,
             ),
           ),
           SizedBox(height: 5),
           Container(
             padding: EdgeInsets.only(left: 5),
-            child: Text("Ảnh",
+            child: Text(name,
                 style: const TextStyle(
                   fontWeight: FontWeight.w900,
                 )),
