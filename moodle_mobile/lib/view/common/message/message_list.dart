@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
 import 'package:moodle_mobile/constants/vars.dart';
@@ -34,73 +35,75 @@ class _MessageListState extends State<MessageList> {
     _conversationDetailStore =
         ConversationDetailStore(GetIt.instance<Repository>());
 
-    _conversationStore.getListConversation(
-        _userStore.user.token, _userStore.user.id);
+    getConversations();
 
     // Update message list
-    _refreshTimer = Timer.periodic(
-        Vars.refreshInterval,
-        (t) => _conversationStore.getListConversation(
-            _userStore.user.token, _userStore.user.id));
+    _refreshTimer =
+        Timer.periodic(Vars.refreshInterval, (t) => getConversations());
   }
+
+  Future getConversations() async => _conversationStore.getListConversation(
+      _userStore.user.token, _userStore.user.id);
 
   @override
   Widget build(BuildContext context) {
     return Observer(builder: (_) {
+      var cons = _conversationStore.listConversation;
       return Expanded(
-        child: AnimatedOpacity(
-          opacity: _conversationStore.listConversation.isEmpty ? 0 : 1,
-          duration: const Duration(milliseconds: 300),
-          child: ListView.builder(
-              padding: EdgeInsets.all(Dimens.default_padding),
-              itemCount: _conversationStore.listConversation.length,
-              itemBuilder: (_, int index) {
-                return Padding(
-                  padding: const EdgeInsets.only(top: Dimens.default_padding),
-                  child: Observer(builder: (_) {
-                    return SlidableTile(
-                        isNotification:
-                            !_conversationStore.listConversation[index].isMuted,
-                        nameInfo: _conversationStore
-                            .listConversation[index].members[0].fullname,
-                        message:
-                            _conversationStore.listConversation[index].message,
-                        onDeletePress: () {
-                          _conversationStore.deleteConversation(
-                              _userStore.user.token,
-                              _userStore.user.id,
-                              _conversationStore.listConversation[index].id);
-                        },
-                        onAlarmPress: () {
-                          _conversationStore.listConversation[index].isMuted
-                              ? _conversationStore.unmuteOneConversation(
+        child: RefreshIndicator(
+          onRefresh: () => getConversations(),
+          child: ListView(
+                  padding: const EdgeInsets.all(Dimens.default_padding),
+                  children: [
+                    Container(height: Dimens.default_padding),
+                    if (cons.isEmpty)
+                      Opacity(
+                        opacity: .5,
+                        child: Center(
+                          child: Text(
+                            AppLocalizations.of(context)!.nothing_yet,
+                          ),
+                        ),
+                      ),
+
+                    ...List.generate(cons.length, (index) {
+                      return Observer(builder: (_) {
+                        return SlidableTile(
+                            isNotification: !cons[index].isMuted,
+                            nameInfo: cons[index].members[0].fullname,
+                            message: cons[index].message,
+                            onDeletePress: () {
+                              _conversationStore.deleteConversation(
                                   _userStore.user.token,
                                   _userStore.user.id,
-                                  _conversationStore.listConversation[index].id)
-                              : _conversationStore.muteOneConversation(
-                                  _userStore.user.token,
-                                  _userStore.user.id,
-                                  _conversationStore
-                                      .listConversation[index].id);
-                        },
-                        onMessDetailPress: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => MessageDetailScreen(
-                                conversationId: _conversationStore
-                                    .listConversation[index].id,
-                                userFrom: _conversationStore
-                                    .listConversation[index]
-                                    .members[0]
-                                    .fullname,
-                              ),
-                            ),
-                          );
-                        });
-                  }),
-                );
-              }),
+                                  cons[index].id);
+                            },
+                            onAlarmPress: () {
+                              cons[index].isMuted
+                                  ? _conversationStore.unmuteOneConversation(
+                                      _userStore.user.token,
+                                      _userStore.user.id,
+                                      cons[index].id)
+                                  : _conversationStore.muteOneConversation(
+                                      _userStore.user.token,
+                                      _userStore.user.id,
+                                      cons[index].id);
+                            },
+                            onMessDetailPress: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => MessageDetailScreen(
+                                    conversationId: cons[index].id,
+                                    userFrom: cons[index].members[0].fullname,
+                                  ),
+                                ),
+                              );
+                            });
+                      });
+                    })
+                  ],
+                ),
         ),
       );
     });

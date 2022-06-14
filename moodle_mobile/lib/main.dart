@@ -8,7 +8,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:moodle_mobile/constants/colors.dart';
-import 'package:moodle_mobile/data/bg_service/bg_service.dart';
 import 'package:moodle_mobile/data/firebase/firebase_helper.dart';
 import 'package:moodle_mobile/di/service_locator.dart';
 import 'package:moodle_mobile/view/splash/splash_screen.dart';
@@ -113,12 +112,17 @@ class MyApp extends StatelessWidget {
           ),
           appBarTheme: Theme.of(context).appBarTheme.copyWith(
                 foregroundColor: Colors.white,
+                actionsIconTheme: Theme.of(context).iconTheme.copyWith(
+                      size: 60,
+                      color: MoodleColors.white,
+                    ),
               ),
-          bottomNavigationBarTheme:
-              Theme.of(context).bottomNavigationBarTheme.copyWith(
-                backgroundColor: Theme.of(context).colorScheme.surface,
-                unselectedItemColor: Theme.of(context).colorScheme.onSurface
-              )),
+          bottomNavigationBarTheme: Theme.of(context)
+              .bottomNavigationBarTheme
+              .copyWith(
+                  backgroundColor: Theme.of(context).colorScheme.surface,
+                  unselectedItemColor:
+                      Theme.of(context).colorScheme.onSurface)),
       home: const SplashScreen(),
       debugShowCheckedModeBanner: false,
     );

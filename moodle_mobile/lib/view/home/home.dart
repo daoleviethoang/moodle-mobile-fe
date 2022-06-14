@@ -20,15 +20,19 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isFilter = false;
 
   CategoryType categoryType = CategoryType.my;
+  Widget? myCoursesUI;
+  Widget? allCoursesUI;
 
   @override
   Widget build(BuildContext context) {
+    myCoursesUI ??= getMyCoursesUI();
+    allCoursesUI ??= getAllCoursesUI();
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: MoodleColors.white,
       body: SafeArea(
         child: Column(
-          children: <Widget>[
+          children: [
             getCategoryUI(),
             getScreenTabUI(categoryType),
           ],
@@ -61,12 +65,12 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget getScreenTabUI(CategoryType categoryTypeData) {
-    if (CategoryType.my == categoryTypeData) {
-      return getMyCoursesUI();
-    } else if (CategoryType.all == categoryTypeData) {
-      return getAllCoursesUI();
+    switch(categoryTypeData) {
+      case CategoryType.my:
+        return myCoursesUI!;
+      case CategoryType.all:
+        return allCoursesUI!;
     }
-    return getMyCoursesUI();
   }
 
   Widget getMyCoursesUI() {
@@ -81,15 +85,10 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget getAllCoursesUI() {
-    return Expanded(
-      child: SingleChildScrollView(
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: const Padding(
-            padding: EdgeInsets.only(top: 0, left: 5, right: 5),
-            child: CourseCategoryScreen(),
-          ),
-        ),
+    return const Expanded(
+      child: Padding(
+        padding: EdgeInsets.only(top: 0, left: 5, right: 5),
+        child: CourseCategoryScreen(),
       ),
     );
   }

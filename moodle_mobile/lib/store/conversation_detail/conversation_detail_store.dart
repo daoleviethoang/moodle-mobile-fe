@@ -24,6 +24,9 @@ abstract class _ConversationDetailStore with Store {
 
       if (kDebugMode) {
         print("Get list message success: ${listMessages.length}");
+        // for (ConversationMessageModel m in listMessages) {
+        //   print(m.text);
+        // }
       }
     } catch (e) {
       if (kDebugMode) {
