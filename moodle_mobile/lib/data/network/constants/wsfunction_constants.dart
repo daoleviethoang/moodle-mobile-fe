@@ -101,4 +101,8 @@ class Wsfunction {
       "mod_quiz_get_attempt_review";
   static const String MOD_QUIZ_GET_USER_BEST_GRADE =
       "mod_quiz_get_user_best_grade";
+
+  //site info
+  static const String CORE_WEBSERVICE_GET_SITE_INFO =
+      "core_webservice_get_site_info";
 }
