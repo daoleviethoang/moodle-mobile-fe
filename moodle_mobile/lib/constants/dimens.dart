@@ -20,4 +20,5 @@ class Dimens {
 
   //Size for icon
   static const double default_size_icon = 35.0;
+  static const double appbar_icon_size = 28;
 }

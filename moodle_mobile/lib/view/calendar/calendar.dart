@@ -3,13 +3,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
+import 'package:mobx/mobx.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/data/network/apis/calendar/calendar_service.dart';
-import 'package:moodle_mobile/data/network/apis/contact/contact_service.dart';
 import 'package:moodle_mobile/data/network/apis/module/module_service.dart';
 import 'package:moodle_mobile/models/calendar/event.dart';
-import 'package:moodle_mobile/models/contact/contact.dart';
 import 'package:moodle_mobile/models/module/module.dart';
 import 'package:moodle_mobile/models/module/module_course.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
@@ -20,7 +19,12 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CalendarScreen extends StatefulWidget {
-  const CalendarScreen({Key? key}) : super(key: key);
+  final Observable<bool>? jumpOpenFlag;
+
+  const CalendarScreen({
+    Key? key,
+    this.jumpOpenFlag,
+  }) : super(key: key);
 
   @override
   State<CalendarScreen> createState() => _CalendarScreenState();
@@ -37,11 +41,19 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   late UserStore _userStore;
   Map<String, List<Event>> _events = {};
+  Observable<bool>? _jumpOpenFlag;
 
   @override
   void initState() {
     super.initState();
     _userStore = GetIt.instance<UserStore>();
+    _jumpOpenFlag = widget.jumpOpenFlag;
+    _jumpOpenFlag?.observe((p0) {
+      if (_jumpOpenFlag?.value ?? false) {
+        _jumpOpenFlag?.toggle();
+        _jumpToDate();
+      }
+    });
   }
 
   void _initMonthView() {
