@@ -1,6 +1,8 @@
 import 'package:get_it/get_it.dart';
+import 'package:mobx/mobx.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:moodle_mobile/constants/dimens.dart';
 import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/data/firebase/messaging/messaging_helper.dart';
 import 'package:moodle_mobile/models/course/courses.dart';
@@ -9,6 +11,7 @@ import 'package:moodle_mobile/view/calendar/calendar.dart';
 import 'package:moodle_mobile/view/home/home.dart';
 import 'package:moodle_mobile/view/menu/menu_screen.dart';
 import 'package:moodle_mobile/view/message_preference/index.dart';
+import 'package:moodle_mobile/view/notification_preference/index.dart';
 import 'package:moodle_mobile/view/notifications/notification_screen.dart';
 import 'package:moodle_mobile/view/message/message_screen.dart';
 import 'package:moodle_mobile/view/search_course/search_course.dart';
@@ -29,6 +32,7 @@ class _DirectScreenState extends State<DirectScreen> {
   // ignore: prefer_final_fields
   List<Widget> _widgetOptions = [];
   static late List<String> _widgetAppBarTitle;
+  final calendarJumpOpenFlag = ObservableBool(false);
 
   void _onItemTapped(int index) {
     setState(() {
@@ -44,7 +48,7 @@ class _DirectScreenState extends State<DirectScreen> {
     setState(() {
       _widgetOptions = <Widget>[
         const HomeScreen(),
-        const CalendarScreen(),
+        CalendarScreen(jumpOpenFlag: calendarJumpOpenFlag),
         const MessageScreen(),
         const NotificationScreen(),
         const MenuScreen(),
@@ -73,7 +77,10 @@ class _DirectScreenState extends State<DirectScreen> {
       extendBody: true,
       appBar: getAppBarUI(),
       body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
+        child: IndexedStack(
+          children: _widgetOptions,
+          index: _selectedIndex,
+        ),
       ),
       bottomNavigationBar: getBottomNavBarUI(),
     );
@@ -84,38 +91,49 @@ class _DirectScreenState extends State<DirectScreen> {
       title: Text(_widgetAppBarTitle.elementAt(_selectedIndex),
           textAlign: TextAlign.left, style: MoodleStyles.appBarTitleStyle),
       actions: <Widget>[
-        _selectedIndex == 0
-            ? SizedBox(
-                width: 60,
-                height: 60,
-                child: IconButton(
-                    iconSize: 28,
+        Builder(
+          builder: (context) {
+            switch (_selectedIndex) {
+              case 0:
+                return IconButton(
+                    iconSize: Dimens.appbar_icon_size,
                     icon: const Icon(Icons.search),
-                    color: MoodleColors.white,
                     onPressed: () async {
                       await showSearch<CourseOverview?>(
                         context: context,
                         delegate: CoursesSearch(token: _userStore.user.token),
                       );
-                    }),
-              )
-            : Container(),
-        _selectedIndex == 2
-            ? SizedBox(
-                width: 60,
-                height: 60,
-                child: IconButton(
-                    iconSize: 28,
+                    });
+              case 1:
+                return IconButton(
+                    iconSize: Dimens.appbar_icon_size,
+                    icon: const Icon(Icons.search),
+                    onPressed: () => calendarJumpOpenFlag.toggle());
+              case 2:
+                return IconButton(
+                    iconSize: Dimens.appbar_icon_size,
                     icon: const Icon(Icons.settings),
-                    color: MoodleColors.white,
                     onPressed: () async {
                       Navigator.of(context)
                           .push(MaterialPageRoute(builder: (_) {
                         return const MessagePreferenceScreen();
                       }));
-                    }),
-              )
-            : Container()
+                    });
+              case 3:
+                return IconButton(
+                    iconSize: Dimens.appbar_icon_size,
+                    icon: const Icon(Icons.settings),
+                    onPressed: () async {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (_) {
+                        return const NotificationPreferenceScreen();
+                      }));
+                    });
+              default:
+                return Container();
+            }
+          }
+        ),
       ],
     );
   }

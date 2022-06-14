@@ -14,6 +14,7 @@ import 'package:moodle_mobile/data/network/apis/course/course_detail_service.dar
 import 'package:moodle_mobile/data/network/apis/course/course_service.dart';
 import 'package:moodle_mobile/data/network/apis/lti/lti_service.dart';
 import 'package:moodle_mobile/data/network/apis/module/module_service.dart';
+import 'package:moodle_mobile/data/network/apis/site_info/site_info_api.dart';
 import 'package:moodle_mobile/models/calendar/event.dart';
 import 'package:moodle_mobile/models/contact/contact.dart';
 import 'package:moodle_mobile/models/course/course_content.dart';
@@ -21,6 +22,8 @@ import 'package:moodle_mobile/models/course/course_detail.dart';
 import 'package:moodle_mobile/models/lti/lti.dart';
 import 'package:moodle_mobile/models/module/module.dart';
 import 'package:moodle_mobile/models/module/module_course.dart';
+import 'package:moodle_mobile/models/site_info/site_info.dart';
+import 'package:moodle_mobile/view/activity/activity_screen.dart';
 import 'package:moodle_mobile/view/common/content_item.dart';
 import 'package:moodle_mobile/view/common/data_card.dart';
 import 'package:moodle_mobile/view/enrol/enrol.dart';
@@ -48,6 +51,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   var _index = 0;
   final _body = <Widget>[];
   Widget _homeTab = Container();
+  Widget _activityTab = Container();
   Widget _announcementsTab = Container();
   Widget _discussionsTab = Container();
   Widget _eventsTab = Container();
@@ -59,6 +63,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   CourseDetail? _course;
   List<CourseContent> _content = [];
   List<Event> _events = [];
+  SiteInfo? _siteInfo;
 
   bool isTeacher = false;
 
@@ -91,6 +96,21 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     } finally {
       if (_homeTab is! Container) {
         _body.add(_homeTab);
+      }
+    }
+    try {
+      if (_siteInfo?.functions?.any((element) =>
+              element.name == "local_modulews_add_section_course") ??
+          false == true) {
+        _initActivityTab();
+      } else {
+        _activityTab = Container();
+      }
+    } catch (e) {
+      _activityTab = ErrorCard(text: '$e');
+    } finally {
+      if (_activityTab is! Container) {
+        _body.add(_activityTab);
       }
     }
     try {
@@ -146,6 +166,9 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     if (_homeTab is! Container) {
       _tabs.add(Tab(child: Text(AppLocalizations.of(context)!.home)));
     }
+    if (_activityTab is! Container) {
+      _tabs.add(Tab(child: Text(AppLocalizations.of(context)!.activity)));
+    }
     if (_announcementsTab is! Container) {
       _tabs.add(Tab(child: Text(AppLocalizations.of(context)!.announcement)));
     }
@@ -190,6 +213,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                     submissionId: m.instance ?? 0,
                     courseId: widget.courseId,
                     dueDate: dueDate,
+                    isTeacher: isTeacher,
                   );
                 case ModuleName.chat:
                   return ChatItem(
@@ -233,9 +257,11 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                   );
                 case ModuleName.quiz:
                   return QuizItem(
-                      title: title,
-                      quizInstanceId: m.instance ?? 0,
-                      courseId: widget.courseId);
+                    title: title,
+                    quizInstanceId: m.instance ?? 0,
+                    courseId: widget.courseId,
+                    isTeacher: isTeacher,
+                  );
                 case ModuleName.resource:
                   var url = m.contents?[0].fileurl ?? '';
                   if (url.isNotEmpty) {
@@ -268,6 +294,28 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
         );
       }).toList(),
     );
+  }
+
+  void _initActivityTab() {
+    var activityList = _content.where((element) => element.name == "Activity");
+    if (activityList.isNotEmpty) {
+      int index = _content.indexOf(activityList.first);
+      _activityTab = ActivityScreen(
+        sectionIndex: index,
+        isTeacher: isTeacher,
+        content: _content[index],
+        courseId: widget.courseId,
+        reGetContent: reGetContentForActivityTab,
+      );
+    } else {
+      _activityTab = ActivityScreen(
+        sectionIndex: 0,
+        isTeacher: isTeacher,
+        content: null,
+        courseId: widget.courseId,
+        reGetContent: reGetContentForActivityTab,
+      );
+    }
   }
 
   void _initAnnouncementsTab() {
@@ -326,6 +374,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                         submissionId: instance,
                         courseId: e.course?.id ?? 0,
                         dueDate: dueDate,
+                        isTeacher: isTeacher,
                       );
                     });
               case ModuleName.quiz:
@@ -344,6 +393,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                         openDate: dueDate,
                         quizInstanceId: instance,
                         courseId: e.course?.id ?? 0,
+                        isTeacher: isTeacher,
                       );
                     });
               default:
@@ -404,11 +454,54 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
         _userStore.user.token,
         _courseId,
       );
+      _siteInfo = await SiteInfoApi().getSiteInfo(_userStore.user.token);
       await CourseService().triggerViewCourse(
         _userStore.user.token,
         _courseId,
       );
       _initBody();
+    } catch (e) {
+      if (e.toString() == "errorcoursecontextnotvalid") {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) {
+          return EnrolScreen(
+            courseId: widget.courseId,
+          );
+        }));
+      }
+      rethrow;
+    }
+  }
+
+  Future reGetContentForActivityTab(bool isSetState) async {
+    try {
+      if (isSetState) {
+        var contentResponse = await CourseContentService().getCourseContent(
+          _userStore.user.token,
+          _courseId,
+        );
+        setState(() {
+          _content = contentResponse;
+        });
+        var activityList =
+            _content.where((element) => element.name == "Activity");
+        if (activityList.isNotEmpty) {
+          int index = _content.indexOf(activityList.first);
+          setState(() {
+            _activityTab = ActivityScreen(
+              sectionIndex: index,
+              isTeacher: isTeacher,
+              content: _content[index],
+              courseId: widget.courseId,
+              reGetContent: reGetContentForActivityTab,
+            );
+          });
+        }
+      } else {
+        _content = await CourseContentService().getCourseContent(
+          _userStore.user.token,
+          _courseId,
+        );
+      }
     } catch (e) {
       if (e.toString() == "errorcoursecontextnotvalid") {
         Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) {

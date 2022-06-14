@@ -17,6 +17,7 @@ ModuleContent _$ModuleContentFromJson(Map<String, dynamic> json) =>
       timemodified: json['timemodified'] as int?,
       sortorder: json['sortorder'] as int?,
       userid: json['userid'] as int?,
+      mimetype: json['mimetype'] as String?,
       author: json['author'] as String?,
       license: json['license'] as String?,
     );
@@ -32,6 +33,7 @@ Map<String, dynamic> _$ModuleContentToJson(ModuleContent instance) =>
       'timemodified': instance.timemodified,
       'sortorder': instance.sortorder,
       'userid': instance.userid,
+      'mimetype': instance.mimetype,
       'author': instance.author,
       'license': instance.license,
     };

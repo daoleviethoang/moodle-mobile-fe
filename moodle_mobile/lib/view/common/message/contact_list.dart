@@ -1,17 +1,13 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
-import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/data/network/apis/contact/contact_message.dart';
-import 'package:moodle_mobile/data/repository.dart';
 import 'package:moodle_mobile/models/conversation/conversation_member.dart';
 import 'package:moodle_mobile/store/conversation/conversation_store.dart';
-import 'package:moodle_mobile/store/conversation_detail/conversation_detail_store.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/participant.dart';
-import 'package:moodle_mobile/view/common/slidable_tile.dart';
-import 'package:moodle_mobile/view/message/message_detail_screen.dart';
 
 class ContactList extends StatefulWidget {
   const ContactList({Key? key}) : super(key: key);
@@ -32,52 +28,64 @@ class _ContactListState extends State<ContactList> {
     _conversationStore = GetIt.instance<ConversationStore>();
     _contactOfMessage = GetIt.instance<ContactOfMessage>();
     _userStore = GetIt.instance<UserStore>();
-
-    _conversationStore.getListConversation(
-        _userStore.user.token, _userStore.user.id);
   }
+
+  Future getContactUser() async => _contactOfMessage.getUserContact(
+      _userStore.user.token, _userStore.user.id);
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: getContactUser(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
-        print(snapshot.connectionState);
+        if (kDebugMode) {
+          print(snapshot.connectionState);
+        }
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return const CircularProgressIndicator();
         }
         if (snapshot.connectionState == ConnectionState.done) {
           List<ConversationMemberModel> listContact = snapshot.data;
-          return SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(height: 16),
-                ...List.generate(
-                  listContact.length,
-                  (index) {
-                    return ParticipantListTile(
-                      fullname: listContact[index].fullname,
-                      id: listContact[index].id,
-                      userStore: _userStore,
-                      avatar: listContact[index].profileImageURL.replaceAll(
-                              "pluginfile.php", "webservice/pluginfile.php") +
-                          "?token=" +
-                          _userStore.user.token,
-                    );
-                  },
-                ),
-              ],
+          return Expanded(
+            child: RefreshIndicator(
+              onRefresh: () async => getContactUser(),
+              child: ListView(
+                padding: const EdgeInsets.all(Dimens.default_padding),
+                physics: const AlwaysScrollableScrollPhysics(),
+                children: [
+                  Container(height: Dimens.default_padding),
+                  if (listContact.isEmpty)
+                    Opacity(
+                      opacity: .5,
+                      child: Center(
+                        child: Text(
+                          AppLocalizations.of(context)!.nothing_yet,
+                        ),
+                      ),
+                    ),
+
+                  ...List.generate(
+                    listContact.length,
+                    (index) {
+                      return ParticipantListTile(
+                        fullname: listContact[index].fullname,
+                        id: listContact[index].id,
+                        userStore: _userStore,
+                        avatar: listContact[index].profileImageURL.replaceAll(
+                                  "pluginfile.php",
+                                  "webservice/pluginfile.php",
+                                ) +
+                            "?token=${_userStore.user.token}",
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
           );
         }
         return Container();
       },
     );
-  }
-
-  Future getContactUser() {
-    return _contactOfMessage.getUserContact(
-        _userStore.user.token, _userStore.user.id);
   }
 }

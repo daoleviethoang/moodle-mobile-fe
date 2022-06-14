@@ -101,4 +101,19 @@ class Wsfunction {
       "mod_quiz_get_attempt_review";
   static const String MOD_QUIZ_GET_USER_BEST_GRADE =
       "mod_quiz_get_user_best_grade";
+
+  //site info
+  static const String CORE_WEBSERVICE_GET_SITE_INFO =
+      "core_webservice_get_site_info";
+
+  //custom api
+  static const String LOCAL_EDIT_FOLDER_NAME =
+      "local_modulews_edit_folder_name_module";
+  static const String LOCAL_ADD_SECTION_COURSE =
+      "local_modulews_add_section_course";
+  static const String LOCAL_EDIT_FOLDER_FILES =
+      "local_modulews_edit_folder_files";
+  static const String LOCAL_ADD_MODULES = "local_modulews_add_modules";
+  static const String LOCAL_REMOVE_FOLDER_MODULE =
+      "local_modulews_remove_folder_module_course";
 }

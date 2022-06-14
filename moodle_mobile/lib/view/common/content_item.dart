@@ -3,6 +3,7 @@ import 'package:html/parser.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/styles.dart';
@@ -166,6 +167,7 @@ class UrlItem extends StatelessWidget {
 class SubmissionItem extends StatelessWidget {
   final String title;
   final int submissionId;
+  final bool? isTeacher;
   final DateTime? dueDate;
   final int courseId;
 
@@ -175,6 +177,7 @@ class SubmissionItem extends StatelessWidget {
     required this.submissionId,
     this.dueDate,
     required this.courseId,
+    required this.isTeacher,
   }) : super(key: key);
 
   @override
@@ -195,6 +198,7 @@ class SubmissionItem extends StatelessWidget {
                       title: title,
                       assignInstanceId: submissionId,
                       courseId: courseId,
+                      isTeacher: isTeacher,
                     )));
       },
     );
@@ -205,11 +209,13 @@ class QuizItem extends StatelessWidget {
   final String title;
   final int courseId;
   final int quizInstanceId;
+  final bool? isTeacher;
   final DateTime? openDate;
 
   const QuizItem({
     Key? key,
     required this.title,
+    required this.isTeacher,
     required this.quizInstanceId,
     required this.courseId,
     this.openDate,
@@ -233,6 +239,7 @@ class QuizItem extends StatelessWidget {
               title: title,
               quizInstanceId: quizInstanceId,
               courseId: courseId,
+              isTeacher: isTeacher,
             ),
           ),
         );
@@ -343,7 +350,7 @@ class ZoomItem extends StatelessWidget {
 // region Cards
 
 class RichTextCard extends StatelessWidget {
-  final String text;
+  final String? text;
   final Map<String, Style>? style;
   final Map<String, dynamic Function(RenderContext, Widget)>? customData;
 
@@ -356,12 +363,12 @@ class RichTextCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Html(
-        data: text,
+        data: text ?? '',
         style: style ?? MoodleStyles.htmlStyle,
         onImageTap: (url, cxt, attributes, element) {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (_) => ImageViewer(
-                    title: 'Image',
+                    title: AppLocalizations.of(context)!.image,
                     base64: url?.split(',')[1] ?? '',
                   )));
         },
@@ -371,14 +378,14 @@ class RichTextCard extends StatelessWidget {
             context: context,
             pageBuilder: (context, ani1, ani2) {
               return AlertDialog(
-                title: const Text('Open link in browser'),
+                title: Text(AppLocalizations.of(context)!.open_link),
                 content: Text(url ?? ''),
                 shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(16))),
                 actions: [
                   TextButton(
                     onPressed: () async => Navigator.pop(context),
-                    child: const Text('Cancel'),
+                    child: Text(AppLocalizations.of(context)!.cancel),
                   ),
                   TextButton(
                     onPressed: () async {
@@ -388,7 +395,7 @@ class RichTextCard extends StatelessWidget {
                         mode: LaunchMode.externalApplication,
                       );
                     },
-                    child: const Text('Open'),
+                    child: Text(AppLocalizations.of(context)!.open),
                   ),
                 ],
               );
@@ -405,7 +412,7 @@ class RichTextCard extends StatelessWidget {
 // region Text and others
 
 class HeaderItem extends StatelessWidget {
-  final String text;
+  final String? text;
 
   const HeaderItem({
     Key? key,
@@ -414,7 +421,7 @@ class HeaderItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final text = parseFragment(this.text).text ?? '';
+    final text = parseFragment(this.text ?? '').text ?? '';
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Text(

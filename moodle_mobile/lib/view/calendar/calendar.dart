@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
+import 'package:mobx/mobx.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/data/network/apis/calendar/calendar_service.dart';
@@ -18,7 +19,12 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CalendarScreen extends StatefulWidget {
-  const CalendarScreen({Key? key}) : super(key: key);
+  final Observable<bool>? jumpOpenFlag;
+
+  const CalendarScreen({
+    Key? key,
+    this.jumpOpenFlag,
+  }) : super(key: key);
 
   @override
   State<CalendarScreen> createState() => _CalendarScreenState();
@@ -35,11 +41,19 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   late UserStore _userStore;
   Map<String, List<Event>> _events = {};
+  Observable<bool>? _jumpOpenFlag;
 
   @override
   void initState() {
     super.initState();
     _userStore = GetIt.instance<UserStore>();
+    _jumpOpenFlag = widget.jumpOpenFlag;
+    _jumpOpenFlag?.observe((p0) {
+      if (_jumpOpenFlag?.value ?? false) {
+        _jumpOpenFlag?.toggle();
+        _jumpToDate();
+      }
+    });
   }
 
   void _initMonthView() {
@@ -188,6 +202,16 @@ class _CalendarScreenState extends State<CalendarScreen> {
           ),
 
           // Event list
+          if (_selectedEvents.isEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Opacity(
+                opacity: .5,
+                child: Center(
+                  child: Text(AppLocalizations.of(context)!.no_events),
+                ),
+              ),
+            ),
           ..._selectedEvents.map((e) {
             final title = e.name ?? '';
             final epoch = (e.timestart ?? 0) * 1000;
@@ -209,6 +233,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         submissionId: instance,
                         courseId: e.course?.id ?? 0,
                         dueDate: dueDate,
+                        isTeacher: null,
                       );
                     });
               case ModuleName.quiz:
@@ -227,6 +252,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         openDate: dueDate,
                         quizInstanceId: instance,
                         courseId: e.course?.id ?? 0,
+                        isTeacher: null,
                       );
                     });
               default:
@@ -276,36 +302,39 @@ class _CalendarScreenState extends State<CalendarScreen> {
             return ErrorCard(
                 text: AppLocalizations.of(context)!.err_get_calendar);
           }
-          return SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                children: [
-                  Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      AnimatedOpacity(
-                        opacity: (_events.isEmpty) ? .5 : 1,
-                        duration: const Duration(milliseconds: 300),
-                        child: IgnorePointer(
-                          ignoring: _events.isEmpty,
-                          child: _monthView,
-                        ),
-                      ),
-                      AnimatedOpacity(
-                          opacity: (_events.isEmpty) ? 1 : 0,
+          return RefreshIndicator(
+            onRefresh: () async => setState(() => _events.clear()),
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  children: [
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        AnimatedOpacity(
+                          opacity: (_events.isEmpty) ? .5 : 1,
                           duration: const Duration(milliseconds: 300),
-                          child: const CircularProgressIndicator.adaptive()),
-                    ],
-                  ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 12, left: 12),
-                      child: _dayView,
+                          child: IgnorePointer(
+                            ignoring: _events.isEmpty,
+                            child: _monthView,
+                          ),
+                        ),
+                        AnimatedOpacity(
+                            opacity: (_events.isEmpty) ? 1 : 0,
+                            duration: const Duration(milliseconds: 300),
+                            child: const CircularProgressIndicator.adaptive()),
+                      ],
                     ),
-                  ),
-                ],
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 12, left: 12),
+                        child: _dayView,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           );

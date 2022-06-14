@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
+import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/models/contant/contant_model.dart';
 import 'package:moodle_mobile/models/contant/course_arrange.dart';
 import 'package:moodle_mobile/models/contant/course_status.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SelectCourseFilter extends StatefulWidget {
   ContantModel arrangeType;
@@ -68,20 +70,17 @@ class _SelectCourseFilterState extends State<SelectCourseFilter>
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(left: 10.0, right: 10.0),
+      margin: const EdgeInsets.symmetric(horizontal: 10),
       child: Column(
-        children: <Widget>[
+        children: [
           GestureDetector(
             onTap: () {
               if (isShow == true) {
                 setState(() {
-                  this.isFilter = true;
+                  isFilter = true;
                 });
-                widget.onOptionSelected(
-                    this.arrangeTypeSelected,
-                    this.statusTypeSelected,
-                    this.showOnlyStarSelected,
-                    this.isFilter);
+                widget.onOptionSelected(arrangeTypeSelected, statusTypeSelected,
+                    showOnlyStarSelected, isFilter);
               }
               isShow = !isShow;
               _runExpandCheck();
@@ -89,7 +88,7 @@ class _SelectCourseFilterState extends State<SelectCourseFilter>
             child: Container(
               margin: const EdgeInsets.only(bottom: 8),
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-              decoration: new BoxDecoration(
+              decoration: BoxDecoration(
                 border: Border.all(color: MoodleColors.grey),
                 borderRadius: BorderRadius.circular(8.0),
                 color: Colors.white,
@@ -100,11 +99,11 @@ class _SelectCourseFilterState extends State<SelectCourseFilter>
                       offset: Offset(0, 2))
                 ],
               ),
-              child: new Row(
+              child: Row(
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(
+                children: [
+                  const SizedBox(
                     width: 10,
                   ),
                   Expanded(
@@ -112,10 +111,11 @@ class _SelectCourseFilterState extends State<SelectCourseFilter>
                     statusTypeSelected.value +
                         " | " +
                         arrangeTypeSelected.value,
-                    style: TextStyle(color: MoodleColors.black, fontSize: 16),
+                    style: const TextStyle(
+                        color: MoodleColors.black, fontSize: 16),
                   )),
                   Align(
-                    alignment: Alignment(1, 0),
+                    alignment: const Alignment(1, 0),
                     child: Icon(
                       isShow ? Icons.arrow_drop_down : Icons.arrow_right,
                       color: MoodleColors.black,
@@ -152,60 +152,39 @@ class _SelectCourseFilterState extends State<SelectCourseFilter>
 
   Container _buildDropListOptions(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.only(left: 22, right: 22),
+      padding: const EdgeInsets.symmetric(horizontal: 22),
       child: Column(children: [
         Container(
           padding: const EdgeInsets.only(top: 27, bottom: 8),
           child: Row(
-            children: const <Widget>[
+            children: [
               Text(
-                'Arrange by',
+                AppLocalizations.of(context)!.arrange_by,
                 textAlign: TextAlign.left,
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16,
-                  letterSpacing: 0.27,
-                  color: MoodleColors.black,
-                ),
+                style: MoodleStyles.courseFilterHeaderStyle,
               ),
             ],
           ),
         ),
         Row(
-          children: <Widget>[
+          children: [
             ...ContantExtension.allCourseArrange
                 .map((item) => _buildFilterByArrangeMenu(item, context))
                 .toList()
           ],
         ),
-        Container(
-          margin: EdgeInsets.only(top: 10, bottom: 10),
-          decoration: const BoxDecoration(
-            border: Border(top: BorderSide(color: Colors.grey, width: 1)),
-          ),
-        ),
+        const Divider(color: Colors.grey, thickness: 1, indent: 10),
         showOnlyStar(context),
-        Container(
-          margin: EdgeInsets.only(top: 10, bottom: 10),
-          decoration: const BoxDecoration(
-            border: Border(top: BorderSide(color: Colors.grey, width: 1)),
-          ),
-        ),
-        Container(
-          child: Row(
-            children: const <Widget>[
-              Text(
-                'Course status',
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16,
-                  letterSpacing: 0.27,
-                  color: MoodleColors.black,
-                ),
-              ),
-            ],
-          ),
+        const Divider(color: Colors.grey, thickness: 1, indent: 10),
+        Container(height: 10),
+        Row(
+          children: [
+            Text(
+              AppLocalizations.of(context)!.course_status,
+              textAlign: TextAlign.left,
+              style: MoodleStyles.courseFilterHeaderStyle,
+            ),
+          ],
         ),
         ...ContantExtension.allCourseStatus
             .map((item) => _buildFilterByStatusMenu(item, context))
@@ -217,10 +196,10 @@ class _SelectCourseFilterState extends State<SelectCourseFilter>
 
   Widget _buildFilterByStatusMenu(ContantModel item, BuildContext context) {
     return Container(
-        padding: const EdgeInsets.only(left: 10, right: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
+          children: [
             Text(
               item.value,
               style: const TextStyle(
@@ -250,7 +229,7 @@ class _SelectCourseFilterState extends State<SelectCourseFilter>
     return Container(
       padding: const EdgeInsets.only(top: 5.0, bottom: 5.0, right: 14),
       child: Row(
-        children: <Widget>[
+        children: [
           Center(
             child: TextButton(
                 style: TextButton.styleFrom(
@@ -270,7 +249,7 @@ class _SelectCourseFilterState extends State<SelectCourseFilter>
                       })
                     },
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 5, right: 5),
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
                   child: Text(item.value,
                       style: const TextStyle(
                           color: MoodleColors.black,
@@ -289,25 +268,23 @@ class _SelectCourseFilterState extends State<SelectCourseFilter>
   Widget showOnlyStar(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
+      children: [
         Row(
-          children: <Widget>[
+          children: [
             const Icon(
               Icons.star,
               color: MoodleColors.yellow_icon,
               size: 24,
             ),
-            const Padding(
-              padding: EdgeInsets.only(left: 10),
-              child: Text('Show only star',
-                  style: TextStyle(
-                      color: MoodleColors.grey_text,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 14),
-                  maxLines: 3,
-                  textAlign: TextAlign.start,
-                  overflow: TextOverflow.ellipsis),
-            ),
+            Container(width: 10),
+            Text(AppLocalizations.of(context)!.show_star,
+                style: const TextStyle(
+                    color: MoodleColors.grey_text,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 14),
+                maxLines: 3,
+                textAlign: TextAlign.start,
+                overflow: TextOverflow.ellipsis),
           ],
         ),
         Checkbox(
@@ -328,10 +305,10 @@ class _SelectCourseFilterState extends State<SelectCourseFilter>
 
   Widget cancelAndFilterButton() {
     return Container(
-      padding: EdgeInsets.only(top: 20, bottom: 15, left: 20, right: 20),
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 15),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
+        children: [
           TextButton(
               style: TextButton.styleFrom(
                 side: const BorderSide(color: MoodleColors.gray, width: 1),
@@ -345,14 +322,12 @@ class _SelectCourseFilterState extends State<SelectCourseFilter>
                   showOnlyStarSelected = false;
                 });
               },
-              child: const Padding(
-                padding:
-                    EdgeInsets.only(left: 40, right: 40, top: 5, bottom: 5),
-                child: Text('Clear',
-                    style: TextStyle(
-                        color: MoodleColors.blue,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 16),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(40, 5, 40, 5),
+                child: Text(AppLocalizations.of(context)!.clear,
+                    style: MoodleStyles.courseFilterButtonTextStyle.copyWith(
+                      color: MoodleColors.blue,
+                    ),
                     textAlign: TextAlign.start,
                     overflow: TextOverflow.ellipsis),
               )),
@@ -365,26 +340,22 @@ class _SelectCourseFilterState extends State<SelectCourseFilter>
               ),
               onPressed: () {
                 setState(() {
-                  this.isFilter = true;
+                  isFilter = true;
                 });
                 setState(() {
-                  this.isShow = !this.isShow;
+                  isShow = !isShow;
                 });
-                widget.onOptionSelected(
-                    this.arrangeTypeSelected,
-                    this.statusTypeSelected,
-                    this.showOnlyStarSelected,
-                    this.isFilter);
+                widget.onOptionSelected(arrangeTypeSelected, statusTypeSelected,
+                    showOnlyStarSelected, isFilter);
                 _runExpandCheck();
               },
-              child: const Padding(
-                padding:
-                    EdgeInsets.only(left: 40, right: 40, top: 5, bottom: 5),
-                child: Text('Filter',
-                    style: TextStyle(
-                        color: MoodleColors.white,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 16),
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    left: 40, right: 40, top: 5, bottom: 5),
+                child: Text(AppLocalizations.of(context)!.filter,
+                    style: MoodleStyles.courseFilterButtonTextStyle.copyWith(
+                      color: MoodleColors.white,
+                    ),
                     textAlign: TextAlign.start,
                     overflow: TextOverflow.ellipsis),
               )),

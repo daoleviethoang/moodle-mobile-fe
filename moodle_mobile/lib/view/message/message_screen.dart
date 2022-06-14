@@ -62,7 +62,7 @@ class _MessageScreenState extends State<MessageScreen> {
               ],
             ),
           ),
-          currentTab == 0 ? const MessageList() : const ContactList()
+          currentTab == 0 ? const MessageList() : const ContactList(),
         ],
       ),
     );
