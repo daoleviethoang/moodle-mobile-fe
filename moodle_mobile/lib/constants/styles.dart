@@ -31,5 +31,7 @@ class MoodleStyles {
   static const TextStyle messageContentStyle =
       TextStyle(fontSize: 12, color: MoodleColors.gray);
 
+  static Style rightMessageTextStyle = Style(color: MoodleColors.white);
+
   static const TextStyle notificationTimestampStyle = TextStyle(fontSize: 12);
 }

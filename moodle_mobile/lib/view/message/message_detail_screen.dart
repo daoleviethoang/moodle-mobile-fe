@@ -41,15 +41,16 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
     _conversationStore = GetIt.instance<ConversationStore>();
     _conversationDetailStore =
         ConversationDetailStore(GetIt.instance<Repository>());
-    _conversationDetailStore.getListMessage(
-        _userStore.user.token, _userStore.user.id, widget.conversationId);
+    getListMessage();
 
     // Update message list
-    _refreshTimer = Timer.periodic(
-        Vars.refreshInterval,
-        (t) => _conversationDetailStore.getListMessage(
-            _userStore.user.token, _userStore.user.id, widget.conversationId));
+    _refreshTimer =
+        Timer.periodic(Vars.refreshInterval, (t) async => getListMessage());
   }
+
+  Future getListMessage() async =>
+      await _conversationDetailStore.getListMessage(
+          _userStore.user.token, _userStore.user.id, widget.conversationId);
 
   @override
   void dispose() {
