@@ -9,6 +9,7 @@ import 'package:moodle_mobile/view/calendar/calendar.dart';
 import 'package:moodle_mobile/view/home/home.dart';
 import 'package:moodle_mobile/view/menu/menu_screen.dart';
 import 'package:moodle_mobile/view/message_preference/index.dart';
+import 'package:moodle_mobile/view/notification_preference/index.dart';
 import 'package:moodle_mobile/view/notifications/notification_screen.dart';
 import 'package:moodle_mobile/view/message/message_screen.dart';
 import 'package:moodle_mobile/view/search_course/search_course.dart';
@@ -115,6 +116,22 @@ class _DirectScreenState extends State<DirectScreen> {
                       Navigator.of(context)
                           .push(MaterialPageRoute(builder: (_) {
                         return const MessagePreferenceScreen();
+                      }));
+                    }),
+              )
+            : Container(),
+        _selectedIndex == 3
+            ? SizedBox(
+                width: 60,
+                height: 60,
+                child: IconButton(
+                    iconSize: 28,
+                    icon: const Icon(Icons.settings),
+                    color: MoodleColors.white,
+                    onPressed: () async {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (_) {
+                        return const NotificationPreferenceScreen();
                       }));
                     }),
               )

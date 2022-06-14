@@ -6,8 +6,10 @@ import 'package:intl/intl.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/data/network/apis/calendar/calendar_service.dart';
+import 'package:moodle_mobile/data/network/apis/contact/contact_service.dart';
 import 'package:moodle_mobile/data/network/apis/module/module_service.dart';
 import 'package:moodle_mobile/models/calendar/event.dart';
+import 'package:moodle_mobile/models/contact/contact.dart';
 import 'package:moodle_mobile/models/module/module.dart';
 import 'package:moodle_mobile/models/module/module_course.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
@@ -219,6 +221,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         submissionId: instance,
                         courseId: e.course?.id ?? 0,
                         dueDate: dueDate,
+                        isTeacher: null,
                       );
                     });
               case ModuleName.quiz:
@@ -237,6 +240,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         openDate: dueDate,
                         quizInstanceId: instance,
                         courseId: e.course?.id ?? 0,
+                        isTeacher: null,
                       );
                     });
               default:

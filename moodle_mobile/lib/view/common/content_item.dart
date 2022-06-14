@@ -167,6 +167,7 @@ class UrlItem extends StatelessWidget {
 class SubmissionItem extends StatelessWidget {
   final String title;
   final int submissionId;
+  final bool? isTeacher;
   final DateTime? dueDate;
   final int courseId;
 
@@ -176,6 +177,7 @@ class SubmissionItem extends StatelessWidget {
     required this.submissionId,
     this.dueDate,
     required this.courseId,
+    required this.isTeacher,
   }) : super(key: key);
 
   @override
@@ -196,6 +198,7 @@ class SubmissionItem extends StatelessWidget {
                       title: title,
                       assignInstanceId: submissionId,
                       courseId: courseId,
+                      isTeacher: isTeacher,
                     )));
       },
     );
@@ -206,11 +209,13 @@ class QuizItem extends StatelessWidget {
   final String title;
   final int courseId;
   final int quizInstanceId;
+  final bool? isTeacher;
   final DateTime? openDate;
 
   const QuizItem({
     Key? key,
     required this.title,
+    required this.isTeacher,
     required this.quizInstanceId,
     required this.courseId,
     this.openDate,
@@ -234,6 +239,7 @@ class QuizItem extends StatelessWidget {
               title: title,
               quizInstanceId: quizInstanceId,
               courseId: courseId,
+              isTeacher: isTeacher,
             ),
           ),
         );

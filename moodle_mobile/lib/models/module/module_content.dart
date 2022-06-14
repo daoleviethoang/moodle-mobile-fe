@@ -13,6 +13,7 @@ class ModuleContent {
   int? timemodified;
   int? sortorder;
   int? userid;
+  String? mimetype;
   String? author;
   String? license;
 
@@ -26,6 +27,7 @@ class ModuleContent {
     this.timemodified,
     this.sortorder,
     this.userid,
+    this.mimetype,
     this.author,
     this.license,
   });
