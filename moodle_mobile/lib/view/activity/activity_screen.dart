@@ -8,10 +8,10 @@ import 'package:moodle_mobile/data/network/apis/file/file_api.dart';
 import 'package:moodle_mobile/models/assignment/file_assignment.dart';
 import 'package:moodle_mobile/models/course/course_content.dart';
 import 'package:moodle_mobile/models/module/module.dart';
-import 'package:moodle_mobile/models/module/module_content.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/activity/album_tile.dart';
 import 'package:moodle_mobile/view/common/custom_button.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ActivityScreen extends StatefulWidget {
   final int sectionIndex;
@@ -48,10 +48,10 @@ class _ActivityScreenState extends State<ActivityScreen> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
+          Padding(
               padding: EdgeInsets.only(top: 20, bottom: 20),
               child: Text(
-                "Classroom Acitivities",
+                AppLocalizations.of(context)!.class_activities,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: MoodleColors.black80,
@@ -60,7 +60,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
               )),
           Center(
             child: CustomButtonWidget(
-              textButton: "Create activity section",
+              textButton: AppLocalizations.of(context)!.create_section_activity,
               onPressed: () async {
                 try {
                   await CustomApi().addSectionCourse(
@@ -91,7 +91,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Classroom Acitivities",
+                  AppLocalizations.of(context)!.class_activities,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: MoodleColors.black80,
@@ -162,8 +162,8 @@ class _ActivityScreenState extends State<ActivityScreen> {
               ],
             )),
         (widget.content?.modules.isEmpty ?? true)
-            ? const Center(
-                child: Text("Empty"),
+            ? Center(
+                child: Text(AppLocalizations.of(context)!.empty_data),
               )
             : Column(
                 children: [

@@ -13,6 +13,7 @@ import 'package:moodle_mobile/models/module/module_content.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/activity/image_album_detail_tile.dart';
 import 'package:moodle_mobile/view/common/custom_text_field.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AlbumScreen extends StatefulWidget {
   final Module module;
@@ -108,7 +109,8 @@ class _AlbumScreenState extends State<AlbumScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Text(
-                                      'Xóa album?',
+                                      AppLocalizations.of(context)!
+                                          .deleete_album,
                                       textScaleFactor: 0.8,
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
@@ -118,7 +120,8 @@ class _AlbumScreenState extends State<AlbumScreen> {
                                       height: 10,
                                     ),
                                     Text(
-                                      'Khi xoá bạn không thể hoàn tác ',
+                                      AppLocalizations.of(context)!
+                                          .delete_album_description,
                                       textScaleFactor: 0.8,
                                     ),
                                   ],
@@ -130,7 +133,9 @@ class _AlbumScreenState extends State<AlbumScreen> {
                                         onPressed: () {
                                           Navigator.pop(context);
                                         },
-                                        child: Text("Cancel",
+                                        child: Text(
+                                            AppLocalizations.of(context)!
+                                                .cancel,
                                             style: TextStyle(
                                               color: Colors.white,
                                               fontWeight: FontWeight.w700,
@@ -156,7 +161,9 @@ class _AlbumScreenState extends State<AlbumScreen> {
                                         onPressed: () async {
                                           Navigator.pop(context, true);
                                         },
-                                        child: Text("Remove",
+                                        child: Text(
+                                            AppLocalizations.of(context)!
+                                                .remove,
                                             style: TextStyle(
                                               color: Colors.white,
                                               fontWeight: FontWeight.w700,
@@ -218,7 +225,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(
-                                  'Album mới',
+                                  AppLocalizations.of(context)!.new_name_album,
                                   textScaleFactor: 0.8,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
@@ -228,7 +235,8 @@ class _AlbumScreenState extends State<AlbumScreen> {
                                   height: 10,
                                 ),
                                 Text(
-                                  'Nhập tên cho album này',
+                                  AppLocalizations.of(context)!
+                                      .new_name_album_description,
                                   textScaleFactor: 0.8,
                                 ),
                                 SizedBox(
@@ -236,7 +244,8 @@ class _AlbumScreenState extends State<AlbumScreen> {
                                 ),
                                 CustomTextFieldWidget(
                                   controller: nameController,
-                                  hintText: "Nhập tiêu đề",
+                                  hintText:
+                                      AppLocalizations.of(context)!.enter_title,
                                   haveLabel: false,
                                   borderRadius: Dimens.default_border_radius,
                                 ),
@@ -249,7 +258,8 @@ class _AlbumScreenState extends State<AlbumScreen> {
                                     onPressed: () {
                                       Navigator.pop(context);
                                     },
-                                    child: Text("Cancel",
+                                    child: Text(
+                                        AppLocalizations.of(context)!.cancel,
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.w700,
@@ -288,12 +298,13 @@ class _AlbumScreenState extends State<AlbumScreen> {
                                       }
                                       Navigator.pop(context);
                                     },
-                                    child: Text("Save",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 16,
-                                        )),
+                                    child:
+                                        Text(AppLocalizations.of(context)!.save,
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w700,
+                                              fontSize: 16,
+                                            )),
                                     style: ButtonStyle(
                                         backgroundColor:
                                             MaterialStateProperty.all(

@@ -5,6 +5,7 @@ import 'package:moodle_mobile/models/module/module_content.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/activity/album_screen.dart';
 import 'package:moodle_mobile/view/activity/image_album_tile.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AlbumTile extends StatelessWidget {
   final Module module;
@@ -64,7 +65,7 @@ class AlbumTile extends StatelessWidget {
                     );
                   }));
                 },
-                child: Text("Xem tất cả",
+                child: Text(AppLocalizations.of(context)!.see_all,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.blueAccent,
