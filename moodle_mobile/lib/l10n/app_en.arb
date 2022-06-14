@@ -171,5 +171,7 @@
   "unfinished": "Unfinished",
   "upcoming_events": "Upcoming events",
   "user_details": "User details",
+  "text_reply": "Text your reply",
+  "replying": "Replying to post"
   "view_file_submission": "View file submission"
 }
