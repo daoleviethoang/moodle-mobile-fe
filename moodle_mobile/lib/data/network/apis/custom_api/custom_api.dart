@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 import 'package:moodle_mobile/data/network/constants/endpoints.dart';
+import 'package:moodle_mobile/data/network/constants/wsfunction_constants.dart';
 import 'package:moodle_mobile/data/network/dio_http.dart';
 
 class CustomApi {
@@ -10,7 +11,7 @@ class CustomApi {
       Dio dio = Http().client;
       final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
         'wstoken': token,
-        'wsfunction': "local_modulews_edit_folder_name_module",
+        'wsfunction': Wsfunction.LOCAL_EDIT_FOLDER_NAME,
         'moodlewsrestformat': 'json',
         'id': moduleId,
         'name': name,
@@ -31,7 +32,7 @@ class CustomApi {
       Dio dio = Http().client;
       final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
         'wstoken': token,
-        'wsfunction': "local_modulews_add_section_course",
+        'wsfunction': Wsfunction.LOCAL_ADD_SECTION_COURSE,
         'moodlewsrestformat': 'json',
         'courseid': courseId,
         'name': name,
@@ -54,7 +55,7 @@ class CustomApi {
       Dio dio = Http().client;
       final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
         'wstoken': token,
-        'wsfunction': "local_modulews_edit_folder_files",
+        'wsfunction': Wsfunction.LOCAL_EDIT_FOLDER_FILES,
         'moodlewsrestformat': 'json',
         'courseid': moduleId,
         'itemId': itemId,
@@ -76,7 +77,7 @@ class CustomApi {
       Dio dio = Http().client;
       final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
         'wstoken': token,
-        'wsfunction': "local_modulews_add_modules",
+        'wsfunction': Wsfunction.LOCAL_ADD_MODULES,
         'moodlewsrestformat': 'json',
         'courseid': courseId,
         'modules[0][modulename]': 'folder',
@@ -108,7 +109,7 @@ class CustomApi {
       Dio dio = Http().client;
       final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
         'wstoken': token,
-        'wsfunction': "local_modulews_add_modules",
+        'wsfunction': Wsfunction.LOCAL_ADD_MODULES,
         'moodlewsrestformat': 'json',
         'courseid': courseId,
         'modules[0][modulename]': 'url',
@@ -138,7 +139,7 @@ class CustomApi {
       Dio dio = Http().client;
       final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
         'wstoken': token,
-        'wsfunction': "local_modulews_remove_folder_module_course",
+        'wsfunction': Wsfunction.LOCAL_REMOVE_FOLDER_MODULE,
         'moodlewsrestformat': 'json',
         'cmid': moduleId,
       });
