@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 
+import 'package:moodle_mobile/view/viewer/image_viewer.dart';
+
 class ImageAlbumDetailTile extends StatelessWidget {
   final String src;
   final String name;
@@ -30,7 +32,14 @@ class ImageAlbumDetailTile extends StatelessWidget {
           ? () {
               setLongPress(false);
             }
-          : () {},
+          : () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+                return ImageViewer(
+                  title: name,
+                  url: src,
+                );
+              }));
+            },
       child: Stack(
         children: [
           Column(

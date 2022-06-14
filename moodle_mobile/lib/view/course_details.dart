@@ -14,6 +14,7 @@ import 'package:moodle_mobile/data/network/apis/course/course_detail_service.dar
 import 'package:moodle_mobile/data/network/apis/course/course_service.dart';
 import 'package:moodle_mobile/data/network/apis/lti/lti_service.dart';
 import 'package:moodle_mobile/data/network/apis/module/module_service.dart';
+import 'package:moodle_mobile/data/network/apis/site_info/site_info_api.dart';
 import 'package:moodle_mobile/models/calendar/event.dart';
 import 'package:moodle_mobile/models/contact/contact.dart';
 import 'package:moodle_mobile/models/course/course_content.dart';
@@ -21,6 +22,7 @@ import 'package:moodle_mobile/models/course/course_detail.dart';
 import 'package:moodle_mobile/models/lti/lti.dart';
 import 'package:moodle_mobile/models/module/module.dart';
 import 'package:moodle_mobile/models/module/module_course.dart';
+import 'package:moodle_mobile/models/site_info/site_info.dart';
 import 'package:moodle_mobile/view/activity/activity_screen.dart';
 import 'package:moodle_mobile/view/common/content_item.dart';
 import 'package:moodle_mobile/view/common/data_card.dart';
@@ -61,6 +63,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   CourseDetail? _course;
   List<CourseContent> _content = [];
   List<Event> _events = [];
+  SiteInfo? _siteInfo;
 
   bool isTeacher = false;
 
@@ -96,7 +99,13 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
       }
     }
     try {
-      _initActivityTab();
+      if (_siteInfo?.functions?.any((element) =>
+              element.name == "local_modulews_add_section_course") ??
+          false == true) {
+        _initActivityTab();
+      } else {
+        _activityTab = Container();
+      }
     } catch (e) {
       _activityTab = ErrorCard(text: '$e');
     } finally {
@@ -440,6 +449,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
         _userStore.user.token,
         _courseId,
       );
+      _siteInfo = await SiteInfoApi().getSiteInfo(_userStore.user.token);
       await CourseService().triggerViewCourse(
         _userStore.user.token,
         _courseId,

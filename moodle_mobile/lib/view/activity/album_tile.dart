@@ -30,7 +30,9 @@ class AlbumTile extends StatelessWidget {
       if (item.mimetype?.contains("image") ?? false) {
         if (item.fileurl != null && item.fileurl!.isNotEmpty) {
           item.fileurl = item.fileurl!.replaceAll("?forcedownload=1", "");
-          item.fileurl = item.fileurl! + "?token=" + userStore.user.token;
+          if (item.fileurl?.contains("?token") == false) {
+            item.fileurl = item.fileurl! + "?token=" + userStore.user.token;
+          }
           images.add(item);
         }
       }

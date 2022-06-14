@@ -22,7 +22,7 @@ class ImageAlbumTile extends StatelessWidget {
             ),
             child: Image.network(
               src,
-              width: 200,
+              width: 120,
               fit: BoxFit.fitWidth,
             ),
           ),

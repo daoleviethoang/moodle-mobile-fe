@@ -10,7 +10,7 @@ class CustomApi {
       Dio dio = Http().client;
       final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
         'wstoken': token,
-        'wsfunction': "local_modulews_edit_name_module",
+        'wsfunction': "local_modulews_edit_folder_name_module",
         'moodlewsrestformat': 'json',
         'id': moduleId,
         'name': name,
@@ -130,6 +130,27 @@ class CustomApi {
         throw e.toString();
       }
       throw "Can't add new url to course";
+    }
+  }
+
+  Future<void> deleteModuleInCourse(String token, int moduleId) async {
+    try {
+      Dio dio = Http().client;
+      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': "local_modulews_remove_folder_module_course",
+        'moodlewsrestformat': 'json',
+        'cmid': moduleId,
+      });
+      if (res.data is Map<String, dynamic> && res.data["exception"] != null) {
+        throw res.data["exception"];
+      }
+    } catch (e) {
+      if (e.toString() == "dml_missing_record_exception") {
+        throw e.toString();
+      }
+      print(e.toString());
+      throw "Can't remove module";
     }
   }
 }

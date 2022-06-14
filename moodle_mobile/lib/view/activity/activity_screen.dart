@@ -35,6 +35,7 @@ class ActivityScreen extends StatefulWidget {
 class _ActivityScreenState extends State<ActivityScreen> {
   List<Module> albums = [];
   late UserStore _userStore;
+  bool isLoading = false;
   @override
   void initState() {
     _userStore = GetIt.instance<UserStore>();
@@ -43,7 +44,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.content == null) {
+    if (widget.content == null && widget.isTeacher == true) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -84,15 +85,81 @@ class _ActivityScreenState extends State<ActivityScreen> {
     }
     return Column(
       children: [
-        const Padding(
+        Padding(
             padding: EdgeInsets.only(top: 20, bottom: 20),
-            child: Text(
-              "Classroom Acitivities",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: MoodleColors.black80,
-              ),
-              textScaleFactor: 1.5,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Classroom Acitivities",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: MoodleColors.black80,
+                  ),
+                  textScaleFactor: 1.5,
+                ),
+                IconButton(
+                    onPressed: () async {
+                      try {
+                        FilePickerResult? result = await FilePicker.platform
+                            .pickFiles(
+                                allowMultiple: true, type: FileType.image);
+                        if (result != null) {
+                          List<FileUpload> files = result.files
+                              .map(
+                                (e) => FileUpload(
+                                  filename: e.name,
+                                  filepath: e.path ?? "",
+                                  filesize: e.size,
+                                  timeModified: DateTime.now(),
+                                ),
+                              )
+                              .toList();
+
+                          int? itemId = await FileApi()
+                              .uploadMultipleFile(_userStore.user.token, files);
+
+                          // set in web
+                          //int itemId = 429429131;
+
+                          if (itemId != null) {
+                            if (albums.any((element) =>
+                                element.name ==
+                                DateFormat("dd/MM/yyyy")
+                                    .format(DateTime.now()))) {
+                              await CustomApi().addModuleFolder(
+                                  _userStore.user.token,
+                                  widget.courseId,
+                                  DateFormat("dd/MM/yyyy hh:mm:ss")
+                                      .format(DateTime.now()),
+                                  widget.sectionIndex,
+                                  itemId);
+                            } else {
+                              await CustomApi().addModuleFolder(
+                                  _userStore.user.token,
+                                  widget.courseId,
+                                  DateFormat("dd/MM/yyyy")
+                                      .format(DateTime.now()),
+                                  widget.sectionIndex,
+                                  itemId);
+                            }
+                            setState(() {
+                              isLoading = true;
+                            });
+                            await widget.reGetContent(true);
+                            setState(() {
+                              isLoading = false;
+                            });
+                          }
+                        }
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(e.toString()),
+                            backgroundColor: Colors.red));
+                      }
+                    },
+                    icon: Icon(Icons.add)),
+              ],
             )),
         (widget.content?.modules.isEmpty ?? true)
             ? const Center(
@@ -114,68 +181,9 @@ class _ActivityScreenState extends State<ActivityScreen> {
                           .toList(),
                     ),
                   ),
+                  isLoading ? const CircularProgressIndicator() : Container()
                 ],
               ),
-        Container(
-          alignment: Alignment.bottomRight,
-          child: FloatingActionButton(
-            child: const Icon(
-              Icons.add,
-              color: Colors.white,
-            ),
-            foregroundColor: MoodleColors.blue,
-            backgroundColor: MoodleColors.blue,
-            onPressed: () async {
-              try {
-                FilePickerResult? result = await FilePicker.platform
-                    .pickFiles(allowMultiple: true, type: FileType.image);
-                if (result != null) {
-                  List<FileUpload> files = result.files
-                      .map(
-                        (e) => FileUpload(
-                          filename: e.name,
-                          filepath: e.path ?? "",
-                          filesize: e.size,
-                          timeModified: DateTime.now(),
-                        ),
-                      )
-                      .toList();
-
-                  int? itemId = await FileApi()
-                      .uploadMultipleFile(_userStore.user.token, files);
-
-                  // set in web
-                  //int itemId = 429429131;
-
-                  if (itemId != null) {
-                    if (albums.any((element) =>
-                        element.name ==
-                        DateFormat("dd/MM/yyyy").format(DateTime.now()))) {
-                      await CustomApi().addModuleFolder(
-                          _userStore.user.token,
-                          widget.courseId,
-                          DateFormat("dd/MM/yyyy hh:mm:ss")
-                              .format(DateTime.now()),
-                          widget.sectionIndex,
-                          itemId);
-                    } else {
-                      await CustomApi().addModuleFolder(
-                          _userStore.user.token,
-                          widget.courseId,
-                          DateFormat("dd/MM/yyyy").format(DateTime.now()),
-                          widget.sectionIndex,
-                          itemId);
-                    }
-                    await widget.reGetContent(true);
-                  }
-                }
-              } catch (e) {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text(e.toString()), backgroundColor: Colors.red));
-              }
-            },
-          ),
-        ),
       ],
     );
   }

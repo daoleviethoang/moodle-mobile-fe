@@ -2,6 +2,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
 import 'package:moodle_mobile/data/network/apis/custom_api/custom_api.dart';
@@ -44,6 +45,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
   late List<ModuleContent> _images;
   List<FileUpload> files = [];
   TextEditingController nameController = TextEditingController();
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -86,118 +88,228 @@ class _AlbumScreenState extends State<AlbumScreen> {
             floating: true,
             snap: true,
             actions: <Widget>[
-              SizedBox(
-                width: 60,
-                height: 60,
-                child: IconButton(
-                  iconSize: 28,
-                  icon: const Icon(Icons.delete),
-                  color: MoodleColors.white,
-                  onPressed: () async {},
-                ),
-              ),
+              widget.isTeacher == false || isLoading == true
+                  ? Container()
+                  : SizedBox(
+                      width: 60,
+                      height: 60,
+                      child: IconButton(
+                        iconSize: 28,
+                        icon: const Icon(Icons.delete),
+                        color: MoodleColors.white,
+                        onPressed: () async {
+                          var check = await showDialog<bool>(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                titlePadding:
+                                    const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                                title: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Xóa album?',
+                                      textScaleFactor: 0.8,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(
+                                      'Khi xoá bạn không thể hoàn tác ',
+                                      textScaleFactor: 0.8,
+                                    ),
+                                  ],
+                                ),
+                                actions: [
+                                  Row(children: [
+                                    Expanded(
+                                      child: TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text("Cancel",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w700,
+                                              fontSize: 16,
+                                            )),
+                                        style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all(
+                                                    MoodleColors.grey),
+                                            shape: MaterialStateProperty.all(
+                                                const RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                8.0))))),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      width: 15,
+                                    ),
+                                    Expanded(
+                                      child: TextButton(
+                                        onPressed: () async {
+                                          Navigator.pop(context, true);
+                                        },
+                                        child: Text("Remove",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w700,
+                                              fontSize: 16,
+                                            )),
+                                        style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all(
+                                                    MoodleColors.blue),
+                                            shape: MaterialStateProperty.all(
+                                                const RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                8.0))))),
+                                      ),
+                                    ),
+                                  ]),
+                                ],
+                              );
+                            },
+                          );
+                          if (check == true) {
+                            try {
+                              setState(() {
+                                isLoading = true;
+                              });
+                              await CustomApi().deleteModuleInCourse(
+                                  widget.userStore.user.token,
+                                  widget.module.id ?? 0);
+                              widget.reGetContent(true);
+                              setState(() {
+                                isLoading = false;
+                              });
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Text(e.toString()),
+                                      backgroundColor:
+                                          Color.fromARGB(255, 58, 44, 43)));
+                            }
+                            Navigator.pop(context);
+                          }
+                        },
+                      ),
+                    ),
             ],
             title: TextButton(
-              onPressed: () {
-                showDialog<bool>(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      titlePadding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                      title: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Album mới',
-                            textScaleFactor: 0.8,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            'Nhập tên cho album này',
-                            textScaleFactor: 0.8,
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          CustomTextFieldWidget(
-                            controller: nameController,
-                            hintText: "Nhập tiêu đề",
-                            haveLabel: false,
-                            borderRadius: Dimens.default_border_radius,
-                          )
-                        ],
-                      ),
-                      actions: [
-                        Row(children: [
-                          Expanded(
-                            child: TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: Text("Cancel",
+              onPressed: widget.isTeacher == false
+                  ? null
+                  : () {
+                      showDialog<bool>(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            titlePadding:
+                                const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                            title: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Album mới',
+                                  textScaleFactor: 0.8,
                                   style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 16,
-                                  )),
-                              style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(
-                                      MoodleColors.grey),
-                                  shape: MaterialStateProperty.all(
-                                      const RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(8.0))))),
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  'Nhập tên cho album này',
+                                  textScaleFactor: 0.8,
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                CustomTextFieldWidget(
+                                  controller: nameController,
+                                  hintText: "Nhập tiêu đề",
+                                  haveLabel: false,
+                                  borderRadius: Dimens.default_border_radius,
+                                ),
+                              ],
                             ),
-                          ),
-                          const SizedBox(
-                            width: 15,
-                          ),
-                          Expanded(
-                            child: TextButton(
-                              onPressed: () async {
-                                try {
-                                  await CustomApi().changeNameModule(
-                                      widget.userStore.user.token,
-                                      widget.module.id ?? 0,
-                                      nameController.text);
-                                  widget.reGetContent(true);
-                                  setState(() {
-                                    _module.name = nameController.text;
-                                  });
-                                } catch (e) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                          content: Text(e.toString()),
-                                          backgroundColor: Colors.red));
-                                }
-                                Navigator.pop(context);
-                              },
-                              child: Text("Save",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 16,
-                                  )),
-                              style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(
-                                      MoodleColors.blue),
-                                  shape: MaterialStateProperty.all(
-                                      const RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(8.0))))),
-                            ),
-                          ),
-                        ]),
-                      ],
-                    );
-                  },
-                );
-              },
+                            actions: [
+                              Row(children: [
+                                Expanded(
+                                  child: TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text("Cancel",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 16,
+                                        )),
+                                    style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all(
+                                                MoodleColors.grey),
+                                        shape: MaterialStateProperty.all(
+                                            const RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(8.0))))),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 15,
+                                ),
+                                Expanded(
+                                  child: TextButton(
+                                    onPressed: () async {
+                                      try {
+                                        await CustomApi().changeNameModule(
+                                            widget.userStore.user.token,
+                                            widget.module.id ?? 0,
+                                            nameController.text);
+                                        widget.reGetContent(true);
+                                        setState(() {
+                                          _module.name = nameController.text;
+                                        });
+                                      } catch (e) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                                content: Text(e.toString()),
+                                                backgroundColor: Colors.red));
+                                      }
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text("Save",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 16,
+                                        )),
+                                    style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all(
+                                                MoodleColors.blue),
+                                        shape: MaterialStateProperty.all(
+                                            const RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(8.0))))),
+                                  ),
+                                ),
+                              ]),
+                            ],
+                          );
+                        },
+                      );
+                    },
               child: Text(
                 _module.name ?? "",
                 style: const TextStyle(
@@ -216,103 +328,105 @@ class _AlbumScreenState extends State<AlbumScreen> {
             ),
           ),
         ],
-        body: GridView(
-          padding: EdgeInsets.only(left: 5, right: 5),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            childAspectRatio: 0.43333,
-            mainAxisSpacing: 1,
-            crossAxisSpacing: 1,
-          ),
-          children: files
-              .map((e) => ImageAlbumDetailTile(
-                    src: e.fileUrl,
-                    name: "",
-                    filePath: null, //e.filepath,
-                    isChoose: chooseImages[files.indexOf(e)],
-                    setLongPress: (bool value) {
-                      setState(() {
-                        chooseImages[files.indexOf(e)] = value;
-                      });
-                    },
-                  ))
-              .toList(),
-        ),
+        body: isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : StaggeredGrid.count(
+                crossAxisCount: 2,
+                children: files
+                    .map((e) => ImageAlbumDetailTile(
+                          src: e.fileUrl,
+                          name: "",
+                          filePath: null, //e.filepath,
+                          isChoose: chooseImages[files.indexOf(e)],
+                          setLongPress: (bool value) {
+                            setState(() {
+                              chooseImages[files.indexOf(e)] = value;
+                            });
+                          },
+                        ))
+                    .toList(),
+              ),
       ),
-      floatingActionButton: chooseImages.any((element) => element == true)
-          ? FloatingActionButton(
-              child: const Icon(
-                Icons.delete,
-                color: MoodleColors.black80,
-              ),
-              foregroundColor: MoodleColors.white,
-              backgroundColor: MoodleColors.white,
-              onPressed: () async {
-                List<FileUpload> tempFiles = [];
-                for (var i = 0; i < chooseImages.length; i++) {
-                  if (chooseImages[i] == false) {
-                    tempFiles.add(files[i]);
-                  }
-                }
-                try {
-                  int? itemId = await FileApi().uploadMultipleFile(
-                      widget.userStore.user.token, tempFiles);
-                  if (itemId != null) {
-                    await CustomApi().changeFileInFolderCourse(
-                        widget.userStore.user.token, _module.id ?? 0, itemId);
-                    setState(() {
-                      files = tempFiles;
-                    });
-                  }
-                } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text(e.toString()),
-                      backgroundColor: Colors.red));
-                }
-              },
-            )
-          : FloatingActionButton(
-              child: const Icon(
-                Icons.add,
-                color: Colors.white,
-              ),
-              foregroundColor: MoodleColors.blue,
-              backgroundColor: MoodleColors.blue,
-              onPressed: () async {
-                try {
-                  FilePickerResult? result =
-                      await FilePicker.platform.pickFiles(type: FileType.image);
-                  if (result != null && result.files.isNotEmpty) {
-                    var file = result.files.first;
-                    var tempFiles = files;
-                    setState(() {
-                      tempFiles.add(FileUpload(
-                        filename: file.name,
-                        filepath: file.path ?? "",
-                        filesize: file.size,
-                        timeModified: DateTime.now(),
-                      ));
-                    });
-
-                    int? itemId = await FileApi().uploadMultipleFile(
-                        widget.userStore.user.token, tempFiles);
-
-                    if (itemId != null) {
-                      await CustomApi().changeFileInFolderCourse(
-                          widget.userStore.user.token, _module.id ?? 0, itemId);
-                      await widget.reGetContent(true);
-                      setState(() {
-                        files = tempFiles;
-                      });
+      floatingActionButton: widget.isTeacher == false || isLoading == true
+          ? Container()
+          : chooseImages.any((element) => element == true)
+              ? FloatingActionButton(
+                  child: const Icon(
+                    Icons.delete,
+                    color: MoodleColors.black80,
+                  ),
+                  foregroundColor: MoodleColors.white,
+                  backgroundColor: MoodleColors.white,
+                  onPressed: () async {
+                    List<FileUpload> tempFiles = [];
+                    for (var i = 0; i < chooseImages.length; i++) {
+                      if (chooseImages[i] == false) {
+                        tempFiles.add(files[i]);
+                      }
                     }
-                  }
-                } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text(e.toString()),
-                      backgroundColor: Colors.red));
-                }
-              },
-            ),
+                    try {
+                      int? itemId = await FileApi().uploadMultipleFile(
+                          widget.userStore.user.token, tempFiles);
+                      if (itemId != null) {
+                        await CustomApi().changeFileInFolderCourse(
+                            widget.userStore.user.token,
+                            _module.id ?? 0,
+                            itemId);
+                        setState(() {
+                          files = tempFiles;
+                        });
+                      }
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(e.toString()),
+                          backgroundColor: Colors.red));
+                    }
+                  },
+                )
+              : FloatingActionButton(
+                  child: const Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  ),
+                  foregroundColor: MoodleColors.blue,
+                  backgroundColor: MoodleColors.blue,
+                  onPressed: () async {
+                    try {
+                      FilePickerResult? result = await FilePicker.platform
+                          .pickFiles(type: FileType.image);
+                      if (result != null && result.files.isNotEmpty) {
+                        var file = result.files.first;
+                        var tempFiles = files;
+                        setState(() {
+                          tempFiles.add(FileUpload(
+                            filename: file.name,
+                            filepath: file.path ?? "",
+                            filesize: file.size,
+                            timeModified: DateTime.now(),
+                          ));
+                        });
+
+                        int? itemId = await FileApi().uploadMultipleFile(
+                            widget.userStore.user.token, tempFiles);
+
+                        if (itemId != null) {
+                          await CustomApi().changeFileInFolderCourse(
+                              widget.userStore.user.token,
+                              _module.id ?? 0,
+                              itemId);
+                          await widget.reGetContent(true);
+                          setState(() {
+                            files = tempFiles;
+                          });
+                        }
+                      }
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(e.toString()),
+                          backgroundColor: Colors.red));
+                    }
+                  },
+                ),
     );
   }
 }
