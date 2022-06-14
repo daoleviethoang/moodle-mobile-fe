@@ -213,6 +213,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                     submissionId: m.instance ?? 0,
                     courseId: widget.courseId,
                     dueDate: dueDate,
+                    isTeacher: isTeacher,
                   );
                 case ModuleName.chat:
                   return ChatItem(
@@ -256,9 +257,11 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                   );
                 case ModuleName.quiz:
                   return QuizItem(
-                      title: title,
-                      quizInstanceId: m.instance ?? 0,
-                      courseId: widget.courseId);
+                    title: title,
+                    quizInstanceId: m.instance ?? 0,
+                    courseId: widget.courseId,
+                    isTeacher: isTeacher,
+                  );
                 case ModuleName.resource:
                   var url = m.contents?[0].fileurl ?? '';
                   if (url.isNotEmpty) {
@@ -371,6 +374,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                         submissionId: instance,
                         courseId: e.course?.id ?? 0,
                         dueDate: dueDate,
+                        isTeacher: isTeacher,
                       );
                     });
               case ModuleName.quiz:
@@ -389,6 +393,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                         openDate: dueDate,
                         quizInstanceId: instance,
                         courseId: e.course?.id ?? 0,
+                        isTeacher: isTeacher,
                       );
                     });
               default:
