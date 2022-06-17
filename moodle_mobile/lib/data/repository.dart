@@ -83,8 +83,14 @@ class Repository {
           token, userId, conversationId, newest, limit);
   Future sentMessage(String token, int conversationId, String text) =>
       _conversationApi.sentMessage(token, conversationId, text);
+  Future sentMessageWithoutConversationId(
+          String token, String text, int userId, int userIdFrom) =>
+      _conversationApi.sentMessageWithoutConversationId(
+          token, text, userId, userIdFrom);
   Future<List<CourseParticipantsModel>> courseParticipant(token, courseId) =>
       _courseParticipants.getParticipantInCourse(token, courseId);
   Future<List<ConversationMemberModel>> listcontactUser(token, userId) =>
       _contactOfMessage.getUserContact(token, userId);
+  Future getConversationIdByUserId(token, userId, otherUserId) =>
+      _conversationApi.getIdConversationByUserId(token, userId, otherUserId);
 }
