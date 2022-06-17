@@ -202,4 +202,58 @@ class ConversationApi {
       rethrow;
     }
   }
+
+  Future getIdConversationByUserId(
+      String token, int userId, int otherUserId) async {
+    try {
+      Dio dio = Http().client;
+      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': Wsfunction.CORE_MESSAGE_GET_CONVERSATION_BETWEEN_USER,
+        'moodlewsrestformat': 'json',
+        'userid': userId,
+        'otheruserid': otherUserId,
+        'includecontactrequests': 1,
+        'includeprivacyinfo': 1
+      });
+      if (res.data['errorcode'] != null) {
+        print(res.data['errorcode']);
+        return;
+      }
+      return res.data['id'];
+    } catch (e) {
+      if (kDebugMode) {
+        print("Sent message Api error: $e");
+      }
+      rethrow;
+    }
+  }
+
+  Future sentMessageWithoutConversationId(
+      String token, String text, int userId, int userIdFrom) async {
+    try {
+      Dio dio = Http().client;
+      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction':
+            Wsfunction.CORE_MESSAGE_SEND_MESSAGE_WITHOUT_CONVERSATIONID,
+        'moodlewsrestformat': 'json',
+        'messages[0][text]': text,
+        'messages[0][touserid]': userIdFrom,
+        'messages[0][textformat]': 0
+      });
+
+      return ConversationMessageModel(
+          id: res.data[0]['msgid'],
+          userIdFrom: res.data[0]['useridfrom'],
+          text: text,
+          conversationId: res.data[0]['conversationid'],
+          timeCreated: res.data[0]['timecreated']);
+    } catch (e) {
+      if (kDebugMode) {
+        print("Sent message Api error: $e");
+      }
+      rethrow;
+    }
+  }
 }

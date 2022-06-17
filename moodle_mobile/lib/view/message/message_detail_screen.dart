@@ -15,10 +15,14 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MessageDetailScreen extends StatefulWidget {
   const MessageDetailScreen(
-      {Key? key, required this.conversationId, required this.userFrom})
+      {Key? key,
+      required this.conversationId,
+      required this.userFrom,
+      this.userFromId})
       : super(key: key);
-  final int conversationId;
+  final int? conversationId;
   final String userFrom;
+  final int? userFromId;
 
   @override
   State<MessageDetailScreen> createState() => _MessageDetailScreenState();
@@ -39,8 +43,8 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
 
     _userStore = GetIt.instance<UserStore>();
     _conversationStore = GetIt.instance<ConversationStore>();
-    _conversationDetailStore =
-        ConversationDetailStore(GetIt.instance<Repository>());
+    _conversationDetailStore = ConversationDetailStore(
+        GetIt.instance<Repository>(), widget.conversationId);
     getListMessage();
 
     // Update message list
@@ -48,9 +52,12 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
         Timer.periodic(Vars.refreshInterval, (t) async => getListMessage());
   }
 
-  Future getListMessage() async =>
-      await _conversationDetailStore.getListMessage(
-          _userStore.user.token, _userStore.user.id, widget.conversationId);
+  Future getListMessage() async {
+    if (_conversationDetailStore.conversationId != null) {
+      await _conversationDetailStore.getListMessage(_userStore.user.token,
+          _userStore.user.id, _conversationDetailStore.conversationId!);
+    }
+  }
 
   @override
   void dispose() {
@@ -120,15 +127,20 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
                           if (_textEditingController.text.isEmpty) {
                             return;
                           }
-                          // if (_textEditingController.text.split(" ").length ==
-                          //     _textEditingController.text.length + 1) {
-                          //   _textEditingController.clear();
-                          //   return;
-                          // }
-                          await _conversationDetailStore.sentMessage(
-                              _userStore.user.token,
-                              widget.conversationId,
-                              _textEditingController.text);
+
+                          if (_conversationDetailStore.conversationId != null) {
+                            await _conversationDetailStore.sentMessage(
+                                _userStore.user.token,
+                                widget.conversationId!,
+                                _textEditingController.text);
+                          } else {
+                            await _conversationDetailStore
+                                .sentMessageWithoutConversationId(
+                                    _userStore.user.token,
+                                    _textEditingController.text,
+                                    _userStore.user.id,
+                                    widget.userFromId!);
+                          }
 
                           _textEditingController.clear();
 

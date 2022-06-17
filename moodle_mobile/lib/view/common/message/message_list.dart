@@ -23,7 +23,6 @@ class MessageList extends StatefulWidget {
 class _MessageListState extends State<MessageList> {
   late ConversationStore _conversationStore;
   late UserStore _userStore;
-  late ConversationDetailStore _conversationDetailStore;
   late Timer _refreshTimer;
 
   @override
@@ -32,8 +31,6 @@ class _MessageListState extends State<MessageList> {
 
     _conversationStore = GetIt.instance<ConversationStore>();
     _userStore = GetIt.instance<UserStore>();
-    _conversationDetailStore =
-        ConversationDetailStore(GetIt.instance<Repository>());
 
     getConversations();
 
@@ -53,57 +50,56 @@ class _MessageListState extends State<MessageList> {
         child: RefreshIndicator(
           onRefresh: () => getConversations(),
           child: ListView(
-                  padding: const EdgeInsets.all(Dimens.default_padding),
-                  children: [
-                    Container(height: Dimens.default_padding),
-                    if (cons.isEmpty)
-                      Opacity(
-                        opacity: .5,
-                        child: Center(
-                          child: Text(
-                            AppLocalizations.of(context)!.nothing_yet,
-                          ),
-                        ),
-                      ),
-
-                    ...List.generate(cons.length, (index) {
-                      return Observer(builder: (_) {
-                        return SlidableTile(
-                            isNotification: !cons[index].isMuted,
-                            nameInfo: cons[index].members[0].fullname,
-                            message: cons[index].message,
-                            onDeletePress: () {
-                              _conversationStore.deleteConversation(
-                                  _userStore.user.token,
-                                  _userStore.user.id,
-                                  cons[index].id);
-                            },
-                            onAlarmPress: () {
-                              cons[index].isMuted
-                                  ? _conversationStore.unmuteOneConversation(
-                                      _userStore.user.token,
-                                      _userStore.user.id,
-                                      cons[index].id)
-                                  : _conversationStore.muteOneConversation(
-                                      _userStore.user.token,
-                                      _userStore.user.id,
-                                      cons[index].id);
-                            },
-                            onMessDetailPress: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => MessageDetailScreen(
-                                    conversationId: cons[index].id,
-                                    userFrom: cons[index].members[0].fullname,
-                                  ),
-                                ),
-                              );
-                            });
-                      });
-                    })
-                  ],
+            padding: const EdgeInsets.all(Dimens.default_padding),
+            children: [
+              Container(height: Dimens.default_padding),
+              if (cons.isEmpty)
+                Opacity(
+                  opacity: .5,
+                  child: Center(
+                    child: Text(
+                      AppLocalizations.of(context)!.nothing_yet,
+                    ),
+                  ),
                 ),
+              ...List.generate(cons.length, (index) {
+                return Observer(builder: (_) {
+                  return SlidableTile(
+                      isNotification: !cons[index].isMuted,
+                      nameInfo: cons[index].members[0].fullname,
+                      message: cons[index].message,
+                      onDeletePress: () {
+                        _conversationStore.deleteConversation(
+                            _userStore.user.token,
+                            _userStore.user.id,
+                            cons[index].id);
+                      },
+                      onAlarmPress: () {
+                        cons[index].isMuted
+                            ? _conversationStore.unmuteOneConversation(
+                                _userStore.user.token,
+                                _userStore.user.id,
+                                cons[index].id)
+                            : _conversationStore.muteOneConversation(
+                                _userStore.user.token,
+                                _userStore.user.id,
+                                cons[index].id);
+                      },
+                      onMessDetailPress: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MessageDetailScreen(
+                              conversationId: cons[index].id,
+                              userFrom: cons[index].members[0].fullname,
+                            ),
+                          ),
+                        );
+                      });
+                });
+              })
+            ],
+          ),
         ),
       );
     });

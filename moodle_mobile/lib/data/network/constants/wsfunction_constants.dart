@@ -64,6 +64,10 @@ class Wsfunction {
       "core_message_mute_conversations";
   static const String CORE_MESSAGE_GET_CONVERSATIONS =
       "core_message_get_conversations";
+  static const String CORE_MESSAGE_GET_CONVERSATION_BETWEEN_USER =
+      "core_message_get_conversation_between_users";
+  static const String CORE_MESSAGE_SEND_MESSAGE_WITHOUT_CONVERSATIONID =
+      "core_message_send_instant_messages";
 
   //notification
   static const String MESSAGE_POPUP_GET_POPUP_NOTIFICATION =

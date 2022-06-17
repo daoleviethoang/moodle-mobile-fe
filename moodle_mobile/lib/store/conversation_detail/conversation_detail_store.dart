@@ -10,10 +10,13 @@ class ConversationDetailStore = _ConversationDetailStore
 
 abstract class _ConversationDetailStore with Store {
   final Repository _repository;
-  _ConversationDetailStore(this._repository);
+  _ConversationDetailStore(this._repository, this.conversationId);
 
   @observable
   ObservableList<ConversationMessageModel> listMessages = ObservableList();
+
+  @observable
+  int? conversationId;
 
   @action
   Future getListMessage(String token, int userId, int conversationId) async {
@@ -24,9 +27,6 @@ abstract class _ConversationDetailStore with Store {
 
       if (kDebugMode) {
         print("Get list message success: ${listMessages.length}");
-        // for (ConversationMessageModel m in listMessages) {
-        //   print(m.text);
-        // }
       }
     } catch (e) {
       if (kDebugMode) {
@@ -40,6 +40,21 @@ abstract class _ConversationDetailStore with Store {
     try {
       ConversationMessageModel message =
           await _repository.sentMessage(token, conversationId, text);
+    } catch (e) {
+      if (kDebugMode) {
+        print("Sent message error: $e");
+      }
+    }
+  }
+
+  @action
+  Future sentMessageWithoutConversationId(
+      String token, String text, int userId, int userIdFrom) async {
+    try {
+      ConversationMessageModel message = await _repository
+          .sentMessageWithoutConversationId(token, text, userId, userIdFrom);
+
+      conversationId = message.conversationId;
     } catch (e) {
       if (kDebugMode) {
         print("Sent message error: $e");
