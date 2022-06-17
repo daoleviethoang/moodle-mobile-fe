@@ -127,9 +127,10 @@ class _SelectCourseFilterState extends State<SelectCourseFilter>
             ),
           ),
           SizeTransition(
-            axisAlignment: 1.0,
+            axisAlignment: 0.0,
             sizeFactor: animation,
             child: Container(
+                height: MediaQuery.of(context).size.height - 300,
                 margin: const EdgeInsets.only(bottom: 10),
                 padding: const EdgeInsets.only(bottom: 10),
                 decoration: BoxDecoration(
@@ -153,44 +154,46 @@ class _SelectCourseFilterState extends State<SelectCourseFilter>
   Container _buildDropListOptions(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 22),
-      child: Column(children: [
-        Container(
-          padding: const EdgeInsets.only(top: 27, bottom: 8),
-          child: Row(
+      child: SingleChildScrollView(
+        child: Column(children: [
+          Container(
+            padding: const EdgeInsets.only(top: 27, bottom: 8),
+            child: Row(
+              children: [
+                Text(
+                  AppLocalizations.of(context)!.arrange_by,
+                  textAlign: TextAlign.left,
+                  style: MoodleStyles.courseFilterHeaderStyle,
+                ),
+              ],
+            ),
+          ),
+          Row(
+            children: [
+              ...ContantExtension.allCourseArrange
+                  .map((item) => _buildFilterByArrangeMenu(item, context))
+                  .toList()
+            ],
+          ),
+          const Divider(color: Colors.grey, thickness: 1, indent: 10),
+          showOnlyStar(context),
+          const Divider(color: Colors.grey, thickness: 1, indent: 10),
+          Container(height: 10),
+          Row(
             children: [
               Text(
-                AppLocalizations.of(context)!.arrange_by,
+                AppLocalizations.of(context)!.course_status,
                 textAlign: TextAlign.left,
                 style: MoodleStyles.courseFilterHeaderStyle,
               ),
             ],
           ),
-        ),
-        Row(
-          children: [
-            ...ContantExtension.allCourseArrange
-                .map((item) => _buildFilterByArrangeMenu(item, context))
-                .toList()
-          ],
-        ),
-        const Divider(color: Colors.grey, thickness: 1, indent: 10),
-        showOnlyStar(context),
-        const Divider(color: Colors.grey, thickness: 1, indent: 10),
-        Container(height: 10),
-        Row(
-          children: [
-            Text(
-              AppLocalizations.of(context)!.course_status,
-              textAlign: TextAlign.left,
-              style: MoodleStyles.courseFilterHeaderStyle,
-            ),
-          ],
-        ),
-        ...ContantExtension.allCourseStatus
-            .map((item) => _buildFilterByStatusMenu(item, context))
-            .toList(),
-        cancelAndFilterButton(),
-      ]),
+          ...ContantExtension.allCourseStatus
+              .map((item) => _buildFilterByStatusMenu(item, context))
+              .toList(),
+          cancelAndFilterButton(),
+        ]),
+      ),
     );
   }
 
@@ -323,7 +326,7 @@ class _SelectCourseFilterState extends State<SelectCourseFilter>
                 });
               },
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(40, 5, 40, 5),
+                padding: const EdgeInsets.fromLTRB(30, 5, 30, 5),
                 child: Text(AppLocalizations.of(context)!.clear,
                     style: MoodleStyles.courseFilterButtonTextStyle.copyWith(
                       color: MoodleColors.blue,
@@ -351,7 +354,7 @@ class _SelectCourseFilterState extends State<SelectCourseFilter>
               },
               child: Padding(
                 padding: const EdgeInsets.only(
-                    left: 40, right: 40, top: 5, bottom: 5),
+                    left: 30, right: 30, top: 5, bottom: 5),
                 child: Text(AppLocalizations.of(context)!.filter,
                     style: MoodleStyles.courseFilterButtonTextStyle.copyWith(
                       color: MoodleColors.white,

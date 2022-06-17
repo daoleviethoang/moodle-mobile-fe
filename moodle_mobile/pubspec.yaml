@@ -67,6 +67,9 @@ dependencies:
 
   flutter_slidable: ^1.2.0
 
+  # Show app setting use in permission
+  app_settings: ^4.1.0
+
   # Show device frame
   device_preview: ^1.0.0
 

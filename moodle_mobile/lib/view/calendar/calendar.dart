@@ -285,6 +285,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
       );
       _initMonthView();
       _initDayView();
+      setState(() {
+        _selectedEvents = _getEventsForDay(_selectedDay);
+      });
     } catch (e) {
       rethrow;
     }
