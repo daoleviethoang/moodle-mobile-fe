@@ -187,7 +187,7 @@ class ConversationApi {
         'moodlewsrestformat': 'json',
         'messages[0][text]': text,
         'conversationid': conversationId,
-        'messages[0][textformat]': 0
+        'messages[0][textformat]': 1
       });
 
       return ConversationMessageModel(
@@ -240,7 +240,7 @@ class ConversationApi {
         'moodlewsrestformat': 'json',
         'messages[0][text]': text,
         'messages[0][touserid]': userIdFrom,
-        'messages[0][textformat]': 0
+        'messages[0][textformat]': 1
       });
 
       return ConversationMessageModel(
