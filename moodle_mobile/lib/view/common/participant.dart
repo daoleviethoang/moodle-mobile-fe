@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:moodle_mobile/data/repository.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/image_view.dart';
+import 'package:moodle_mobile/view/common/user/user_avatar_common.dart';
 import 'package:moodle_mobile/view/message/message_detail_screen.dart';
 import 'package:moodle_mobile/view/user_detail/user_detail.dart';
 import 'package:moodle_mobile/view/user_detail/user_detail_student.dart';
@@ -30,18 +31,12 @@ class ParticipantListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(avatar + "&token=" + userStore.user.token);
     return Padding(
       padding: const EdgeInsets.all(10),
       child: ListTile(
-        leading: SizedBox(
-          width: 60.0,
-          height: 60.0,
-          child: CircleImageView(
-            fit: BoxFit.cover,
-            imageUrl: avatar + "&token=" + userStore.user.token,
-            placeholder:
-                const FittedBox(child: Icon(Icons.person, color: Colors.white)),
-          ),
+        leading: UserAvatarCommon(
+          imageURL: avatar + "&token=" + userStore.user.token,
         ),
         trailing: RoundedImageView(
           color: Colors.transparent,
