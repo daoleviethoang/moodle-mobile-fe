@@ -69,6 +69,7 @@ class _SelectCourseFilterState extends State<SelectCourseFilter>
 
   @override
   Widget build(BuildContext context) {
+    print(widget.isFilter);
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 10),
       child: Column(
@@ -130,13 +131,13 @@ class _SelectCourseFilterState extends State<SelectCourseFilter>
             axisAlignment: 0.0,
             sizeFactor: animation,
             child: Container(
-                height: MediaQuery.of(context).size.height - 320 > 520
-                    ? 520
+                height: MediaQuery.of(context).size.height - 320 > 480
+                    ? 480
                     : MediaQuery.of(context).size.height - 320,
                 margin: const EdgeInsets.only(bottom: 10),
                 padding: const EdgeInsets.only(bottom: 10),
                 decoration: BoxDecoration(
-                  border: Border.all(color: MoodleColors.grey),
+                  border: Border.all(color: MoodleColors.gray),
                   borderRadius: const BorderRadius.all(Radius.circular(10)),
                   color: Colors.white,
                   boxShadow: const [

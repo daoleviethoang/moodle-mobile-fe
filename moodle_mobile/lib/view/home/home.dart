@@ -65,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget getScreenTabUI(CategoryType categoryTypeData) {
-    switch(categoryTypeData) {
+    switch (categoryTypeData) {
       case CategoryType.my:
         return myCoursesUI!;
       case CategoryType.all:
