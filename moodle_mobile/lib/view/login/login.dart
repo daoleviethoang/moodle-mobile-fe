@@ -27,12 +27,18 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController usernameControler = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController baseUrlController =
-      TextEditingController(text: "https://");
+      TextEditingController(text: "Chương trình");
 
-  final List<String> suggestions = [
+  final List<String> suggestionsData = [
     "https://courses.ctda.hcmus.edu.vn",
     "https://courses.fit.hcmus.edu.vn",
     "https://elearning.fit.hcmus.edu.vn",
+  ];
+
+  final List<String> suggestions = [
+    "Chương trình đề án (CLC, CTT, VP)",
+    "Chương trình đại trà",
+    "Chương trình đào tạo từ xa",
   ];
 
   GlobalKey<AutoCompleteTextFieldState<String>> key = new GlobalKey();
@@ -233,7 +239,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void onLoginPressed() async {
     FocusScope.of(context).unfocus();
-    _userStore.setBaseUrl(baseUrlController.text);
+
+    int index = suggestions.indexOf(baseUrlController.text);
+    if (index != -1) {
+      _userStore.setBaseUrl(suggestionsData[index]);
+    } else {
+      _userStore.setBaseUrl(baseUrlController.text);
+    }
 
     await _userStore.login(
       usernameControler.text,
