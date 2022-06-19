@@ -13,6 +13,7 @@ import 'package:moodle_mobile/models/course/course_detail.dart';
 import 'package:moodle_mobile/models/notification/notification.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:moodle_mobile/view/forum/forum_detail_screen.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({Key? key}) : super(key: key);
@@ -136,6 +137,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           article: article,
                           subject: subject,
                           title: temp.contexturlname,
+                          temp: temp.customdata,
                           date: date),
                     );
                   })
@@ -155,6 +157,7 @@ class NotificationPopupContainer extends StatelessWidget {
   final String? subject;
   final String? article;
   final String? name;
+  final CustomData? temp;
 
   const NotificationPopupContainer({
     this.subject,
@@ -162,6 +165,7 @@ class NotificationPopupContainer extends StatelessWidget {
     this.name = 'temp',
     this.article,
     this.date,
+    this.temp,
     Key? key,
   }) : super(key: key);
 
@@ -205,7 +209,13 @@ class NotificationPopupContainer extends StatelessWidget {
                   ),
                   IconButton(
                     icon: const Icon(Icons.arrow_right),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (builder) {
+                        return ForumDetailScreen(
+                            DiscussionId: int.parse(temp!.discussionid!));
+                      }));
+                    },
                   )
                 ],
               ),
