@@ -1,13 +1,9 @@
 import 'package:autocomplete_textfield_ns/autocomplete_textfield_ns.dart';
-import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
 import 'package:moodle_mobile/data/network/apis/forgot_pass/forgot_api.dart';
-import 'package:moodle_mobile/data/network/apis/user/user_api.dart';
-import 'package:moodle_mobile/data/network/dio_client.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/custom_button.dart';
 import 'package:moodle_mobile/view/common/custom_text_field.dart';
@@ -35,13 +31,23 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
   GlobalKey<AutoCompleteTextFieldState<String>> key = new GlobalKey();
 
   sendLinkForgotPass() async {
+    FocusScope.of(context).unfocus();
     _userStore.setBaseUrl(baseUrlController.text);
     try {
-      String check = await ForgotPassApi().forgotPass(usernameControler.text);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(check),
-        backgroundColor: Colors.green,
-      ));
+      String? check = await ForgotPassApi().forgotPass(usernameControler.text);
+      if (check == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.user_not_exist),
+            backgroundColor: Colors.red,
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(check),
+          backgroundColor: Colors.green,
+        ));
+      }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

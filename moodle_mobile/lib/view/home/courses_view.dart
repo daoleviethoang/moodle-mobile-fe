@@ -347,6 +347,10 @@ class CategoryView extends StatelessWidget {
                                   onPressed: () {
                                     showModalBottomSheet(
                                         context: context,
+                                        shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(20)),
+                                        ),
                                         builder: (builder) => buildBottomDialog(
                                             course!, builder));
                                   },
@@ -608,7 +612,8 @@ class CategoryView extends StatelessWidget {
                   padding: EdgeInsets.only(left: 20),
                   child: const Text(
                     "Star this course",
-                    style: const TextStyle(color: MoodleColors.black, fontSize: 16),
+                    style: const TextStyle(
+                        color: MoodleColors.black, fontSize: 16),
                   ),
                 ),
                 style: TextButton.styleFrom(

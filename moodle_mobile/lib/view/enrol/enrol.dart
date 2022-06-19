@@ -38,7 +38,9 @@ class _EnrolScreenState extends State<EnrolScreen> {
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(AppLocalizations.of(context)!.enrol_key_not_correct)));
+        content: Text(AppLocalizations.of(context)!.enrol_key_not_correct),
+        backgroundColor: Colors.red,
+      ));
     }
   }
 

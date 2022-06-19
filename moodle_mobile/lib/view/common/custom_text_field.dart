@@ -9,6 +9,7 @@ class CustomTextFieldWidget extends StatelessWidget {
   final double borderRadius;
   final IconData? prefixIcon; // ? accept null value
   final bool haveLabel;
+  final double fontSize;
 
   const CustomTextFieldWidget(
       {Key? key,
@@ -16,6 +17,7 @@ class CustomTextFieldWidget extends StatelessWidget {
       this.hidePass = false,
       this.prefixIcon,
       this.maxLines = 1,
+      this.fontSize = 16,
       this.haveLabel = true,
       required this.controller,
       required this.borderRadius})
@@ -24,6 +26,7 @@ class CustomTextFieldWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      keyboardType: TextInputType.visiblePassword,
       controller: controller,
       obscureText: hidePass,
       maxLines: maxLines,
@@ -33,7 +36,9 @@ class CustomTextFieldWidget extends StatelessWidget {
         hintText: hintText,
         labelText: haveLabel ? hintText : null,
         isDense: true,
-        hintStyle: const TextStyle(fontSize: 16),
+        hintStyle: TextStyle(
+          fontSize: fontSize,
+        ),
         border: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(borderRadius))),
       ),

@@ -467,8 +467,9 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
             courseId: widget.courseId,
           );
         }));
+      } else {
+        rethrow;
       }
-      rethrow;
     }
   }
 
