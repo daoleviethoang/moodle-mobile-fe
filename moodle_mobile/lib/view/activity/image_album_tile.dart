@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:moodle_mobile/view/viewer/image_viewer.dart';
 
 class ImageAlbumTile extends StatelessWidget {
   final String src;
@@ -11,30 +12,42 @@ class ImageAlbumTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(left: 5),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+          return ImageViewer(
+            title: name,
+            url: src,
+          );
+        }));
+      },
+      child: Container(
+        margin: const EdgeInsets.only(left: 5),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Image.network(
+                src,
+                width: 100,
+                height: 100,
+                fit: BoxFit.fill,
+              ),
             ),
-            child: Image.network(
-              src,
-              width: 120,
-              fit: BoxFit.fitWidth,
+            SizedBox(height: 5),
+            Container(
+              width: 110,
+              padding: EdgeInsets.only(left: 5),
+              child: Text(name,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w900,
+                  )),
             ),
-          ),
-          SizedBox(height: 5),
-          Container(
-            padding: EdgeInsets.only(left: 5),
-            child: Text(name,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w900,
-                )),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

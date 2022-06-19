@@ -80,7 +80,10 @@ class _ImageViewerState extends State<ImageViewer> {
           child: const Icon(CupertinoIcons.back),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Text(_title),
+        title: Text(
+          _title,
+          overflow: TextOverflow.clip,
+        ),
         actions: [
           _base64.isNotEmpty
               ? Container()
