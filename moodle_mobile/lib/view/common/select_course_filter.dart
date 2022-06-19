@@ -69,7 +69,6 @@ class _SelectCourseFilterState extends State<SelectCourseFilter>
 
   @override
   Widget build(BuildContext context) {
-    print(widget.isFilter);
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 10),
       child: Column(
