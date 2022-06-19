@@ -1,3 +1,4 @@
+import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/constants/colors.dart';
@@ -136,28 +137,30 @@ class _MenuScreenState extends State<MenuScreen> {
                           },
                         ),
                         const SizedBox(height: 8),
-                        m.MenuItem(
-                          title: AppLocalizations.of(context)!.moodle_settings,
-                          color: Colors.blueGrey,
-                          icon: const Icon(Icons.school_rounded),
-                          fullWidth: true,
-                          onPressed: () {},
-                        ),
-                        const SizedBox(height: 8),
-                        m.MenuItem(
-                          title: AppLocalizations.of(context)!.app_settings,
-                          color: Colors.purple.shade200,
-                          icon: const Icon(Icons.lightbulb_rounded),
-                          fullWidth: true,
-                          onPressed: () {},
-                        ),
-                        const SizedBox(height: 8),
+                        // m.MenuItem(
+                        //   title: AppLocalizations.of(context)!.moodle_settings,
+                        //   color: Colors.blueGrey,
+                        //   icon: const Icon(Icons.school_rounded),
+                        //   fullWidth: true,
+                        //   onPressed: () {},
+                        // ),
+                        // const SizedBox(height: 8),
+                        // m.MenuItem(
+                        //   title: AppLocalizations.of(context)!.app_settings,
+                        //   color: Colors.purple.shade200,
+                        //   icon: const Icon(Icons.lightbulb_rounded),
+                        //   fullWidth: true,
+                        //   onPressed: () {},
+                        // ),
+                        // const SizedBox(height: 8),
                         m.MenuItem(
                           title: AppLocalizations.of(context)!.permissions,
                           color: Colors.green,
                           icon: const Icon(Icons.lock_rounded),
                           fullWidth: true,
-                          onPressed: () {},
+                          onPressed: () async {
+                            await AppSettings.openAppSettings();
+                          },
                         ),
                       ],
                     ),
@@ -181,14 +184,14 @@ class _MenuScreenState extends State<MenuScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        m.MenuItem(
-                          title: AppLocalizations.of(context)!.change_password,
-                          color: Colors.blue,
-                          icon: const Icon(Icons.password_rounded),
-                          fullWidth: true,
-                          onPressed: () {},
-                        ),
-                        const SizedBox(height: 8),
+                        // m.MenuItem(
+                        //   title: AppLocalizations.of(context)!.change_password,
+                        //   color: Colors.blue,
+                        //   icon: const Icon(Icons.password_rounded),
+                        //   fullWidth: true,
+                        //   onPressed: () {},
+                        // ),
+                        // const SizedBox(height: 8),
                         m.MenuItem(
                           title: AppLocalizations.of(context)!.report,
                           color: Colors.red,
@@ -252,7 +255,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
     super.initState();
     _userStore = widget._userStore;
   }
-  
+
   @override
   Widget build(BuildContext context) {
     var avatar = "";

@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
 import 'package:moodle_mobile/data/network/apis/contact/contact_message.dart';
+import 'package:moodle_mobile/data/repository.dart';
 import 'package:moodle_mobile/models/conversation/conversation_member.dart';
 import 'package:moodle_mobile/store/conversation/conversation_store.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
@@ -20,6 +21,7 @@ class _ContactListState extends State<ContactList> {
   late ConversationStore _conversationStore;
   late UserStore _userStore;
   late ContactOfMessage _contactOfMessage;
+  late Repository _repository;
 
   @override
   void initState() {
@@ -28,6 +30,7 @@ class _ContactListState extends State<ContactList> {
     _conversationStore = GetIt.instance<ConversationStore>();
     _contactOfMessage = GetIt.instance<ContactOfMessage>();
     _userStore = GetIt.instance<UserStore>();
+    _repository = GetIt.instance<Repository>();
   }
 
   Future getContactUser() async => _contactOfMessage.getUserContact(
@@ -63,7 +66,6 @@ class _ContactListState extends State<ContactList> {
                         ),
                       ),
                     ),
-
                   ...List.generate(
                     listContact.length,
                     (index) {
@@ -71,6 +73,8 @@ class _ContactListState extends State<ContactList> {
                         fullname: listContact[index].fullname,
                         id: listContact[index].id,
                         userStore: _userStore,
+                        repository: _repository,
+                        context: context,
                         avatar: listContact[index].profileImageURL.replaceAll(
                                   "pluginfile.php",
                                   "webservice/pluginfile.php",

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/constants/styles.dart';
+import 'package:moodle_mobile/data/network/apis/conversation/conversation_api.dart';
 import 'package:moodle_mobile/data/repository.dart';
 import 'package:moodle_mobile/models/course/course_participants.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
@@ -21,6 +22,7 @@ class ParticipantsInOneCourse extends StatefulWidget {
 class _ParticipantsInOneCourseState extends State<ParticipantsInOneCourse> {
   late Repository _repository;
   late UserStore _userStore;
+  late ConversationApi _conversationApi;
   bool isLoad = true;
   List<CourseParticipantsModel> participants = [];
 
@@ -35,7 +37,6 @@ class _ParticipantsInOneCourseState extends State<ParticipantsInOneCourse> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.courseId);
     return isLoad
         ? CircularProgressIndicator()
         : SingleChildScrollView(
@@ -59,6 +60,8 @@ class _ParticipantsInOneCourseState extends State<ParticipantsInOneCourse> {
                             id: participants[index].id,
                             role: participants[index].roles[0].roleID,
                             userStore: _userStore,
+                            repository: _repository,
+                            context: context,
                             courseName: widget.courseName,
                             avatar: participants[index].avatar.replaceAll(
                                     "pluginfile.php",
@@ -84,6 +87,8 @@ class _ParticipantsInOneCourseState extends State<ParticipantsInOneCourse> {
                             id: participants[index].id,
                             role: participants[index].roles[0].roleID,
                             userStore: _userStore,
+                            repository: _repository,
+                            context: context,
                             courseName: widget.courseName,
                             avatar: participants[index].avatar.replaceAll(
                                     "pluginfile.php",
