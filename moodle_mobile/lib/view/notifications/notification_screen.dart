@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
+import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/constants/vars.dart';
 import 'package:moodle_mobile/data/network/apis/course/course_detail_service.dart';
@@ -108,7 +109,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
                         ),
                       ),
                     ),
-
                   ...List.generate(notifications.length, (index) {
                     final temp = notifications[index];
 
@@ -185,7 +185,7 @@ class NotificationPopupContainer extends StatelessWidget {
                     ),
                   ),
                   Card(
-                      color: Colors.blue[50],
+                      color: MoodleColors.blue,
                       child: Padding(
                         padding: const EdgeInsets.all(8),
                         child: Text(date!,

@@ -19,9 +19,8 @@ class MoodleStyles {
     color: MoodleColors.black,
   );
 
-  static const courseFilterButtonTextStyle = TextStyle(
-      fontWeight: FontWeight.w700,
-      fontSize: 16);
+  static const courseFilterButtonTextStyle =
+      TextStyle(fontWeight: FontWeight.w700, fontSize: 16);
 
   static const sectionHeaderStyle = TextStyle(
     fontWeight: FontWeight.bold,
@@ -44,5 +43,6 @@ class MoodleStyles {
 
   static Style rightMessageTextStyle = Style(color: MoodleColors.white);
 
-  static const TextStyle notificationTimestampStyle = TextStyle(fontSize: 12);
+  static const TextStyle notificationTimestampStyle =
+      TextStyle(fontSize: 12, fontWeight: FontWeight.bold);
 }
