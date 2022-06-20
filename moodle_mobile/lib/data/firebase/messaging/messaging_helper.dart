@@ -5,22 +5,20 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:moodle_mobile/data/notifications/notification_helper.dart';
 
 class MessagingHelper {
+  // region Init
+
   static Future initMessaging() async {
     // Listen to new messages
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       logMessage(message);
-      await NotificationHelper.showTextNotification(
-        message.notification?.title ?? message.notification?.body ?? 'Moodle',
-        message.data,
-      );
+      await showMessageNotification(message);
     });
-    FirebaseMessaging.onBackgroundMessage((message) async {
-      logMessage(message);
-      await NotificationHelper.showTextNotification(
-        message.notification?.title ?? message.notification?.body ?? 'Moodle',
-        message.data,
-      );
-    });
+    FirebaseMessaging.onBackgroundMessage(onBackgroundMessage);
+  }
+
+  static Future onBackgroundMessage(message) async {
+    logMessage(message);
+    await showMessageNotification(message);
   }
 
   static logMessage(RemoteMessage message) {
@@ -33,6 +31,17 @@ class MessagingHelper {
       print('Message also contained: ${message.notification}');
     }
   }
+
+  static showMessageNotification(RemoteMessage message) async {
+    var title = message.notification?.title ?? '';
+    final body = message.notification?.body ?? '';
+    if (title.isNotEmpty && body.isNotEmpty) {
+      title += ': ';
+    }
+    await NotificationHelper.showTextNotification(title + body, message.data);
+  }
+
+  // endregion
 
   static Future checkPermission(BuildContext context) async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;

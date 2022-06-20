@@ -11,6 +11,7 @@ import 'package:moodle_mobile/constants/vars.dart';
 import 'package:moodle_mobile/data/notifications/notification_helper.dart';
 import 'package:moodle_mobile/di/service_locator.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 import 'bg_events.dart';
@@ -19,27 +20,20 @@ class BgService {
   static Future<void> initBackgroundService() async {
     // Register to receive BackgroundFetch events after app is terminated.
     // Requires {stopOnTerminate: false, enableHeadless: true}
+    await initPlatformState();
     await BackgroundFetch.registerHeadlessTask(bgHeadlessTask);
   }
 
-  static void bgHeadlessTask(HeadlessTask task) async {
+  static bgHeadlessTask(HeadlessTask task) async {
     String taskId = task.taskId;
     bool isTimeout = task.timeout;
     if (isTimeout) {
-      // This task has exceeded its allowed running-time.
-      // You must stop what you're doing and immediately .finish(taskId)
-      print("[BackgroundFetch] Headless task timed-out: $taskId");
-      BackgroundFetch.finish(taskId);
-      return;
+      onTimeOut(taskId);
     }
-    print('[BackgroundFetch] Headless event received.');
-    // Do your work here...
-    BackgroundFetch.finish(taskId);
+    onFetch(taskId);
   }
 
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future initPlatformState() async {
-    // Configure BackgroundFetch.
+  static initPlatformState() async {
     int status = await BackgroundFetch.configure(
       BackgroundFetchConfig(
         minimumFetchInterval: 1,
@@ -50,9 +44,11 @@ class BgService {
       onFetch,
       onTimeOut,
     );
-    print('[BackgroundFetch] configure success: $status');
+    if (kDebugMode) {
+      print('[BackgroundFetch] configure success: $status');
+    }
     await BackgroundFetch.scheduleTask(TaskConfig(
-      taskId: FetchMessage().event,
+      taskId: '${FetchMessage()}',
       delay: 5000,
       periodic: true,
       startOnBoot: true,
@@ -62,28 +58,31 @@ class BgService {
     ));
   }
 
-  onFetch(String taskId) async {
-    // This is the fetch-event callback.
-    print("[BackgroundFetch] Event received $taskId");
-    NotificationHelper.showTextNotification(taskId);
-    // IMPORTANT: You must signal completion of your task
-    // or the OS can punish your app for taking too long in the background.
+  static onFetch(String taskId) async {
+    if (kDebugMode) {
+      print("[BackgroundFetch] Event received $taskId");
+    }
+    if (taskId == '${FetchMessage()}') {
+      if (kDebugMode) {
+        print('FETCH Message!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+      }
+    }
     BackgroundFetch.finish(taskId);
   }
 
-  onTimeOut(String taskId) async {
-    // This task has exceeded its allowed running-time.
-    // You must stop what you're doing and immediately .finish(taskId)
-    print("[BackgroundFetch] TASK TIMEOUT taskId: $taskId");
+  static onTimeOut(String taskId) async {
+    if (kDebugMode) {
+      print("[BackgroundFetch] TASK TIMEOUT taskId: $taskId");
+    }
     BackgroundFetch.finish(taskId);
   }
 }
 
 // class BgServiceOld {
 //   static UserStore? _userStore;
-
+//
 //   static Timer? fetchingTimer;
-
+//
 //   static Future<void> initBackgroundService() async {
 //     final service = FlutterBackgroundService();
 //     await service.configure(
@@ -100,7 +99,7 @@ class BgService {
 //     );
 //     service.startService();
 //   }
-
+//
 //   // to ensure this executed
 //   // run app from xcode, then from xcode menu, select Simulate Background Fetch
 //   static bool onIosBackground(ServiceInstance service) {
@@ -110,25 +109,25 @@ class BgService {
 //     }
 //     return true;
 //   }
-
+//
 //   static void onStart(ServiceInstance service) async {
 //     // Only available for flutter 3.0.0 and later
 //     if (Vars.isFlutter3Plus) {
 //       DartPluginRegistrant.ensureInitialized();
 //     }
-
+//
 //     // For flutter prior to version 3.0.0
 //     // We have to register the plugin manually
-
+//
 //     registerBuiltInEvents(service);
 //     registerMoodleEvents(service);
 //     startFetchingTimer(service);
-
+//
 //     if (kDebugMode) {
 //       print('FLUTTER BACKGROUND SERVICE INITIALIZED');
 //     }
 //   }
-
+//
 //   /// Listen to events sent by system
 //   static void registerBuiltInEvents(ServiceInstance service) {
 //     if (service is AndroidServiceInstance) {
@@ -140,7 +139,7 @@ class BgService {
 //     final stopService = StopService(service);
 //     service.on(stopService.event).listen(stopService.onData);
 //   }
-
+//
 //   /// Listen to events sent by timers
 //   static void registerMoodleEvents(ServiceInstance service) {
 //     final fetchMessage = FetchMessage();
@@ -152,7 +151,7 @@ class BgService {
 //     });
 //     service.on(fetchNotification.event).listen(fetchNotification.onData);
 //   }
-
+//
 //   /// A timer for refreshing message & notification list
 //   static void startFetchingTimer(ServiceInstance service) {
 //     fetchingTimer = Timer.periodic(
@@ -163,7 +162,7 @@ class BgService {
 //           await setupLocator();
 //           _userStore = GetIt.instance<UserStore>();
 //         }
-
+//
 //         // Update persistent notification
 //         if (service is AndroidServiceInstance) {
 //           service.setForegroundNotificationInfo(
@@ -171,17 +170,17 @@ class BgService {
 //             content: "Updated at ${DateTime.now()}",
 //           );
 //         }
-
+//
 //         // Invoke events
 //         service.invoke(
-//           FetchMessage().event,
+//           '${FetchMessage()}',
 //           {
 //             'token': _userStore!.user.token,
 //             'userId': _userStore!.user.id,
 //           },
 //         );
 //         service.invoke(
-//           FetchNotification().event,
+//           '${FetchNotification()}',
 //           {'token': _userStore!.user.token},
 //         );
 //       },

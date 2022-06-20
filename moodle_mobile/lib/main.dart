@@ -20,7 +20,7 @@ void main() async {
   await setupLocator();
   await initDownloader();
   await FirebaseHelper.initFirebase();
-  // await BgService.initBackgroundService();
+  await BgService.initBackgroundService();
   await NotificationHelper.initNotificationService();
   runApp(
     DevicePreview(

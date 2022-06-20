@@ -21,6 +21,9 @@ abstract class BgEvent {
     this.onDone,
     this.cancelOnError,
   });
+
+  @override
+  String toString() => event;
 }
 
 // region Built-in events
