@@ -7,13 +7,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:moodle_mobile/constants/colors.dart';
-import 'package:moodle_mobile/data/firebase/firebase_helper.dart';
-import 'package:moodle_mobile/di/service_locator.dart';
-import 'package:moodle_mobile/view/splash/splash_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'constants/colors.dart';
+import 'data/firebase/firebase_helper.dart';
+import 'data/bg_service/bg_service.dart';
 import 'data/notifications/notification_helper.dart';
+import 'di/service_locator.dart';
+import 'view/splash/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,7 +25,7 @@ void main() async {
   await NotificationHelper.initNotificationService();
   runApp(
     DevicePreview(
-      enabled: kDebugMode && kIsWeb,
+      enabled: !kReleaseMode && kIsWeb,
       builder: (context) => const MyApp(), // Wrap your app
     ),
   );
