@@ -176,10 +176,12 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
       for (var element in courses) {
         List<Contact> contacts = await ContactService()
             .getContacts(_userStore.user.token, element.id);
-        setState(() {
-          coursesOverview.where((e) => element.id == e.id).first.teacher =
-              contacts;
-        });
+        if (coursesOverview.where((e) => element.id == e.id).isNotEmpty) {
+          setState(() {
+            coursesOverview.where((e) => element.id == e.id).first.teacher =
+                contacts;
+          });
+        }
         if (element.id == courses[courses.length - 1].id) {
           isLoadFilter = true;
         }
