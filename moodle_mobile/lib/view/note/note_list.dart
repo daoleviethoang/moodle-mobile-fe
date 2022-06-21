@@ -3,12 +3,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it/get_it.dart';
-import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/styles.dart';
-import 'package:moodle_mobile/constants/vars.dart';
 import 'package:moodle_mobile/models/note/note.dart';
+import 'package:moodle_mobile/models/note/notes.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/data_card.dart';
 import 'package:moodle_mobile/view/common/menu_item.dart';
@@ -24,7 +23,7 @@ class _NoteListState extends State<NoteList> {
   Widget _folderView = Container();
   Widget _highlightView = Container();
 
-  final _notes = <Note>[];
+  final _notes = Notes();
 
   late UserStore _userStore;
   Observable<bool>? _searchOpenFlag;
@@ -51,28 +50,28 @@ class _NoteListState extends State<NoteList> {
         return [
           MenuCard(
             title: AppLocalizations.of(context)!.all_notes,
-            subtitle: '0',
+            subtitle: '${_notes.length}',
             icon: const Icon(CupertinoIcons.square_grid_2x2_fill),
             color: MoodleColors.blue,
             onPressed: () {},
           ),
           MenuCard(
             title: AppLocalizations.of(context)!.important,
-            subtitle: '0',
+            subtitle: '${_notes.important.length}',
             icon: const Icon(CupertinoIcons.star_fill),
             color: Colors.amber,
             onPressed: () {},
           ),
           MenuCard(
             title: AppLocalizations.of(context)!.done,
-            subtitle: '0',
+            subtitle: '${_notes.done.length}',
             icon: const Icon(CupertinoIcons.checkmark_seal_fill),
             color: Colors.grey,
             onPressed: () {},
           ),
           MenuCard(
             title: AppLocalizations.of(context)!.personal,
-            subtitle: '0',
+            subtitle: '${_notes.personal.length}',
             icon: const Icon(CupertinoIcons.person_alt),
             color: Colors.pink,
             onPressed: () {},
@@ -83,10 +82,6 @@ class _NoteListState extends State<NoteList> {
   }
 
   void _initHighlightView() {
-    final _recent = _notes.where((n) {
-      return DateTime.now().difference(n.creationDate) < Vars.recentThreshold;
-    }).toList();
-    _recent.sort((n1, n2) => n2.creationDate.compareTo(n1.creationDate));
     _highlightView = Column(
       children: [
         Align(
@@ -97,7 +92,7 @@ class _NoteListState extends State<NoteList> {
           ),
         ),
         Container(height: 12),
-        ..._recent.map((n) {
+        ..._notes.recent.map((n) {
           return Padding(
             padding: const EdgeInsets.only(bottom: 8),
             child: NoteCard(n, onPressed: () {}),
@@ -108,22 +103,21 @@ class _NoteListState extends State<NoteList> {
   }
 
   Future queryData() async {
-    _notes.clear();
     final now = DateTime.now();
     final uid = '${_userStore.user.id}';
     final d1 = '${now.millisecondsSinceEpoch}';
-    final d2 =
+    final d3 =
         '${now.subtract(const Duration(days: 2)).millisecondsSinceEpoch}';
-    final d3 = '${now.add(const Duration(days: 2)).millisecondsSinceEpoch}';
-    final d4 =
-        '${now.subtract(const Duration(days: 4)).millisecondsSinceEpoch}';
-    final d5 =
-        '${now.subtract(const Duration(days: 6)).millisecondsSinceEpoch}';
-    final d6 =
-        '${now.subtract(const Duration(days: 8)).millisecondsSinceEpoch}';
+    final d5 = '${now.add(const Duration(days: 2)).millisecondsSinceEpoch}';
     final d7 =
+        '${now.subtract(const Duration(days: 4)).millisecondsSinceEpoch}';
+    final d6 =
+        '${now.subtract(const Duration(days: 6)).millisecondsSinceEpoch}';
+    final d4 =
+        '${now.subtract(const Duration(days: 8)).millisecondsSinceEpoch}';
+    final d2 =
         '${now.subtract(const Duration(days: 10)).millisecondsSinceEpoch}';
-    _notes.addAll([
+    _notes.replace([
       Note(
         id: '${uid}_$d1',
         courseId: null,
@@ -167,6 +161,21 @@ class _NoteListState extends State<NoteList> {
         content: 'Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum',
         isImportant: true,
       ),
+      Note(
+        id: '${uid}_$d1',
+        courseId: null,
+        title: 'Note 8',
+        isDone: true,
+        isImportant: true,
+      ),
+      Note(
+        id: '${uid}_$d1',
+        courseId: null,
+        title: 'Note 9',
+        content: 'Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum',
+        isDone: true,
+        isImportant: true,
+      ),
     ]);
 
     _initFolderView();
@@ -185,7 +194,7 @@ class _NoteListState extends State<NoteList> {
             return ErrorCard(text: AppLocalizations.of(context)!.err_get_notes);
           }
           return RefreshIndicator(
-            onRefresh: () async => setState(() => _notes.clear()),
+            onRefresh: () async => setState(() {}),
             child: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(12),

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:moodle_mobile/constants/dimens.dart';
 import 'package:moodle_mobile/constants/styles.dart';
 
 /// Create a menu with icon on the left, and text on the right
@@ -141,9 +142,10 @@ class MenuCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onPressed,
-      child: Card(
+    return Card(
+      child: InkWell(
+        onTap: onPressed,
+        radius: Dimens.default_card_radius,
         child: Stack(
           children: [
             Align(

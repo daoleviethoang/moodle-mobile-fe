@@ -78,9 +78,9 @@ class _NoteCardState extends State<NoteCard> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: widget.onPressed,
-      child: Card(
+    return Card(
+      child: InkWell(
+        onTap: widget.onPressed,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 8),
           child: Row(
@@ -101,6 +101,9 @@ class _NoteCardState extends State<NoteCard> {
                       Text(
                         _note.getCourseName(context),
                         style: MoodleStyles.noteHeaderStyle.copyWith(
+                          color: _note.isImportant
+                              ? Colors.amber
+                              : Theme.of(context).textTheme.titleMedium?.color,
                           decoration: _note.isDone
                               ? TextDecoration.lineThrough
                               : TextDecoration.none,
@@ -113,6 +116,9 @@ class _NoteCardState extends State<NoteCard> {
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.start,
                         style: TextStyle(
+                          color: _note.isImportant
+                              ? Colors.amber
+                              : Theme.of(context).textTheme.bodyMedium?.color,
                           decoration: _note.isDone
                               ? TextDecoration.lineThrough
                               : TextDecoration.none,

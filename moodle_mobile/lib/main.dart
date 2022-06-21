@@ -8,6 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:moodle_mobile/constants/colors.dart';
+import 'package:moodle_mobile/constants/dimens.dart';
 import 'package:moodle_mobile/data/bg_service/bg_service.dart';
 import 'package:moodle_mobile/data/firebase/firebase_helper.dart';
 import 'package:moodle_mobile/di/service_locator.dart';
@@ -121,7 +122,8 @@ class MyApp extends StatelessWidget {
               color: Theme.of(context).colorScheme.surface,
               elevation: 8,
               shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(12)),
+                borderRadius: BorderRadius.all(
+                    Radius.circular(Dimens.default_card_radius)),
               ),
             ),
             appBarTheme: Theme.of(context).appBarTheme.copyWith(
