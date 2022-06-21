@@ -96,19 +96,16 @@ class SlidableTile extends StatelessWidget {
                     const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
               ),
             ),
-            isStarred
-                ? const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 2),
-                    child:
-                        Icon(Icons.star_rounded, color: Colors.amber, size: 16),
-                  )
-                : Container(),
-            !isNotification
-                ? const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 2),
-                    child: Icon(Icons.notifications_off, size: 16),
-                  )
-                : Container(),
+            if (isStarred)
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 2),
+                child: Icon(Icons.star_rounded, color: Colors.amber, size: 16),
+              ),
+            if (isNotification)
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 2),
+                child: Icon(Icons.notifications_off, size: 16),
+              )
           ],
         ),
         subtitle: message != null
