@@ -103,6 +103,7 @@ dependencies:
 
   #icon app
   flutter_launcher_icons: ^0.9.1
+  
   firebase_messaging: ^11.4.1
   background_fetch: ^1.1.0
   package_info_plus: ^0.0.1
