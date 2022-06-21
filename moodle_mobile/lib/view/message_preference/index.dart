@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/data/network/apis/notification_preference/notification_preference_api.dart';
 import 'package:moodle_mobile/models/message_preference/message_preference.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
@@ -130,47 +131,67 @@ class _MessagePreferenceScreenState extends State<MessagePreferenceScreen>
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  AppLocalizations.of(context)!.restrict,
-                  textScaleFactor: 1.3,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Wrap(
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  runAlignment: WrapAlignment.center,
-                  children: [
-                    Checkbox(
-                        value: blockContact,
-                        shape: const CircleBorder(),
-                        activeColor: Colors.green,
-                        onChanged: (value) async {
-                          await blockMessage();
-                        }),
-                    Text(
-                      AppLocalizations.of(context)!.restrict_contact,
-                      textScaleFactor: 1.2,
+                Container(
+                    width: MediaQuery.of(context).size.width - 20,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: MoodleColors.grey),
+                      borderRadius: BorderRadius.circular(8.0),
+                      color: Colors.white,
                     ),
-                  ],
-                ),
-                Wrap(
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  runAlignment: WrapAlignment.center,
-                  children: [
-                    Checkbox(
-                        value: !blockContact,
-                        activeColor: Colors.green,
-                        shape: const CircleBorder(),
-                        onChanged: (value) async {
-                          await blockMessage();
-                        }),
-                    Text(
-                      AppLocalizations.of(context)!.restrict_anyone,
-                      textScaleFactor: 1.2,
-                    ),
-                  ],
-                ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Text(
+                            AppLocalizations.of(context)!.restrict,
+                            textScaleFactor: 1.3,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Wrap(
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          runAlignment: WrapAlignment.center,
+                          children: [
+                            Checkbox(
+                                value: blockContact,
+                                shape: const CircleBorder(),
+                                activeColor: Colors.green,
+                                onChanged: (value) async {
+                                  await blockMessage();
+                                }),
+                            Text(
+                              AppLocalizations.of(context)!.restrict_contact,
+                              textScaleFactor: 1.2,
+                            ),
+                          ],
+                        ),
+                        Wrap(
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          runAlignment: WrapAlignment.center,
+                          children: [
+                            Checkbox(
+                                value: !blockContact,
+                                activeColor: Colors.green,
+                                shape: const CircleBorder(),
+                                onChanged: (value) async {
+                                  await blockMessage();
+                                }),
+                            Text(
+                              AppLocalizations.of(context)!.restrict_anyone,
+                              textScaleFactor: 1.2,
+                            ),
+                          ],
+                        ),
+                      ],
+                    )),
                 const SizedBox(
                   height: 20,
                 ),

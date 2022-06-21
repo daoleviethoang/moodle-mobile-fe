@@ -25,7 +25,9 @@ class _CourseCategoryScreenState extends State<CourseCategoryScreen> {
           await CourseCategoryApi().getCourseCategory(_userStore.user.token);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(AppLocalizations.of(context)!.load_category_fail)));
+        content: Text(AppLocalizations.of(context)!.load_category_fail),
+        backgroundColor: Colors.red,
+      ));
     }
 
     if (categories.isNotEmpty) {
@@ -76,9 +78,6 @@ class _CourseCategoryScreenState extends State<CourseCategoryScreen> {
       body: FutureBuilder(
           future: readData(),
           builder: (context, data) {
-            if (data.hasError) {
-              return const Center(child: Text("Error"));
-            }
             List<CourseCategory> categories = [];
             if (data.hasData) {
               categories = data.data as List<CourseCategory>;
@@ -88,22 +87,22 @@ class _CourseCategoryScreenState extends State<CourseCategoryScreen> {
 
             final tilePadVert = MediaQuery.of(context).size.height * 0.01;
             final tilePadHoz = MediaQuery.of(context).size.height * 0.02;
-            return RefreshIndicator(
-              onRefresh: () async => readData(),
+            return SingleChildScrollView(
               child: ListView(
                 primary: false,
                 shrinkWrap: true,
-                physics: const AlwaysScrollableScrollPhysics(),
                 children: [
                   Container(height: 2),
-                  ...categories.map(
-                    (e) => CourseCategoryListTile(
-                        data: e,
-                        margin: EdgeInsets.symmetric(
-                          vertical: tilePadVert,
-                          horizontal: tilePadHoz,
-                        )),
-                  ).toList(),
+                  ...categories
+                      .map(
+                        (e) => CourseCategoryListTile(
+                            data: e,
+                            margin: EdgeInsets.symmetric(
+                              vertical: tilePadVert,
+                              horizontal: tilePadHoz,
+                            )),
+                      )
+                      .toList(),
                   Container(height: 2),
                 ],
               ),

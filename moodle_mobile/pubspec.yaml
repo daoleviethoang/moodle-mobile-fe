@@ -86,8 +86,6 @@ dependencies:
   permission_handler: ^9.2.0
   photo_view: ^0.13.0
 
-  #auto complete text field
-  autocomplete_textfield_ns: ^2.0.0
   auto_size_text: ^3.0.0
 
   #count down timer
@@ -103,6 +101,7 @@ dependencies:
 
   #icon app
   flutter_launcher_icons: ^0.9.1
+  
   firebase_messaging: ^11.4.1
   background_fetch: ^1.1.0
   package_info_plus: ^0.0.1

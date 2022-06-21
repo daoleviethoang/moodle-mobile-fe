@@ -341,18 +341,24 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   }
 
   void _initEventsTab() {
-    if (_events.isEmpty) {
-      _eventsTab = Container();
-      return;
-    }
-    _eventsTab = Align(
-      alignment: Alignment.centerLeft,
+    // if (_events.isEmpty) {
+    //   _eventsTab = Container();
+    //   return;
+    // }
+    _eventsTab = SizedBox(
+      height: MediaQuery.of(context).size.height - 100,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(AppLocalizations.of(context)!.upcoming_events,
               style: MoodleStyles.courseHeaderStyle),
           Container(height: 16),
+          if (_events.isEmpty)
+            Center(
+              child: Text(
+                AppLocalizations.of(context)!.nothing_yet,
+              ),
+            ),
           ..._events.map((e) {
             final title = e.name ?? '';
             final epoch = (e.timestart ?? 0) * 1000;

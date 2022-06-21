@@ -7,7 +7,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:moodle_mobile/constants/colors.dart';
+import 'package:moodle_mobile/data/bg_service/bg_service.dart';
+import 'package:moodle_mobile/data/firebase/firebase_helper.dart';
+import 'package:moodle_mobile/di/service_locator.dart';
+import 'package:moodle_mobile/provider/LocaleManager.dart';
+import 'package:moodle_mobile/view/splash/splash_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 import 'constants/colors.dart';
 import 'data/firebase/firebase_helper.dart';
@@ -23,12 +30,17 @@ void main() async {
   await FirebaseHelper.initFirebase();
   await BgService.initBackgroundService();
   await NotificationHelper.initNotificationService();
-  runApp(
-    DevicePreview(
-      enabled: !kReleaseMode && kIsWeb,
-      builder: (context) => const MyApp(), // Wrap your app
+  runApp(DevicePreview(
+    enabled: !kReleaseMode && kIsWeb,
+    builder: (context) => MultiProvider(
+      providers: [
+        ChangeNotifierProvider<LocaleNotifier>(
+          create: (_) => LocaleNotifier(),
+        ),
+      ],
+      child: const MyApp(),
     ),
-  );
+  ));
 }
 
 Future<void> initDownloader() async {
@@ -79,53 +91,55 @@ class MyApp extends StatelessWidget {
       }
     }
 
-    return MaterialApp(
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      useInheritedMediaQuery: true,
-      locale: DevicePreview.locale(context),
-      builder: DevicePreview.appBuilder,
-      title: 'Moodle App',
-      theme: ThemeData(
-          fontFamily: 'SF',
-          colorScheme: const ColorScheme(
-            brightness: Brightness.light,
-            primary: MoodleColors.blue,
-            onPrimary: Colors.black,
-            secondary: MoodleColors.blue,
-            onSecondary: Colors.black,
-            background: Colors.white,
-            onBackground: Colors.black,
-            // Need to consider again
-            primaryVariant: Colors.black,
-            secondaryVariant: Colors.black,
-            surface: Colors.white,
-            onSurface: Colors.black,
-            error: CupertinoColors.systemRed,
-            onError: Colors.white,
-          ),
-          cardTheme: CardTheme(
-            color: Theme.of(context).colorScheme.surface,
-            elevation: 8,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(12)),
+    return Consumer<LocaleNotifier>(
+      builder: (context, locale, _) => MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        useInheritedMediaQuery: true,
+        locale: DevicePreview.locale(context) ?? locale.getLocale(),
+        builder: DevicePreview.appBuilder,
+        title: 'Moodle App',
+        theme: ThemeData(
+            fontFamily: 'SF',
+            colorScheme: const ColorScheme(
+              brightness: Brightness.light,
+              primary: MoodleColors.blue,
+              onPrimary: Colors.black,
+              secondary: MoodleColors.blue,
+              onSecondary: Colors.black,
+              background: Colors.white,
+              onBackground: Colors.black,
+              // Need to consider again
+              primaryVariant: Colors.black,
+              secondaryVariant: Colors.black,
+              surface: Colors.white,
+              onSurface: Colors.black,
+              error: CupertinoColors.systemRed,
+              onError: Colors.white,
             ),
-          ),
-          appBarTheme: Theme.of(context).appBarTheme.copyWith(
-                foregroundColor: Colors.white,
-                actionsIconTheme: Theme.of(context).iconTheme.copyWith(
-                      size: 60,
-                      color: MoodleColors.white,
-                    ),
+            cardTheme: CardTheme(
+              color: Theme.of(context).colorScheme.surface,
+              elevation: 8,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(12)),
               ),
-          bottomNavigationBarTheme: Theme.of(context)
-              .bottomNavigationBarTheme
-              .copyWith(
-                  backgroundColor: Theme.of(context).colorScheme.surface,
-                  unselectedItemColor:
-                      Theme.of(context).colorScheme.onSurface)),
-      home: const SplashScreen(),
-      debugShowCheckedModeBanner: false,
+            ),
+            appBarTheme: Theme.of(context).appBarTheme.copyWith(
+                  foregroundColor: Colors.white,
+                  actionsIconTheme: Theme.of(context).iconTheme.copyWith(
+                        size: 60,
+                        color: MoodleColors.white,
+                      ),
+                ),
+            bottomNavigationBarTheme: Theme.of(context)
+                .bottomNavigationBarTheme
+                .copyWith(
+                    backgroundColor: Theme.of(context).colorScheme.surface,
+                    unselectedItemColor:
+                        Theme.of(context).colorScheme.onSurface)),
+        home: const SplashScreen(),
+        debugShowCheckedModeBanner: false,
+      ),
     );
   }
 }

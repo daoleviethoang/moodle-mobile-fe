@@ -1,4 +1,5 @@
-import 'package:autocomplete_textfield_ns/autocomplete_textfield_ns.dart';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
@@ -11,6 +12,7 @@ import 'package:moodle_mobile/view/common/custom_button.dart';
 import 'package:moodle_mobile/view/common/custom_text_field.dart';
 import 'package:moodle_mobile/view/direct_page.dart';
 import 'package:moodle_mobile/view/forget_pass/forget_pass_screen.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -26,22 +28,31 @@ class _LoginScreenState extends State<LoginScreen> {
   // Create a text controler
   final TextEditingController usernameControler = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
   final TextEditingController baseUrlController =
-      TextEditingController(text: "Chương trình");
+      TextEditingController(text: "");
+
+  final TextEditingController otherUrlController =
+      TextEditingController(text: "https://");
 
   final List<String> suggestionsData = [
     "https://courses.ctda.hcmus.edu.vn",
     "https://courses.fit.hcmus.edu.vn",
     "https://elearning.fit.hcmus.edu.vn",
+    "https://",
   ];
 
   final List<String> suggestions = [
     "Chương trình đề án (CLC, CTT, VP)",
     "Chương trình đại trà",
     "Chương trình đào tạo từ xa",
+    "Other",
   ];
 
-  GlobalKey<AutoCompleteTextFieldState<String>> key = new GlobalKey();
+  bool otherUrl = false;
+
+  final focusNode = FocusNode();
+  final urlKey = GlobalKey();
 
   // Store
   late UserStore _userStore;
@@ -65,13 +76,132 @@ class _LoginScreenState extends State<LoginScreen> {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+    focusNode.dispose();
     super.dispose();
+  }
+
+  _onAppLanguagePressed(BuildContext context) async {
+    final root = Overlay.of(context)?.context.findRenderObject();
+    final rb = urlKey.currentContext?.findRenderObject();
+    final pos = (rb as RenderBox).localToGlobal(Offset.zero);
+
+    var value = await showMenu<String>(
+      context: context,
+      position: RelativeRect.fromRect(
+          Offset(pos.dx, pos.dy) & const Size(64, 64),
+          Offset.zero & (root as RenderBox).size),
+      items: suggestions.map((e) {
+        var index = suggestions.indexOf(e);
+        return PopupMenuItem(
+          value: suggestionsData[index],
+          child: Text(suggestions[index]),
+        );
+      }).toList(),
+    );
+    if (value == null) {
+      return;
+    }
+    if (suggestionsData.indexOf(value) == 3) {
+      setState(() {
+        otherUrl = true;
+      });
+      var check = await showDialog<bool>(
+        context: context,
+        builder: (BuildContext dialogContext) {
+          return AlertDialog(
+            titlePadding: const EdgeInsets.fromLTRB(20, 20, 10, 10),
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  "Domain",
+                  textScaleFactor: 0.8,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                CustomTextFieldWidget(
+                  controller: otherUrlController,
+                  hintText: AppLocalizations.of(context)!.enter_title,
+                  haveLabel: false,
+                  borderRadius: Dimens.default_border_radius,
+                ),
+              ],
+            ),
+            actions: [
+              Row(children: [
+                Expanded(
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.pop(dialogContext);
+                    },
+                    child: Text(AppLocalizations.of(context)!.cancel,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 16,
+                        )),
+                    style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(MoodleColors.grey),
+                        shape: MaterialStateProperty.all(
+                            const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8.0))))),
+                  ),
+                ),
+                const SizedBox(
+                  width: 15,
+                ),
+                Expanded(
+                  child: TextButton(
+                    onPressed: () {
+                      FocusScope.of(dialogContext).unfocus();
+                      Navigator.pop(dialogContext, true);
+                    },
+                    child: Text(AppLocalizations.of(context)!.ok,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 16,
+                        )),
+                    style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(MoodleColors.blue),
+                        shape: MaterialStateProperty.all(
+                            const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8.0))))),
+                  ),
+                ),
+              ]),
+            ],
+          );
+        },
+      );
+      setState(() {
+        otherUrl = false;
+      });
+      if (check == true) {
+        setState(() {
+          baseUrlController.text = otherUrlController.text;
+        });
+      }
+    } else {
+      setState(() {
+        otherUrl = false;
+        baseUrlController.text = value;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset: true,
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(),
         body: KeyboardVisibilityBuilder(builder: (context, isKeyboardVisible) {
           return Center(
@@ -80,9 +210,17 @@ class _LoginScreenState extends State<LoginScreen> {
               children: <Widget>[
                 // Logo image
                 isKeyboardVisible
-                    ? Container(
-                        height: 10,
-                      )
+                    ? !otherUrl
+                        ? Container(
+                            height: 10,
+                          )
+                        : Container(
+                            color: MoodleColors.lightGray,
+                            width: double.infinity,
+                            // MediaQuery: get 1/4 of screen height
+                            height: MediaQuery.of(context).size.height * 1 / 6,
+                            child: Image.asset('assets/image/logo.png'),
+                          )
                     : Container(
                         color: MoodleColors.lightGray,
                         width: double.infinity,
@@ -91,33 +229,34 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: Image.asset('assets/image/logo.png'),
                       ),
 
-                // base url text field
                 Padding(
-                    padding: const EdgeInsets.only(
-                        left: Dimens.login_padding_left,
-                        right: Dimens.login_padding_right),
-                    child: SimpleAutoCompleteTextField(
-                      textInputAction: TextInputAction.search,
-                      decoration: InputDecoration(
-                        contentPadding:
-                            EdgeInsets.all(Dimens.default_padding_double),
-                        hintText: "BaseUrl",
-                        prefixIcon: Icon(Icons.language),
-                        hintStyle: isKeyboardVisible
-                            ? TextStyle(fontSize: 14)
-                            : TextStyle(fontSize: 16),
-                        labelText: "BaseUrl",
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                                Radius.circular(Dimens.default_border_radius))),
-                      ),
-                      suggestions: suggestions,
-                      controller: baseUrlController,
-                      key: key,
-                      textChanged: (text) {},
-                      clearOnSubmit: false,
-                      textSubmitted: (text) {},
-                    )),
+                  padding: const EdgeInsets.only(
+                      left: Dimens.login_padding_left,
+                      right: Dimens.login_padding_right),
+                  child: TextField(
+                    key: urlKey,
+                    focusNode: focusNode,
+                    keyboardType: TextInputType.visiblePassword,
+                    controller: baseUrlController,
+                    readOnly: true,
+                    maxLines: 1,
+                    //readOnly: !canChangeUrl,
+                    onTap: () async {
+                      await _onAppLanguagePressed(context);
+                    },
+                    decoration: const InputDecoration(
+                      contentPadding:
+                          EdgeInsets.all(Dimens.default_padding_double),
+                      prefixIcon: const Icon(Icons.language),
+                      hintText: "BaseUrl",
+                      labelText: "BaseUrl",
+                      isDense: true,
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                              Radius.circular(Dimens.default_border_radius))),
+                    ),
+                  ),
+                ),
 
                 const SizedBox(height: Dimens.login_sizedbox_height),
 
@@ -240,12 +379,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void onLoginPressed() async {
     FocusScope.of(context).unfocus();
 
-    int index = suggestions.indexOf(baseUrlController.text);
-    if (index != -1) {
-      _userStore.setBaseUrl(suggestionsData[index]);
-    } else {
-      _userStore.setBaseUrl(baseUrlController.text);
-    }
+    _userStore.setBaseUrl(baseUrlController.text);
 
     await _userStore.login(
       usernameControler.text,
