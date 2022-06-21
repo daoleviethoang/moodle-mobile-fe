@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:autocomplete_textfield_ns/autocomplete_textfield_ns.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
@@ -49,8 +48,6 @@ class _LoginScreenState extends State<LoginScreen> {
     "Chương trình đào tạo từ xa",
     "Other",
   ];
-
-  List<String> suggestionFilter = [];
 
   bool otherUrl = false;
 

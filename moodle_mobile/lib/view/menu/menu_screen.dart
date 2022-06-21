@@ -3,16 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/styles.dart';
+import 'package:moodle_mobile/provider/LocaleManager.dart';
+import 'package:moodle_mobile/provider/StorageManager.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/content_item.dart';
 import 'package:moodle_mobile/view/common/image_view.dart';
+import 'package:moodle_mobile/view/common/language/changeLanguage.dart';
 import 'package:moodle_mobile/view/common/menu_item.dart' as m;
 import 'package:moodle_mobile/view/menu/profile/profile.dart';
-import 'package:moodle_mobile/view/message_preference/index.dart';
 import 'package:moodle_mobile/view/notification_preference/index.dart';
 import 'package:moodle_mobile/view/splash/splash_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:provider/provider.dart';
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({Key? key}) : super(key: key);
@@ -24,10 +27,97 @@ class MenuScreen extends StatefulWidget {
 class _MenuScreenState extends State<MenuScreen> {
   late UserStore _userStore;
 
+  String language = "default";
+
   @override
   void initState() {
     _userStore = GetIt.instance<UserStore>();
     super.initState();
+  }
+
+  fetchCurrentLocale() async {
+    String? _locale = await StorageManager.readData('localeMode');
+    setState(() {
+      language = _locale ?? "default";
+    });
+  }
+
+  _showChangeLanguageDialog() async {
+    LocaleNotifier locale = context.read<LocaleNotifier>();
+    await fetchCurrentLocale();
+    final SetListLangTiles _setListTiles = SetListLangTiles(
+      language: language,
+    );
+
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          titlePadding: const EdgeInsets.fromLTRB(50, 30, 50, 10),
+          title: const Text('Choose your language!'),
+          content: SingleChildScrollView(
+            child: Column(
+              children: [
+                _setListTiles,
+              ],
+            ),
+          ),
+          actions: [
+            Row(children: [
+              Expanded(
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text(AppLocalizations.of(context)!.cancel,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 16,
+                      )),
+                  style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all(MoodleColors.grey),
+                      shape: MaterialStateProperty.all(
+                          const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(8.0))))),
+                ),
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              Expanded(
+                child: TextButton(
+                  onPressed: () {
+                    setState(() {
+                      language = _setListTiles.language;
+                    });
+                    locale.setMode(language);
+
+                    // need change preference
+                    Navigator.pop(context);
+                  },
+                  child: Text(AppLocalizations.of(context)!.ok,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 16,
+                      )),
+                  style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all(MoodleColors.blue),
+                      shape: MaterialStateProperty.all(
+                          const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(8.0))))),
+                ),
+              ),
+            ]),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -145,14 +235,16 @@ class _MenuScreenState extends State<MenuScreen> {
                         //   onPressed: () {},
                         // ),
                         // const SizedBox(height: 8),
-                        // m.MenuItem(
-                        //   title: AppLocalizations.of(context)!.app_settings,
-                        //   color: Colors.purple.shade200,
-                        //   icon: const Icon(Icons.lightbulb_rounded),
-                        //   fullWidth: true,
-                        //   onPressed: () {},
-                        // ),
-                        // const SizedBox(height: 8),
+                        m.MenuItem(
+                          title: AppLocalizations.of(context)!.app_language,
+                          color: Colors.purple.shade200,
+                          icon: const Icon(Icons.lightbulb_rounded),
+                          fullWidth: true,
+                          onPressed: () async {
+                            await _showChangeLanguageDialog();
+                          },
+                        ),
+                        const SizedBox(height: 8),
                         m.MenuItem(
                           title: AppLocalizations.of(context)!.permissions,
                           color: Colors.green,
