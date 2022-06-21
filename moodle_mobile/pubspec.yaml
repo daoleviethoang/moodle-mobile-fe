@@ -86,8 +86,6 @@ dependencies:
   permission_handler: ^9.2.0
   photo_view: ^0.13.0
 
-  #auto complete text field
-  autocomplete_textfield_ns: ^2.0.0
   auto_size_text: ^3.0.0
 
   #count down timer

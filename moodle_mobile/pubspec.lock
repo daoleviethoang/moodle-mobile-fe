@@ -50,13 +50,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.0"
-  autocomplete_textfield_ns:
-    dependency: "direct main"
-    description:
-      name: autocomplete_textfield_ns
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.0"
   background_fetch:
     dependency: "direct main"
     description:
