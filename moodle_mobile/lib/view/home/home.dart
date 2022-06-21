@@ -84,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Expanded(
       child: SingleChildScrollView(
         child: SizedBox(
-          height: MediaQuery.of(context).size.height,
+          height: MediaQuery.of(context).size.height - 100,
           child: const Padding(
             padding: EdgeInsets.only(top: 0, left: 5, right: 5),
             child: CourseCategoryScreen(),
