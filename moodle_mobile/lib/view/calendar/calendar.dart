@@ -16,8 +16,10 @@ import 'package:moodle_mobile/models/module/module_course.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/content_item.dart';
 import 'package:moodle_mobile/view/common/custom_button.dart';
+import 'package:moodle_mobile/view/common/custom_button_short.dart';
 import 'package:moodle_mobile/view/common/data_card.dart';
-import 'package:moodle_mobile/view/common/menu_item.dart';
+import 'package:moodle_mobile/view/common/menu_item.dart' as m;
+import 'package:moodle_mobile/view/note/note_list.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -33,9 +35,16 @@ class CalendarScreen extends StatefulWidget {
   State<CalendarScreen> createState() => _CalendarScreenState();
 }
 
-class _CalendarScreenState extends State<CalendarScreen> {
+class _CalendarScreenState extends State<CalendarScreen>
+    with TickerProviderStateMixin {
+  Widget _tabView = Container();
+  Widget _body = Container();
+  Widget _calendarTabView = Container();
   Widget _monthView = Container();
   Widget _dayView = Container();
+  Widget _noteTabView = Container();
+
+  late TabController _tabController;
 
   var _jumpDate = DateTime.now();
   var _selectedDay = DateTime.now();
@@ -49,6 +58,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(
+      length: 2,
+      initialIndex: 0,
+      vsync: this,
+    );
+
     _userStore = GetIt.instance<UserStore>();
     _jumpOpenFlag = widget.jumpOpenFlag;
     _jumpOpenFlag?.observe((p0) {
@@ -57,6 +72,119 @@ class _CalendarScreenState extends State<CalendarScreen> {
         _jumpToDate();
       }
     });
+  }
+
+  void _initTabView() {
+    _tabView = TabBar(
+      controller: _tabController,
+      indicatorColor: Colors.transparent,
+      padding: EdgeInsets.zero,
+      indicatorPadding: EdgeInsets.zero,
+      labelPadding: EdgeInsets.zero,
+      isScrollable: true,
+      tabs: [
+        Tab(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 6),
+            child: CustomButtonShort(
+              text: AppLocalizations.of(context)!.calendar,
+              textColor: (_tabController.index == 0)
+                  ? MoodleColors.blue
+                  : Colors.black,
+              bgColor: (_tabController.index == 0)
+                  ? MoodleColors.brightGray
+                  : MoodleColors.white,
+              blurRadius: 3,
+              onPressed: () => _tabController.index = 0,
+            ),
+          ),
+        ),
+        Tab(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 6),
+            child: CustomButtonShort(
+              text: AppLocalizations.of(context)!.notes,
+              textColor: (_tabController.index == 1)
+                  ? MoodleColors.blue
+                  : Colors.black,
+              bgColor: (_tabController.index == 1)
+                  ? MoodleColors.brightGray
+                  : MoodleColors.white,
+              blurRadius: 3,
+              onPressed: () => _tabController.index = 1,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _initBody() {
+    _initTabView();
+    _initCalendarTabView();
+    _initNoteTabView();
+
+    _body = SafeArea(
+      child: Column(
+        children: [
+          Container(height: 16),
+          _tabView,
+          Expanded(child: [_calendarTabView, _noteTabView][_tabController.index]),
+        ],
+      ),
+    );
+  }
+
+  // region Calendar tab
+
+  void _initCalendarTabView() {
+    _calendarTabView = FutureBuilder(
+        future: queryData(),
+        builder: (context, data) {
+          if (data.hasError) {
+            if (kDebugMode) {
+              print('${data.error}');
+            }
+            return ErrorCard(
+                text: AppLocalizations.of(context)!.err_get_calendar);
+          }
+          return RefreshIndicator(
+            onRefresh: () async => setState(() => _events.clear()),
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  children: [
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        AnimatedOpacity(
+                          opacity: (_events.isEmpty) ? .5 : 1,
+                          duration: const Duration(milliseconds: 300),
+                          child: IgnorePointer(
+                            ignoring: _events.isEmpty,
+                            child: _monthView,
+                          ),
+                        ),
+                        AnimatedOpacity(
+                            opacity: (_events.isEmpty) ? 1 : 0,
+                            duration: const Duration(milliseconds: 300),
+                            child: const CircularProgressIndicator.adaptive()),
+                      ],
+                    ),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 12, left: 12),
+                        child: _dayView,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
   }
 
   void _initMonthView() {
@@ -188,146 +316,93 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 
   void _initDayView() {
-    _dayView = ConstrainedBox(
-      constraints: const BoxConstraints(minHeight: 500),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Day view header
-          Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: Text(
-              AppLocalizations.of(context)!.events_on(
-                  DateFormat.MMMMd(Localizations.localeOf(context).languageCode)
-                      .format(_selectedDay)),
-              style: MoodleStyles.sectionHeaderStyle,
-            ),
+    _dayView = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Day view header
+        Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: Text(
+            AppLocalizations.of(context)!.events_on(
+                DateFormat.MMMMd(Localizations.localeOf(context).languageCode)
+                    .format(_selectedDay)),
+            style: MoodleStyles.sectionHeaderStyle,
           ),
+        ),
 
-          // Event list
-          if (_selectedEvents.isEmpty)
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Opacity(
-                opacity: .5,
-                child: Center(
-                  child: Text(AppLocalizations.of(context)!.no_events),
-                ),
+        // Event list
+        if (_selectedEvents.isEmpty)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: Opacity(
+              opacity: .5,
+              child: Center(
+                child: Text(AppLocalizations.of(context)!.no_events),
               ),
             ),
-          ..._selectedEvents.map((e) {
-            final title = e.name ?? '';
-            final epoch = (e.timestart ?? 0) * 1000;
-            final dueDate = DateTime.fromMillisecondsSinceEpoch(epoch);
-            switch (e.modulename ?? '') {
-              case ModuleName.assign:
-                return FutureBuilder(
-                    future: queryModule(e),
-                    builder: (context, data) {
-                      if (data.hasError) {
-                        return ErrorCard(text: '${data.error}');
-                      } else if (!data.hasData) {
-                        return const LoadingCard();
-                      }
-                      final instance =
-                          (data.data as ModuleCourse).instance ?? 0;
-                      return SubmissionItem(
-                        title: title,
-                        submissionId: instance,
-                        courseId: e.course?.id ?? 0,
-                        dueDate: dueDate,
-                        isTeacher: null,
-                      );
-                    });
-              case ModuleName.quiz:
-                return FutureBuilder(
-                    future: queryModule(e),
-                    builder: (context, data) {
-                      if (data.hasError) {
-                        return ErrorCard(text: '${data.error}');
-                      } else if (!data.hasData) {
-                        return const LoadingCard();
-                      }
-                      final instance =
-                          (data.data as ModuleCourse).instance ?? 0;
-                      return QuizItem(
-                        title: title,
-                        openDate: dueDate,
-                        quizInstanceId: instance,
-                        courseId: e.course?.id ?? 0,
-                        isTeacher: null,
-                      );
-                    });
-              case "":
-                return MenuItem(
-                  icon: const Icon(CupertinoIcons.calendar),
-                  color: MoodleColors.blue,
-                  title: title,
-                  subtitle: DateFormat('HH:mm, dd MMMM, yyyy').format(dueDate),
-                  fullWidth: true,
-                  onPressed: () {
-                    showModalBottomSheet(
-                      context: context,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(20)),
-                      ),
-                      builder: (builder) => Container(
-                        height: 300,
-                        padding: const EdgeInsets.only(
-                            top: 8, bottom: 20, left: 10, right: 10),
-                        decoration: const BoxDecoration(
-                          color: MoodleColors.grey_bottom_bar,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(20),
-                            topRight: Radius.circular(20),
-                          ),
-                        ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          children: <Widget>[
-                            Container(
-                              height: 30,
-                              child: Text(
-                                e.name ?? "No name",
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold),
-                                textScaleFactor: 1.8,
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            Container(
-                              height: 230,
-                              padding: const EdgeInsets.only(
-                                  left: Dimens.default_padding,
-                                  right: Dimens.default_padding),
-                              child:
-                                  Html(data: e.description ?? "No description"),
-                              decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(
-                                      Dimens.default_border_radius * 3),
-                                ),
-                                color: MoodleColors.brightGray,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+          ),
+        ..._selectedEvents.map((e) {
+          final title = e.name ?? '';
+          final epoch = (e.timestart ?? 0) * 1000;
+          final dueDate = DateTime.fromMillisecondsSinceEpoch(epoch);
+          switch (e.modulename ?? '') {
+            case ModuleName.assign:
+              return FutureBuilder(
+                  future: queryModule(e),
+                  builder: (context, data) {
+                    if (data.hasError) {
+                      return ErrorCard(text: '${data.error}');
+                    } else if (!data.hasData) {
+                      return const LoadingCard();
+                    }
+                    final instance =
+                        (data.data as ModuleCourse).instance ?? 0;
+                    return SubmissionItem(
+                      title: title,
+                      submissionId: instance,
+                      courseId: e.course?.id ?? 0,
+                      dueDate: dueDate,
+                      isTeacher: null,
                     );
-                  },
-                );
-              default:
-                return ErrorCard(
-                  text: 'Unknown module name: ' + (e.modulename ?? ''),
-                );
-            }
-          }).toList(),
-        ],
-      ),
+                  });
+            case ModuleName.quiz:
+              return FutureBuilder(
+                  future: queryModule(e),
+                  builder: (context, data) {
+                    if (data.hasError) {
+                      return ErrorCard(text: '${data.error}');
+                    } else if (!data.hasData) {
+                      return const LoadingCard();
+                    }
+                    final instance =
+                        (data.data as ModuleCourse).instance ?? 0;
+                    return QuizItem(
+                      title: title,
+                      openDate: dueDate,
+                      quizInstanceId: instance,
+                      courseId: e.course?.id ?? 0,
+                      isTeacher: null,
+                    );
+                  });
+            case "":
+              return EventItem(
+                title: title,
+                date: dueDate,
+                event: e,
+              );
+            default:
+              return ErrorCard(
+                text: 'Unknown module name: ' + (e.modulename ?? ''),
+              );
+          }
+        }).toList(),
+      ],
     );
   }
+
+  // endregion
+
+  // region Calendar data fetch
 
   Future<ModuleCourse> queryModule(Event e) async {
     try {
@@ -356,57 +431,19 @@ class _CalendarScreenState extends State<CalendarScreen> {
     }
   }
 
+  // endregion
+
+  // region Note tab
+
+  void _initNoteTabView() {
+    _noteTabView = const NoteList();
+  }
+
+  // endregion
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: FutureBuilder(
-          future: queryData(),
-          builder: (context, data) {
-            if (data.hasError) {
-              if (kDebugMode) {
-                print('${data.error}');
-              }
-              return ErrorCard(
-                  text: AppLocalizations.of(context)!.err_get_calendar);
-            }
-            return RefreshIndicator(
-              onRefresh: () async => setState(() => _events.clear()),
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Column(
-                    children: [
-                      Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          AnimatedOpacity(
-                            opacity: (_events.isEmpty) ? .5 : 1,
-                            duration: const Duration(milliseconds: 300),
-                            child: IgnorePointer(
-                              ignoring: _events.isEmpty,
-                              child: _monthView,
-                            ),
-                          ),
-                          AnimatedOpacity(
-                              opacity: (_events.isEmpty) ? 1 : 0,
-                              duration: const Duration(milliseconds: 300),
-                              child:
-                                  const CircularProgressIndicator.adaptive()),
-                        ],
-                      ),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 12, left: 12),
-                          child: _dayView,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          }),
-    );
+    _initBody();
+    return _body;
   }
 }

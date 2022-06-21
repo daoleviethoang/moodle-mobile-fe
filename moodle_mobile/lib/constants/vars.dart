@@ -28,4 +28,7 @@ class Vars {
 
   /// Return whether the Flutter version for this build is >= 3.0
   static bool get isFlutter3Plus => Vars.dartVersion >= 2.17;
+
+  /// How much time is `recent` for notes
+  static const Duration recentThreshold = Duration(days: 7);
 }

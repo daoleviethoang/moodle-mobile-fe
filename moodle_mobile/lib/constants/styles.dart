@@ -32,6 +32,22 @@ class MoodleStyles {
     fontWeight: FontWeight.bold,
   );
 
+  static const TextStyle noteFolderNameStyle = TextStyle(
+    fontSize: 24,
+    fontWeight: FontWeight.bold,
+  );
+
+  static TextStyle noteFolderCountStyle = TextStyle(
+    fontSize: 20,
+    fontWeight: FontWeight.bold,
+    color: MoodleColors.black.withOpacity(.25),
+  );
+
+  static const TextStyle noteHeaderStyle = TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+  );
+
   static Map<String, Style> htmlStyle = {
     'h1': Style(fontSize: const FontSize(19)),
     'h2': Style(fontSize: const FontSize(17.5)),

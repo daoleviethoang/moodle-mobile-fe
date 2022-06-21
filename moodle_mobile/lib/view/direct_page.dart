@@ -63,7 +63,7 @@ class _DirectScreenState extends State<DirectScreen> {
 
     _widgetAppBarTitle = [
       "Learning Management System",
-      AppLocalizations.of(context)!.calendar,
+      AppLocalizations.of(context)!.planning,
       AppLocalizations.of(context)!.messenger,
       AppLocalizations.of(context)!.notifications,
       AppLocalizations.of(context)!.menu,

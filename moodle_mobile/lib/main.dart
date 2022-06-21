@@ -16,7 +16,12 @@ import 'package:moodle_mobile/view/splash/splash_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
+import 'constants/colors.dart';
+import 'data/firebase/firebase_helper.dart';
+import 'data/bg_service/bg_service.dart';
 import 'data/notifications/notification_helper.dart';
+import 'di/service_locator.dart';
+import 'view/splash/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,7 +31,7 @@ void main() async {
   await BgService.initBackgroundService();
   await NotificationHelper.initNotificationService();
   runApp(DevicePreview(
-    enabled: kDebugMode && kIsWeb,
+    enabled: !kReleaseMode && kIsWeb,
     builder: (context) => MultiProvider(
       providers: [
         ChangeNotifierProvider<LocaleNotifier>(
