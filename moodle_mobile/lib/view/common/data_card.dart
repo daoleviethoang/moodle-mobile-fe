@@ -98,16 +98,39 @@ class _NoteCardState extends State<NoteCard> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        _note.getCourseName(context),
-                        style: MoodleStyles.noteHeaderStyle.copyWith(
-                          color: _note.isImportant
-                              ? Colors.amber
-                              : Theme.of(context).textTheme.titleMedium?.color,
-                          decoration: _note.isDone
-                              ? TextDecoration.lineThrough
-                              : TextDecoration.none,
-                        ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          if (_note.isImportant)
+                            Icon(Icons.star_rounded,
+                                size: 16,
+                                color: _note.isNotDone
+                                    ? Colors.amber
+                                    : Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.color),
+                          if (_note.isRecent)
+                            Icon(Icons.schedule_rounded,
+                                size: 16,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.color
+                                    ?.withOpacity(.75)),
+                          if (_note.isImportant || _note.isRecent)
+                            Container(width: 4),
+                          Text(
+                            _note.getCourseName(context),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: MoodleStyles.noteHeaderStyle.copyWith(
+                              decoration: _note.isDone
+                                  ? TextDecoration.lineThrough
+                                  : TextDecoration.none,
+                            ),
+                          ),
+                        ],
                       ),
                       Container(height: 4),
                       Text(
@@ -116,9 +139,6 @@ class _NoteCardState extends State<NoteCard> {
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.start,
                         style: TextStyle(
-                          color: _note.isImportant
-                              ? Colors.amber
-                              : Theme.of(context).textTheme.bodyMedium?.color,
                           decoration: _note.isDone
                               ? TextDecoration.lineThrough
                               : TextDecoration.none,

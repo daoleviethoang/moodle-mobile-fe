@@ -1,6 +1,3 @@
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:moodle_mobile/constants/vars.dart';
-
 import 'note.dart';
 
 class Notes {
@@ -23,9 +20,7 @@ class Notes {
   // region Filters
 
   List<Note> get recent {
-    final recent = _v.where((n) {
-      return DateTime.now().difference(n.creationDate) < Vars.recentThreshold;
-    }).toList();
+    final recent = _v.where((n) => n.isRecent).toList();
     recent.sort((n1, n2) => n1.id.compareTo(n2.id));
     return recent.reversed.toList();
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:moodle_mobile/constants/vars.dart';
 
 part 'note.g.dart';
 
@@ -34,6 +35,9 @@ class Note {
 
   DateTime get creationDate =>
       DateTime.fromMillisecondsSinceEpoch(int.tryParse(id.split('_')[1]) ?? 0);
+
+  bool get isRecent =>
+      DateTime.now().difference(creationDate) < Vars.recentThreshold;
 
   bool get isPersonal => courseId == null;
 
