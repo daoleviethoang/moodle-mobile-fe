@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:moodle_mobile/constants/styles.dart';
 
 /// Create a menu with icon on the left, and text on the right
 ///
@@ -106,6 +107,78 @@ class MenuItem extends StatelessWidget {
               }
               return const SizedBox.shrink();
             }),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Create a menu with icon on the topLeft, title on the bottomLeft, and
+/// subtitle on the topRight
+///
+/// Arguments:
+///   - icon: The icon that shows on the topLeft
+///   - color: Color of the icon above and title
+///   - title: The title shows on the bottomLeft
+///   - subtitle: The optional subtitle that shows on the topRight
+///   - onPressed: The function called when the user presses this menu
+class MenuCard extends StatelessWidget {
+  final String title;
+  final String? subtitle;
+  final Widget icon;
+  final Color? color;
+  final VoidCallback? onPressed;
+
+  const MenuCard({
+    Key? key,
+    required this.title,
+    this.subtitle,
+    required this.icon,
+    this.color,
+    this.onPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onPressed,
+      child: Card(
+        child: Stack(
+          children: [
+            Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: CircleAvatar(
+                  backgroundColor: color,
+                  foregroundColor: Theme.of(context).colorScheme.surface,
+                  child: icon,
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Text(
+                  title,
+                  style: MoodleStyles.noteFolderNameStyle.copyWith(
+                      color: (color ?? Theme.of(context).primaryColor)
+                          .withOpacity(.75)),
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.topRight,
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Text(
+                  subtitle ?? '',
+                  style: MoodleStyles.noteFolderCountStyle,
+                ),
+              ),
+            ),
           ],
         ),
       ),

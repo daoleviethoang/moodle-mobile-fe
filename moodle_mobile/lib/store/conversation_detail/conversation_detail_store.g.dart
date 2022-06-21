@@ -25,6 +25,22 @@ mixin _$ConversationDetailStore on _ConversationDetailStore, Store {
     });
   }
 
+  late final _$conversationIdAtom =
+      Atom(name: '_ConversationDetailStore.conversationId', context: context);
+
+  @override
+  int? get conversationId {
+    _$conversationIdAtom.reportRead();
+    return super.conversationId;
+  }
+
+  @override
+  set conversationId(int? value) {
+    _$conversationIdAtom.reportWrite(value, super.conversationId, () {
+      super.conversationId = value;
+    });
+  }
+
   late final _$getListMessageAsyncAction =
       AsyncAction('_ConversationDetailStore.getListMessage', context: context);
 
@@ -43,10 +59,22 @@ mixin _$ConversationDetailStore on _ConversationDetailStore, Store {
         .run(() => super.sentMessage(token, conversationId, text));
   }
 
+  late final _$sentMessageWithoutConversationIdAsyncAction = AsyncAction(
+      '_ConversationDetailStore.sentMessageWithoutConversationId',
+      context: context);
+
+  @override
+  Future<dynamic> sentMessageWithoutConversationId(
+      String token, String text, int userId, int userIdFrom) {
+    return _$sentMessageWithoutConversationIdAsyncAction.run(() => super
+        .sentMessageWithoutConversationId(token, text, userId, userIdFrom));
+  }
+
   @override
   String toString() {
     return '''
-listMessages: ${listMessages}
+listMessages: ${listMessages},
+conversationId: ${conversationId}
     ''';
   }
 }

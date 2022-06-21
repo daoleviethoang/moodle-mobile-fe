@@ -18,7 +18,8 @@ import 'package:moodle_mobile/view/common/content_item.dart';
 import 'package:moodle_mobile/view/common/custom_button.dart';
 import 'package:moodle_mobile/view/common/custom_button_short.dart';
 import 'package:moodle_mobile/view/common/data_card.dart';
-import 'package:moodle_mobile/view/common/menu_item.dart';
+import 'package:moodle_mobile/view/common/menu_item.dart' as m;
+import 'package:moodle_mobile/view/note/note_list.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -42,7 +43,6 @@ class _CalendarScreenState extends State<CalendarScreen>
   Widget _monthView = Container();
   Widget _dayView = Container();
   Widget _noteTabView = Container();
-  Widget _noteView = Container();
 
   late TabController _tabController;
 
@@ -124,12 +124,14 @@ class _CalendarScreenState extends State<CalendarScreen>
     _initCalendarTabView();
     _initNoteTabView();
 
-    _body = Column(
-      children: [
-        Container(height: 16),
-        _tabView,
-        [_calendarTabView, _noteTabView][_tabController.index],
-      ],
+    _body = SafeArea(
+      child: Column(
+        children: [
+          Container(height: 16),
+          _tabView,
+          Expanded(child: [_calendarTabView, _noteTabView][_tabController.index]),
+        ],
+      ),
     );
   }
 
@@ -383,64 +385,10 @@ class _CalendarScreenState extends State<CalendarScreen>
                     );
                   });
             case "":
-              return MenuItem(
-                icon: const Icon(CupertinoIcons.calendar),
-                color: MoodleColors.blue,
+              return EventItem(
                 title: title,
-                subtitle: DateFormat('HH:mm, dd MMMM, yyyy').format(dueDate),
-                fullWidth: true,
-                onPressed: () {
-                  showModalBottomSheet(
-                    context: context,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
-                    ),
-                    builder: (builder) => Container(
-                      height: 300,
-                      padding: const EdgeInsets.only(
-                          top: 8, bottom: 20, left: 10, right: 10),
-                      decoration: const BoxDecoration(
-                        color: MoodleColors.grey_bottom_bar,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(20),
-                          topRight: Radius.circular(20),
-                        ),
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        children: <Widget>[
-                          Container(
-                            height: 30,
-                            child: Text(
-                              e.name ?? "No name",
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold),
-                              textScaleFactor: 1.8,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Container(
-                            height: 230,
-                            padding: const EdgeInsets.only(
-                                left: Dimens.default_padding,
-                                right: Dimens.default_padding),
-                            child:
-                            Html(data: e.description ?? "No description"),
-                            decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(
-                                    Dimens.default_border_radius * 3),
-                              ),
-                              color: MoodleColors.brightGray,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
+                date: dueDate,
+                event: e,
               );
             default:
               return ErrorCard(
@@ -488,7 +436,7 @@ class _CalendarScreenState extends State<CalendarScreen>
   // region Note tab
 
   void _initNoteTabView() {
-    _noteTabView = Container();
+    _noteTabView = const NoteList();
   }
 
   // endregion

@@ -6,7 +6,9 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:moodle_mobile/constants/colors.dart';
+import 'package:moodle_mobile/constants/dimens.dart';
 import 'package:moodle_mobile/constants/styles.dart';
+import 'package:moodle_mobile/models/calendar/event.dart';
 import 'package:moodle_mobile/view/assignment/index.dart';
 import 'package:moodle_mobile/view/common/menu_item.dart' as m;
 import 'package:moodle_mobile/view/quiz/index.dart';
@@ -341,6 +343,81 @@ class ZoomItem extends StatelessWidget {
       onPressed: () {
         // TODO: Open zoom
       },
+    );
+  }
+}
+
+class EventItem extends StatelessWidget {
+  final String title;
+  final DateTime date;
+  final Event event;
+
+  const EventItem({
+    Key? key,
+    required this.title,
+    required this.date,
+    required this.event,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return m.MenuItem(
+      icon: const Icon(CupertinoIcons.calendar),
+      color: MoodleColors.blue,
+      title: title,
+      subtitle: DateFormat('HH:mm, dd MMMM, yyyy').format(date),
+      fullWidth: true,
+      onPressed: () => _onPressed(context),
+    );
+  }
+
+  void _onPressed(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(20)),
+      ),
+      builder: (builder) => Container(
+        height: 300,
+        padding: const EdgeInsets.only(top: 8, bottom: 20, left: 10, right: 10),
+        decoration: const BoxDecoration(
+          color: MoodleColors.grey_bottom_bar,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            SizedBox(
+              height: 30,
+              child: Text(
+                event.name ?? AppLocalizations.of(context)!.no_name,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+                textScaleFactor: 1.8,
+              ),
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            Container(
+              height: 230,
+              padding: const EdgeInsets.only(
+                  left: Dimens.default_padding, right: Dimens.default_padding),
+              child: Html(
+                  data: event.description ??
+                      AppLocalizations.of(context)!.no_description),
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(Dimens.default_border_radius * 3),
+                ),
+                color: MoodleColors.brightGray,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
