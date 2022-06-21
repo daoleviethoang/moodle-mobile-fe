@@ -152,18 +152,17 @@ class _NotificationPreferenceScreenState
                         onTap: (value) => setState(() => _index = value),
                       ),
                 Divider(),
-                _tabs.isNotEmpty
-                    ? Column(
-                        children: notificationPreference?.components
-                                ?.map((e) => NotificationPreferenceTile(
-                                    preferenceName: notificationPreference!
-                                        .processors![_index].displayname!,
-                                    disable: disableAll,
-                                    components: e))
-                                .toList() ??
-                            [],
-                      )
-                    : Container(),
+                if (_tabs.isNotEmpty)
+                  Column(
+                    children: notificationPreference?.components
+                            ?.map((e) => NotificationPreferenceTile(
+                                preferenceName: notificationPreference!
+                                    .processors![_index].displayname!,
+                                disable: disableAll,
+                                components: e))
+                            .toList() ??
+                        [],
+                  ),
               ],
             ),
           ),

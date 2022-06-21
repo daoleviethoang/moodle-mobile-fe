@@ -218,110 +218,105 @@ class _ReplyPostScreenState extends State<ReplyPostScreen> {
                   ),
                 ),
               ),
-              showAdvance
-                  ? Container(
-                      color: Colors.orange[50],
-                      height: 10,
-                    )
-                  : Container(),
-              showAdvance
-                  ? Container(
-                      margin: const EdgeInsets.only(left: 8, right: 8),
-                      color: Colors.orange[50],
-                      alignment: Alignment.centerLeft,
-                      child: Wrap(
-                        spacing: 2,
-                        children: files
-                            .map(
-                              (e) => Container(
-                                margin: EdgeInsets.only(top: 1, bottom: 1),
-                                child: ChipTile(
-                                    label: e.filename,
-                                    onDelete: () {
-                                      setState(() {
-                                        files.remove(e);
-                                      });
-                                    },
-                                    backgroundColor: Colors.blue),
-                              ),
-                            )
-                            .toList(),
-                      ),
-                    )
-                  : Container(),
-              showAdvance
-                  ? Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: 300,
-                      color: Colors.orange[50],
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          CustomButtonShort(
-                              text: AppLocalizations.of(context)!.add_file,
-                              textColor: Colors.white,
-                              bgColor: MoodleColors.blue,
-                              blurRadius: 1,
-                              onPressed: () async {
-                                FilePickerResult? result =
-                                    await FilePicker.platform.pickFiles();
-                                if (result != null) {
-                                  PlatformFile file = result.files.first;
-                                  // check size more than condition
-                                  if (file.size + caculateByteSize() >
-                                      (forumCourse?.maxbytes ?? 0)) {
-                                    var snackBar = SnackBar(
-                                        content: Text(
-                                            AppLocalizations.of(context)!
-                                                .file_size_bigger));
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(snackBar);
-                                    return;
-                                  }
-                                  // check number file more than condition
-                                  if (files.length ==
-                                      (forumCourse?.maxattachments ?? 0)) {
-                                    var snackBar = SnackBar(
-                                        content: Text(
-                                            AppLocalizations.of(context)!
-                                                .number_file_full));
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(snackBar);
-                                    return;
-                                  }
-                                  // check file same name
-                                  bool check = checkOverwrite(file);
-                                  if (check == true) return;
-
-                                  // add file
-                                  files.add(FileUpload(
-                                      filename: file.name,
-                                      filepath: file.path ?? "",
-                                      timeModified: DateTime.now(),
-                                      filesize: file.size));
+              if (showAdvance)
+                Container(
+                  color: Colors.orange[50],
+                  height: 10,
+                ),
+              if (showAdvance)
+                Container(
+                  margin: const EdgeInsets.only(left: 8, right: 8),
+                  color: Colors.orange[50],
+                  alignment: Alignment.centerLeft,
+                  child: Wrap(
+                    spacing: 2,
+                    children: files
+                        .map(
+                          (e) => Container(
+                            margin: EdgeInsets.only(top: 1, bottom: 1),
+                            child: ChipTile(
+                                label: e.filename,
+                                onDelete: () {
                                   setState(() {
-                                    files.sort(((a, b) =>
-                                        a.filename.compareTo(b.filename)));
+                                    files.remove(e);
                                   });
-                                }
-                              }),
-                          SizedBox(
-                            height: 10,
+                                },
+                                backgroundColor: Colors.blue),
                           ),
-                          Text(
-                            AppLocalizations.of(context)!.max_file_size +
-                                "${(forumCourse?.maxbytes ?? 0) / 1024 / 1024} MB.",
-                            maxLines: 3,
-                          ),
-                          Text(
-                            AppLocalizations.of(context)!.default_num_file +
-                                "${forumCourse?.maxattachments ?? 0} file.",
-                          ),
-                        ],
+                        )
+                        .toList(),
+                  ),
+                ),
+              if (showAdvance)
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 300,
+                  color: Colors.orange[50],
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      CustomButtonShort(
+                          text: AppLocalizations.of(context)!.add_file,
+                          textColor: Colors.white,
+                          bgColor: MoodleColors.blue,
+                          blurRadius: 1,
+                          onPressed: () async {
+                            FilePickerResult? result =
+                                await FilePicker.platform.pickFiles();
+                            if (result != null) {
+                              PlatformFile file = result.files.first;
+                              // check size more than condition
+                              if (file.size + caculateByteSize() >
+                                  (forumCourse?.maxbytes ?? 0)) {
+                                var snackBar = SnackBar(
+                                    content: Text(AppLocalizations.of(context)!
+                                        .file_size_bigger));
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                                return;
+                              }
+                              // check number file more than condition
+                              if (files.length ==
+                                  (forumCourse?.maxattachments ?? 0)) {
+                                var snackBar = SnackBar(
+                                    content: Text(AppLocalizations.of(context)!
+                                        .number_file_full));
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                                return;
+                              }
+                              // check file same name
+                              bool check = checkOverwrite(file);
+                              if (check == true) return;
+
+                              // add file
+                              files.add(FileUpload(
+                                  filename: file.name,
+                                  filepath: file.path ?? "",
+                                  timeModified: DateTime.now(),
+                                  filesize: file.size));
+                              setState(() {
+                                files.sort(((a, b) =>
+                                    a.filename.compareTo(b.filename)));
+                              });
+                            }
+                          }),
+                      SizedBox(
+                        height: 10,
                       ),
-                    )
-                  : Container(),
+                      Text(
+                        AppLocalizations.of(context)!.max_file_size +
+                            "${(forumCourse?.maxbytes ?? 0) / 1024 / 1024} MB.",
+                        maxLines: 3,
+                      ),
+                      Text(
+                        AppLocalizations.of(context)!.default_num_file +
+                            "${forumCourse?.maxattachments ?? 0} file.",
+                      ),
+                    ],
+                  ),
+                ),
             ],
           ),
         ),

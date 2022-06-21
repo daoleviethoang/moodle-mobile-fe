@@ -12,6 +12,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CourseCategoryFolderScreen extends StatefulWidget {
   final CourseCategory data;
+
   const CourseCategoryFolderScreen({Key? key, required this.data})
       : super(key: key);
 
@@ -79,7 +80,7 @@ class _CourseCategoryFolderScreenState
                       id: e.id, title: e.displayname, teacher: e.contacts!))
                   .toList();
             } else {
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             }
 
             return SingleChildScrollView(
@@ -87,43 +88,35 @@ class _CourseCategoryFolderScreenState
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                  widget.data.child.isNotEmpty
-                      ? Container(
-                          child: Text(
-                              AppLocalizations.of(context)!.course_category),
-                          margin: const EdgeInsets.only(
-                              top: 5.0, left: 15.0, bottom: 5),
-                        )
-                      : Container(),
-                  Container(
-                      child: ListView(
-                    padding: EdgeInsets.only(top: 0),
+                  if (widget.data.child.isNotEmpty)
+                    Container(
+                      child:
+                          Text(AppLocalizations.of(context)!.course_category),
+                      margin: const EdgeInsets.fromLTRB(15, 5, 0, 5),
+                    ),
+                  ListView(
+                    padding: const EdgeInsets.only(top: 0),
                     primary: false,
                     shrinkWrap: true,
                     children: widget.data.child
                         .map((e) => FolderTile(
                             data: e,
-                            margin: EdgeInsets.only(
-                              top: 5,
-                              left: 10,
-                              right: 10,
-                            )))
+                            margin: const EdgeInsets.fromLTRB(10, 5, 10, 0)))
                         .toList(),
-                  )),
-                  courses.isNotEmpty
-                      ? Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              child: Text(AppLocalizations.of(context)!.course),
-                              margin: const EdgeInsets.only(
-                                  top: 10.0, left: 15.0, bottom: 5),
-                            ),
-                            CategoryCourseListView(courses: courses)
-                          ],
-                        )
-                      : Container(),
+                  ),
+                  if (courses.isNotEmpty)
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          child: Text(AppLocalizations.of(context)!.course),
+                          margin: const EdgeInsets.only(
+                              top: 10.0, left: 15.0, bottom: 5),
+                        ),
+                        CategoryCourseListView(courses: courses)
+                      ],
+                    ),
                 ]));
           }),
     ));

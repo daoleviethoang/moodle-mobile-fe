@@ -281,24 +281,21 @@ class _QuizScreenState extends State<QuizScreen> {
                                             const SizedBox(
                                               height: 5,
                                             ),
-                                            lastAttempt.id != null
-                                                ? Text(AppLocalizations.of(
-                                                            context)!
-                                                        .submitted +
-                                                    " " +
-                                                    dayOfWeek.format(DateTime
-                                                        .fromMillisecondsSinceEpoch(
-                                                            (lastAttempt.timefinish ??
-                                                                    0) *
-                                                                1000)))
-                                                : Container(),
-                                            lastAttempt.id != null
-                                                ? Text(formatDate.format(DateTime
-                                                    .fromMillisecondsSinceEpoch(
-                                                        (lastAttempt.timefinish ??
-                                                                0) *
-                                                            1000)))
-                                                : Container(),
+                                            if (lastAttempt.id != null)
+                                              Text(AppLocalizations.of(context)!
+                                                      .submitted +
+                                                  " " +
+                                                  dayOfWeek.format(DateTime
+                                                      .fromMillisecondsSinceEpoch(
+                                                          (lastAttempt.timefinish ??
+                                                                  0) *
+                                                              1000))),
+                                            if (lastAttempt.id != null)
+                                              Text(formatDate.format(DateTime
+                                                  .fromMillisecondsSinceEpoch(
+                                                      (lastAttempt.timefinish ??
+                                                              0) *
+                                                          1000))),
                                           ],
                                         ))
                                       : Expanded(
@@ -338,97 +335,93 @@ class _QuizScreenState extends State<QuizScreen> {
                             const SizedBox(
                               height: 5,
                             ),
-                            lastAttempt.id != null &&
-                                    lastAttempt.state == "finished" &&
-                                    lastAttempt.preview == 0
-                                ? Center(
-                                    child: CustomButtonShort(
-                                      text: AppLocalizations.of(context)!
-                                          .preview_last,
-                                      onPressed: () {
-                                        Navigator.of(context).push(
-                                            MaterialPageRoute(builder: (_) {
-                                          return QuizPreviewScreen(
-                                            title: widget.title,
-                                            attemptId: lastAttempt.id ?? 0,
-                                          );
-                                        }));
-                                      },
-                                      bgColor: MoodleColors.blue,
-                                      blurRadius: 0,
-                                      textColor: Colors.white,
-                                    ),
-                                  )
-                                : Container(),
+                            if (lastAttempt.id != null &&
+                                lastAttempt.state == "finished" &&
+                                lastAttempt.preview == 0)
+                              Center(
+                                child: CustomButtonShort(
+                                  text: AppLocalizations.of(context)!
+                                      .preview_last,
+                                  onPressed: () {
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(builder: (_) {
+                                      return QuizPreviewScreen(
+                                        title: widget.title,
+                                        attemptId: lastAttempt.id ?? 0,
+                                      );
+                                    }));
+                                  },
+                                  bgColor: MoodleColors.blue,
+                                  blurRadius: 0,
+                                  textColor: Colors.white,
+                                ),
+                              ),
                             const SizedBox(
                               height: 15,
                             ),
-                            lastAttempt.state == "finished" &&
-                                    (quiz.attempts ?? 0) > numAttempt
-                                ? Center(
-                                    child: CustomButtonShort(
-                                      text: AppLocalizations.of(context)!
-                                          .start_attempt,
-                                      onPressed: () async {
-                                        Attempt attempt = await QuizApi()
-                                            .startQuiz(_userStore.user.token,
-                                                widget.quizInstanceId);
-                                        Navigator.of(context).push(
-                                            MaterialPageRoute(builder: (_) {
-                                          return QuizDoScreen(
-                                            title: widget.title,
-                                            attemptId: attempt.id ?? 0,
-                                            endTime: DateTime
-                                                    .fromMillisecondsSinceEpoch(
-                                                        (attempt.timestart ??
-                                                                0) *
-                                                            1000)
+                            if (lastAttempt.state == "finished" &&
+                                (quiz.attempts ?? 0) > numAttempt)
+                              Center(
+                                child: CustomButtonShort(
+                                  text: AppLocalizations.of(context)!
+                                      .start_attempt,
+                                  onPressed: () async {
+                                    Attempt attempt = await QuizApi().startQuiz(
+                                        _userStore.user.token,
+                                        widget.quizInstanceId);
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(builder: (_) {
+                                      return QuizDoScreen(
+                                        title: widget.title,
+                                        attemptId: attempt.id ?? 0,
+                                        endTime:
+                                            DateTime.fromMillisecondsSinceEpoch(
+                                                    (attempt.timestart ?? 0) *
+                                                        1000)
                                                 .add(Duration(
                                                     seconds:
                                                         quiz.timelimit ?? 0))
                                                 .millisecondsSinceEpoch,
-                                          );
-                                        })).then((value) async {
-                                          await load();
-                                        });
-                                      },
-                                      bgColor: MoodleColors.blue,
-                                      blurRadius: 0,
-                                      textColor: Colors.white,
-                                    ),
-                                  )
-                                : Container(),
-                            lastAttempt.state == "inprogress"
-                                ? Center(
-                                    child: CustomButtonShort(
-                                      text: AppLocalizations.of(context)!
-                                          .continue_attempt,
-                                      onPressed: () async {
-                                        Navigator.of(context).push(
-                                            MaterialPageRoute(builder: (_) {
-                                          return QuizDoScreen(
-                                            title: widget.title,
-                                            attemptId: lastAttempt.id ?? 0,
-                                            endTime: DateTime
-                                                    .fromMillisecondsSinceEpoch(
-                                                        (lastAttempt.timestart ??
-                                                                0) *
-                                                            1000)
+                                      );
+                                    })).then((value) async {
+                                      await load();
+                                    });
+                                  },
+                                  bgColor: MoodleColors.blue,
+                                  blurRadius: 0,
+                                  textColor: Colors.white,
+                                ),
+                              ),
+                            if (lastAttempt.state == "inprogress")
+                              Center(
+                                child: CustomButtonShort(
+                                  text: AppLocalizations.of(context)!
+                                      .continue_attempt,
+                                  onPressed: () async {
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(builder: (_) {
+                                      return QuizDoScreen(
+                                        title: widget.title,
+                                        attemptId: lastAttempt.id ?? 0,
+                                        endTime:
+                                            DateTime.fromMillisecondsSinceEpoch(
+                                                    (lastAttempt.timestart ??
+                                                            0) *
+                                                        1000)
                                                 .add(Duration(
                                                     seconds:
                                                         quiz.timelimit ?? 0))
                                                 .millisecondsSinceEpoch,
-                                          );
-                                        })).then((value) async {
-                                          await load();
-                                        });
-                                      },
-                                      bgColor: MoodleColors.blue,
-                                      blurRadius: 0,
-                                      textColor: Colors.white,
-                                    ),
-                                  )
-                                : Container(),
+                                      );
+                                    })).then((value) async {
+                                      await load();
+                                    });
+                                  },
+                                  bgColor: MoodleColors.blue,
+                                  blurRadius: 0,
+                                  textColor: Colors.white,
+                                ),
+                              ),
                           ],
                         ),
                 ),
