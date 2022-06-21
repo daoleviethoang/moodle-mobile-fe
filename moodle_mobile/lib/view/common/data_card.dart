@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/models/note/note.dart';
 
@@ -78,9 +78,9 @@ class _NoteCardState extends State<NoteCard> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: widget.onPressed,
-      child: Card(
+    return Card(
+      child: InkWell(
+        onTap: widget.onPressed,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 8),
           child: Row(
@@ -98,13 +98,32 @@ class _NoteCardState extends State<NoteCard> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        _note.getCourseName(context),
-                        style: MoodleStyles.noteHeaderStyle.copyWith(
-                          decoration: _note.isDone
-                              ? TextDecoration.lineThrough
-                              : TextDecoration.none,
-                        ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          if (_note.isImportant)
+                            Icon(Icons.star_rounded,
+                                size: 16,
+                                color: _note.isNotDone
+                                    ? Colors.amber
+                                    : MoodleColors.black80),
+                          if (_note.isRecent)
+                            Icon(Icons.schedule_rounded,
+                                size: 16,
+                                color: MoodleColors.black80.withOpacity(.75)),
+                          if (_note.isImportant || _note.isRecent)
+                            Container(width: 4),
+                          Text(
+                            _note.getCourseName(context),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: MoodleStyles.noteHeaderStyle.copyWith(
+                              decoration: _note.isDone
+                                  ? TextDecoration.lineThrough
+                                  : TextDecoration.none,
+                            ),
+                          ),
+                        ],
                       ),
                       Container(height: 4),
                       Text(

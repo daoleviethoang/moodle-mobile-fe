@@ -109,19 +109,18 @@ class _PublicInformationCommonViewState extends State<PublicInformationCommonVie
                         child: Icon(Icons.person),
                       )),
                 ),
-                _canEditAvatar
-                    ? const Positioned(
-                        bottom: 10,
-                        right: 10,
-                        child: CircleAvatar(
-                          backgroundColor: Colors.green,
-                          radius: 15,
-                          child: Icon(
-                            Icons.edit,
-                            color: Colors.white,
-                          ),
-                        ))
-                    : Container(),
+                if (_canEditAvatar)
+                  const Positioned(
+                      bottom: 10,
+                      right: 10,
+                      child: CircleAvatar(
+                        backgroundColor: Colors.green,
+                        radius: 15,
+                        child: Icon(
+                          Icons.edit,
+                          color: Colors.white,
+                        ),
+                      )),
               ],
             ),
           ),

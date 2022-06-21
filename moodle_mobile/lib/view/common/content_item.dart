@@ -601,7 +601,7 @@ class _SectionItemState extends State<SectionItem> {
             children: [...(_expanded ? (widget.body ?? []) : [])],
           ),
         ),
-        widget.hasSeparator ? const LineItem() : Container(),
+        if (widget.hasSeparator) const LineItem(),
       ],
     );
   }

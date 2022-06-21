@@ -88,7 +88,7 @@ class _CourseCategoryListTileState extends State<CourseCategoryListTile> {
                 ],
               ),
               Container(height: 8),
-              showChild ? Divider() : Container(),
+              if (showChild) Divider(),
               Column(
                 mainAxisSize: MainAxisSize.min,
                 children: listChild
