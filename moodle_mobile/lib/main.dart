@@ -8,6 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:moodle_mobile/constants/colors.dart';
+import 'package:moodle_mobile/data/bg_service/bg_service.dart';
 import 'package:moodle_mobile/data/firebase/firebase_helper.dart';
 import 'package:moodle_mobile/di/service_locator.dart';
 import 'package:moodle_mobile/view/splash/splash_screen.dart';
