@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 import 'package:moodle_mobile/constants/colors.dart';
+import 'package:moodle_mobile/constants/dimens.dart';
 import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/data/network/apis/calendar/calendar_service.dart';
 import 'package:moodle_mobile/data/network/apis/module/module_service.dart';
@@ -15,6 +17,7 @@ import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/content_item.dart';
 import 'package:moodle_mobile/view/common/custom_button.dart';
 import 'package:moodle_mobile/view/common/data_card.dart';
+import 'package:moodle_mobile/view/common/menu_item.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -255,6 +258,66 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         isTeacher: null,
                       );
                     });
+              case "":
+                return MenuItem(
+                  icon: const Icon(CupertinoIcons.calendar),
+                  color: MoodleColors.blue,
+                  title: title,
+                  subtitle: DateFormat('HH:mm, dd MMMM, yyyy').format(dueDate),
+                  fullWidth: true,
+                  onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                      ),
+                      builder: (builder) => Container(
+                        height: 300,
+                        padding: const EdgeInsets.only(
+                            top: 8, bottom: 20, left: 10, right: 10),
+                        decoration: const BoxDecoration(
+                          color: MoodleColors.grey_bottom_bar,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(20),
+                            topRight: Radius.circular(20),
+                          ),
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          children: <Widget>[
+                            Container(
+                              height: 30,
+                              child: Text(
+                                e.name ?? "No name",
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                                textScaleFactor: 1.8,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            Container(
+                              height: 230,
+                              padding: const EdgeInsets.only(
+                                  left: Dimens.default_padding,
+                                  right: Dimens.default_padding),
+                              child:
+                                  Html(data: e.description ?? "No description"),
+                              decoration: const BoxDecoration(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(
+                                      Dimens.default_border_radius * 3),
+                                ),
+                                color: MoodleColors.brightGray,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                );
               default:
                 return ErrorCard(
                   text: 'Unknown module name: ' + (e.modulename ?? ''),
@@ -295,52 +358,55 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: queryData(),
-        builder: (context, data) {
-          if (data.hasError) {
-            if (kDebugMode) {
-              print('${data.error}');
+    return SafeArea(
+      child: FutureBuilder(
+          future: queryData(),
+          builder: (context, data) {
+            if (data.hasError) {
+              if (kDebugMode) {
+                print('${data.error}');
+              }
+              return ErrorCard(
+                  text: AppLocalizations.of(context)!.err_get_calendar);
             }
-            return ErrorCard(
-                text: AppLocalizations.of(context)!.err_get_calendar);
-          }
-          return RefreshIndicator(
-            onRefresh: () async => setState(() => _events.clear()),
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  children: [
-                    Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        AnimatedOpacity(
-                          opacity: (_events.isEmpty) ? .5 : 1,
-                          duration: const Duration(milliseconds: 300),
-                          child: IgnorePointer(
-                            ignoring: _events.isEmpty,
-                            child: _monthView,
-                          ),
-                        ),
-                        AnimatedOpacity(
-                            opacity: (_events.isEmpty) ? 1 : 0,
+            return RefreshIndicator(
+              onRefresh: () async => setState(() => _events.clear()),
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    children: [
+                      Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          AnimatedOpacity(
+                            opacity: (_events.isEmpty) ? .5 : 1,
                             duration: const Duration(milliseconds: 300),
-                            child: const CircularProgressIndicator.adaptive()),
-                      ],
-                    ),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 12, left: 12),
-                        child: _dayView,
+                            child: IgnorePointer(
+                              ignoring: _events.isEmpty,
+                              child: _monthView,
+                            ),
+                          ),
+                          AnimatedOpacity(
+                              opacity: (_events.isEmpty) ? 1 : 0,
+                              duration: const Duration(milliseconds: 300),
+                              child:
+                                  const CircularProgressIndicator.adaptive()),
+                        ],
                       ),
-                    ),
-                  ],
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 12, left: 12),
+                          child: _dayView,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          );
-        });
+            );
+          }),
+    );
   }
 }
