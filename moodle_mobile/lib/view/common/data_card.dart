@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/models/note/note.dart';
 
@@ -106,18 +106,11 @@ class _NoteCardState extends State<NoteCard> {
                                 size: 16,
                                 color: _note.isNotDone
                                     ? Colors.amber
-                                    : Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium
-                                        ?.color),
+                                    : MoodleColors.black80),
                           if (_note.isRecent)
                             Icon(Icons.schedule_rounded,
                                 size: 16,
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium
-                                    ?.color
-                                    ?.withOpacity(.75)),
+                                color: MoodleColors.black80.withOpacity(.75)),
                           if (_note.isImportant || _note.isRecent)
                             Container(width: 4),
                           Text(
