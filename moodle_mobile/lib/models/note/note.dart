@@ -31,10 +31,12 @@ class Note {
     this.content,
     this.isDone = false,
     this.isImportant = false,
-  }) : assert((title ?? '').isNotEmpty || (content ?? '').isNotEmpty);
+  });
 
   DateTime get creationDate =>
       DateTime.fromMillisecondsSinceEpoch(int.tryParse(id.split('_')[1]) ?? 0);
+
+  bool get isEmpty => (title ?? '').isEmpty && (content ?? '').isEmpty;
 
   bool get isRecent =>
       DateTime.now().difference(creationDate) < Vars.recentThreshold;
@@ -50,7 +52,10 @@ class Note {
     return '$courseId';
   }
 
-  factory Note.fromJson(Map<String, dynamic> json) => _$NoteFromJson(json);
+  factory Note.fromJson(String id, Map<String, dynamic> json) {
+    json['id'] = id;
+    return _$NoteFromJson(json);
+  }
 
   Map<String, dynamic> toJson() => _$NoteToJson(this);
 
@@ -58,4 +63,39 @@ class Note {
   String toString() {
     return toJson().toString();
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Note &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          courseId == other.courseId &&
+          title == other.title &&
+          content == other.content &&
+          isDone == other.isDone &&
+          isImportant == other.isImportant;
+
+
+  @override
+  int get hashCode => toJson().hashCode;
+
+  Note copyWith({
+    String? id,
+    int? courseId,
+    String? title,
+    String? content,
+    bool? isDone,
+    bool? isImportant,
+  }) {
+    return Note(
+      id: id ?? this.id,
+      courseId: courseId ?? this.courseId,
+      title: title ?? this.title,
+      content: content ?? this.content,
+      isDone: isDone ?? this.isDone,
+      isImportant: isImportant ?? this.isImportant,
+    );
+  }
+
 }

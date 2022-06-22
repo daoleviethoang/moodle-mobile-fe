@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it/get_it.dart';
+import 'package:moodle_mobile/constants/dimens.dart';
 import 'package:moodle_mobile/data/network/apis/contact/contact_service.dart';
 import 'package:moodle_mobile/data/network/apis/course/course_service.dart';
 import 'package:moodle_mobile/models/contact/contact.dart';
@@ -448,8 +449,8 @@ class CategoryView extends StatelessWidget {
       decoration: const BoxDecoration(
         color: MoodleColors.grey_bottom_bar,
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
+          topLeft: Radius.circular(Dimens.default_sheet_radius),
+          topRight: Radius.circular(Dimens.default_sheet_radius),
         ),
       ),
       child: Column(

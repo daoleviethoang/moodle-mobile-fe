@@ -101,44 +101,51 @@ class MyApp extends StatelessWidget {
         builder: DevicePreview.appBuilder,
         title: 'Moodle App',
         theme: ThemeData(
-            fontFamily: 'SF',
-            colorScheme: const ColorScheme(
-              brightness: Brightness.light,
-              primary: MoodleColors.blue,
-              onPrimary: Colors.black,
-              secondary: MoodleColors.blue,
-              onSecondary: Colors.black,
-              background: Colors.white,
-              onBackground: Colors.black,
-              // Need to consider again
-              primaryVariant: Colors.black,
-              secondaryVariant: Colors.black,
-              surface: Colors.white,
-              onSurface: Colors.black,
-              error: CupertinoColors.systemRed,
-              onError: Colors.white,
+          fontFamily: 'SF',
+          colorScheme: const ColorScheme(
+            brightness: Brightness.light,
+            primary: MoodleColors.blue,
+            onPrimary: Colors.black,
+            secondary: MoodleColors.blue,
+            onSecondary: Colors.black,
+            background: Colors.white,
+            onBackground: Colors.black,
+            // Need to consider again
+            primaryVariant: Colors.black,
+            secondaryVariant: Colors.black,
+            surface: Colors.white,
+            onSurface: Colors.black,
+            error: CupertinoColors.systemRed,
+            onError: Colors.white,
+          ),
+          cardTheme: CardTheme(
+            color: Theme.of(context).colorScheme.surface,
+            elevation: 8,
+            shape: const RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.all(Radius.circular(Dimens.default_card_radius)),
             ),
-            cardTheme: CardTheme(
-              color: Theme.of(context).colorScheme.surface,
-              elevation: 8,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(
-                    Radius.circular(Dimens.default_card_radius)),
+          ),
+          appBarTheme: Theme.of(context).appBarTheme.copyWith(
+                foregroundColor: Colors.white,
+                actionsIconTheme: Theme.of(context).iconTheme.copyWith(
+                      size: 60,
+                      color: MoodleColors.white,
+                    ),
               ),
+          bottomNavigationBarTheme: Theme.of(context)
+              .bottomNavigationBarTheme
+              .copyWith(
+                  backgroundColor: Theme.of(context).colorScheme.surface,
+                  unselectedItemColor: Theme.of(context).colorScheme.onSurface),
+          bottomSheetTheme: const BottomSheetThemeData(
+              shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(Dimens.default_sheet_radius),
+              topRight: Radius.circular(Dimens.default_sheet_radius),
             ),
-            appBarTheme: Theme.of(context).appBarTheme.copyWith(
-                  foregroundColor: Colors.white,
-                  actionsIconTheme: Theme.of(context).iconTheme.copyWith(
-                        size: 60,
-                        color: MoodleColors.white,
-                      ),
-                ),
-            bottomNavigationBarTheme: Theme.of(context)
-                .bottomNavigationBarTheme
-                .copyWith(
-                    backgroundColor: Theme.of(context).colorScheme.surface,
-                    unselectedItemColor:
-                        Theme.of(context).colorScheme.onSurface)),
+          )),
+        ),
         home: const SplashScreen(),
         debugShowCheckedModeBanner: false,
       ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moodle_mobile/constants/colors.dart';
+import 'package:moodle_mobile/constants/dimens.dart';
 import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/models/note/note.dart';
 
@@ -81,6 +82,8 @@ class _NoteCardState extends State<NoteCard> {
     return Card(
       child: InkWell(
         onTap: widget.onPressed,
+        borderRadius: const BorderRadius.all(
+            Radius.circular(Dimens.default_card_radius)),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 8),
           child: Row(

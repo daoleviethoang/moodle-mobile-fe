@@ -33,10 +33,15 @@ class Notes {
 
   // endregion
 
-  void replace(List<Note> newValues) {
+  void replace({List<Note>? fromValues, Notes? fromNotes}) {
+    assert(fromValues != null || fromNotes != null);
     values ??= [];
     values!.clear();
-    values!.addAll(newValues);
+    if (fromValues != null) {
+      values!.addAll(fromValues);
+    } else {
+      values!.addAll(fromNotes?.values ?? []);
+    }
   }
 
   @override

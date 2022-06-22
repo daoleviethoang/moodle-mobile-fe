@@ -8,6 +8,7 @@ class Dimens {
   static const double default_checkbox_border_radius = 2.0;
   static const double default_padding = 8.0;
   static const double default_padding_double = 16.0;
+  static const double default_sheet_radius = 20;
 
   // For login screen
   static const double login_padding_left = 16.0;
