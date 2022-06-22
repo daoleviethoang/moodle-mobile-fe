@@ -14,7 +14,7 @@ class _SetListLangTilesState extends State<SetListLangTiles> {
     return Column(
       children: <Widget>[
         ListTile(
-          title: Text("Default"),
+          title: Text(AppLocalizations.of(context)!.default_language),
           leading: Radio<String>(
               value: "default",
               groupValue: widget.language,

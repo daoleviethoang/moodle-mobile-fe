@@ -95,7 +95,7 @@ class _FileAssignmentTileState extends State<FileAssignmentTile> {
   void initState() {
     _userStore = GetIt.instance<UserStore>();
     super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback(
+    WidgetsBinding.instance.addPostFrameCallback(
       (_) => setState(
         () {
           action = [

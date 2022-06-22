@@ -46,7 +46,6 @@ class _LoginScreenState extends State<LoginScreen> {
     "Chương trình đề án (CLC, CTT, VP)",
     "Chương trình đại trà",
     "Chương trình đào tạo từ xa",
-    "Other",
   ];
 
   bool otherUrl = false;
@@ -59,6 +58,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => setState(
+        () {
+          suggestions.add(AppLocalizations.of(context)!.other);
+        },
+      ),
+    );
     super.initState();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
@@ -114,7 +120,7 @@ class _LoginScreenState extends State<LoginScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  "Domain",
+                  AppLocalizations.of(context)!.domain,
                   textScaleFactor: 0.8,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
@@ -244,12 +250,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     onTap: () async {
                       await _onAppLanguagePressed(context);
                     },
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       contentPadding:
                           EdgeInsets.all(Dimens.default_padding_double),
                       prefixIcon: const Icon(Icons.language),
-                      hintText: "BaseUrl",
-                      labelText: "BaseUrl",
+                      hintText: AppLocalizations.of(context)!.baseUrl,
+                      labelText: AppLocalizations.of(context)!.baseUrl,
                       isDense: true,
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(
@@ -266,7 +272,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         left: Dimens.login_padding_left,
                         right: Dimens.login_padding_right),
                     child: CustomTextFieldWidget(
-                      hintText: "Username",
+                      hintText: AppLocalizations.of(context)!.username,
                       controller: usernameControler,
                       prefixIcon: Icons.people,
                       borderRadius: Dimens.default_border_radius,
@@ -281,7 +287,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       left: Dimens.login_padding_left,
                       right: Dimens.login_padding_right),
                   child: CustomTextFieldWidget(
-                    hintText: "Password",
+                    hintText: AppLocalizations.of(context)!.password,
                     hidePass: true,
                     controller: passwordController,
                     prefixIcon: Icons.lock,
@@ -311,7 +317,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             borderRadius: BorderRadius.circular(
                                 Dimens.default_checkbox_border_radius)),
                       ),
-                      const Text("Remember account",
+                      Text(AppLocalizations.of(context)!.remember_account,
                           style: TextStyle(fontSize: 16))
                     ],
                   ),
@@ -325,7 +331,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         left: Dimens.login_checkbox_padding_left,
                         right: Dimens.login_padding_right),
                     child: CustomButtonWidget(
-                        textButton: "Login", onPressed: onLoginPressed)),
+                        textButton: AppLocalizations.of(context)!.login,
+                        onPressed: onLoginPressed)),
 
                 const SizedBox(height: Dimens.login_sizedbox_height),
 
@@ -344,8 +351,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         padding: const EdgeInsets.all(10.0),
                         width: double.infinity,
                         // MediaQuery: get 1/4 of screen height
-                        child: const Text(
-                          "Invalid login, please try again",
+                        child: Text(
+                          AppLocalizations.of(context)!.login_invalid,
                           textAlign: TextAlign.center,
                         ),
                         decoration: const BoxDecoration(
@@ -362,8 +369,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     ? Container()
                     : TextButton(
                         onPressed: forgotPass,
-                        child: const Text(
-                          "Forgot your username or password ?",
+                        child: Text(
+                          AppLocalizations.of(context)!.forgot_password,
                           style: TextStyle(fontSize: 14),
                         ),
                         style: ButtonStyle(

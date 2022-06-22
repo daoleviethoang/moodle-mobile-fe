@@ -54,7 +54,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
     _module = widget.module;
     _images = widget.images;
     nameController = TextEditingController(text: _module.name ?? "");
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       for (var item in _images) {
         var file = await DefaultCacheManager().getSingleFile(
             item.fileurl! + "?token=" + widget.userStore.user.token);

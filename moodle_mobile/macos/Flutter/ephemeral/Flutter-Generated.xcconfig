@@ -1,6 +1,6 @@
 // This is a generated file; do not edit or check into version control.
-FLUTTER_ROOT=/opt/flutter
-FLUTTER_APPLICATION_PATH=/home/nateclint/Documents/DATN/moodle-mobile-fe/moodle_mobile
+FLUTTER_ROOT=D:\flutter3.0\flutter
+FLUTTER_APPLICATION_PATH=E:\moodle\moodle-mobile-fe\moodle_mobile
 COCOAPODS_PARALLEL_CODE_SIGN=true
 FLUTTER_BUILD_DIR=build
 FLUTTER_BUILD_NAME=1.0.0
