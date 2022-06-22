@@ -34,8 +34,7 @@ class SlidableTile extends StatelessWidget {
     String timeCreated = DateTime.now().toString();
 
     if (message != null) {
-      messageContent =
-          HtmlParser.parseHTML(message!.text).documentElement!.text;
+      messageContent = HtmlParser.parseHTML(message!.text).text;
       timeCreated = DateFormat('dd-MM-yyyy').format(
           DateTime.fromMillisecondsSinceEpoch(message!.timeCreated * 1000));
     }

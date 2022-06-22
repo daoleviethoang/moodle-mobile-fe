@@ -3,6 +3,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:html/parser.dart' show parse;
 import 'package:html/dom.dart' as dom;
 import 'package:moodle_mobile/constants/colors.dart';
+import 'package:moodle_mobile/constants/matcher.dart';
 import 'package:moodle_mobile/view/common/content_item.dart';
 import 'package:moodle_mobile/view/viewer/image_viewer.dart';
 
@@ -121,7 +122,8 @@ class _MultiChoiceDoQuizState extends State<MultiChoiceDoQuiz> {
             RichTextCard(text: question, style: {
               'p': Style(fontSize: const FontSize(16)),
             }, customData: {
-              "img": (RenderContext renderContext, Widget child) {
+              imgMatcher():
+                  CustomRender.widget(widget: (renderContext, buildChildren) {
                 final attrs = renderContext.tree.element?.attributes;
                 final src = (attrs?['src'] ?? "about:blank").replaceAll(
                         "pluginfile.php", "webservice/pluginfile.php") +
@@ -143,7 +145,7 @@ class _MultiChoiceDoQuizState extends State<MultiChoiceDoQuiz> {
                         const Text("Can't load image"),
                   ),
                 );
-              },
+              }),
             }),
             SizedBox(
               height: 15,
