@@ -94,8 +94,9 @@ class _LoginScreenState extends State<LoginScreen> {
     var value = await showMenu<String>(
       context: context,
       position: RelativeRect.fromRect(
-          Offset(pos.dx, pos.dy) & const Size(64, 64),
+          Offset(pos.dx, pos.dy + rb.size.height) & const Size(64, 64),
           Offset.zero & (root as RenderBox).size),
+      constraints: const BoxConstraints(minWidth: double.infinity),
       items: suggestions.map((e) {
         var index = suggestions.indexOf(e);
         return PopupMenuItem(
