@@ -15,7 +15,7 @@ class ImageAlbumDetailTile extends StatelessWidget {
       required this.isChoose,
       required this.setLongPress,
       required this.name,
-      this.filePath})
+      required this.filePath})
       : super(key: key);
 
   @override
@@ -49,20 +49,26 @@ class ImageAlbumDetailTile extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: filePath != null
-                    ? Image.file(
-                        File(filePath!),
-                        width: (MediaQuery.of(context).size.width - 3) / 2,
-                        fit: BoxFit.fitWidth,
-                        errorBuilder: (context, exception, stackTrace) {
-                          return Text("error");
-                        },
-                      )
-                    : Image.network(
+                child: filePath == null
+                    ? Image.network(
                         src,
                         width: (MediaQuery.of(context).size.width - 3) / 2,
                         fit: BoxFit.fitWidth,
-                      ),
+                      )
+                    : filePath != ""
+                        ? Image.file(
+                            File(filePath!),
+                            width: (MediaQuery.of(context).size.width - 3) / 2,
+                            fit: BoxFit.fitWidth,
+                            errorBuilder: (context, exception, stackTrace) {
+                              return Text(filePath!);
+                            },
+                          )
+                        : Image.network(
+                            src,
+                            width: (MediaQuery.of(context).size.width - 3) / 2,
+                            fit: BoxFit.fitWidth,
+                          ),
               ),
               SizedBox(height: 5),
               Container(

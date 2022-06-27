@@ -116,7 +116,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     try {
       _initAnnouncementsTab();
     } catch (e) {
-      _announcementsTab = ErrorCard(text: '$e');
+      //_announcementsTab = ErrorCard(text: '$e');
     } finally {
       if (_announcementsTab is! Container) {
         _body.add(_announcementsTab);
@@ -125,7 +125,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     try {
       _initDiscussionsTab();
     } catch (e) {
-      _discussionsTab = ErrorCard(text: '$e');
+      //_discussionsTab = ErrorCard(text: '$e');
     } finally {
       if (_discussionsTab is! Container) {
         _body.add(_discussionsTab);
@@ -326,6 +326,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     _announcementsTab = ForumAnnouncementScreen(
       forumId: _content[0].modules[0].instance ?? 0,
       courseId: _courseId,
+      isTeacher: isTeacher,
     );
   }
 

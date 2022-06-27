@@ -130,12 +130,14 @@ class _FilesAssignmentScreenState extends State<FilesAssignmentScreen> {
                 fileUrl: item.fileurl ?? ""));
           });
         }
+        setState(() {
+          isLoading = false;
+        });
       }
     });
     setState(() {
       disable = !widget.canEdit;
       files.sort(((a, b) => a.filename.compareTo(b.filename)));
-      isLoading = false;
     });
     super.initState();
   }

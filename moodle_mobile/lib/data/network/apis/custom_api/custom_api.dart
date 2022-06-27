@@ -57,7 +57,7 @@ class CustomApi {
         'wstoken': token,
         'wsfunction': Wsfunction.LOCAL_EDIT_FOLDER_FILES,
         'moodlewsrestformat': 'json',
-        'courseid': moduleId,
+        'id': moduleId,
         'itemId': itemId,
       });
       if (res.data is Map<String, dynamic> && res.data["exception"] != null) {
