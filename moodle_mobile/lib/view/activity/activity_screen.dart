@@ -98,7 +98,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                   ),
                   textScaleFactor: 1.5,
                 ),
-                IconButton(
+                widget.isTeacher == false ? Container() : IconButton(
                     onPressed: () async {
                       try {
                         FilePickerResult? result = await FilePicker.platform
