@@ -36,8 +36,10 @@ Assignment _$AssignmentFromJson(Map<String, dynamic> json) => Assignment(
       requiresubmissionstatement: json['requiresubmissionstatement'] as int?,
       preventsubmissionnotingroup: json['preventsubmissionnotingroup'] as int?,
       configs: (json['configs'] as List<dynamic>?)
-          ?.map((e) => ConfigsAssignment.fromJson(e as Map<String, dynamic>))
-          .toList(),
+              ?.map(
+                  (e) => ConfigsAssignment.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
       intro: json['intro'] as String?,
       introformat: json['introformat'] as int?,
     );
