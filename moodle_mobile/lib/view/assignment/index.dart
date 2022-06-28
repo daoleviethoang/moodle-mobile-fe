@@ -340,7 +340,8 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                                     );
                                   }));
                                 },
-                                title: Text("Number student submit"),
+                                title: Text(AppLocalizations.of(context)!
+                                    .number_submission),
                                 trailing: Text(userSubmiteds
                                     .where(
                                         (element) => element.submitted == true)
