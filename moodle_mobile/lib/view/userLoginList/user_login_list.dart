@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
@@ -146,7 +147,7 @@ class _ListUserLoginScreenState extends State<ListUserLoginScreen> {
                           }));
                         },
                         child: Text(
-                          'Add another account',
+                          AppLocalizations.of(context)!.add_account,
                           style: const TextStyle(fontSize: 16),
                         ),
                         style: ButtonStyle(

@@ -32,6 +32,7 @@
   },
   "account": "Account",
   "activity": "Activity",
+  "add_account": "Add another account",
   "add_file": "Add file",
   "add_new_discussion": "Add new discussion",
   "advance": "Advance",

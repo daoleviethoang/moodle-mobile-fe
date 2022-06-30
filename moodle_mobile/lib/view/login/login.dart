@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
@@ -35,18 +36,9 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController otherUrlController =
       TextEditingController(text: "https://");
 
-  final List<String> suggestionsData = [
-    "https://courses.ctda.hcmus.edu.vn",
-    "https://courses.fit.hcmus.edu.vn",
-    "https://elearning.fit.hcmus.edu.vn",
-    "https://",
-  ];
-
-  final List<String> suggestions = [
-    "Chương trình đề án (CLC, CTT, VP)",
-    "Chương trình đại trà",
-    "Chương trình đào tạo từ xa",
-  ];
+  // Check _initSuggestions()
+  final List<String> suggestionsData = [];
+  final List<String> suggestions = [];
 
   bool otherUrl = false;
 
@@ -56,14 +48,34 @@ class _LoginScreenState extends State<LoginScreen> {
   // Store
   late UserStore _userStore;
 
+  void _initSuggestions(BuildContext context) {
+    suggestionsData.clear();
+    suggestions.clear();
+
+    suggestionsData.addAll([
+      "https://courses.ctda.hcmus.edu.vn",
+      "https://courses.fit.hcmus.edu.vn",
+      "https://elearning.fit.hcmus.edu.vn",
+      "https://",
+    ]);
+    suggestions.addAll([
+      AppLocalizations.of(context)!.ctda_program,
+      AppLocalizations.of(context)!.common_program,
+      AppLocalizations.of(context)!.e_learing_program,
+      AppLocalizations.of(context)!.other,
+    ]);
+
+    // Testing domain
+    if (kDebugMode) {
+      suggestionsData.add('https://courses.hcmus.edu.vn/lms');
+      suggestions.add('Server thử nghiệm');
+    }
+  }
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback(
-      (_) => setState(
-        () {
-          suggestions.add(AppLocalizations.of(context)!.other);
-        },
-      ),
+      (_) => setState(() => _initSuggestions(context)),
     );
     super.initState();
     SystemChrome.setPreferredOrientations([
