@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:ui';
 
 import 'package:background_fetch/background_fetch.dart';
@@ -46,6 +47,7 @@ class BgService {
     );
     if (kDebugMode) {
       print('[BackgroundFetch] configure success: $status');
+      print('${FetchMessage()}');
     }
     await BackgroundFetch.scheduleTask(TaskConfig(
       taskId: '${FetchMessage()}',
