@@ -128,21 +128,24 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
                             return;
                           }
 
+                          var newText = _textEditingController.text;
+
+                          _textEditingController.clear();
+
                           if (_conversationDetailStore.conversationId != null) {
                             await _conversationDetailStore.sentMessage(
                                 _userStore.user.token,
                                 widget.conversationId!,
-                                _textEditingController.text);
+                                newText);
                           } else {
                             await _conversationDetailStore
                                 .sentMessageWithoutConversationId(
                                     _userStore.user.token,
-                                    _textEditingController.text,
+                                    newText,
                                     _userStore.user.id,
                                     widget.userFromId!);
+                            getListMessage();
                           }
-
-                          _textEditingController.clear();
 
                           _scrollController.animateTo(
                             0,

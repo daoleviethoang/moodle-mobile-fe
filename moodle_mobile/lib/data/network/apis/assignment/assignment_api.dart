@@ -8,6 +8,7 @@ import 'package:moodle_mobile/data/network/dio_http.dart';
 import 'package:moodle_mobile/models/assignment/assignment.dart';
 import 'package:moodle_mobile/models/assignment/attemp_assignment.dart';
 import 'package:moodle_mobile/models/assignment/feedback.dart';
+import 'package:moodle_mobile/models/assignment/user_submited.dart';
 
 class AssignmentApi {
   saveAssignment(String token, int assignid, int itemid) async {
@@ -49,7 +50,7 @@ class AssignmentApi {
         'courseids[]': courseId,
       });
 
-      if (res.data["exception"] != null) {
+      if (res.data is Map<String, dynamic> && res.data["exception"] != null) {
         throw res.data["exception"];
       }
       final list = res.data['courses'][0]['assignments'] as List;
@@ -59,6 +60,7 @@ class AssignmentApi {
 
       return assigns;
     } catch (e) {
+      print('!!!!!!!!!!$e');
       throw "Can't get list assignment";
     }
   }
@@ -108,7 +110,35 @@ class AssignmentApi {
       return temp;
     } catch (e) {
       print(e.toString());
-      throw "Can't get list assignment";
+      throw "Can't get last attempt assignment";
+    }
+  }
+
+  Future<List<UserSubmited>> getListUserSubmit(
+      String token, int assignInstanceId) async {
+    try {
+      Dio dio = Http().client;
+      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': "mod_assign_list_participants",
+        "moodlewsrestformat": "json",
+        'assignid': assignInstanceId,
+        'groupid': 0,
+        'filter': 0,
+        'onlyids': 1,
+      });
+      if (res.data is Map<String, dynamic> && res.data["exception"] != null) {
+        throw res.data["exception"];
+      }
+      final list = res.data as List;
+
+      print(list);
+
+      var listSubmited = list.map((e) => UserSubmited.fromJson(e)).toList();
+      return listSubmited;
+    } catch (e) {
+      print(e.toString());
+      throw "Can't get list submited user";
     }
   }
 }

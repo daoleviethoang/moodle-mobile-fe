@@ -1,6 +1,7 @@
 {
   "account": "Tài khoản",
   "activity": "Hoạt động",
+  "add_account": "Thêm tài khoản",
   "add_file": "Thêm file",
   "add_new_discussion": "Thêm 1 bài đăng",
   "advance": "Nâng cao",
@@ -113,6 +114,7 @@
   "noti_settings": "Thông báo & Âm thanh",
   "notifications": "Thông báo",
   "number_file_full": "Số lượng file đã đầy",
+  "number_submission": "Số học sinh nộp bài:",
   "ok": "đồng ý",
   "online_just_now": "Đang hoạt động",
   "open": "Mở",

@@ -13,7 +13,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class ForumAnnouncementScreen extends StatefulWidget {
   final int? forumId;
   final int? courseId;
-  ForumAnnouncementScreen({Key? key, this.forumId, this.courseId})
+  final bool isTeacher;
+  ForumAnnouncementScreen(
+      {Key? key, this.forumId, this.courseId, required this.isTeacher})
       : super(key: key);
 
   @override
@@ -69,6 +71,22 @@ class _ForumAnnouncementScreenState extends State<ForumAnnouncementScreen> {
                       icon: Icon(Icons.arrow_downward),
                       onPressed: Sort,
                     ),
+              Spacer(),
+              widget.isTeacher
+                  ? IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (builder) => AddPostScreen(
+                                      forumInstanceId: widget.forumId!,
+                                      courseId: widget.courseId!,
+                                    ))).then((_) {
+                          fetch();
+                        });
+                      },
+                      icon: Icon(Icons.add))
+                  : Container(),
             ],
           ),
         ),

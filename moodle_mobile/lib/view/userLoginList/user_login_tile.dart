@@ -67,15 +67,27 @@ class _UserLoginTileState extends State<UserLoginTile> {
                                     widget.user.token,
                                 scale: 1.4,
                                 errorBuilder: (context, error, stackTrace) =>
-                                    const Icon(
-                                      Icons.person,
-                                      size: 20,
-                                      color: Colors.white,
+                                    Container(
+                                      height: 70,
+                                      width: 70,
+                                      decoration: const BoxDecoration(
+                                          color: MoodleColors.blue),
+                                      child: const Icon(
+                                        Icons.person,
+                                        size: 45,
+                                        color: Colors.white,
+                                      ),
                                     ))
-                            : const Icon(
-                                Icons.person,
-                                size: 20,
-                                color: Colors.white,
+                            : Container(
+                                height: 70,
+                                width: 70,
+                                decoration: const BoxDecoration(
+                                    color: MoodleColors.blue),
+                                child: const Icon(
+                                  Icons.person,
+                                  size: 45,
+                                  color: Colors.white,
+                                ),
                               )),
                     SizedBox(width: 15),
                     Column(
