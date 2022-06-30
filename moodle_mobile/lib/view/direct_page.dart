@@ -32,7 +32,7 @@ class _DirectScreenState extends State<DirectScreen> {
   // ignore: prefer_final_fields
   List<Widget> _widgetOptions = [];
   static late List<String> _widgetAppBarTitle;
-  final calendarJumpOpenFlag = ObservableBool(false);
+  final calendarJumpOpenFlag = Observable<bool>(false);
 
   void _onItemTapped(int index) {
     setState(() {
@@ -91,49 +91,45 @@ class _DirectScreenState extends State<DirectScreen> {
       title: Text(_widgetAppBarTitle.elementAt(_selectedIndex),
           textAlign: TextAlign.left, style: MoodleStyles.appBarTitleStyle),
       actions: <Widget>[
-        Builder(
-          builder: (context) {
-            switch (_selectedIndex) {
-              case 0:
-                return IconButton(
-                    iconSize: Dimens.appbar_icon_size,
-                    icon: const Icon(Icons.search),
-                    onPressed: () async {
-                      await showSearch<CourseOverview?>(
-                        context: context,
-                        delegate: CoursesSearch(token: _userStore.user.token),
-                      );
-                    });
-              case 1:
-                return IconButton(
-                    iconSize: Dimens.appbar_icon_size,
-                    icon: const Icon(Icons.search),
-                    onPressed: () => calendarJumpOpenFlag.toggle());
-              case 2:
-                return IconButton(
-                    iconSize: Dimens.appbar_icon_size,
-                    icon: const Icon(Icons.settings),
-                    onPressed: () async {
-                      Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (_) {
-                        return const MessagePreferenceScreen();
-                      }));
-                    });
-              case 3:
-                return IconButton(
-                    iconSize: Dimens.appbar_icon_size,
-                    icon: const Icon(Icons.settings),
-                    onPressed: () async {
-                      Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (_) {
-                        return const NotificationPreferenceScreen();
-                      }));
-                    });
-              default:
-                return Container();
-            }
+        Builder(builder: (context) {
+          switch (_selectedIndex) {
+            case 0:
+              return IconButton(
+                  iconSize: Dimens.appbar_icon_size,
+                  icon: const Icon(Icons.search),
+                  onPressed: () async {
+                    await showSearch<CourseOverview?>(
+                      context: context,
+                      delegate: CoursesSearch(token: _userStore.user.token),
+                    );
+                  });
+            case 1:
+              return IconButton(
+                  iconSize: Dimens.appbar_icon_size,
+                  icon: const Icon(Icons.search),
+                  onPressed: () => calendarJumpOpenFlag.toggle());
+            case 2:
+              return IconButton(
+                  iconSize: Dimens.appbar_icon_size,
+                  icon: const Icon(Icons.settings),
+                  onPressed: () async {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+                      return const MessagePreferenceScreen();
+                    }));
+                  });
+            case 3:
+              return IconButton(
+                  iconSize: Dimens.appbar_icon_size,
+                  icon: const Icon(Icons.settings),
+                  onPressed: () async {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+                      return const NotificationPreferenceScreen();
+                    }));
+                  });
+            default:
+              return Container();
           }
-        ),
+        }),
       ],
     );
   }
