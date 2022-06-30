@@ -5,15 +5,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
+import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/data/network/apis/assignment/assignment_api.dart';
 import 'package:moodle_mobile/data/network/apis/contact/contact_service.dart';
 import 'package:moodle_mobile/models/assignment/assignment.dart';
 import 'package:moodle_mobile/models/assignment/attemp_assignment.dart';
 import 'package:moodle_mobile/models/assignment/feedback.dart';
+import 'package:moodle_mobile/models/assignment/user_submited.dart';
 import 'package:moodle_mobile/models/contact/contact.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/assignment/date_assignment_tile.dart';
 import 'package:moodle_mobile/view/assignment/files_assignment.dart';
+import 'package:moodle_mobile/view/assignment/list_user_submit.dart';
 import 'package:moodle_mobile/view/assignment/submission_status_tile.dart';
 import 'package:moodle_mobile/view/common/custom_button.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -39,6 +42,7 @@ class AssignmentScreen extends StatefulWidget {
 class _AssignmentScreenState extends State<AssignmentScreen> {
   Assignment assignment = Assignment();
   AttemptAssignment attempt = AttemptAssignment();
+  List<UserSubmited> userSubmiteds = [];
   bool isLoading = false;
   String dateDiff = "";
   Color dateDiffColor = Colors.grey;
@@ -138,13 +142,38 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
     return FeedBack();
   }
 
+  Future<List<UserSubmited>> readUserSubmited(int assignInstanceId) async {
+    try {
+      List<UserSubmited> users = await AssignmentApi()
+          .getListUserSubmit(_userStore.user.token, assignInstanceId);
+      return users;
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString()), backgroundColor: Colors.red));
+    }
+    return [];
+  }
+
   void loadAssignment() async {
     setState(() {
       isLoading = true;
     });
     Assignment temp = await ReadData(widget.assignInstanceId, widget.courseId);
-    AttemptAssignment temp2 = await ReadData2(widget.assignInstanceId);
-    FeedBack temp3 = await readFeedBack(widget.assignInstanceId);
+
+    AttemptAssignment temp2 = isTeacher == true
+        ? AttemptAssignment()
+        : await ReadData2(widget.assignInstanceId);
+    FeedBack temp3 = isTeacher == true
+        ? FeedBack()
+        : await readFeedBack(widget.assignInstanceId);
+
+    if (isTeacher == true) {
+      List<UserSubmited> temp4 =
+          await readUserSubmited(widget.assignInstanceId);
+      setState(() {
+        userSubmiteds = temp4;
+      });
+    }
     setState(() {
       assignment = temp;
       attempt = temp2;
@@ -278,20 +307,46 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              DateAssignmentTile(
-                                date:
-                                    (assignment.allowsubmissionsfromdate ?? 0) *
-                                        1000,
-                                title: AppLocalizations.of(context)!.opened,
-                                iconColor: Colors.grey,
-                                backgroundIconColor:
-                                    const Color.fromARGB(255, 217, 217, 217),
-                              ),
-                              DateAssignmentTile(
-                                date: (assignment.duedate ?? 0) * 1000,
-                                title: AppLocalizations.of(context)!.due,
-                                iconColor: Colors.green,
-                                backgroundIconColor: Colors.greenAccent,
+                              assignment.allowsubmissionsfromdate == null
+                                  ? Container()
+                                  : DateAssignmentTile(
+                                      date: (assignment
+                                                  .allowsubmissionsfromdate ??
+                                              0) *
+                                          1000,
+                                      title:
+                                          AppLocalizations.of(context)!.opened,
+                                      iconColor: Colors.grey,
+                                      backgroundIconColor: const Color.fromARGB(
+                                          255, 217, 217, 217),
+                                    ),
+                              assignment.duedate == null
+                                  ? Container()
+                                  : DateAssignmentTile(
+                                      date: (assignment.duedate ?? 0) * 1000,
+                                      title: AppLocalizations.of(context)!.due,
+                                      iconColor: Colors.green,
+                                      backgroundIconColor: Colors.greenAccent,
+                                    ),
+                              const Divider(),
+                              ListTile(
+                                tileColor: MoodleColors.grey_soft,
+                                onTap: () {
+                                  Navigator.of(context)
+                                      .push(MaterialPageRoute(builder: (_) {
+                                    return ListUserSubmited(
+                                      userSubmiteds: userSubmiteds,
+                                      title: widget.title,
+                                    );
+                                  }));
+                                },
+                                title: Text(AppLocalizations.of(context)!
+                                    .number_submission),
+                                trailing: Text(userSubmiteds
+                                    .where(
+                                        (element) => element.submitted == true)
+                                    .length
+                                    .toString()),
                               ),
                             ],
                           ),
@@ -305,21 +360,27 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              DateAssignmentTile(
-                                date:
-                                    (assignment.allowsubmissionsfromdate ?? 0) *
-                                        1000,
-                                title: AppLocalizations.of(context)!.opened,
-                                iconColor: Colors.grey,
-                                backgroundIconColor:
-                                    const Color.fromARGB(255, 217, 217, 217),
-                              ),
-                              DateAssignmentTile(
-                                date: (assignment.duedate ?? 0) * 1000,
-                                title: AppLocalizations.of(context)!.due,
-                                iconColor: Colors.green,
-                                backgroundIconColor: Colors.greenAccent,
-                              ),
+                              assignment.allowsubmissionsfromdate == null
+                                  ? Container()
+                                  : DateAssignmentTile(
+                                      date: (assignment
+                                                  .allowsubmissionsfromdate ??
+                                              0) *
+                                          1000,
+                                      title:
+                                          AppLocalizations.of(context)!.opened,
+                                      iconColor: Colors.grey,
+                                      backgroundIconColor: const Color.fromARGB(
+                                          255, 217, 217, 217),
+                                    ),
+                              assignment.duedate == null
+                                  ? Container()
+                                  : DateAssignmentTile(
+                                      date: (assignment.duedate ?? 0) * 1000,
+                                      title: AppLocalizations.of(context)!.due,
+                                      iconColor: Colors.green,
+                                      backgroundIconColor: Colors.greenAccent,
+                                    ),
                               const Divider(),
                               const SizedBox(
                                 height: 5,

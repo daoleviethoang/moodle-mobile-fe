@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
@@ -35,19 +36,9 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController otherUrlController =
       TextEditingController(text: "https://");
 
-  final List<String> suggestionsData = [
-    "https://courses.ctda.hcmus.edu.vn",
-    "https://courses.fit.hcmus.edu.vn",
-    "https://elearning.fit.hcmus.edu.vn",
-    "https://",
-  ];
-
-  final List<String> suggestions = [
-    "Chương trình đề án (CLC, CTT, VP)",
-    "Chương trình đại trà",
-    "Chương trình đào tạo từ xa",
-    "Other",
-  ];
+  // Check _initSuggestions()
+  final List<String> suggestionsData = [];
+  final List<String> suggestions = [];
 
   bool otherUrl = false;
 
@@ -57,8 +48,35 @@ class _LoginScreenState extends State<LoginScreen> {
   // Store
   late UserStore _userStore;
 
+  void _initSuggestions(BuildContext context) {
+    suggestionsData.clear();
+    suggestions.clear();
+
+    suggestionsData.addAll([
+      "https://courses.ctda.hcmus.edu.vn",
+      "https://courses.fit.hcmus.edu.vn",
+      "https://elearning.fit.hcmus.edu.vn",
+      "https://",
+    ]);
+    suggestions.addAll([
+      AppLocalizations.of(context)!.ctda_program,
+      AppLocalizations.of(context)!.common_program,
+      AppLocalizations.of(context)!.e_learing_program,
+      AppLocalizations.of(context)!.other,
+    ]);
+
+    // Testing domain
+    if (kDebugMode) {
+      suggestionsData.add('https://courses.hcmus.edu.vn/lms');
+      suggestions.add('Server thử nghiệm');
+    }
+  }
+
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => setState(() => _initSuggestions(context)),
+    );
     super.initState();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
@@ -88,8 +106,9 @@ class _LoginScreenState extends State<LoginScreen> {
     var value = await showMenu<String>(
       context: context,
       position: RelativeRect.fromRect(
-          Offset(pos.dx, pos.dy) & const Size(64, 64),
+          Offset(pos.dx, pos.dy + rb.size.height) & const Size(64, 64),
           Offset.zero & (root as RenderBox).size),
+      constraints: const BoxConstraints(minWidth: double.infinity),
       items: suggestions.map((e) {
         var index = suggestions.indexOf(e);
         return PopupMenuItem(
@@ -114,7 +133,7 @@ class _LoginScreenState extends State<LoginScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  "Domain",
+                  AppLocalizations.of(context)!.domain,
                   textScaleFactor: 0.8,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
@@ -244,12 +263,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     onTap: () async {
                       await _onAppLanguagePressed(context);
                     },
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       contentPadding:
                           EdgeInsets.all(Dimens.default_padding_double),
                       prefixIcon: const Icon(Icons.language),
-                      hintText: "BaseUrl",
-                      labelText: "BaseUrl",
+                      hintText: AppLocalizations.of(context)!.baseUrl,
+                      labelText: AppLocalizations.of(context)!.baseUrl,
                       isDense: true,
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(
@@ -266,7 +285,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         left: Dimens.login_padding_left,
                         right: Dimens.login_padding_right),
                     child: CustomTextFieldWidget(
-                      hintText: "Username",
+                      hintText: AppLocalizations.of(context)!.username,
                       controller: usernameControler,
                       prefixIcon: Icons.people,
                       borderRadius: Dimens.default_border_radius,
@@ -281,7 +300,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       left: Dimens.login_padding_left,
                       right: Dimens.login_padding_right),
                   child: CustomTextFieldWidget(
-                    hintText: "Password",
+                    hintText: AppLocalizations.of(context)!.password,
                     hidePass: true,
                     controller: passwordController,
                     prefixIcon: Icons.lock,
@@ -311,7 +330,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             borderRadius: BorderRadius.circular(
                                 Dimens.default_checkbox_border_radius)),
                       ),
-                      const Text("Remember account",
+                      Text(AppLocalizations.of(context)!.remember_account,
                           style: TextStyle(fontSize: 16))
                     ],
                   ),
@@ -325,7 +344,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         left: Dimens.login_checkbox_padding_left,
                         right: Dimens.login_padding_right),
                     child: CustomButtonWidget(
-                        textButton: "Login", onPressed: onLoginPressed)),
+                        textButton: AppLocalizations.of(context)!.login,
+                        onPressed: onLoginPressed)),
 
                 const SizedBox(height: Dimens.login_sizedbox_height),
 
@@ -344,8 +364,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         padding: const EdgeInsets.all(10.0),
                         width: double.infinity,
                         // MediaQuery: get 1/4 of screen height
-                        child: const Text(
-                          "Invalid login, please try again",
+                        child: Text(
+                          AppLocalizations.of(context)!.login_invalid,
                           textAlign: TextAlign.center,
                         ),
                         decoration: const BoxDecoration(
@@ -362,8 +382,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     ? Container()
                     : TextButton(
                         onPressed: forgotPass,
-                        child: const Text(
-                          "Forgot your username or password ?",
+                        child: Text(
+                          AppLocalizations.of(context)!.forgot_password,
                           style: TextStyle(fontSize: 14),
                         ),
                         style: ButtonStyle(

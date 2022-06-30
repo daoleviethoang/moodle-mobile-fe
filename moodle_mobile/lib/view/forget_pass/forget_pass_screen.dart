@@ -36,7 +36,6 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
     "Chương trình đề án (CLC, CTT, VP)",
     "Chương trình đại trà",
     "Chương trình đào tạo từ xa",
-    "Other",
   ];
 
   bool otherUrl = false;
@@ -75,6 +74,13 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
   @override
   void initState() {
     _userStore = GetIt.instance<UserStore>();
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => setState(
+        () {
+          suggestions.add(AppLocalizations.of(context)!.other);
+        },
+      ),
+    );
     super.initState();
   }
 
@@ -86,8 +92,9 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
     var value = await showMenu<String>(
       context: context,
       position: RelativeRect.fromRect(
-          Offset(pos.dx, pos.dy) & const Size(64, 64),
+          Offset(pos.dx, pos.dy + rb.size.height) & const Size(64, 64),
           Offset.zero & (root as RenderBox).size),
+      constraints: const BoxConstraints(minWidth: double.infinity),
       items: suggestions.map((e) {
         var index = suggestions.indexOf(e);
         return PopupMenuItem(
@@ -112,7 +119,7 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  "Domain",
+                  AppLocalizations.of(context)!.domain,
                   textScaleFactor: 0.8,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
@@ -230,11 +237,11 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
                 onTap: () async {
                   await _onAppLanguagePressed(context);
                 },
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   contentPadding: EdgeInsets.all(Dimens.default_padding_double),
                   prefixIcon: const Icon(Icons.language),
-                  hintText: "BaseUrl",
-                  labelText: "BaseUrl",
+                  hintText: AppLocalizations.of(context)!.baseUrl,
+                  labelText: AppLocalizations.of(context)!.baseUrl,
                   isDense: true,
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(
@@ -251,7 +258,7 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
                     left: Dimens.login_padding_left,
                     right: Dimens.login_padding_right),
                 child: CustomTextFieldWidget(
-                  hintText: "Username",
+                  hintText: AppLocalizations.of(context)!.username,
                   controller: usernameControler,
                   prefixIcon: Icons.people,
                   borderRadius: Dimens.default_border_radius,
@@ -265,7 +272,7 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
                   left: Dimens.login_checkbox_padding_left,
                   right: Dimens.login_padding_right),
               child: CustomButtonWidget(
-                textButton: "Send link",
+                textButton: AppLocalizations.of(context)!.send_forgot_link,
                 onPressed: () async {
                   await sendLinkForgotPass();
                 },

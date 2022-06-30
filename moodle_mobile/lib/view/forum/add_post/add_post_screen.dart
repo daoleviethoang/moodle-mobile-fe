@@ -404,7 +404,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                             ),
                             Text(
                               AppLocalizations.of(context)!.default_num_file +
-                                  "${forumCourse?.maxattachments ?? 0} file.",
+                                  ": ${forumCourse?.maxattachments ?? 0} file.",
                             ),
                           ],
                         ),

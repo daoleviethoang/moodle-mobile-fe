@@ -81,8 +81,11 @@ class _QuizScreenState extends State<QuizScreen> {
           break;
         }
       }
-      List<Attempt> attemps = await QuizApi()
-          .getAttempts(_userStore.user.token, widget.quizInstanceId);
+
+      List<Attempt> attemps = isTeacher
+          ? []
+          : await QuizApi()
+              .getAttempts(_userStore.user.token, widget.quizInstanceId);
       setState(() {
         numAttempt = attemps.length;
       });
@@ -147,38 +150,47 @@ class _QuizScreenState extends State<QuizScreen> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            DateAssignmentTile(
-                              date: (quiz.timeopen ?? 0) * 1000,
-                              title: AppLocalizations.of(context)!.opened,
-                              iconColor: Colors.grey,
-                              backgroundIconColor:
-                                  const Color.fromARGB(255, 217, 217, 217),
-                            ),
-                            DateAssignmentTile(
-                              date: (quiz.timeclose ?? 0) * 1000,
-                              title: AppLocalizations.of(context)!.due,
-                              iconColor: Colors.green,
-                              backgroundIconColor: Colors.greenAccent,
-                            ),
+                            quiz.timeopen == null
+                                ? Container()
+                                : DateAssignmentTile(
+                                    date: (quiz.timeopen ?? 0) * 1000,
+                                    title: AppLocalizations.of(context)!.opened,
+                                    iconColor: Colors.grey,
+                                    backgroundIconColor: const Color.fromARGB(
+                                        255, 217, 217, 217),
+                                  ),
+                            quiz.timeclose == null
+                                ? Container()
+                                : DateAssignmentTile(
+                                    date: (quiz.timeclose ?? 0) * 1000,
+                                    title: AppLocalizations.of(context)!.due,
+                                    iconColor: Colors.green,
+                                    backgroundIconColor: Colors.greenAccent,
+                                  ),
+                            const Divider(),
                           ],
                         )
                       : Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            DateAssignmentTile(
-                              date: (quiz.timeopen ?? 0) * 1000,
-                              title: AppLocalizations.of(context)!.opened,
-                              iconColor: Colors.grey,
-                              backgroundIconColor:
-                                  const Color.fromARGB(255, 217, 217, 217),
-                            ),
-                            DateAssignmentTile(
-                              date: (quiz.timeclose ?? 0) * 1000,
-                              title: AppLocalizations.of(context)!.due,
-                              iconColor: Colors.green,
-                              backgroundIconColor: Colors.greenAccent,
-                            ),
+                            quiz.timeopen == null
+                                ? Container()
+                                : DateAssignmentTile(
+                                    date: (quiz.timeopen ?? 0) * 1000,
+                                    title: AppLocalizations.of(context)!.opened,
+                                    iconColor: Colors.grey,
+                                    backgroundIconColor: const Color.fromARGB(
+                                        255, 217, 217, 217),
+                                  ),
+                            quiz.timeclose == null
+                                ? Container()
+                                : DateAssignmentTile(
+                                    date: (quiz.timeclose ?? 0) * 1000,
+                                    title: AppLocalizations.of(context)!.due,
+                                    iconColor: Colors.green,
+                                    backgroundIconColor: Colors.greenAccent,
+                                  ),
                             const Divider(),
                             Container(
                               width: MediaQuery.of(context).size.width,

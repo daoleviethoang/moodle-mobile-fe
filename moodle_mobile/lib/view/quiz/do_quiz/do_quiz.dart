@@ -81,7 +81,7 @@ class _QuizDoScreenState extends State<QuizDoScreen> {
 
   setComplete(int index, bool value) {
     if (complete[index] != value) {
-      WidgetsBinding.instance!.addPostFrameCallback(
+      WidgetsBinding.instance.addPostFrameCallback(
         (_) => setState(
           () {
             complete[index] = value;

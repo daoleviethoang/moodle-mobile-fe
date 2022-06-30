@@ -426,7 +426,7 @@ class EventItem extends StatelessWidget {
 class RichTextCard extends StatelessWidget {
   final String? text;
   final Map<String, Style>? style;
-  final Map<String, dynamic Function(RenderContext, Widget)>? customData;
+  final Map<bool Function(RenderContext), CustomRender>? customData;
 
   const RichTextCard(
       {Key? key, required this.text, this.style, this.customData})
@@ -446,7 +446,7 @@ class RichTextCard extends StatelessWidget {
                     base64: url?.split(',')[1] ?? '',
                   )));
         },
-        customRender: customData ?? {},
+        customRenders: customData ?? {},
         onLinkTap: (url, cxt, attributes, element) async {
           await showGeneralDialog(
             context: context,

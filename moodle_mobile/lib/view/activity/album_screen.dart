@@ -47,6 +47,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
   List<FileUpload> files = [];
   TextEditingController nameController = TextEditingController();
   bool isLoading = false;
+  DefaultCacheManager manager = DefaultCacheManager();
 
   @override
   void initState() {
@@ -54,19 +55,34 @@ class _AlbumScreenState extends State<AlbumScreen> {
     _module = widget.module;
     _images = widget.images;
     nameController = TextEditingController(text: _module.name ?? "");
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
-      for (var item in _images) {
-        var file = await DefaultCacheManager().getSingleFile(
-            item.fileurl! + "?token=" + widget.userStore.user.token);
-        setState(() {
-          files.add(FileUpload(
-              filename: item.filename ?? "",
-              filepath: file.path,
-              filesize: item.filesize ?? 0,
-              timeModified: DateTime.fromMillisecondsSinceEpoch(
-                  item.timemodified! * 1000),
-              fileUrl: item.fileurl ?? ""));
-        });
+    files = _images
+        .map((e) => FileUpload(
+            filename: e.filename ?? "",
+            filepath: "",
+            filesize: e.filesize ?? 0,
+            timeModified:
+                DateTime.fromMillisecondsSinceEpoch(e.timemodified! * 1000),
+            fileUrl: e.fileurl ?? ""))
+        .toList();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      if (widget.isTeacher == true) {
+        for (var item in _images) {
+          var file = await DefaultCacheManager().getSingleFile(
+            item.fileurl!,
+          );
+
+          var index = _images.indexOf(item);
+
+          setState(() {
+            files[index] = FileUpload(
+                filename: item.filename ?? "",
+                filepath: file.path,
+                filesize: item.filesize ?? 0,
+                timeModified: DateTime.fromMillisecondsSinceEpoch(
+                    item.timemodified! * 1000),
+                fileUrl: item.fileurl ?? "");
+          });
+        }
       }
     });
   }
@@ -347,12 +363,14 @@ class _AlbumScreenState extends State<AlbumScreen> {
                     .map((e) => ImageAlbumDetailTile(
                           src: e.fileUrl,
                           name: "",
-                          filePath: null, //e.filepath,
+                          filePath: widget.isTeacher ? e.filepath : null,
                           isChoose: chooseImages[files.indexOf(e)],
                           setLongPress: (bool value) {
-                            setState(() {
-                              chooseImages[files.indexOf(e)] = value;
-                            });
+                            if (widget.isTeacher == true) {
+                              setState(() {
+                                chooseImages[files.indexOf(e)] = value;
+                              });
+                            }
                           },
                         ))
                     .toList(),
@@ -407,6 +425,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                           .pickFiles(type: FileType.image);
                       if (result != null && result.files.isNotEmpty) {
                         var file = result.files.first;
+                        print(file);
                         var tempFiles = files;
                         setState(() {
                           tempFiles.add(FileUpload(

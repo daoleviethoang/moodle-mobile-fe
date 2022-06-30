@@ -114,7 +114,7 @@ class _FilesAssignmentScreenState extends State<FilesAssignmentScreen> {
       isLoading = true;
     });
     _userStore = GetIt.instance<UserStore>();
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       for (Files item
           in widget.attempt.submission?.plugins?[0].fileareas?[0].files ?? []) {
         if (item.fileurl != null) {
@@ -130,12 +130,14 @@ class _FilesAssignmentScreenState extends State<FilesAssignmentScreen> {
                 fileUrl: item.fileurl ?? ""));
           });
         }
+        setState(() {
+          isLoading = false;
+        });
       }
     });
     setState(() {
       disable = !widget.canEdit;
       files.sort(((a, b) => a.filename.compareTo(b.filename)));
-      isLoading = false;
     });
     super.initState();
   }

@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:isolate';
 import 'dart:ui';
 
-import 'package:device_preview/device_preview.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -31,9 +30,8 @@ void main() async {
   await FirebaseHelper.initFirebase();
   await BgService.initBackgroundService();
   await NotificationHelper.initNotificationService();
-  runApp(DevicePreview(
-    enabled: !kReleaseMode && kIsWeb,
-    builder: (context) => MultiProvider(
+  runApp(
+    MultiProvider(
       providers: [
         ChangeNotifierProvider<LocaleNotifier>(
           create: (_) => LocaleNotifier(),
@@ -41,7 +39,7 @@ void main() async {
       ],
       child: const MyApp(),
     ),
-  ));
+  );
 }
 
 Future<void> initDownloader() async {
@@ -97,8 +95,7 @@ class MyApp extends StatelessWidget {
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         useInheritedMediaQuery: true,
-        locale: DevicePreview.locale(context) ?? locale.getLocale(),
-        builder: DevicePreview.appBuilder,
+        locale: locale.getLocale(),
         title: 'Moodle App',
         theme: ThemeData(
           fontFamily: 'SF',
