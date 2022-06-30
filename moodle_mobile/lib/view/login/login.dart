@@ -384,7 +384,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         onPressed: forgotPass,
                         child: Text(
                           AppLocalizations.of(context)!.forgot_password,
-                          style: TextStyle(fontSize: 14),
+                          style: TextStyle(fontSize: 16),
                         ),
                         style: ButtonStyle(
                             foregroundColor:

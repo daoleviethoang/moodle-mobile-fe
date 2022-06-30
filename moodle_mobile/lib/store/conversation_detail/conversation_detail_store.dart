@@ -26,7 +26,8 @@ abstract class _ConversationDetailStore with Store {
       listMessages = ObservableList.of(listMessages.reversed);
 
       if (kDebugMode) {
-        print("Get list message success: ${listMessages.length}");
+        print(
+            "Get list message success: ${listMessages.length} with user ${userId}");
       }
     } catch (e) {
       if (kDebugMode) {

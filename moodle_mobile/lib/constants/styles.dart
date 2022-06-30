@@ -52,6 +52,7 @@ class MoodleStyles {
     'h1': Style(fontSize: const FontSize(19)),
     'h2': Style(fontSize: const FontSize(17.5)),
     'h3': Style(fontSize: const FontSize(16)),
+    "body": Style(color: MoodleColors.white)
   };
 
   static const TextStyle messageContentStyle =
@@ -59,6 +60,6 @@ class MoodleStyles {
 
   static Style rightMessageTextStyle = Style(color: MoodleColors.white);
 
-  static const TextStyle notificationTimestampStyle =
-      TextStyle(fontSize: 12, fontWeight: FontWeight.bold);
+  static const TextStyle notificationTimestampStyle = TextStyle(
+      fontSize: 13, fontWeight: FontWeight.bold, color: MoodleColors.blue);
 }
