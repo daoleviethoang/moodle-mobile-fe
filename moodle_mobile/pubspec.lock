@@ -12,11 +12,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: main
-      resolved-ref: "09cd727048f18e9159b218783f201b1c9fd3f841"
+      ref: "013ec0d"
+      resolved-ref: "013ec0d7ab0da33fd856098f201bfe1d5d044827"
       url: "https://github.com/super-alpha-team/alpha_quiz.git"
     source: git
-    version: "0.0.1"
+    version: "0.0.2"
   analyzer:
     dependency: transitive
     description:
