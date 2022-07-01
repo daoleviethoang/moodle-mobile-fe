@@ -102,7 +102,7 @@ class CustomTextFieldRight extends StatelessWidget {
                   left: Dimens.default_padding, right: Dimens.default_padding),
               child: Html(
                 data: messageText,
-                style: MoodleStyles.htmlStyle,
+                style: {"body": Style(color: MoodleColors.white)},
                 onLinkTap: (url, cxt, attributes, element) async {
                   await showGeneralDialog(
                     context: context,

@@ -247,7 +247,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                       return UrlItem(
                         title: title,
                         url: d.endpoint ?? '',
-                        id: m.instance,
+                        id: m.instance!,
                       );
                     },
                   );
