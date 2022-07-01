@@ -1,8 +1,5 @@
-import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/data/shared_reference/shared_preference_helper.dart';
 import 'package:moodle_mobile/di/service_locator.dart';
-import 'package:moodle_mobile/store/user/user_store.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Endpoints {
   Endpoints._();
@@ -23,6 +20,9 @@ class Endpoints {
   // user endpoints
   static String login = baseUrl + "/login/token.php";
   static String forgetPass = baseUrl + "/lib/ajax/service-nologin.php";
-  static String webserviceServer = baseUrl + "/webservice/rest/server.php";
+  static get webserviceServer {
+    return baseUrl + "/webservice/rest/server.php";
+  }
+
   static String uploadFile = baseUrl + "/webservice/upload.php";
 }

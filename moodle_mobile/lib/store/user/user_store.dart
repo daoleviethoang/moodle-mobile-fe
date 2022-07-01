@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:mobx/mobx.dart';
+import 'package:moodle_mobile/data/network/constants/endpoints.dart';
 import 'package:moodle_mobile/data/repository.dart';
 import 'package:moodle_mobile/models/user.dart';
 import 'package:moodle_mobile/models/user_login.dart';
@@ -88,8 +89,15 @@ abstract class _UserStore with Store {
     }
   }
 
-  void setBaseUrl(String baseUrl) {
-    _repository.saveBaseUrl(baseUrl);
+  @action
+  Future setBaseUrl(String baseUrl) async {
+    try {
+      _repository.saveBaseUrl(baseUrl);
+    } catch (e) {
+      if (kDebugMode) {
+        print("Save baseurl error: $e");
+      }
+    }
   }
 
   Future checkIsLogin() async {
@@ -126,27 +134,34 @@ abstract class _UserStore with Store {
   @action
   Future setUser(String token, String username) async {
     try {
+      isLoading = true;
+
       _repository.saveAuthToken(token);
       _repository.saveUsername(username);
 
       user = await _repository.getUserInfo(token, username);
+      print(user.fullname);
       if (kDebugMode) {
         print("here userstore");
       }
 
       isLogin = true;
+      isLoading = false;
     } catch (e) {
       if (kDebugMode) {
         print("Set user error: $e");
       }
       isLoginFailed = true;
       isLogin = false;
+      isLoading = false;
     }
   }
 
   @action
   void logout() {
     _repository.saveAuthToken("");
+    _repository.saveUsername("");
+    _repository.saveBaseUrl("");
     isLogin = false;
   }
 }
