@@ -117,6 +117,11 @@ dependencies:
   #detect keyboard 
   flutter_keyboard_visibility: ^5.0.0
 
+  alpha_quiz:
+    git: 
+      url: https://github.com/super-alpha-team/alpha_quiz.git
+      ref: main
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
