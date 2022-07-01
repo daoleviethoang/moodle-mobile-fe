@@ -7,39 +7,38 @@ import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/image_view.dart';
 import 'package:moodle_mobile/view/direct_page.dart';
 
-class UserLoginTile extends StatefulWidget {
+class UserLoginTile extends StatelessWidget {
   final UserLogin user;
   final UserStore userStore;
   final VoidCallback refresh;
+  final BuildContext context;
   const UserLoginTile(
       {Key? key,
       required this.user,
       required this.userStore,
-      required this.refresh})
+      required this.refresh,
+      required this.context})
       : super(key: key);
 
-  @override
-  State<UserLoginTile> createState() => _UserLoginTileState();
-}
-
-class _UserLoginTileState extends State<UserLoginTile> {
   login() async {
-    widget.userStore.setBaseUrl(widget.user.baseUrl);
+    await userStore.setBaseUrl(user.baseUrl);
 
-    await widget.userStore.setUser(
-      widget.user.token,
-      widget.user.username,
+    await userStore.setUser(
+      user.token,
+      user.username,
     );
 
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(
-        builder: (context) {
-          return const DirectScreen();
-        },
-      ),
-      (route) => false,
-    );
+    if (userStore.isLogin == true && userStore.isLoading == false) {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return const DirectScreen();
+          },
+        ),
+        (route) => false,
+      );
+    }
   }
 
   @override
@@ -60,11 +59,9 @@ class _UserLoginTileState extends State<UserLoginTile> {
                   children: [
                     ClipRRect(
                         borderRadius: BorderRadius.circular(1000),
-                        child: widget.user.photo != null
+                        child: user.photo != null
                             ? Image.network(
-                                widget.user.photo! +
-                                    "&token=" +
-                                    widget.user.token,
+                                user.photo! + "&token=" + user.token,
                                 scale: 1.4,
                                 errorBuilder: (context, error, stackTrace) =>
                                     Container(
@@ -95,7 +92,7 @@ class _UserLoginTileState extends State<UserLoginTile> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            widget.user.username,
+                            user.username,
                             maxLines: 1,
                             overflow: TextOverflow.clip,
                             style: TextStyle(fontWeight: FontWeight.bold),
@@ -105,7 +102,7 @@ class _UserLoginTileState extends State<UserLoginTile> {
                             height: 5,
                           ),
                           Text(
-                            widget.user.baseUrl.replaceAll("https://", ""),
+                            user.baseUrl.replaceAll("https://", ""),
                             textScaleFactor: 1.1,
                           ),
                         ]),
@@ -114,8 +111,8 @@ class _UserLoginTileState extends State<UserLoginTile> {
                 IconButton(
                     onPressed: () async {
                       await SQLHelper.deleteUserItem(
-                          widget.user.baseUrl, widget.user.username);
-                      widget.refresh();
+                          user.baseUrl, user.username);
+                      refresh();
                     },
                     icon: const Icon(
                       Icons.delete,
