@@ -85,10 +85,16 @@ class _GradeInOneCourseState extends State<GradeInOneCourse> {
                   children: List<Widget>.generate(
                     assignments.length,
                     (int index) => ListTile(
-                      onTap: () {},
+                      onTap: null,
                       leading: const Icon(Icons.description),
                       title: Text(assignments[index].name!),
-                      trailing: Text(gradesAssign[index] ?? "-"),
+                      trailing: index < gradesAssign.length
+                          ? Text(gradesAssign[index] ?? "-")
+                          : const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(),
+                            ),
                     ),
                   )),
               ListView(
@@ -98,10 +104,16 @@ class _GradeInOneCourseState extends State<GradeInOneCourse> {
                   children: List<Widget>.generate(
                     quizs.length,
                     (int index) => ListTile(
-                      onTap: () {},
+                      onTap: null,
                       leading: const Icon(Icons.description),
                       title: Text(quizs[index].name!),
-                      trailing: Text(gradesQuiz[index]?.toString() ?? "-"),
+                      trailing: index < gradesQuiz.length
+                          ? Text(gradesQuiz[index]?.toString() ?? "-")
+                          : const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(),
+                            ),
                     ),
                   )),
             ]),
@@ -120,6 +132,15 @@ class _GradeInOneCourseState extends State<GradeInOneCourse> {
       List<Assignment> getAssignments = await AssignmentApi()
           .getAssignments(_userStore.user.token, 0, widget.courseId);
 
+      List<Quiz> getQuizs =
+          await QuizApi().getQuizs(_userStore.user.token, widget.courseId);
+
+      setState(() {
+        assignments = getAssignments;
+        quizs = getQuizs;
+        isLoad = false;
+      });
+
       for (var item in getAssignments) {
         FeedBack feedBack = await AssignmentApi()
             .getAssignmentFeedbackAndGrade(_userStore.user.token, item.id ?? 0);
@@ -128,9 +149,6 @@ class _GradeInOneCourseState extends State<GradeInOneCourse> {
         });
       }
 
-      List<Quiz> getQuizs =
-          await QuizApi().getQuizs(_userStore.user.token, widget.courseId);
-
       for (var item in getQuizs) {
         double? grade =
             await QuizApi().getGrade(_userStore.user.token, item.id ?? 0);
@@ -138,12 +156,6 @@ class _GradeInOneCourseState extends State<GradeInOneCourse> {
           gradesQuiz.add(grade);
         });
       }
-
-      setState(() {
-        assignments = getAssignments;
-        quizs = getQuizs;
-        isLoad = false;
-      });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(e.toString()), backgroundColor: Colors.red));

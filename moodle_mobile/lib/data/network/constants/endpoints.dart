@@ -18,11 +18,19 @@ class Endpoints {
 
   // Add more endpoints here when we need to call to different API
   // user endpoints
-  static String login = baseUrl + "/login/token.php";
-  static String forgetPass = baseUrl + "/lib/ajax/service-nologin.php";
+  static get login {
+    return baseUrl + "/login/token.php";
+  }
+
+  static get forgetPass {
+    return baseUrl + "/lib/ajax/service-nologin.php";
+  }
+
   static get webserviceServer {
     return baseUrl + "/webservice/rest/server.php";
   }
 
-  static String uploadFile = baseUrl + "/webservice/upload.php";
+  static get uploadFile {
+    return baseUrl + "/webservice/upload.php";
+  }
 }
