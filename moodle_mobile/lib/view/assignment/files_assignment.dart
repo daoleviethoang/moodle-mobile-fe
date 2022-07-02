@@ -130,10 +130,10 @@ class _FilesAssignmentScreenState extends State<FilesAssignmentScreen> {
                 fileUrl: item.fileurl ?? ""));
           });
         }
-        setState(() {
-          isLoading = false;
-        });
       }
+      setState(() {
+        isLoading = false;
+      });
     });
     setState(() {
       disable = !widget.canEdit;
