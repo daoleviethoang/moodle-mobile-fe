@@ -88,6 +88,8 @@ class Wsfunction {
 
   //search course
   static const String CORE_COURSE_SEARCH_COURSES = "core_course_search_courses";
+  static const String CORE_COURSE_SEARCH_USERS =
+      "core_message_message_search_users";
 
   //courses
   static const String CORE_COURSES_PARTICIPANT =
