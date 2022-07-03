@@ -9,6 +9,7 @@ import 'package:moodle_mobile/models/assignment/assignment.dart';
 import 'package:moodle_mobile/models/assignment/feedback.dart';
 import 'package:moodle_mobile/models/quiz/quiz.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
+import 'package:moodle_mobile/view/common/course/grade_overview.dart';
 
 class GradeInOneCourse extends StatefulWidget {
   final int courseId;
@@ -45,38 +46,10 @@ class _GradeInOneCourseState extends State<GradeInOneCourse> {
           )
         : SingleChildScrollView(
             child: Column(children: [
-              Padding(
-                padding: const EdgeInsets.all(Dimens.default_padding * 3),
-                child: Text(widget.courseName!,
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                        letterSpacing: 1,
-                        color: MoodleColors.black)),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.only(bottom: Dimens.default_padding * 3),
-                child: Container(
-                  decoration: const BoxDecoration(
-                      color: Colors.orangeAccent,
-                      borderRadius: BorderRadius.all(
-                          Radius.circular(Dimens.default_border_radius * 3))),
-                  child: Text(courseGrade ?? "-",
-                      style: TextStyle(
-                          fontSize: 18,
-                          letterSpacing: 1,
-                          color: MoodleColors.white)),
-                  padding: EdgeInsets.only(
-                      top: Dimens.default_padding,
-                      bottom: Dimens.default_padding,
-                      left: Dimens.default_padding * 3,
-                      right: Dimens.default_padding * 3),
-                ),
-              ),
-              Divider(
-                height: 10,
-                thickness: 2,
+              GradeOverview(
+                courseId: widget.courseId,
+                courseName: widget.courseName,
+                courseGrade: courseGrade,
               ),
               ListView(
                   padding: EdgeInsets.only(top: 0),

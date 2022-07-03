@@ -41,16 +41,23 @@ class Grade {
   int? timemodified;
   int? grader;
   String? grade;
+  int? courseid;
+  String? rawgrade;
+  String? courseName;
 
-  Grade(
-      {this.id,
-      this.assignment,
-      this.userid,
-      this.attemptnumber,
-      this.timecreated,
-      this.timemodified,
-      this.grader,
-      this.grade});
+  Grade({
+    this.id,
+    this.assignment,
+    this.userid,
+    this.attemptnumber,
+    this.timecreated,
+    this.timemodified,
+    this.grader,
+    this.grade,
+    this.courseid,
+    this.rawgrade,
+    this.courseName,
+  });
 
   Grade.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -61,6 +68,9 @@ class Grade {
     timemodified = json['timemodified'];
     grader = json['grader'];
     grade = json['grade'];
+    courseid = json['courseid'];
+    rawgrade = json['rawgrade'];
+    courseName = json['courseName'];
   }
 
   Map<String, dynamic> toJson() {
@@ -73,6 +83,9 @@ class Grade {
     data['timemodified'] = this.timemodified;
     data['grader'] = this.grader;
     data['grade'] = this.grade;
+    data['courseid'] = this.courseid;
+    data['rawgrade'] = this.rawgrade;
+    data['courseName'] = this.courseName;
     return data;
   }
 }

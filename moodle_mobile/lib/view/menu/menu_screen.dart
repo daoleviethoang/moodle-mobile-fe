@@ -7,9 +7,11 @@ import 'package:moodle_mobile/provider/LocaleManager.dart';
 import 'package:moodle_mobile/provider/StorageManager.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/content_item.dart';
+import 'package:moodle_mobile/view/common/course/grade_overview.dart';
 import 'package:moodle_mobile/view/common/image_view.dart';
 import 'package:moodle_mobile/view/common/language/changeLanguage.dart';
 import 'package:moodle_mobile/view/common/menu_item.dart' as m;
+import 'package:moodle_mobile/view/menu/account/courses_grade_overview.dart';
 import 'package:moodle_mobile/view/menu/profile/profile.dart';
 import 'package:moodle_mobile/view/notification_preference/index.dart';
 import 'package:moodle_mobile/view/splash/splash_screen.dart';
@@ -70,7 +72,7 @@ class _MenuScreenState extends State<MenuScreen> {
                     Navigator.pop(context);
                   },
                   child: Text(AppLocalizations.of(context)!.cancel,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w700,
                         fontSize: 16,
@@ -99,7 +101,7 @@ class _MenuScreenState extends State<MenuScreen> {
                     Navigator.pop(context);
                   },
                   child: Text(AppLocalizations.of(context)!.ok,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w700,
                         fontSize: 16,
@@ -284,6 +286,18 @@ class _MenuScreenState extends State<MenuScreen> {
                         //   onPressed: () {},
                         // ),
                         // const SizedBox(height: 8),
+                        m.MenuItem(
+                          title: AppLocalizations.of(context)!.grades,
+                          color: Colors.amber,
+                          icon: const Icon(Icons.grade),
+                          fullWidth: true,
+                          onPressed: () {
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(builder: (_) {
+                              return const CoursesGradeOverviewScreen();
+                            }));
+                          },
+                        ),
                         m.MenuItem(
                           title: AppLocalizations.of(context)!.report,
                           color: Colors.red,

@@ -33,4 +33,5 @@ class MoodleColors {
   static const Color line_bottom_bar = Color(0xffB0C0D8);
   static const Color border_star = Color(0xffFFF4E4);
   static const Color black80 = Color(0xff464646);
+  static const Color yellow_grade = Color(0xFFF9B959);
 }
