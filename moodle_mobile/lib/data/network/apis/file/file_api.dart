@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:moodle_mobile/data/network/constants/endpoints.dart';
 import 'package:moodle_mobile/data/network/dio_http.dart';
@@ -39,7 +40,10 @@ class FileApi {
       }
       return data[0]["itemid"];
     } catch (e) {
-      throw "Upload file fail $fileName";
+      if (kDebugMode) {
+        print("Upload file fail $fileName");
+      }
+      return 0;
     }
   }
 

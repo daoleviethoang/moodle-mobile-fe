@@ -60,6 +60,7 @@
   "err_load_noti_settings": "Tải cài đặt thông báo thất bại, vui lòng thử lại sau",
   "err_set_noti_settings": "Cập nhật cài đặt thông báo thất bại, vui lòng thử lại sau",
   "err_unknown_module": "Module chưa được hỗ trợ: {modname}",
+  "error_connect": "Không thể kết nối mạng",
   "events": "Sự kiện",
   "events_on": "Sự kiện vào {date}",
   "file_size_bigger": "Kích thước file quá lớn",

@@ -421,20 +421,22 @@ class _AlbumScreenState extends State<AlbumScreen> {
                   backgroundColor: MoodleColors.blue,
                   onPressed: () async {
                     try {
-                      FilePickerResult? result = await FilePicker.platform
-                          .pickFiles(type: FileType.image);
+                      FilePickerResult? result =
+                          await FilePicker.platform.pickFiles(
+                        type: FileType.image,
+                        allowMultiple: true,
+                      );
                       if (result != null && result.files.isNotEmpty) {
-                        var file = result.files.first;
-                        print(file);
                         var tempFiles = files;
-                        setState(() {
+                        var filesPick = result.files;
+                        for (var item in filesPick) {
                           tempFiles.add(FileUpload(
-                            filename: file.name,
-                            filepath: file.path ?? "",
-                            filesize: file.size,
+                            filename: item.name,
+                            filepath: item.path ?? "",
+                            filesize: item.size,
                             timeModified: DateTime.now(),
                           ));
-                        });
+                        }
 
                         int? itemId = await FileApi().uploadMultipleFile(
                             widget.userStore.user.token, tempFiles);
