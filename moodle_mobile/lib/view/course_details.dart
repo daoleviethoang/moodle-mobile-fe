@@ -591,7 +591,9 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                 ];
               },
               body: hasError
-                  ? ErrorCard(text: '${data.error}')
+                  ? Center(
+                      child: ErrorCard(
+                          text: AppLocalizations.of(context)!.error_connect))
                   : !hasData
                       ? const LoadingCard()
                       : AnimatedOpacity(

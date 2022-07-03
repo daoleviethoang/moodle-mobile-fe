@@ -91,6 +91,7 @@
   "err_load_noti_settings": "Loading notification preferences fail, please try again later",
   "err_set_noti_settings": "Set notification preferences fail, please try again later",
   "err_unknown_module": "Unsupported module name: {modname}",
+  "error_connect": "Can't connect internet",
   "events": "Events",
   "events_on": "Events on {date}",
   "file_size_bigger": "File's size is bigger",
