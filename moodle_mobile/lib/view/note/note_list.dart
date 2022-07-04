@@ -7,7 +7,7 @@ import 'package:mobx/mobx.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
 import 'package:moodle_mobile/constants/styles.dart';
-import 'package:moodle_mobile/data/firebase/firestore/notes/notes_service.dart';
+import 'package:moodle_mobile/data/network/apis/notes/notes_service.dart';
 import 'package:moodle_mobile/models/note/note.dart';
 import 'package:moodle_mobile/models/note/notes.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
@@ -94,14 +94,14 @@ class _NoteListState extends State<NoteList> {
             ),
           ),
           MenuCard(
-            title: AppLocalizations.of(context)!.personal,
-            subtitle: '${_notes.personal.length}',
-            icon: const Icon(CupertinoIcons.person_alt),
+            title: AppLocalizations.of(context)!.other,
+            subtitle: '${_notes.other.length}',
+            icon: const Icon(CupertinoIcons.doc_on_doc_fill),
             color: Colors.pink,
             onPressed: () => Navigator.of(context).push(
               CupertinoPageRoute(
                 builder: (context) =>
-                    const NoteFolder(type: NoteFolderType.personal),
+                    const NoteFolder(type: NoteFolderType.other),
               ),
             ),
           ),
@@ -161,6 +161,7 @@ class _NoteListState extends State<NoteList> {
             padding: const EdgeInsets.only(bottom: 8),
             child: NoteCard(
               n,
+              _userStore.user.token,
               onPressed: () => _onEditNote(context, n),
             ),
           );
@@ -176,8 +177,9 @@ class _NoteListState extends State<NoteList> {
       context: context,
       isScrollControlled: true,
       builder: (context) => NoteEditDialog(
+        token: _userStore.user.token,
         uid: _userStore.user.id,
-        courseId: null,
+        cid: null,
       ),
     ).then((result) {
       if (result.runtimeType is Note) queryData();
@@ -189,8 +191,9 @@ class _NoteListState extends State<NoteList> {
       context: context,
       isScrollControlled: true,
       builder: (context) => NoteEditDialog(
+        token: _userStore.user.token,
         uid: _userStore.user.id,
-        courseId: null,
+        cid: null,
         note: n,
       ),
     ).then((result) {
@@ -199,7 +202,9 @@ class _NoteListState extends State<NoteList> {
   }
 
   Future queryData() async {
-    _notes.replace(fromNotes: await NotesService.getNotes(_userStore.user.id));
+    _notes.replace(
+        fromNotes: await NotesService()
+            .getNotes(_userStore.user.token, _userStore.user.id));
     _initFolderView();
     _initAddNoteView();
     _initHighlightView();

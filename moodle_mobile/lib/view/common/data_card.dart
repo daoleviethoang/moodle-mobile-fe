@@ -56,10 +56,12 @@ class ErrorCard extends StatelessWidget {
 
 class NoteCard extends StatefulWidget {
   final Note note;
+  final String token;
   final VoidCallback? onPressed;
 
   const NoteCard(
-    this.note, {
+    this.note,
+    this.token, {
     Key? key,
     this.onPressed,
   }) : super(key: key);
@@ -69,11 +71,13 @@ class NoteCard extends StatefulWidget {
 }
 
 class _NoteCardState extends State<NoteCard> {
+  late String _token;
   late Note _note;
 
   @override
   void initState() {
     super.initState();
+    _token = widget.token;
     _note = widget.note;
   }
 
@@ -116,21 +120,33 @@ class _NoteCardState extends State<NoteCard> {
                                 color: MoodleColors.black80.withOpacity(.75)),
                           if (_note.isImportant || _note.isRecent)
                             Container(width: 4),
-                          Text(
-                            _note.getCourseName(context),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: MoodleStyles.noteHeaderStyle.copyWith(
-                              decoration: _note.isDone
-                                  ? TextDecoration.lineThrough
-                                  : TextDecoration.none,
-                            ),
+                          FutureBuilder(
+                            future: _note.getCourseName(context, _token),
+                            builder: (context, snapshot) {
+                              String courseName = '…';
+                              if (snapshot.hasData) {
+                                courseName = snapshot.data as String;
+                              } else if (snapshot.hasError) {
+                                return Container();
+                              }
+
+                              return Text(
+                                courseName,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: MoodleStyles.noteHeaderStyle.copyWith(
+                                  decoration: _note.isDone
+                                      ? TextDecoration.lineThrough
+                                      : TextDecoration.none,
+                                ),
+                              );
+                            }
                           ),
                         ],
                       ),
                       Container(height: 4),
                       Text(
-                        _note.title ?? _note.content ?? '',
+                        _note.txt,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.start,

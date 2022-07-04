@@ -4,20 +4,22 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
 import 'package:moodle_mobile/constants/styles.dart';
-import 'package:moodle_mobile/data/firebase/firestore/notes/notes_service.dart';
+import 'package:moodle_mobile/data/network/apis/notes/notes_service.dart';
 import 'package:moodle_mobile/models/note/note.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:moodle_mobile/view/common/custom_button.dart';
 
 class NoteEditDialog extends StatefulWidget {
+  final String token;
   final int uid;
-  final int? courseId;
+  final int? cid;
   final Note? note;
 
   const NoteEditDialog({
     Key? key,
+    required this.token,
     required this.uid,
-    required this.courseId,
+    required this.cid,
     this.note,
   }) : super(key: key);
 
@@ -28,57 +30,35 @@ class NoteEditDialog extends StatefulWidget {
 class _NoteEditDialogState extends State<NoteEditDialog> {
   final _formKey = GlobalKey<FormState>();
   late int _uid;
-  late int? _courseId;
-  late Widget _titleInput;
+  late int? _cid;
   late Widget _contentInput;
 
   late Note _note;
   var _failed = false;
   var _canceling = false;
 
-  bool get _noteInvalid =>
-      (_note.title ?? '').isEmpty && (_note.content ?? '').isEmpty;
+  bool get _noteInvalid => _note.txt.isEmpty;
 
   @override
   void initState() {
     super.initState();
-    final now = DateTime.now();
 
     _uid = widget.uid;
-    _courseId = widget.courseId;
+    _cid = widget.cid;
     _note = widget.note ??
         Note(
-          id: '${_uid}_${now.millisecondsSinceEpoch}',
-          courseId: _courseId,
-          title: '',
-          content: '',
+          userid: _uid,
+          publishstate: 'personal',
+          courseid: _cid,
+          text: '',
+          format: 1,
         );
-  }
-
-  _initTitleInput() {
-    _titleInput = TextFormField(
-      keyboardType: TextInputType.text,
-      initialValue: _note.title,
-      decoration: InputDecoration(
-        hintText: AppLocalizations.of(context)!.title,
-        labelText: AppLocalizations.of(context)!.title,
-        contentPadding: const EdgeInsets.all(Dimens.default_padding_double),
-        isDense: true,
-        border: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(
-                Radius.circular(Dimens.default_border_radius))),
-      ),
-      maxLines: 1,
-      autofocus: widget.note == null,
-      onChanged: (value) =>
-          setState(() => _note = _note.copyWith(title: value)),
-    );
   }
 
   _initContentInput() {
     _contentInput = TextFormField(
       keyboardType: TextInputType.multiline,
-      initialValue: _note.content,
+      initialValue: _note.txt,
       decoration: InputDecoration(
         hintText: AppLocalizations.of(context)!.content,
         labelText: AppLocalizations.of(context)!.content,
@@ -91,8 +71,9 @@ class _NoteEditDialogState extends State<NoteEditDialog> {
       minLines: 4,
       maxLines: null,
       textAlignVertical: TextAlignVertical.top,
+      autofocus: widget.note == null,
       onChanged: (value) =>
-          setState(() => _note = _note.copyWith(content: value)),
+          setState(() => _note.text = value),
     );
   }
 
@@ -104,7 +85,7 @@ class _NoteEditDialogState extends State<NoteEditDialog> {
     }
 
     // Call API
-    final note = await NotesService.setNote(_note);
+    final note = await NotesService().setNote(widget.token, _note);
     // Hide the keyboard
     FocusManager.instance.primaryFocus?.unfocus();
     Navigator.pop(context, note);
@@ -134,7 +115,6 @@ class _NoteEditDialogState extends State<NoteEditDialog> {
 
   @override
   Widget build(BuildContext context) {
-    _initTitleInput();
     _initContentInput();
 
     return Form(
@@ -155,8 +135,6 @@ class _NoteEditDialogState extends State<NoteEditDialog> {
                     style: MoodleStyles.bottomSheetTitleStyle,
                   ),
                   Container(height: 40),
-                  _titleInput,
-                  Container(height: 20),
                   _contentInput,
                   Container(height: 20),
                   Row(
@@ -172,7 +150,7 @@ class _NoteEditDialogState extends State<NoteEditDialog> {
                       Switch(
                         value: _note.isImportant,
                         onChanged: (value) =>
-                            setState(() => _note.copyWith(isImportant: value)),
+                            setState(() => _note.isImportant = value),
                       ),
                     ],
                   ),

@@ -5,7 +5,7 @@ enum NoteFolderType {
   all,
   important,
   done,
-  personal,
+  other,
   recent,
 }
 
@@ -50,8 +50,8 @@ class _NoteFolderState extends State<NoteFolder> {
               return Text(AppLocalizations.of(context)!.important);
             case NoteFolderType.done:
               return Text(AppLocalizations.of(context)!.done);
-            case NoteFolderType.personal:
-              return Text(AppLocalizations.of(context)!.personal);
+            case NoteFolderType.other:
+              return Text(AppLocalizations.of(context)!.other);
             case NoteFolderType.recent:
               return Text(AppLocalizations.of(context)!.recent_notes);
           }
