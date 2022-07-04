@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
@@ -123,12 +124,12 @@ class _ListUserLoginScreenState extends State<ListUserLoginScreen> {
                         child: ListView(
                           padding: const EdgeInsets.only(top: 0),
                           shrinkWrap: true,
-                          semanticChildCount: 3,
                           children: users
                               .map((e) => UserLoginTile(
                                     user: e,
                                     userStore: _userStore,
                                     refresh: loadUsers2,
+                                    context: context,
                                   ))
                               .toList(),
                         ),

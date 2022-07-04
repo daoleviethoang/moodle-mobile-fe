@@ -81,6 +81,6 @@ class MoodleStyles {
 
   static Style rightMessageTextStyle = Style(color: MoodleColors.white);
 
-  static const TextStyle notificationTimestampStyle =
-      TextStyle(fontSize: 12, fontWeight: FontWeight.bold);
+  static const TextStyle notificationTimestampStyle = TextStyle(
+      fontSize: 13, fontWeight: FontWeight.bold, color: MoodleColors.blue);
 }

@@ -9,6 +9,7 @@ import 'package:moodle_mobile/models/assignment/assignment.dart';
 import 'package:moodle_mobile/models/assignment/feedback.dart';
 import 'package:moodle_mobile/models/quiz/quiz.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
+import 'package:moodle_mobile/view/common/course/grade_overview.dart';
 
 class GradeInOneCourse extends StatefulWidget {
   final int courseId;
@@ -45,38 +46,10 @@ class _GradeInOneCourseState extends State<GradeInOneCourse> {
           )
         : SingleChildScrollView(
             child: Column(children: [
-              Padding(
-                padding: const EdgeInsets.all(Dimens.default_padding * 3),
-                child: Text(widget.courseName!,
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                        letterSpacing: 1,
-                        color: MoodleColors.black)),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.only(bottom: Dimens.default_padding * 3),
-                child: Container(
-                  decoration: const BoxDecoration(
-                      color: Colors.orangeAccent,
-                      borderRadius: BorderRadius.all(
-                          Radius.circular(Dimens.default_border_radius * 3))),
-                  child: Text(courseGrade ?? "-",
-                      style: TextStyle(
-                          fontSize: 18,
-                          letterSpacing: 1,
-                          color: MoodleColors.white)),
-                  padding: EdgeInsets.only(
-                      top: Dimens.default_padding,
-                      bottom: Dimens.default_padding,
-                      left: Dimens.default_padding * 3,
-                      right: Dimens.default_padding * 3),
-                ),
-              ),
-              Divider(
-                height: 10,
-                thickness: 2,
+              GradeOverview(
+                courseId: widget.courseId,
+                courseName: widget.courseName,
+                courseGrade: courseGrade,
               ),
               ListView(
                   padding: EdgeInsets.only(top: 0),
@@ -85,10 +58,16 @@ class _GradeInOneCourseState extends State<GradeInOneCourse> {
                   children: List<Widget>.generate(
                     assignments.length,
                     (int index) => ListTile(
-                      onTap: () {},
+                      onTap: null,
                       leading: const Icon(Icons.description),
                       title: Text(assignments[index].name!),
-                      trailing: Text(gradesAssign[index] ?? "-"),
+                      trailing: index < gradesAssign.length
+                          ? Text(gradesAssign[index] ?? "-")
+                          : const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(),
+                            ),
                     ),
                   )),
               ListView(
@@ -98,10 +77,16 @@ class _GradeInOneCourseState extends State<GradeInOneCourse> {
                   children: List<Widget>.generate(
                     quizs.length,
                     (int index) => ListTile(
-                      onTap: () {},
+                      onTap: null,
                       leading: const Icon(Icons.description),
                       title: Text(quizs[index].name!),
-                      trailing: Text(gradesQuiz[index]?.toString() ?? "-"),
+                      trailing: index < gradesQuiz.length
+                          ? Text(gradesQuiz[index]?.toString() ?? "-")
+                          : const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(),
+                            ),
                     ),
                   )),
             ]),
@@ -120,6 +105,15 @@ class _GradeInOneCourseState extends State<GradeInOneCourse> {
       List<Assignment> getAssignments = await AssignmentApi()
           .getAssignments(_userStore.user.token, 0, widget.courseId);
 
+      List<Quiz> getQuizs =
+          await QuizApi().getQuizs(_userStore.user.token, widget.courseId);
+
+      setState(() {
+        assignments = getAssignments;
+        quizs = getQuizs;
+        isLoad = false;
+      });
+
       for (var item in getAssignments) {
         FeedBack feedBack = await AssignmentApi()
             .getAssignmentFeedbackAndGrade(_userStore.user.token, item.id ?? 0);
@@ -128,9 +122,6 @@ class _GradeInOneCourseState extends State<GradeInOneCourse> {
         });
       }
 
-      List<Quiz> getQuizs =
-          await QuizApi().getQuizs(_userStore.user.token, widget.courseId);
-
       for (var item in getQuizs) {
         double? grade =
             await QuizApi().getGrade(_userStore.user.token, item.id ?? 0);
@@ -138,12 +129,6 @@ class _GradeInOneCourseState extends State<GradeInOneCourse> {
           gradesQuiz.add(grade);
         });
       }
-
-      setState(() {
-        assignments = getAssignments;
-        quizs = getQuizs;
-        isLoad = false;
-      });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(e.toString()), backgroundColor: Colors.red));

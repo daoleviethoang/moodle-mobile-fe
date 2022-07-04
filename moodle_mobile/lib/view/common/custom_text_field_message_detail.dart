@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:moodle_mobile/constants/styles.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -101,6 +102,7 @@ class CustomTextFieldRight extends StatelessWidget {
                   left: Dimens.default_padding, right: Dimens.default_padding),
               child: Html(
                 data: messageText,
+                style: {"body": Style(color: MoodleColors.white)},
                 onLinkTap: (url, cxt, attributes, element) async {
                   await showGeneralDialog(
                     context: context,

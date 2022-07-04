@@ -1,4 +1,6 @@
+import 'package:alpha_quiz/alpha_quiz.dart';
 import 'package:flutter/foundation.dart';
+import 'package:get_it/get_it.dart';
 import 'package:html/parser.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +11,7 @@ import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
 import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/models/calendar/event.dart';
+import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/assignment/index.dart';
 import 'package:moodle_mobile/view/common/menu_item.dart' as m;
 import 'package:moodle_mobile/view/quiz/index.dart';
@@ -132,11 +135,13 @@ class VideoItem extends StatelessWidget {
 class UrlItem extends StatelessWidget {
   final String title;
   final String url;
+  final int? id;
 
   const UrlItem({
     Key? key,
     required this.title,
     required this.url,
+    this.id,
   }) : super(key: key);
 
   @override
@@ -148,6 +153,19 @@ class UrlItem extends StatelessWidget {
       subtitle: url,
       fullWidth: true,
       onPressed: () async {
+        if (id != null && AlphaAPI.isAlphaModule(url)) {
+          final user = GetIt.instance<UserStore>();
+          AlphaQuizData.setWSToken(user.user.token);
+          AlphaQuizData.setUsername(user.user.username);
+          AlphaAPI.moodleBaseUrl = user.user.baseUrl;
+
+          Navigator.of(context).push(CupertinoPageRoute(builder: (_) {
+            return PlayScreen(toolId: id!);
+          }));
+
+          return;
+        }
+
         // Go to webpage in browser
         final uri = Uri.parse(url);
         var ableLaunch = await canLaunchUrl(uri);

@@ -122,7 +122,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     article = article.substring(0, article.indexOf('posted'));
 
                     //get date
-                    String date = DateFormat("dd-MM-yyyy")
+                    String date = DateFormat("dd/MM/yyyy")
                         .format(DateTime.fromMillisecondsSinceEpoch(
                             temp.timecreated! * 1000))
                         .toString();
@@ -172,10 +172,10 @@ class NotificationPopupContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+      padding: const EdgeInsets.fromLTRB(5, 10, 5, 0),
       child: Card(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+          padding: const EdgeInsets.fromLTRB(20, 10, 15, 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -185,11 +185,17 @@ class NotificationPopupContainer extends StatelessWidget {
                     child: Text(
                       subject!,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14.0,
+                          letterSpacing: 0.2),
                     ),
                   ),
                   Card(
-                      color: MoodleColors.blue,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(3.0),
+                      ),
+                      color: MoodleColors.brightGray,
                       child: Padding(
                         padding: const EdgeInsets.all(8),
                         child: Text(date!,
@@ -220,7 +226,7 @@ class NotificationPopupContainer extends StatelessWidget {
                 ],
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 20),
+                padding: const EdgeInsets.only(top: 10),
                 child: Text(title ?? ' '),
               ),
             ],

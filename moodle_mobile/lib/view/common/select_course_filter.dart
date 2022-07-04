@@ -130,9 +130,7 @@ class _SelectCourseFilterState extends State<SelectCourseFilter>
             axisAlignment: 0.0,
             sizeFactor: animation,
             child: Container(
-                height: MediaQuery.of(context).size.height - 320 > 480
-                    ? 480
-                    : MediaQuery.of(context).size.height - 320,
+                height: MediaQuery.of(context).size.height * 0.55,
                 margin: const EdgeInsets.only(bottom: 10),
                 padding: const EdgeInsets.only(bottom: 10),
                 decoration: BoxDecoration(

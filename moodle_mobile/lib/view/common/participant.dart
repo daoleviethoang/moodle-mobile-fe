@@ -17,6 +17,7 @@ class ParticipantListTile extends StatelessWidget {
       required this.repository,
       required this.context,
       this.courseName,
+      this.conversationId,
       required this.avatar})
       : super(key: key);
 
@@ -28,6 +29,7 @@ class ParticipantListTile extends StatelessWidget {
   final String avatar;
   final Repository repository;
   final BuildContext context;
+  final int? conversationId;
 
   @override
   Widget build(BuildContext context) {
@@ -47,16 +49,28 @@ class ParticipantListTile extends StatelessWidget {
             height: 50,
           ),
           onClick: () async {
-            int? conversationId = await getConversationIdByUserId(id);
-            Navigator.push<dynamic>(
-              context,
-              MaterialPageRoute<dynamic>(
-                builder: (BuildContext context) => MessageDetailScreen(
-                    conversationId: conversationId,
-                    userFrom: fullname,
-                    userFromId: id),
-              ),
-            );
+            if (conversationId == null) {
+              var newConversationId = await getConversationIdByUserId(id);
+              Navigator.push<dynamic>(
+                context,
+                MaterialPageRoute<dynamic>(
+                  builder: (BuildContext context) => MessageDetailScreen(
+                      conversationId: newConversationId,
+                      userFrom: fullname,
+                      userFromId: id),
+                ),
+              );
+            } else {
+              Navigator.push<dynamic>(
+                context,
+                MaterialPageRoute<dynamic>(
+                  builder: (BuildContext context) => MessageDetailScreen(
+                      conversationId: conversationId,
+                      userFrom: fullname,
+                      userFromId: id),
+                ),
+              );
+            }
           },
         ),
         title: Text(fullname),

@@ -90,6 +90,14 @@ mixin _$UserStore on _UserStore, Store {
         .run(() => super.reGetUserInfo(token, username));
   }
 
+  late final _$setBaseUrlAsyncAction =
+      AsyncAction('_UserStore.setBaseUrl', context: context);
+
+  @override
+  Future<dynamic> setBaseUrl(String baseUrl) {
+    return _$setBaseUrlAsyncAction.run(() => super.setBaseUrl(baseUrl));
+  }
+
   late final _$setUserAsyncAction =
       AsyncAction('_UserStore.setUser', context: context);
 

@@ -1,18 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:moodle_mobile/data/network/apis/search/search_api.dart';
-import 'package:moodle_mobile/models/course/courses.dart';
-import 'package:moodle_mobile/view/course_category/courses_view.dart';
+import 'package:moodle_mobile/data/repository.dart';
+import 'package:moodle_mobile/models/search_user/message_contact.dart';
+import 'package:moodle_mobile/store/user/user_store.dart';
+import 'package:moodle_mobile/view/common/participant.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class CoursesSearch extends SearchDelegate<CourseOverview?> {
-  final String token;
-  CoursesSearch({required this.token});
+class SearchUser extends SearchDelegate<MessageContact?> {
+  final UserStore userStore;
+  final Repository repository;
+  SearchUser({
+    required this.userStore,
+    required this.repository,
+  });
 
   @override
   List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(
-        icon: Icon(
+        icon: const Icon(
           Icons.clear,
           color: Colors.blue,
         ),
@@ -36,9 +42,10 @@ class CoursesSearch extends SearchDelegate<CourseOverview?> {
     );
   }
 
-  Future<List<CourseOverview>> searchCourse() async {
-    List<CourseOverview> temp = [];
-    temp = await SearchApi().searchCourse(token, query);
+  Future<List<MessageContact>> searchUser() async {
+    List<MessageContact> temp = [];
+    temp = await SearchApi()
+        .searchUser(userStore.user.token, userStore.user.id, query);
 
     return temp;
   }
@@ -46,7 +53,7 @@ class CoursesSearch extends SearchDelegate<CourseOverview?> {
   @override
   Widget buildResults(BuildContext context) {
     return FutureBuilder(
-      future: searchCourse(),
+      future: searchUser(),
       builder: (context, snapshot) {
         if (query == '') {
           return Container(
@@ -66,7 +73,7 @@ class CoursesSearch extends SearchDelegate<CourseOverview?> {
                   ),
                 ),
                 Text(
-                  AppLocalizations.of(context)!.search_course,
+                  AppLocalizations.of(context)!.search_user,
                   style: const TextStyle(color: Colors.black),
                 )
               ],
@@ -79,8 +86,8 @@ class CoursesSearch extends SearchDelegate<CourseOverview?> {
           );
         }
         if (snapshot.connectionState == ConnectionState.done) {
-          List<CourseOverview> courses = snapshot.data as List<CourseOverview>;
-          if (courses.isEmpty) {
+          List<MessageContact> contacts = snapshot.data as List<MessageContact>;
+          if (contacts.isEmpty) {
             return Container(
               color: Colors.white,
               child: Center(
@@ -96,8 +103,28 @@ class CoursesSearch extends SearchDelegate<CourseOverview?> {
               )),
             );
           } else {
-            return CategoryCourseListView(
-              courses: courses,
+            return SingleChildScrollView(
+              child: Column(
+                children: contacts
+                    .map(
+                      (e) => ParticipantListTile(
+                        fullname: e.fullname!,
+                        id: e.id!,
+                        userStore: userStore,
+                        repository: repository,
+                        context: context,
+                        conversationId: e.conversations!.isNotEmpty
+                            ? e.conversations!.first.id
+                            : null,
+                        avatar: e.profileimageurl!.replaceAll(
+                              "pluginfile.php",
+                              "webservice/pluginfile.php",
+                            ) +
+                            "?token=${userStore.user.token}",
+                      ),
+                    )
+                    .toList(),
+              ),
             );
           }
         } else {
