@@ -392,17 +392,14 @@ class EventItem extends StatelessWidget {
   void _onPressed(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(20)),
-      ),
       builder: (builder) => Container(
         height: 300,
         padding: const EdgeInsets.only(top: 8, bottom: 20, left: 10, right: 10),
         decoration: const BoxDecoration(
           color: MoodleColors.grey_bottom_bar,
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
+            topLeft: Radius.circular(Dimens.default_sheet_radius),
+            topRight: Radius.circular(Dimens.default_sheet_radius),
           ),
         ),
         child: Column(

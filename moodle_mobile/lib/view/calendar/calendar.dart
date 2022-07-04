@@ -1,12 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 import 'package:moodle_mobile/constants/colors.dart';
-import 'package:moodle_mobile/constants/dimens.dart';
 import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/data/network/apis/calendar/calendar_service.dart';
 import 'package:moodle_mobile/data/network/apis/module/module_service.dart';
@@ -18,7 +16,6 @@ import 'package:moodle_mobile/view/common/content_item.dart';
 import 'package:moodle_mobile/view/common/custom_button.dart';
 import 'package:moodle_mobile/view/common/custom_button_short.dart';
 import 'package:moodle_mobile/view/common/data_card.dart';
-import 'package:moodle_mobile/view/common/menu_item.dart' as m;
 import 'package:moodle_mobile/view/note/note_list.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -129,7 +126,8 @@ class _CalendarScreenState extends State<CalendarScreen>
         children: [
           Container(height: 16),
           _tabView,
-          Expanded(child: [_calendarTabView, _noteTabView][_tabController.index]),
+          Expanded(
+              child: [_calendarTabView, _noteTabView][_tabController.index]),
         ],
       ),
     );
@@ -280,8 +278,10 @@ class _CalendarScreenState extends State<CalendarScreen>
               Container(height: 20),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Text(AppLocalizations.of(context)!.jump_date,
-                    style: const TextStyle(fontSize: 20)),
+                child: Text(
+                  AppLocalizations.of(context)!.jump_date,
+                  style: MoodleStyles.bottomSheetTitleStyle,
+                ),
               ),
               Container(height: 40),
               Padding(
@@ -355,8 +355,7 @@ class _CalendarScreenState extends State<CalendarScreen>
                     } else if (!data.hasData) {
                       return const LoadingCard();
                     }
-                    final instance =
-                        (data.data as ModuleCourse).instance ?? 0;
+                    final instance = (data.data as ModuleCourse).instance ?? 0;
                     return SubmissionItem(
                       title: title,
                       submissionId: instance,
@@ -374,8 +373,7 @@ class _CalendarScreenState extends State<CalendarScreen>
                     } else if (!data.hasData) {
                       return const LoadingCard();
                     }
-                    final instance =
-                        (data.data as ModuleCourse).instance ?? 0;
+                    final instance = (data.data as ModuleCourse).instance ?? 0;
                     return QuizItem(
                       title: title,
                       openDate: dueDate,

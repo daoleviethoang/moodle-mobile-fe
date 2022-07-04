@@ -19,9 +19,11 @@ class Notes {
 
   // region Filters
 
+  Map<int, Note> get byCourse => {for (Note n in _v) n.courseid ?? -1: n};
+
   List<Note> get recent {
     final recent = _v.where((n) => n.isRecent).toList();
-    recent.sort((n1, n2) => n1.id.compareTo(n2.id));
+    recent.sort((n1, n2) => n1.created!.compareTo(n2.created!));
     return recent.reversed.toList();
   }
 
@@ -29,18 +31,22 @@ class Notes {
 
   List<Note> get done => _v.where((n) => n.isDone).toList();
 
-  List<Note> get personal => _v.where((n) => n.isPersonal).toList();
+  List<Note> get other =>
+      _v.where((n) => n.isNotDone && n.isNotImportant).toList();
 
   // endregion
 
-  void replace(List<Note> newValues) {
+  void replace({List<Note>? fromValues, Notes? fromNotes}) {
+    if (fromValues == null && fromNotes == null) return;
     values ??= [];
     values!.clear();
-    values!.addAll(newValues);
+    if (fromValues != null) {
+      values!.addAll(fromValues);
+    } else {
+      values!.addAll(fromNotes?.values ?? []);
+    }
   }
 
   @override
-  String toString() {
-    return values.toString();
-  }
+  String toString() => values.toString();
 }

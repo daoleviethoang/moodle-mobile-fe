@@ -7,10 +7,19 @@ class MoodleStyles {
   MoodleStyles._();
 
   static const TextStyle appBarTitleStyle = TextStyle(
-      fontWeight: FontWeight.bold,
-      fontSize: 18,
-      letterSpacing: 1,
-      color: MoodleColors.white);
+    fontWeight: FontWeight.bold,
+    fontSize: 18,
+    letterSpacing: 1,
+    color: MoodleColors.white,
+  );
+
+  static const bottomSheetTitleStyle = TextStyle(
+    fontWeight: FontWeight.bold,
+    fontSize: 20,
+    color: MoodleColors.blue,
+  );
+
+  static const bottomSheetHeaderStyle = TextStyle(fontSize: 20);
 
   static const courseFilterHeaderStyle = TextStyle(
     fontWeight: FontWeight.w600,
@@ -48,10 +57,23 @@ class MoodleStyles {
     fontWeight: FontWeight.bold,
   );
 
+  static const TextStyle noteSeeAllStyle = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.bold,
+    color: MoodleColors.blue,
+    decoration: TextDecoration.none,
+  );
+
   static Map<String, Style> htmlStyle = {
     'h1': Style(fontSize: const FontSize(19)),
     'h2': Style(fontSize: const FontSize(17.5)),
     'h3': Style(fontSize: const FontSize(16)),
+    'a': Style(
+      fontSize: FontSize.medium,
+      fontWeight: FontWeight.bold,
+      color: MoodleColors.blue,
+      textDecoration: TextDecoration.none,
+    ),
   };
 
   static const TextStyle messageContentStyle =

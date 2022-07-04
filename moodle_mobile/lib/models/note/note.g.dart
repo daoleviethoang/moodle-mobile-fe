@@ -7,19 +7,29 @@ part of 'note.dart';
 // **************************************************************************
 
 Note _$NoteFromJson(Map<String, dynamic> json) => Note(
-      id: json['id'] as String,
-      courseId: json['courseId'] as int?,
-      title: json['title'] as String?,
+      noteid: json['noteid'] as int?,
+      userid: json['userid'] as int?,
+      publishstate: json['publishstate'] as String?,
+      courseid: json['courseid'] as int?,
+      text: json['text'] as String?,
+      format: json['format'] as int?,
       content: json['content'] as String?,
-      isDone: json['isDone'] as bool? ?? false,
-      isImportant: json['isImportant'] as bool? ?? false,
+      created: json['created'] as int?,
+      lastmodified: json['lastmodified'] as int?,
+      usermodified: json['usermodified'] as int?,
+      clientnoteid: json['clientnoteid'] as String?,
     );
 
 Map<String, dynamic> _$NoteToJson(Note instance) => <String, dynamic>{
-      'id': instance.id,
-      'courseId': instance.courseId,
-      'title': instance.title,
+      'noteid': instance.noteid,
+      'userid': instance.userid,
+      'publishstate': instance.publishstate,
+      'courseid': instance.courseid,
+      'text': instance.text,
+      'format': instance.format,
       'content': instance.content,
-      'isDone': instance.isDone,
-      'isImportant': instance.isImportant,
+      'created': instance.created,
+      'lastmodified': instance.lastmodified,
+      'usermodified': instance.usermodified,
+      'clientnoteid': instance.clientnoteid,
     };

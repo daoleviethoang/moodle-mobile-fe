@@ -145,7 +145,8 @@ class MenuCard extends StatelessWidget {
     return Card(
       child: InkWell(
         onTap: onPressed,
-        radius: Dimens.default_card_radius,
+        borderRadius: const BorderRadius.all(
+            Radius.circular(Dimens.default_card_radius)),
         child: Stack(
           children: [
             Align(

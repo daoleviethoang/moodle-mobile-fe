@@ -27,6 +27,13 @@ class Wsfunction {
       "core_calendar_get_calendar_monthly_view";
   static const String GET_UPCOMING = "core_calendar_get_calendar_upcoming_view";
 
+  // note
+  static const String CREATE_NOTES = "core_notes_create_notes";
+  static const String DELETE_NOTES = "core_notes_delete_notes";
+  static const String GET_COURSE_NOTES = "core_notes_get_course_notes";
+  static const String GET_NOTES = "core_notes_get_notes";
+  static const String UPDATE_NOTES = "core_notes_update_notes";
+
   //course category
   static const String CORE_USER_GET_USERS_BY_FIELD =
       "core_user_get_users_by_field";

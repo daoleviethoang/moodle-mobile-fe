@@ -5,12 +5,18 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 import 'package:moodle_mobile/constants/colors.dart';
+import 'package:moodle_mobile/constants/dimens.dart';
 import 'package:moodle_mobile/constants/styles.dart';
+import 'package:moodle_mobile/data/network/apis/notes/notes_service.dart';
 import 'package:moodle_mobile/models/note/note.dart';
 import 'package:moodle_mobile/models/note/notes.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
+import 'package:moodle_mobile/view/common/custom_text_field.dart';
 import 'package:moodle_mobile/view/common/data_card.dart';
 import 'package:moodle_mobile/view/common/menu_item.dart';
+
+import 'note_edit_dialog.dart';
+import 'note_folder.dart';
 
 class NoteList extends StatefulWidget {
   const NoteList({Key? key}) : super(key: key);
@@ -21,6 +27,7 @@ class NoteList extends StatefulWidget {
 
 class _NoteListState extends State<NoteList> {
   Widget _folderView = Container();
+  Widget _addNoteView = Container();
   Widget _highlightView = Container();
 
   final _notes = Notes();
@@ -33,6 +40,8 @@ class _NoteListState extends State<NoteList> {
     super.initState();
     _userStore = GetIt.instance<UserStore>();
   }
+
+  // region Init widgets
 
   void _initFolderView() {
     _folderView = GridView.builder(
@@ -53,132 +62,151 @@ class _NoteListState extends State<NoteList> {
             subtitle: '${_notes.length}',
             icon: const Icon(CupertinoIcons.square_grid_2x2_fill),
             color: MoodleColors.blue,
-            onPressed: () {},
+            onPressed: () => Navigator.of(context).push(
+              CupertinoPageRoute(
+                builder: (context) =>
+                    const NoteFolder(type: NoteFolderType.all),
+              ),
+            ),
           ),
           MenuCard(
             title: AppLocalizations.of(context)!.important,
             subtitle: '${_notes.important.length}',
             icon: const Icon(CupertinoIcons.star_fill),
             color: Colors.amber,
-            onPressed: () {},
+            onPressed: () => Navigator.of(context).push(
+              CupertinoPageRoute(
+                builder: (context) =>
+                    const NoteFolder(type: NoteFolderType.important),
+              ),
+            ),
           ),
           MenuCard(
             title: AppLocalizations.of(context)!.done,
             subtitle: '${_notes.done.length}',
             icon: const Icon(CupertinoIcons.checkmark_seal_fill),
             color: Colors.grey,
-            onPressed: () {},
+            onPressed: () => Navigator.of(context).push(
+              CupertinoPageRoute(
+                builder: (context) =>
+                    const NoteFolder(type: NoteFolderType.done),
+              ),
+            ),
           ),
           MenuCard(
-            title: AppLocalizations.of(context)!.personal,
-            subtitle: '${_notes.personal.length}',
-            icon: const Icon(CupertinoIcons.person_alt),
+            title: AppLocalizations.of(context)!.other,
+            subtitle: '${_notes.other.length}',
+            icon: const Icon(CupertinoIcons.doc_on_doc_fill),
             color: Colors.pink,
-            onPressed: () {},
+            onPressed: () => Navigator.of(context).push(
+              CupertinoPageRoute(
+                builder: (context) =>
+                    const NoteFolder(type: NoteFolderType.other),
+              ),
+            ),
           ),
         ][index];
       },
     );
   }
 
+  void _initAddNoteView() {
+    _addNoteView = CustomTextFieldWidget(
+      controller:
+          TextEditingController(text: AppLocalizations.of(context)!.add_note),
+      hintText: AppLocalizations.of(context)!.add_note,
+      haveLabel: false,
+      borderRadius: Dimens.default_border_radius,
+      readonly: true,
+      fillColor: Colors.white,
+      prefixIcon: Icons.note_add_rounded,
+      elevation: 2,
+      onTap: () => _onAddNote(context),
+    );
+  }
+
   void _initHighlightView() {
     _highlightView = Column(
       children: [
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Text(
-            AppLocalizations.of(context)!.recent_notes,
-            style: MoodleStyles.sectionHeaderStyle,
-          ),
+        Stack(
+          children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                AppLocalizations.of(context)!.recent_notes,
+                style: MoodleStyles.sectionHeaderStyle,
+              ),
+            ),
+            Positioned(
+              bottom: 0,
+              right: 0,
+              child: InkWell(
+                onTap: () => Navigator.of(context).push(
+                  CupertinoPageRoute(
+                    builder: (context) =>
+                        const NoteFolder(type: NoteFolderType.recent),
+                  ),
+                ),
+                child: Text(
+                  AppLocalizations.of(context)!.see_all,
+                  style: MoodleStyles.noteSeeAllStyle,
+                ),
+              ),
+            ),
+          ],
         ),
         Container(height: 12),
         ..._notes.recent.map((n) {
           return Padding(
             padding: const EdgeInsets.only(bottom: 8),
-            child: NoteCard(n, onPressed: () {}),
+            child: NoteCard(
+              n,
+              _userStore.user.token,
+              onPressed: () => _onEditNote(context, n),
+            ),
           );
         })
       ],
     );
   }
 
-  Future queryData() async {
-    final now = DateTime.now();
-    final uid = '${_userStore.user.id}';
-    final d1 = '${now.millisecondsSinceEpoch}';
-    final d3 =
-        '${now.subtract(const Duration(days: 2)).millisecondsSinceEpoch}';
-    final d5 = '${now.add(const Duration(days: 2)).millisecondsSinceEpoch}';
-    final d7 =
-        '${now.subtract(const Duration(days: 4)).millisecondsSinceEpoch}';
-    final d6 =
-        '${now.subtract(const Duration(days: 6)).millisecondsSinceEpoch}';
-    final d4 =
-        '${now.subtract(const Duration(days: 8)).millisecondsSinceEpoch}';
-    final d2 =
-        '${now.subtract(const Duration(days: 10)).millisecondsSinceEpoch}';
-    _notes.replace([
-      Note(
-        id: '${uid}_$d1',
-        courseId: null,
-        title: 'Note 1',
-      ),
-      Note(
-        id: '${uid}_$d2',
-        courseId: null,
-        title: 'Note 2',
-        content: 'Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum',
-      ),
-      Note(
-        id: '${uid}_$d3',
-        courseId: null,
-        title: null,
-        content: 'Note 3 Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum',
-      ),
-      Note(
-        id: '${uid}_$d4',
-        courseId: null,
-        title: 'Note 4',
-        isDone: true,
-      ),
-      Note(
-        id: '${uid}_$d5',
-        courseId: null,
-        title: 'Note 5',
-        content: 'Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum',
-        isDone: true,
-      ),
-      Note(
-        id: '${uid}_$d6',
-        courseId: null,
-        title: 'Note 6',
-        isImportant: true,
-      ),
-      Note(
-        id: '${uid}_$d7',
-        courseId: null,
-        title: 'Note 7',
-        content: 'Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum',
-        isImportant: true,
-      ),
-      Note(
-        id: '${uid}_$d1',
-        courseId: null,
-        title: 'Note 8',
-        isDone: true,
-        isImportant: true,
-      ),
-      Note(
-        id: '${uid}_$d1',
-        courseId: null,
-        title: 'Note 9',
-        content: 'Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum',
-        isDone: true,
-        isImportant: true,
-      ),
-    ]);
+  // endregion
 
+  void _onAddNote(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => NoteEditDialog(
+        token: _userStore.user.token,
+        uid: _userStore.user.id,
+        cid: null,
+      ),
+    ).then((result) {
+      if (result.runtimeType is Note) queryData();
+    });
+  }
+
+  void _onEditNote(BuildContext context, Note n) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => NoteEditDialog(
+        token: _userStore.user.token,
+        uid: _userStore.user.id,
+        cid: null,
+        note: n,
+      ),
+    ).then((result) {
+      if (result.runtimeType is Note) queryData();
+    });
+  }
+
+  Future queryData() async {
+    _notes.replace(
+        fromNotes: await NotesService()
+            .getNotes(_userStore.user.token, _userStore.user.id));
     _initFolderView();
+    _initAddNoteView();
     _initHighlightView();
   }
 
@@ -220,6 +248,12 @@ class _NoteListState extends State<NoteList> {
                         ),
                       ],
                     ),
+                    Container(height: 6),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: _addNoteView,
+                    ),
+                    Container(height: 6),
                     if (_notes.isNotEmpty)
                       Padding(
                         padding: const EdgeInsets.only(top: 12, left: 12),
