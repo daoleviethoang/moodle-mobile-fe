@@ -67,6 +67,22 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
 
   bool isTeacher = false;
 
+  final specialModuleCheckThreshold = 3;
+  final announcementModuleName = 'announcement';
+  final discussionModuleName = 'discussion';
+
+  bool get hasAnnouncementModule {
+    return _content.first.modules.any((m) {
+      return m.name?.toLowerCase().contains(announcementModuleName) ?? false;
+    });
+  }
+
+  bool get hasDiscussionForumModule {
+    return _content.first.modules.any((m) {
+      return m.name?.toLowerCase().contains(discussionModuleName) ?? false;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -116,7 +132,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     try {
       _initAnnouncementsTab();
     } catch (e) {
-      //_announcementsTab = ErrorCard(text: '$e');
+      _announcementsTab = ErrorCard(text: '$e');
     } finally {
       if (_announcementsTab is! Container) {
         _body.add(_announcementsTab);
@@ -125,7 +141,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     try {
       _initDiscussionsTab();
     } catch (e) {
-      //_discussionsTab = ErrorCard(text: '$e');
+      _discussionsTab = ErrorCard(text: '$e');
     } finally {
       if (_discussionsTab is! Container) {
         _body.add(_discussionsTab);
@@ -226,6 +242,22 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                   return ForumItem(
                     title: title,
                     onPressed: () {
+                      // Switch to special module
+                      if (_content.first == c) {
+                        final name = m.name?.toLowerCase() ?? '';
+                        var newIndex = -1;
+                        if (name.contains(announcementModuleName)) {
+                          newIndex = _body.indexOf(_announcementsTab);
+                        } else if (name.contains(discussionModuleName)) {
+                          newIndex = _body.indexOf(_discussionsTab);
+                        }
+                        if (newIndex != -1) {
+                          setState (() {
+                            _tabController?.animateTo(newIndex);
+                          });
+                          return;
+                        }
+                      }
                       // Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
                       //   return ForumScreen();
                       // })))
@@ -320,24 +352,30 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   }
 
   void _initAnnouncementsTab() {
-    if (_content.isEmpty) {
+    if (!hasAnnouncementModule) {
       _announcementsTab = Container();
       return;
     }
     _announcementsTab = ForumAnnouncementScreen(
-      forumId: _content[0].modules[0].instance ?? 0,
+      forumId: _content.first.modules
+          .firstWhere((m) =>
+              m.name?.toLowerCase().contains(announcementModuleName) ?? false)
+          .instance!,
       courseId: _courseId,
       isTeacher: isTeacher,
     );
   }
 
   void _initDiscussionsTab() {
-    if (_content.isEmpty) {
+    if (!hasDiscussionForumModule) {
       _discussionsTab = Container();
       return;
     }
     _discussionsTab = ForumDiscussionScreen(
-      forumId: _content[0].modules[1].instance ?? 0,
+      forumId: _content.first.modules
+          .firstWhere((m) =>
+              m.name?.toLowerCase().contains(discussionModuleName) ?? false)
+          .instance!,
       courseId: _courseId,
     );
   }
