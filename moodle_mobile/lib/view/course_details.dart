@@ -69,8 +69,10 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   CourseDetail? _course;
   List<CourseContent> _content = [];
   List<Event> _events = [];
-  Notes _notes = Notes();
+  final Notes _notes = Notes();
   SiteInfo? _siteInfo;
+
+  String get token => _userStore.user.token;
 
   bool isTeacher = false;
 
@@ -105,8 +107,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   }
 
   checkIsTeacher() async {
-    List<Contact> contacts = await ContactService()
-        .getContacts(_userStore.user.token, widget.courseId);
+    List<Contact> contacts =
+        await ContactService().getContacts(token, widget.courseId);
     if (contacts.any((element) => element.id == _userStore.user.id)) {
       setState(() {
         isTeacher = true;
@@ -305,7 +307,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                   var url = m.contents?[0].fileurl ?? '';
                   if (url.isNotEmpty) {
                     url = url.substring(0, url.indexOf('?forcedownload'));
-                    url += '?token=' + _userStore.user.token;
+                    url += '?token=' + token;
                   }
                   return DocumentItem(
                     title: title,
@@ -353,15 +355,17 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
               child: Opacity(
                 opacity: .5,
                 child:
-                Center(child: Text(AppLocalizations.of(context)!.no_notes)),
+                    Center(child: Text(AppLocalizations.of(context)!.no_notes)),
               ),
             ),
-            ..._notes.all.map((n) {
+            ..._notes.importantFirst.map((n) {
               return Padding(
                 padding: const EdgeInsets.only(bottom: 8),
                 child: NoteCard(
                   n,
-                  _userStore.user.token,
+                  token,
+                  onCheckbox: (value) async =>
+                      await NotesService().toggleDone(token, n),
                   onPressed: () => _openNoteDialog(context, n),
                 ),
               );
@@ -377,9 +381,9 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
       context: context,
       isScrollControlled: true,
       builder: (context) => NoteEditDialog(
-        token: _userStore.user.token,
+        token: token,
         uid: _userStore.user.id,
-        cid: null,
+        cid: _courseId,
         note: n,
       ),
     ).then((result) {
@@ -525,7 +529,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   Future<Lti> queryLti(int toolid) async {
     try {
       return await LtiService().getLti(
-        _userStore.user.token,
+        token,
         toolid,
       );
     } catch (e) {
@@ -536,7 +540,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   Future<ModuleCourse> queryModule(Event e) async {
     try {
       return await ModuleService().getModule(
-        _userStore.user.token,
+        token,
         e.instance ?? 0,
       );
     } catch (e) {
@@ -547,25 +551,26 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   Future queryData() async {
     try {
       _content = await CourseContentService().getCourseContent(
-        _userStore.user.token,
+        token,
         _courseId,
       );
       _course = await CourseDetailService().getCourseById(
-        _userStore.user.token,
+        token,
         _courseId,
       );
       _events = await CalendarService().getUpcomingByCourse(
-        _userStore.user.token,
+        token,
         _courseId,
       );
-      _notes = await NotesService().getCourseNotes(
-        _userStore.user.token,
+      _notes.replace(
+          fromNotes: await NotesService().getCourseNotes(
+        token,
         _courseId,
         _course?.displayname,
-      );
-      _siteInfo = await SiteInfoApi().getSiteInfo(_userStore.user.token);
+      ));
+      _siteInfo = await SiteInfoApi().getSiteInfo(token);
       await CourseService().triggerViewCourse(
-        _userStore.user.token,
+        token,
         _courseId,
       );
       _initBody();
@@ -586,7 +591,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     try {
       if (isSetState) {
         var contentResponse = await CourseContentService().getCourseContent(
-          _userStore.user.token,
+          token,
           _courseId,
         );
         setState(() {
@@ -608,7 +613,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
         }
       } else {
         _content = await CourseContentService().getCourseContent(
-          _userStore.user.token,
+          token,
           _courseId,
         );
       }

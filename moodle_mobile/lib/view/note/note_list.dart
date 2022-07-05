@@ -151,6 +151,8 @@ class _NoteListState extends State<NoteList> {
             child: NoteCard(
               n,
               _userStore.user.token,
+              onCheckbox: (value) async =>
+                  await NotesService().toggleDone(_userStore.user.token, n),
               onPressed: () => _openNoteDialog(context, n),
             ),
           );

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:moodle_mobile/data/network/apis/course/course_service.dart';
 import 'package:moodle_mobile/data/network/constants/endpoints.dart';
 import 'package:moodle_mobile/data/network/constants/wsfunction_constants.dart';
@@ -23,8 +24,8 @@ class NotesService {
       var data = (json['personalnotes'] as List<dynamic>?) ?? [];
 
       final mapList = <Map<String, dynamic>>[];
-      for (var d in data) {
-        mapList.add(d as Map<String, dynamic>);
+      for (Map<String, dynamic> d in data) {
+        mapList.add(d);
       }
       final notes = Notes(mapList.map((n) {
         var note = Note.fromJson(n);
@@ -87,7 +88,7 @@ class NotesService {
         'moodlewsrestformat': 'json',
         'notes': [
           {
-            'id': note.noteid,
+            'id': note.nid,
             'publishstate': note.publishstate,
             'text': note.text,
             'format': note.format,
@@ -95,7 +96,10 @@ class NotesService {
         ],
       });
 
-      return note.noteid!;
+      if (kDebugMode) {
+        print(res.data);
+      }
+      return note.nid;
     } catch (e) {
       rethrow;
     }
@@ -103,11 +107,22 @@ class NotesService {
 
   Future<int> setNote(String token, Note note) async {
     try {
-      if (note.noteid == null) {
+      print(note.nid);
+      if (note.nid == -1) {
         return await createNote(token, note);
       } else {
         return await updateNote(token, note);
       }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<bool> toggleDone(String token, Note note) async {
+    note.isDone = !note.isDone;
+    try {
+      await setNote(token, note);
+      return note.isDone;
     } catch (e) {
       rethrow;
     }

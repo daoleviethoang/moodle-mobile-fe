@@ -11,6 +11,10 @@ class Note {
   static String doneChar = '✔';
   static String importantChar = '⭐';
 
+  /// Don't use noteid or id, use this instead
+  @JsonKey(ignore: true)
+  int get nid => noteid ?? id ?? -1;
+
   /// Don't use text or content, use this instead
   @JsonKey(ignore: true)
   String get txt => text ?? content ?? '';
@@ -19,15 +23,15 @@ class Note {
   String get txtFiltered {
     var _txt = txt;
     if (isDone) {
-      _txt = _txt.replaceFirst(doneChar, '');
+      _txt = _txt.replaceFirst(doneChar, '').trimLeft();
     }
     if (isImportant) {
-      _txt = _txt.replaceFirst(importantChar, '');
+      _txt = _txt.replaceFirst(importantChar, '').trimLeft();
     }
     return _txt;
   }
 
-  int? noteid;
+  int? noteid; // DONT USE THIS, use nid instead
   int? userid;
   String? publishstate; // 'personal', 'course' or 'site'
   // Or note state (i.e. draft, public, site)
@@ -36,6 +40,7 @@ class Note {
   int? format; // (1 = HTML, 0 = MOODLE, 2 = PLAIN or 4 = MARKDOWN)
 
   // Only in core_notes_get_course_notes
+  int? id; // DONT USE THIS, use nid instead
   String? content; // DONT USE THIS, use txt instead
   int? created;
   int? lastmodified;
@@ -64,6 +69,12 @@ class Note {
 
   /// Change text or content depending on which is not null
   set txt(String value) {
+    if (isDone) {
+      value = '$doneChar $value';
+    }
+    if (isImportant) {
+      value = '$importantChar $value';
+    }
     if (text != null) {
       text = value;
     }
@@ -72,30 +83,19 @@ class Note {
     }
   }
 
+  @JsonKey(ignore: true)
   bool get isDone => txt.startsWith(doneChar);
 
   bool get isNotDone => !isDone;
+
+  set isDone(bool done) => txt = txtFiltered;
 
   @JsonKey(ignore: true)
   bool get isImportant => txt.startsWith(importantChar);
 
   bool get isNotImportant => !isImportant;
 
-  set isImportant(bool important) {
-    if (isImportant) {
-      if (important) {
-        return; // Already important
-      } else {
-        txt = txt.substring(1);
-      }
-    } else {
-      if (important) {
-        txt = importantChar + txt.substring(1);
-      } else {
-        return; // Already not important
-      }
-    }
-  }
+  set isImportant(bool important) => txt = txtFiltered;
 
   DateTime? get creationDate {
     if (created == null) return null;

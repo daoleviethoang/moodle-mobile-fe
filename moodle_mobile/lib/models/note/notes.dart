@@ -23,6 +23,16 @@ class Notes {
 
   List<Note> get all => _v;
 
+  List<Note> get importantFirst {
+    final important = this.important;
+    final notImportant = _v.where((n) => n.isNotImportant).toList();
+    important.sort(
+        (a, b) => a.created?.compareTo(b.created ?? -1) ?? -1);
+    notImportant.sort(
+        (a, b) => a.created?.compareTo(b.created ?? -1) ?? -1);
+    return important.reversed.toList() + notImportant.reversed.toList();
+  }
+
   List<Note> get recent {
     final recent = _v.where((n) => n.isRecent).toList();
     recent.sort((n1, n2) => n1.created!.compareTo(n2.created!));
