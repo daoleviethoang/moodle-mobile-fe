@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
@@ -34,6 +35,9 @@ class ErrorCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (kReleaseMode) {
+      return Container();
+    }
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -42,6 +46,14 @@ class ErrorCard extends StatelessWidget {
             Icons.warning_rounded,
             size: 54,
             color: Theme.of(context).colorScheme.error,
+          ),
+          Container(height: 16),
+          Text(
+            'Error in testing mode',
+            style: TextStyle(
+              fontSize: 20,
+              color: Theme.of(context).colorScheme.error,
+            ),
           ),
           Container(height: 16),
           Text(
