@@ -8,7 +8,7 @@ import 'package:moodle_mobile/models/note/note.dart';
 import 'package:moodle_mobile/models/note/notes.dart';
 
 class NotesService {
-  Future<Notes> getCourseNotes(String token, String cid,
+  Future<Notes> getCourseNotes(String token, int cid,
       [String? courseName]) async {
     try {
       Dio dio = Http().client;
@@ -45,7 +45,7 @@ class NotesService {
       final notes = Notes([]);
       for (Course course in courses) {
         final courseNotes =
-            await getCourseNotes(token, '${course.id}', course.displayname);
+            await getCourseNotes(token, course.id, course.displayname);
         notes.values?.addAll(courseNotes.values ?? []);
       }
       return notes;

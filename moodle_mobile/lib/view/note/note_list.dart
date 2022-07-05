@@ -5,7 +5,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 import 'package:moodle_mobile/constants/colors.dart';
-import 'package:moodle_mobile/constants/dimens.dart';
 import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/data/network/apis/notes/notes_service.dart';
 import 'package:moodle_mobile/models/note/note.dart';
@@ -27,7 +26,6 @@ class NoteList extends StatefulWidget {
 
 class _NoteListState extends State<NoteList> {
   Widget _folderView = Container();
-  Widget _addNoteView = Container();
   Widget _highlightView = Container();
 
   final _notes = Notes();
@@ -110,21 +108,6 @@ class _NoteListState extends State<NoteList> {
     );
   }
 
-  void _initAddNoteView() {
-    _addNoteView = CustomTextFieldWidget(
-      controller:
-          TextEditingController(text: AppLocalizations.of(context)!.add_note),
-      hintText: AppLocalizations.of(context)!.add_note,
-      haveLabel: false,
-      borderRadius: Dimens.default_border_radius,
-      readonly: true,
-      fillColor: Colors.white,
-      prefixIcon: Icons.note_add_rounded,
-      elevation: 2,
-      onTap: () => _onAddNote(context),
-    );
-  }
-
   void _initHighlightView() {
     _highlightView = Column(
       children: [
@@ -156,13 +139,19 @@ class _NoteListState extends State<NoteList> {
           ],
         ),
         Container(height: 12),
+        if (_notes.recent.isEmpty)
+          Center(
+            child: Text(
+              AppLocalizations.of(context)!.no_notes,
+            ),
+          ),
         ..._notes.recent.map((n) {
           return Padding(
             padding: const EdgeInsets.only(bottom: 8),
             child: NoteCard(
               n,
               _userStore.user.token,
-              onPressed: () => _onEditNote(context, n),
+              onPressed: () => _openNoteDialog(context, n),
             ),
           );
         })
@@ -172,21 +161,7 @@ class _NoteListState extends State<NoteList> {
 
   // endregion
 
-  void _onAddNote(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) => NoteEditDialog(
-        token: _userStore.user.token,
-        uid: _userStore.user.id,
-        cid: null,
-      ),
-    ).then((result) {
-      if (result.runtimeType is Note) queryData();
-    });
-  }
-
-  void _onEditNote(BuildContext context, Note n) {
+  void _openNoteDialog(BuildContext context, [Note? n]) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -206,7 +181,6 @@ class _NoteListState extends State<NoteList> {
         fromNotes: await NotesService()
             .getNotes(_userStore.user.token, _userStore.user.id));
     _initFolderView();
-    _initAddNoteView();
     _initHighlightView();
   }
 
@@ -251,7 +225,9 @@ class _NoteListState extends State<NoteList> {
                     Container(height: 6),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 12),
-                      child: _addNoteView,
+                      child: NoteAddTextField(
+                        onTap: () => _openNoteDialog(context),
+                      ),
                     ),
                     Container(height: 6),
                     if (_notes.isNotEmpty)

@@ -21,6 +21,8 @@ class Notes {
 
   Map<int, Note> get byCourse => {for (Note n in _v) n.courseid ?? -1: n};
 
+  List<Note> get all => _v;
+
   List<Note> get recent {
     final recent = _v.where((n) => n.isRecent).toList();
     recent.sort((n1, n2) => n1.created!.compareTo(n2.created!));

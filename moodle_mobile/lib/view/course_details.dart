@@ -14,6 +14,7 @@ import 'package:moodle_mobile/data/network/apis/course/course_detail_service.dar
 import 'package:moodle_mobile/data/network/apis/course/course_service.dart';
 import 'package:moodle_mobile/data/network/apis/lti/lti_service.dart';
 import 'package:moodle_mobile/data/network/apis/module/module_service.dart';
+import 'package:moodle_mobile/data/network/apis/notes/notes_service.dart';
 import 'package:moodle_mobile/data/network/apis/site_info/site_info_api.dart';
 import 'package:moodle_mobile/models/calendar/event.dart';
 import 'package:moodle_mobile/models/contact/contact.dart';
@@ -22,14 +23,18 @@ import 'package:moodle_mobile/models/course/course_detail.dart';
 import 'package:moodle_mobile/models/lti/lti.dart';
 import 'package:moodle_mobile/models/module/module.dart';
 import 'package:moodle_mobile/models/module/module_course.dart';
+import 'package:moodle_mobile/models/note/note.dart';
+import 'package:moodle_mobile/models/note/notes.dart';
 import 'package:moodle_mobile/models/site_info/site_info.dart';
 import 'package:moodle_mobile/view/activity/activity_screen.dart';
 import 'package:moodle_mobile/view/common/content_item.dart';
+import 'package:moodle_mobile/view/common/custom_text_field.dart';
 import 'package:moodle_mobile/view/common/data_card.dart';
 import 'package:moodle_mobile/view/enrol/enrol.dart';
 import 'package:moodle_mobile/view/forum/forum_announcement_scren.dart';
 import 'package:moodle_mobile/view/forum/forum_screen.dart';
 import 'package:moodle_mobile/view/grade_in_one_course.dart';
+import 'package:moodle_mobile/view/note/note_edit_dialog.dart';
 import 'package:moodle_mobile/view/participants_in_one_course.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -51,6 +56,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   var _index = 0;
   final _body = <Widget>[];
   Widget _homeTab = Container();
+  Widget _notesTab = Container();
   Widget _activityTab = Container();
   Widget _announcementsTab = Container();
   Widget _discussionsTab = Container();
@@ -63,6 +69,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   CourseDetail? _course;
   List<CourseContent> _content = [];
   List<Event> _events = [];
+  Notes _notes = Notes();
   SiteInfo? _siteInfo;
 
   bool isTeacher = false;
@@ -122,6 +129,16 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
       if (_homeTab is! Container) {
         _body.add(_homeTab);
         _tabs.add(Tab(child: Text(str.home)));
+      }
+    }
+    try {
+      _initNotesTab();
+    } catch (e) {
+      _notesTab = kReleaseMode ? Container() : ErrorCard(text: '$e');
+    } finally {
+      if (_notesTab is! Container) {
+        _body.add(_notesTab);
+        _tabs.add(Tab(child: Text(str.notes)));
       }
     }
     try {
@@ -318,6 +335,58 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     );
   }
 
+  void _initNotesTab() {
+    _notesTab = SingleChildScrollView(
+      child: AnimatedOpacity(
+        opacity: (_notes.isEmpty) ? .5 : 1,
+        duration: const Duration(milliseconds: 300),
+        child: Column(
+          children: [
+            Container(height: 6),
+            NoteAddTextField(
+              onTap: () => _openNoteDialog(context),
+            ),
+            Container(height: 6),
+            AnimatedOpacity(
+              opacity: (_notes.isEmpty) ? 1 : 0,
+              duration: const Duration(milliseconds: 300),
+              child: Opacity(
+                opacity: .5,
+                child:
+                Center(child: Text(AppLocalizations.of(context)!.no_notes)),
+              ),
+            ),
+            ..._notes.all.map((n) {
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: NoteCard(
+                  n,
+                  _userStore.user.token,
+                  onPressed: () => _openNoteDialog(context, n),
+                ),
+              );
+            })
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _openNoteDialog(BuildContext context, [Note? n]) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => NoteEditDialog(
+        token: _userStore.user.token,
+        uid: _userStore.user.id,
+        cid: null,
+        note: n,
+      ),
+    ).then((result) {
+      if (result.runtimeType is Note) queryData();
+    });
+  }
+
   void _initActivityTab() {
     if (!hasActivitySection) {
       _activityTab = Container();
@@ -488,6 +557,11 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
       _events = await CalendarService().getUpcomingByCourse(
         _userStore.user.token,
         _courseId,
+      );
+      _notes = await NotesService().getCourseNotes(
+        _userStore.user.token,
+        _courseId,
+        _course?.displayname,
       );
       _siteInfo = await SiteInfoApi().getSiteInfo(_userStore.user.token);
       await CourseService().triggerViewCourse(

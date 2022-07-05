@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
 
 class CustomTextFieldWidget extends StatelessWidget {
@@ -58,6 +59,28 @@ class CustomTextFieldWidget extends StatelessWidget {
           fillColor: fillColor,
         ),
       ),
+    );
+  }
+}
+
+class NoteAddTextField extends StatelessWidget {
+  final Function()? onTap;
+
+  const NoteAddTextField({Key? key, this.onTap}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomTextFieldWidget(
+      controller:
+          TextEditingController(text: AppLocalizations.of(context)!.add_note),
+      hintText: AppLocalizations.of(context)!.add_note,
+      haveLabel: false,
+      borderRadius: Dimens.default_border_radius,
+      readonly: true,
+      fillColor: Colors.white,
+      prefixIcon: Icons.note_add_rounded,
+      elevation: 2,
+      onTap: onTap,
     );
   }
 }
