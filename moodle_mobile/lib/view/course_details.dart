@@ -14,6 +14,7 @@ import 'package:moodle_mobile/data/network/apis/course/course_detail_service.dar
 import 'package:moodle_mobile/data/network/apis/course/course_service.dart';
 import 'package:moodle_mobile/data/network/apis/lti/lti_service.dart';
 import 'package:moodle_mobile/data/network/apis/module/module_service.dart';
+import 'package:moodle_mobile/data/network/apis/notes/notes_service.dart';
 import 'package:moodle_mobile/data/network/apis/site_info/site_info_api.dart';
 import 'package:moodle_mobile/models/calendar/event.dart';
 import 'package:moodle_mobile/models/contact/contact.dart';
@@ -22,14 +23,18 @@ import 'package:moodle_mobile/models/course/course_detail.dart';
 import 'package:moodle_mobile/models/lti/lti.dart';
 import 'package:moodle_mobile/models/module/module.dart';
 import 'package:moodle_mobile/models/module/module_course.dart';
+import 'package:moodle_mobile/models/note/note.dart';
+import 'package:moodle_mobile/models/note/notes.dart';
 import 'package:moodle_mobile/models/site_info/site_info.dart';
 import 'package:moodle_mobile/view/activity/activity_screen.dart';
 import 'package:moodle_mobile/view/common/content_item.dart';
+import 'package:moodle_mobile/view/common/custom_text_field.dart';
 import 'package:moodle_mobile/view/common/data_card.dart';
 import 'package:moodle_mobile/view/enrol/enrol.dart';
 import 'package:moodle_mobile/view/forum/forum_announcement_scren.dart';
 import 'package:moodle_mobile/view/forum/forum_screen.dart';
 import 'package:moodle_mobile/view/grade_in_one_course.dart';
+import 'package:moodle_mobile/view/note/note_edit_dialog.dart';
 import 'package:moodle_mobile/view/participants_in_one_course.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -51,6 +56,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   var _index = 0;
   final _body = <Widget>[];
   Widget _homeTab = Container();
+  Widget _notesTab = Container();
   Widget _activityTab = Container();
   Widget _announcementsTab = Container();
   Widget _discussionsTab = Container();
@@ -63,9 +69,34 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   CourseDetail? _course;
   List<CourseContent> _content = [];
   List<Event> _events = [];
+  final Notes _notes = Notes();
   SiteInfo? _siteInfo;
 
+  String get token => _userStore.user.token;
+
   bool isTeacher = false;
+
+  final activitySectionName = 'activity';
+  final announcementModuleName = 'announcement';
+  final discussionModuleName = 'discussion';
+
+  bool get hasActivitySection {
+    return _siteInfo?.functions?.any(
+            (element) => element.name == "local_modulews_add_section_course") ??
+        false;
+  }
+
+  bool get hasAnnouncementModule {
+    return _content.first.modules.any((m) {
+      return m.name?.toLowerCase().contains(announcementModuleName) ?? false;
+    });
+  }
+
+  bool get hasDiscussionForumModule {
+    return _content.first.modules.any((m) {
+      return m.name?.toLowerCase().contains(discussionModuleName) ?? false;
+    });
+  }
 
   @override
   void initState() {
@@ -76,8 +107,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   }
 
   checkIsTeacher() async {
-    List<Contact> contacts = await ContactService()
-        .getContacts(_userStore.user.token, widget.courseId);
+    List<Contact> contacts =
+        await ContactService().getContacts(token, widget.courseId);
     if (contacts.any((element) => element.id == _userStore.user.id)) {
       setState(() {
         isTeacher = true;
@@ -89,100 +120,88 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
 
   void _initBody() {
     _body.clear();
+    _tabs.clear();
+
+    final str = AppLocalizations.of(context)!;
     try {
       _initHomeTab();
     } catch (e) {
-      _homeTab = ErrorCard(text: '$e');
+      _homeTab = kReleaseMode ? Container() : ErrorCard(text: '$e');
     } finally {
       if (_homeTab is! Container) {
         _body.add(_homeTab);
+        _tabs.add(Tab(child: Text(str.home)));
       }
     }
     try {
-      if (_siteInfo?.functions?.any((element) =>
-              element.name == "local_modulews_add_section_course") ??
-          false == true) {
-        _initActivityTab();
-      } else {
-        _activityTab = Container();
-      }
+      _initNotesTab();
     } catch (e) {
-      _activityTab = ErrorCard(text: '$e');
+      _notesTab = kReleaseMode ? Container() : ErrorCard(text: '$e');
+    } finally {
+      if (_notesTab is! Container) {
+        _body.add(_notesTab);
+        _tabs.add(Tab(child: Text(str.notes)));
+      }
+    }
+    try {
+      _initActivityTab();
+    } catch (e) {
+      _activityTab = kReleaseMode ? Container() : ErrorCard(text: '$e');
     } finally {
       if (_activityTab is! Container) {
         _body.add(_activityTab);
+        _tabs.add(Tab(child: Text(str.activity)));
       }
     }
     try {
       _initAnnouncementsTab();
     } catch (e) {
-      //_announcementsTab = ErrorCard(text: '$e');
+      _announcementsTab = kReleaseMode ? Container() : ErrorCard(text: '$e');
     } finally {
       if (_announcementsTab is! Container) {
         _body.add(_announcementsTab);
+        _tabs.add(Tab(child: Text(str.announcement)));
       }
     }
     try {
       _initDiscussionsTab();
     } catch (e) {
-      //_discussionsTab = ErrorCard(text: '$e');
+      _discussionsTab = kReleaseMode ? Container() : ErrorCard(text: '$e');
     } finally {
       if (_discussionsTab is! Container) {
         _body.add(_discussionsTab);
+        _tabs.add(Tab(child: Text(str.discussion)));
       }
     }
     try {
       _initEventsTab();
     } catch (e) {
-      _eventsTab = ErrorCard(text: '$e');
+      _eventsTab = kReleaseMode ? Container() : ErrorCard(text: '$e');
     } finally {
       if (_eventsTab is! Container) {
         _body.add(_eventsTab);
+        _tabs.add(Tab(child: Text(str.events)));
       }
     }
     try {
       _initGradesTab();
     } catch (e) {
-      _gradesTab = ErrorCard(text: '$e');
+      _gradesTab = kReleaseMode ? Container() : ErrorCard(text: '$e');
     } finally {
       if (_gradesTab is! Container) {
         _body.add(_gradesTab);
+        _tabs.add(Tab(child: Text(str.grades)));
       }
     }
     try {
       _initPeopleTab();
     } catch (e) {
-      _peopleTab = ErrorCard(text: '$e');
+      _peopleTab = kReleaseMode ? Container() : ErrorCard(text: '$e');
     } finally {
       if (_peopleTab is! Container) {
         _body.add(_peopleTab);
+        _tabs.add(Tab(child: Text(str.participants)));
       }
-    }
-    _initTabList();
-  }
-
-  void _initTabList() {
-    _tabs.clear();
-    if (_homeTab is! Container) {
-      _tabs.add(Tab(child: Text(AppLocalizations.of(context)!.home)));
-    }
-    if (_activityTab is! Container) {
-      _tabs.add(Tab(child: Text(AppLocalizations.of(context)!.activity)));
-    }
-    if (_announcementsTab is! Container) {
-      _tabs.add(Tab(child: Text(AppLocalizations.of(context)!.announcement)));
-    }
-    if (_discussionsTab is! Container) {
-      _tabs.add(Tab(child: Text(AppLocalizations.of(context)!.discussion)));
-    }
-    if (_eventsTab is! Container) {
-      _tabs.add(Tab(child: Text(AppLocalizations.of(context)!.events)));
-    }
-    if (_gradesTab is! Container) {
-      _tabs.add(Tab(child: Text(AppLocalizations.of(context)!.grades)));
-    }
-    if (_peopleTab is! Container) {
-      _tabs.add(Tab(child: Text(AppLocalizations.of(context)!.participants)));
     }
 
     _tabController = TabController(
@@ -192,10 +211,15 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     );
   }
 
+  // region Tabs
+
   void _initHomeTab() {
     _homeTab = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: _content.map((c) {
+        if (c.name.toLowerCase() == activitySectionName) {
+          return Container();
+        }
         return SectionItem(
           header: HeaderItem(text: c.name),
           body: c.modules.map((m) {
@@ -226,6 +250,22 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                   return ForumItem(
                     title: title,
                     onPressed: () {
+                      // Switch to special module
+                      if (_content.first == c) {
+                        final name = m.name?.toLowerCase() ?? '';
+                        var newIndex = -1;
+                        if (name.contains(announcementModuleName)) {
+                          newIndex = _body.indexOf(_announcementsTab);
+                        } else if (name.contains(discussionModuleName)) {
+                          newIndex = _body.indexOf(_discussionsTab);
+                        }
+                        if (newIndex != -1) {
+                          setState(() {
+                            _tabController?.animateTo(newIndex);
+                          });
+                          return;
+                        }
+                      }
                       // Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
                       //   return ForumScreen();
                       // })))
@@ -267,7 +307,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                   var url = m.contents?[0].fileurl ?? '';
                   if (url.isNotEmpty) {
                     url = url.substring(0, url.indexOf('?forcedownload'));
-                    url += '?token=' + _userStore.user.token;
+                    url += '?token=' + token;
                   }
                   return DocumentItem(
                     title: title,
@@ -297,47 +337,105 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     );
   }
 
+  void _initNotesTab() {
+    _notesTab = SingleChildScrollView(
+      child: AnimatedOpacity(
+        opacity: (_notes.isEmpty) ? .5 : 1,
+        duration: const Duration(milliseconds: 300),
+        child: Column(
+          children: [
+            Container(height: 6),
+            NoteAddTextField(
+              onTap: () => _openNoteDialog(context),
+            ),
+            Container(height: 6),
+            AnimatedOpacity(
+              opacity: (_notes.isEmpty) ? 1 : 0,
+              duration: const Duration(milliseconds: 300),
+              child: Opacity(
+                opacity: .5,
+                child:
+                    Center(child: Text(AppLocalizations.of(context)!.no_notes)),
+              ),
+            ),
+            ..._notes.importantFirst.map((n) {
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: NoteCard(
+                  n,
+                  token,
+                  onCheckbox: (value) async =>
+                      await NotesService().toggleDone(token, n),
+                  onPressed: () => _openNoteDialog(context, n),
+                ),
+              );
+            })
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _openNoteDialog(BuildContext context, [Note? n]) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => NoteEditDialog(
+        token: token,
+        uid: _userStore.user.id,
+        cid: _courseId,
+        note: n,
+      ),
+    ).then((result) {
+      if (result.runtimeType is Note) queryData();
+    });
+  }
+
   void _initActivityTab() {
-    var activityList = _content.where((element) => element.name == "Activity");
-    if (activityList.isNotEmpty) {
-      int index = _content.indexOf(activityList.first);
-      _activityTab = ActivityScreen(
-        sectionIndex: index,
-        isTeacher: isTeacher,
-        content: _content[index],
-        courseId: widget.courseId,
-        reGetContent: reGetContentForActivityTab,
-      );
-    } else {
-      _activityTab = ActivityScreen(
-        sectionIndex: 0,
-        isTeacher: isTeacher,
-        content: null,
-        courseId: widget.courseId,
-        reGetContent: reGetContentForActivityTab,
-      );
+    if (!hasActivitySection) {
+      _activityTab = Container();
+      return;
     }
+    var activityList = _content
+        .where((element) => element.name.toLowerCase() == activitySectionName);
+    _activityTab = Builder(builder: (context) {
+      int? index =
+          activityList.isNotEmpty ? _content.indexOf(activityList.first) : null;
+      return ActivityScreen(
+        sectionIndex: (index == null) ? 0 : index,
+        isTeacher: isTeacher,
+        content: (index == null) ? null : _content[index],
+        courseId: widget.courseId,
+        reGetContent: reGetContentForActivityTab,
+      );
+    });
   }
 
   void _initAnnouncementsTab() {
-    if (_content.isEmpty) {
+    if (!hasAnnouncementModule) {
       _announcementsTab = Container();
       return;
     }
     _announcementsTab = ForumAnnouncementScreen(
-      forumId: _content[0].modules[0].instance ?? 0,
+      forumId: _content.first.modules
+          .firstWhere((m) =>
+              m.name?.toLowerCase().contains(announcementModuleName) ?? false)
+          .instance!,
       courseId: _courseId,
       isTeacher: isTeacher,
     );
   }
 
   void _initDiscussionsTab() {
-    if (_content.isEmpty) {
+    if (!hasDiscussionForumModule) {
       _discussionsTab = Container();
       return;
     }
     _discussionsTab = ForumDiscussionScreen(
-      forumId: _content[0].modules[1].instance ?? 0,
+      forumId: _content.first.modules
+          .firstWhere((m) =>
+              m.name?.toLowerCase().contains(discussionModuleName) ?? false)
+          .instance!,
       courseId: _courseId,
     );
   }
@@ -426,10 +524,12 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
 
   // endregion
 
+  // endregion
+
   Future<Lti> queryLti(int toolid) async {
     try {
       return await LtiService().getLti(
-        _userStore.user.token,
+        token,
         toolid,
       );
     } catch (e) {
@@ -440,7 +540,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   Future<ModuleCourse> queryModule(Event e) async {
     try {
       return await ModuleService().getModule(
-        _userStore.user.token,
+        token,
         e.instance ?? 0,
       );
     } catch (e) {
@@ -451,20 +551,26 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   Future queryData() async {
     try {
       _content = await CourseContentService().getCourseContent(
-        _userStore.user.token,
+        token,
         _courseId,
       );
       _course = await CourseDetailService().getCourseById(
-        _userStore.user.token,
+        token,
         _courseId,
       );
       _events = await CalendarService().getUpcomingByCourse(
-        _userStore.user.token,
+        token,
         _courseId,
       );
-      _siteInfo = await SiteInfoApi().getSiteInfo(_userStore.user.token);
+      _notes.replace(
+          fromNotes: await NotesService().getCourseNotes(
+        token,
+        _courseId,
+        _course?.displayname,
+      ));
+      _siteInfo = await SiteInfoApi().getSiteInfo(token);
       await CourseService().triggerViewCourse(
-        _userStore.user.token,
+        token,
         _courseId,
       );
       _initBody();
@@ -485,7 +591,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     try {
       if (isSetState) {
         var contentResponse = await CourseContentService().getCourseContent(
-          _userStore.user.token,
+          token,
           _courseId,
         );
         setState(() {
@@ -507,7 +613,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
         }
       } else {
         _content = await CourseContentService().getCourseContent(
-          _userStore.user.token,
+          token,
           _courseId,
         );
       }

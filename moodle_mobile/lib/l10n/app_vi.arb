@@ -62,7 +62,7 @@
   "err_get_notes": "Tải danh sách ghi chú không thành công, vui lòng thử lại sau",
   "err_load_message_settings": "Tải cài đặt tin nhắn thất bại, vui lòng thử lại sau",
   "err_load_noti_settings": "Tải cài đặt thông báo thất bại, vui lòng thử lại sau",
-  "err_note_invalid": "Một trong hai trường tiêu đề hoặc nội dung phải được điền",
+  "err_note_invalid": "Nội dung note không được để trống",
   "err_set_noti_settings": "Cập nhật cài đặt thông báo thất bại, vui lòng thử lại sau",
   "err_unknown_module": "Module chưa được hỗ trợ: {modname}",
   "error_connect": "Không thể kết nối mạng",

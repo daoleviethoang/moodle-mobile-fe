@@ -18,7 +18,7 @@ Note _$NoteFromJson(Map<String, dynamic> json) => Note(
       lastmodified: json['lastmodified'] as int?,
       usermodified: json['usermodified'] as int?,
       clientnoteid: json['clientnoteid'] as String?,
-    );
+    )..id = json['id'] as int?;
 
 Map<String, dynamic> _$NoteToJson(Note instance) => <String, dynamic>{
       'noteid': instance.noteid,
@@ -27,6 +27,7 @@ Map<String, dynamic> _$NoteToJson(Note instance) => <String, dynamic>{
       'courseid': instance.courseid,
       'text': instance.text,
       'format': instance.format,
+      'id': instance.id,
       'content': instance.content,
       'created': instance.created,
       'lastmodified': instance.lastmodified,

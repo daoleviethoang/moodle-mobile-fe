@@ -58,7 +58,7 @@ class _NoteEditDialogState extends State<NoteEditDialog> {
   _initContentInput() {
     _contentInput = TextFormField(
       keyboardType: TextInputType.multiline,
-      initialValue: _note.txt,
+      initialValue: _note.txtFiltered,
       decoration: InputDecoration(
         hintText: AppLocalizations.of(context)!.content,
         labelText: AppLocalizations.of(context)!.content,
@@ -73,7 +73,7 @@ class _NoteEditDialogState extends State<NoteEditDialog> {
       textAlignVertical: TextAlignVertical.top,
       autofocus: widget.note == null,
       onChanged: (value) =>
-          setState(() => _note.text = value),
+          setState(() => _note.txt = value),
     );
   }
 

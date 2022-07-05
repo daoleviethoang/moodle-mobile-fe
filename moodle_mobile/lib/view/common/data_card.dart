@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
@@ -34,6 +35,9 @@ class ErrorCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (kReleaseMode) {
+      return Container();
+    }
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -42,6 +46,14 @@ class ErrorCard extends StatelessWidget {
             Icons.warning_rounded,
             size: 54,
             color: Theme.of(context).colorScheme.error,
+          ),
+          Container(height: 16),
+          Text(
+            'Error in testing mode',
+            style: TextStyle(
+              fontSize: 20,
+              color: Theme.of(context).colorScheme.error,
+            ),
           ),
           Container(height: 16),
           Text(
@@ -57,12 +69,14 @@ class ErrorCard extends StatelessWidget {
 class NoteCard extends StatefulWidget {
   final Note note;
   final String token;
+  final Function(bool)? onCheckbox;
   final VoidCallback? onPressed;
 
   const NoteCard(
     this.note,
     this.token, {
     Key? key,
+    this.onCheckbox,
     this.onPressed,
   }) : super(key: key);
 
@@ -86,8 +100,8 @@ class _NoteCardState extends State<NoteCard> {
     return Card(
       child: InkWell(
         onTap: widget.onPressed,
-        borderRadius: const BorderRadius.all(
-            Radius.circular(Dimens.default_card_radius)),
+        borderRadius:
+            const BorderRadius.all(Radius.circular(Dimens.default_card_radius)),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 8),
           child: Row(
@@ -96,7 +110,11 @@ class _NoteCardState extends State<NoteCard> {
                 alignment: Alignment.topLeft,
                 child: Checkbox(
                   value: _note.isDone,
-                  onChanged: (value) {},
+                  onChanged: widget.onCheckbox == null
+                      ? null
+                      : (value) {
+                          if (value != null) widget.onCheckbox!(value);
+                        },
                 ),
               ),
               Expanded(
@@ -121,32 +139,31 @@ class _NoteCardState extends State<NoteCard> {
                           if (_note.isImportant || _note.isRecent)
                             Container(width: 4),
                           FutureBuilder(
-                            future: _note.getCourseName(context, _token),
-                            builder: (context, snapshot) {
-                              String courseName = '…';
-                              if (snapshot.hasData) {
-                                courseName = snapshot.data as String;
-                              } else if (snapshot.hasError) {
-                                return Container();
-                              }
+                              future: _note.getCourseName(context, _token),
+                              builder: (context, snapshot) {
+                                String courseName = '…';
+                                if (snapshot.hasData) {
+                                  courseName = snapshot.data as String;
+                                } else if (snapshot.hasError) {
+                                  return Container();
+                                }
 
-                              return Text(
-                                courseName,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: MoodleStyles.noteHeaderStyle.copyWith(
-                                  decoration: _note.isDone
-                                      ? TextDecoration.lineThrough
-                                      : TextDecoration.none,
-                                ),
-                              );
-                            }
-                          ),
+                                return Text(
+                                  courseName,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: MoodleStyles.noteHeaderStyle.copyWith(
+                                    decoration: _note.isDone
+                                        ? TextDecoration.lineThrough
+                                        : TextDecoration.none,
+                                  ),
+                                );
+                              }),
                         ],
                       ),
                       Container(height: 4),
                       Text(
-                        _note.txt,
+                        _note.txtFiltered,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.start,
