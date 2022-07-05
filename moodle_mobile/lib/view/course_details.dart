@@ -67,9 +67,15 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
 
   bool isTeacher = false;
 
-  final specialModuleCheckThreshold = 3;
+  final activitySectionName = 'activity';
   final announcementModuleName = 'announcement';
   final discussionModuleName = 'discussion';
+
+  bool get hasActivitySection {
+    return _siteInfo?.functions?.any(
+            (element) => element.name == "local_modulews_add_section_course") ??
+        false;
+  }
 
   bool get hasAnnouncementModule {
     return _content.first.modules.any((m) {
@@ -105,100 +111,78 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
 
   void _initBody() {
     _body.clear();
+    _tabs.clear();
+
+    final str = AppLocalizations.of(context)!;
     try {
       _initHomeTab();
     } catch (e) {
-      _homeTab = ErrorCard(text: '$e');
+      _homeTab = kReleaseMode ? Container() : ErrorCard(text: '$e');
     } finally {
       if (_homeTab is! Container) {
         _body.add(_homeTab);
+        _tabs.add(Tab(child: Text(str.home)));
       }
     }
     try {
-      if (_siteInfo?.functions?.any((element) =>
-              element.name == "local_modulews_add_section_course") ??
-          false == true) {
-        _initActivityTab();
-      } else {
-        _activityTab = Container();
-      }
+      _initActivityTab();
     } catch (e) {
-      _activityTab = ErrorCard(text: '$e');
+      _activityTab = kReleaseMode ? Container() : ErrorCard(text: '$e');
     } finally {
       if (_activityTab is! Container) {
         _body.add(_activityTab);
+        _tabs.add(Tab(child: Text(str.activity)));
       }
     }
     try {
       _initAnnouncementsTab();
     } catch (e) {
-      _announcementsTab = ErrorCard(text: '$e');
+      _announcementsTab = kReleaseMode ? Container() : ErrorCard(text: '$e');
     } finally {
       if (_announcementsTab is! Container) {
         _body.add(_announcementsTab);
+        _tabs.add(Tab(child: Text(str.announcement)));
       }
     }
     try {
       _initDiscussionsTab();
     } catch (e) {
-      _discussionsTab = ErrorCard(text: '$e');
+      _discussionsTab = kReleaseMode ? Container() : ErrorCard(text: '$e');
     } finally {
       if (_discussionsTab is! Container) {
         _body.add(_discussionsTab);
+        _tabs.add(Tab(child: Text(str.discussion)));
       }
     }
     try {
       _initEventsTab();
     } catch (e) {
-      _eventsTab = ErrorCard(text: '$e');
+      _eventsTab = kReleaseMode ? Container() : ErrorCard(text: '$e');
     } finally {
       if (_eventsTab is! Container) {
         _body.add(_eventsTab);
+        _tabs.add(Tab(child: Text(str.events)));
       }
     }
     try {
       _initGradesTab();
     } catch (e) {
-      _gradesTab = ErrorCard(text: '$e');
+      _gradesTab = kReleaseMode ? Container() : ErrorCard(text: '$e');
     } finally {
       if (_gradesTab is! Container) {
         _body.add(_gradesTab);
+        _tabs.add(Tab(child: Text(str.grades)));
       }
     }
     try {
       _initPeopleTab();
     } catch (e) {
-      _peopleTab = ErrorCard(text: '$e');
+      _peopleTab = kReleaseMode ? Container() : ErrorCard(text: '$e');
     } finally {
       if (_peopleTab is! Container) {
         _body.add(_peopleTab);
+        _tabs.add(Tab(child: Text(str.participants)));
       }
-    }
-    _initTabList();
-  }
-
-  void _initTabList() {
-    _tabs.clear();
-    if (_homeTab is! Container) {
-      _tabs.add(Tab(child: Text(AppLocalizations.of(context)!.home)));
-    }
-    if (_activityTab is! Container) {
-      _tabs.add(Tab(child: Text(AppLocalizations.of(context)!.activity)));
-    }
-    if (_announcementsTab is! Container) {
-      _tabs.add(Tab(child: Text(AppLocalizations.of(context)!.announcement)));
-    }
-    if (_discussionsTab is! Container) {
-      _tabs.add(Tab(child: Text(AppLocalizations.of(context)!.discussion)));
-    }
-    if (_eventsTab is! Container) {
-      _tabs.add(Tab(child: Text(AppLocalizations.of(context)!.events)));
-    }
-    if (_gradesTab is! Container) {
-      _tabs.add(Tab(child: Text(AppLocalizations.of(context)!.grades)));
-    }
-    if (_peopleTab is! Container) {
-      _tabs.add(Tab(child: Text(AppLocalizations.of(context)!.participants)));
     }
 
     _tabController = TabController(
@@ -208,10 +192,15 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     );
   }
 
+  // region Tabs
+
   void _initHomeTab() {
     _homeTab = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: _content.map((c) {
+        if (c.name.toLowerCase() == activitySectionName) {
+          return Container();
+        }
         return SectionItem(
           header: HeaderItem(text: c.name),
           body: c.modules.map((m) {
@@ -252,7 +241,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                           newIndex = _body.indexOf(_discussionsTab);
                         }
                         if (newIndex != -1) {
-                          setState (() {
+                          setState(() {
                             _tabController?.animateTo(newIndex);
                           });
                           return;
@@ -330,25 +319,23 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   }
 
   void _initActivityTab() {
-    var activityList = _content.where((element) => element.name == "Activity");
-    if (activityList.isNotEmpty) {
-      int index = _content.indexOf(activityList.first);
-      _activityTab = ActivityScreen(
-        sectionIndex: index,
-        isTeacher: isTeacher,
-        content: _content[index],
-        courseId: widget.courseId,
-        reGetContent: reGetContentForActivityTab,
-      );
-    } else {
-      _activityTab = ActivityScreen(
-        sectionIndex: 0,
-        isTeacher: isTeacher,
-        content: null,
-        courseId: widget.courseId,
-        reGetContent: reGetContentForActivityTab,
-      );
+    if (!hasActivitySection) {
+      _activityTab = Container();
+      return;
     }
+    var activityList = _content
+        .where((element) => element.name.toLowerCase() == activitySectionName);
+    _activityTab = Builder(builder: (context) {
+      int? index =
+          activityList.isNotEmpty ? _content.indexOf(activityList.first) : null;
+      return ActivityScreen(
+        sectionIndex: (index == null) ? 0 : index,
+        isTeacher: isTeacher,
+        content: (index == null) ? null : _content[index],
+        courseId: widget.courseId,
+        reGetContent: reGetContentForActivityTab,
+      );
+    });
   }
 
   void _initAnnouncementsTab() {
@@ -461,6 +448,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     _peopleTab = ParticipantsInOneCourse(
         courseId: _courseId, courseName: _course!.displayname);
   }
+
+  // endregion
 
   // endregion
 
