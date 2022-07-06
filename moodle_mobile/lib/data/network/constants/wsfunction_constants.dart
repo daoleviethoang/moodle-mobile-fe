@@ -33,6 +33,7 @@ class Wsfunction {
   static const String GET_COURSE_NOTES = "core_notes_get_course_notes";
   static const String GET_NOTES = "core_notes_get_notes";
   static const String UPDATE_NOTES = "core_notes_update_notes";
+  static const String UPDATE_NOTE = "local_modulews_update_note";
 
   //course category
   static const String CORE_USER_GET_USERS_BY_FIELD =

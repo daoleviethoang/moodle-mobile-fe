@@ -62,8 +62,14 @@ class _NoteListState extends State<NoteList> {
             color: MoodleColors.blue,
             onPressed: () => Navigator.of(context).push(
               CupertinoPageRoute(
-                builder: (context) =>
-                    const NoteFolder(type: NoteFolderType.all),
+                builder: (context) => NoteFolder(
+                  notes: _notes,
+                  type: NoteFolderType.all,
+              token: _userStore.user.token,
+              onCheckbox: (value, note) async =>
+                  await NotesService().toggleDone(_userStore.user.token, note),
+              onPressed: (note) => _openNoteDialog(context, note),
+                ),
               ),
             ),
           ),
@@ -74,8 +80,14 @@ class _NoteListState extends State<NoteList> {
             color: Colors.amber,
             onPressed: () => Navigator.of(context).push(
               CupertinoPageRoute(
-                builder: (context) =>
-                    const NoteFolder(type: NoteFolderType.important),
+                builder: (context) => NoteFolder(
+                  notes: _notes,
+                  type: NoteFolderType.important,
+              token: _userStore.user.token,
+              onCheckbox: (value, note) async =>
+                  await NotesService().toggleDone(_userStore.user.token, note),
+              onPressed: (note) => _openNoteDialog(context, note),
+                ),
               ),
             ),
           ),
@@ -86,8 +98,14 @@ class _NoteListState extends State<NoteList> {
             color: Colors.grey,
             onPressed: () => Navigator.of(context).push(
               CupertinoPageRoute(
-                builder: (context) =>
-                    const NoteFolder(type: NoteFolderType.done),
+                builder: (context) => NoteFolder(
+                  notes: _notes,
+                  type: NoteFolderType.done,
+              token: _userStore.user.token,
+              onCheckbox: (value, note) async =>
+                  await NotesService().toggleDone(_userStore.user.token, note),
+              onPressed: (note) => _openNoteDialog(context, note),
+                ),
               ),
             ),
           ),
@@ -98,8 +116,14 @@ class _NoteListState extends State<NoteList> {
             color: Colors.pink,
             onPressed: () => Navigator.of(context).push(
               CupertinoPageRoute(
-                builder: (context) =>
-                    const NoteFolder(type: NoteFolderType.other),
+                builder: (context) => NoteFolder(
+                  notes: _notes,
+                  type: NoteFolderType.other,
+              token: _userStore.user.token,
+              onCheckbox: (value, note) async =>
+                  await NotesService().toggleDone(_userStore.user.token, note),
+              onPressed: (note) => _openNoteDialog(context, note),
+                ),
               ),
             ),
           ),
@@ -126,8 +150,14 @@ class _NoteListState extends State<NoteList> {
               child: InkWell(
                 onTap: () => Navigator.of(context).push(
                   CupertinoPageRoute(
-                    builder: (context) =>
-                        const NoteFolder(type: NoteFolderType.recent),
+                    builder: (context) => NoteFolder(
+                      notes: _notes,
+                      type: NoteFolderType.recent,
+              token: _userStore.user.token,
+              onCheckbox: (value, note) async =>
+                  await NotesService().toggleDone(_userStore.user.token, note),
+              onPressed: (note) => _openNoteDialog(context, note),
+                    ),
                   ),
                 ),
                 child: Text(

@@ -84,21 +84,13 @@ class NotesService {
       Dio dio = Http().client;
       final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
         'wstoken': token,
-        'wsfunction': Wsfunction.UPDATE_NOTES,
+        'wsfunction': Wsfunction.UPDATE_NOTE,
         'moodlewsrestformat': 'json',
-        'notes': [
-          {
-            'id': note.nid,
-            'publishstate': note.publishstate,
-            'text': note.text,
-            'format': note.format,
-          }
-        ],
+        'id': note.nid,
+        'content': note.txt,
       });
 
-      if (kDebugMode) {
-        print(res.data);
-      }
+      if (kDebugMode) print(res.data);
       return note.nid;
     } catch (e) {
       rethrow;
@@ -107,7 +99,7 @@ class NotesService {
 
   Future<int> setNote(String token, Note note) async {
     try {
-      print(note.nid);
+      if (kDebugMode) print(note.nid);
       if (note.nid == -1) {
         return await createNote(token, note);
       } else {

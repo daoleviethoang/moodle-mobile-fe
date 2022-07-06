@@ -69,12 +69,6 @@ class Note {
 
   /// Change text or content depending on which is not null
   set txt(String value) {
-    if (isDone) {
-      value = '$doneChar $value';
-    }
-    if (isImportant) {
-      value = '$importantChar $value';
-    }
     if (text != null) {
       text = value;
     }
@@ -88,18 +82,34 @@ class Note {
 
   bool get isNotDone => !isDone;
 
-  set isDone(bool done) => txt = txtFiltered;
+  set isDone(bool done) {
+    if (isDone == done) {
+      return;
+    } else {
+      txt = '${done ? '$doneChar ' : ''}'
+          '${isImportant ? '$importantChar ' : ''}'
+          '$txtFiltered';
+    }
+  }
 
   @JsonKey(ignore: true)
   bool get isImportant => txt.startsWith(importantChar);
 
   bool get isNotImportant => !isImportant;
 
-  set isImportant(bool important) => txt = txtFiltered;
+  set isImportant(bool important) {
+    if (isImportant == important) {
+      return;
+    } else {
+      txt = '${isDone ? '$doneChar ' : ''}'
+          '${important ? '$importantChar ' : ''}'
+          '$txtFiltered';
+    }
+  }
 
   DateTime? get creationDate {
     if (created == null) return null;
-    return DateTime.fromMillisecondsSinceEpoch(created!);
+    return DateTime.fromMillisecondsSinceEpoch(created! * 1000);
   }
 
   bool get isEmpty => txt.isEmpty;
@@ -107,7 +117,7 @@ class Note {
   bool get isNotEmpty => !isEmpty;
 
   bool get isRecent {
-    if (created == null) return false;
+    if (creationDate == null) return false;
     return DateTime.now().difference(creationDate!) < Vars.recentThreshold;
   }
 
