@@ -11,15 +11,17 @@ class Note {
   static String doneChar = '✔';
   static String importantChar = '⭐';
 
-  /// Don't use noteid or id, use this instead
+  /// Returns noteid or id if either is not null
   @JsonKey(ignore: true)
   int get nid => noteid ?? id ?? -1;
 
-  /// Don't use text or content, use this instead
+  /// Returns text or content if either is not null
   @JsonKey(ignore: true)
   String get txt => text ?? content ?? '';
 
-  /// Or this if the doneChar and importantChar are not needed
+  /// Returns text or content if either is not null,
+  /// filtering out doneChar and importantChar if present
+  @JsonKey(ignore: true)
   String get txtFiltered {
     var _txt = txt;
     if (isDone) {
@@ -31,17 +33,23 @@ class Note {
     return _txt;
   }
 
-  int? noteid; // DONT USE THIS, use nid instead
+  /// DONT USE THIS, use nid instead
+  int? noteid;
   int? userid;
-  String? publishstate; // 'personal', 'course' or 'site'
-  // Or note state (i.e. draft, public, site)
+  /// 'personal', 'course' or 'site'
+  /// Or note state (i.e. draft, public, site)
+  String? publishstate;
   int? courseid;
-  String? text; // DONT USE THIS, use txt instead
-  int? format; // (1 = HTML, 0 = MOODLE, 2 = PLAIN or 4 = MARKDOWN)
+  /// DONT USE THIS, use txt instead
+  String? text;
+  /// (1 = HTML, 0 = MOODLE, 2 = PLAIN or 4 = MARKDOWN)
+  int? format;
 
   // Only in core_notes_get_course_notes
-  int? id; // DONT USE THIS, use nid instead
-  String? content; // DONT USE THIS, use txt instead
+  /// DONT USE THIS, use nid instead
+  int? id;
+  /// DONT USE THIS, use txt instead
+  String? content;
   int? created;
   int? lastmodified;
   int? usermodified;
@@ -67,8 +75,25 @@ class Note {
     this.clientnoteid,
   });
 
-  /// Change text or content depending on which is not null
+  /// Change text or content depending on which is not null,
+  /// must include doneChar and/or importantChar when isDone/isImportant is true
+  /// or else their status will be lost.
+  /// That requirement is not needed if you use txtFiltered setter instead.
   set txt(String value) {
+    if (text != null) {
+      text = value;
+    }
+    if (content != null) {
+      content = value;
+    }
+  }
+
+  /// Change text or content depending on which is not null,
+  /// also preserves isDone and isImportant status
+  set txtFiltered(String value) {
+    value = '${isDone ? '$doneChar ' : ''}'
+        '${isImportant ? '$importantChar ' : ''}'
+        '$value';
     if (text != null) {
       text = value;
     }
@@ -145,7 +170,7 @@ class Note {
       identical(this, other) ||
       other is Note &&
           runtimeType == other.runtimeType &&
-          noteid == other.noteid &&
+          nid == other.nid &&
           userid == other.userid &&
           courseid == other.courseid &&
           txt == other.txt;

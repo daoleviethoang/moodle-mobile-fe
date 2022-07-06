@@ -380,6 +380,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      isDismissible: false,
+      enableDrag: false,
       builder: (context) => NoteEditDialog(
         token: token,
         uid: _userStore.user.id,

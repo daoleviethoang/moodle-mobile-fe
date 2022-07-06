@@ -197,6 +197,8 @@ class _NoteListState extends State<NoteList> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      isDismissible: false,
+      enableDrag: false,
       builder: (context) => NoteEditDialog(
         token: _userStore.user.token,
         uid: _userStore.user.id,
