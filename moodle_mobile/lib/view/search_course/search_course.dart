@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/data/network/apis/search/search_api.dart';
 import 'package:moodle_mobile/models/course/courses.dart';
 import 'package:moodle_mobile/view/course_category/courses_view.dart';
@@ -12,9 +13,9 @@ class CoursesSearch extends SearchDelegate<CourseOverview?> {
   List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(
-        icon: Icon(
+        icon: const Icon(
           Icons.clear,
-          color: Colors.blue,
+          color: MoodleColors.blue,
         ),
         onPressed: () {
           query = '';
@@ -26,9 +27,9 @@ class CoursesSearch extends SearchDelegate<CourseOverview?> {
   @override
   Widget buildLeading(BuildContext context) {
     return IconButton(
-      icon: Icon(
+      icon: const Icon(
         Icons.arrow_back,
-        color: Colors.blue,
+        color: MoodleColors.blue,
       ),
       onPressed: () {
         close(context, null);

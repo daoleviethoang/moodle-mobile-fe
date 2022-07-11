@@ -331,7 +331,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                           files.remove(e);
                                         });
                                       },
-                                      backgroundColor: Colors.blue),
+                                      backgroundColor: MoodleColors.blue),
                                 ),
                               )
                               .toList(),

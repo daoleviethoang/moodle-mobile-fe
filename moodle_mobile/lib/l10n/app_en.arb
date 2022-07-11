@@ -148,6 +148,7 @@
   "not_participant_course": "You are not a participant of this course.",
   "note_deleted": "Note is deleted",
   "note_is_important": "Important note",
+  "note_search": "Search for notes",
   "notes": "Notes",
   "nothing_yet": "Nothing here yet.",
   "noti_context": "<b>{article}</b><br/> in <b>{name}</b>",

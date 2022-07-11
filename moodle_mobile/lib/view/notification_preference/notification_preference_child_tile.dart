@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/data/network/apis/notification_preference/notification_preference_api.dart';
 import 'package:moodle_mobile/models/notification_preference/notification_preference.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
@@ -115,7 +116,7 @@ class _NotificationPreferenceChildTileState
                           SizedBox(
                             width: 5,
                           ),
-                          Icon(Icons.help, color: Colors.blue),
+                          Icon(Icons.help, color: MoodleColors.blue),
                         ]),
                         trailing: Text(AppLocalizations.of(context)!.unable),
                       ),
@@ -129,7 +130,7 @@ class _NotificationPreferenceChildTileState
                           SizedBox(
                             width: 5,
                           ),
-                          Icon(Icons.help, color: Colors.blue),
+                          Icon(Icons.help, color: MoodleColors.blue),
                         ]),
                         trailing: Text(AppLocalizations.of(context)!.unable),
                       ),
@@ -143,7 +144,7 @@ class _NotificationPreferenceChildTileState
                       SizedBox(
                         width: 5,
                       ),
-                      Icon(Icons.help, color: Colors.blue),
+                      Icon(Icons.help, color: MoodleColors.blue),
                     ]),
                     value: online,
                     onChanged: (value) async {
@@ -156,7 +157,7 @@ class _NotificationPreferenceChildTileState
                       SizedBox(
                         width: 5,
                       ),
-                      Icon(Icons.help, color: Colors.blue),
+                      Icon(Icons.help, color: MoodleColors.blue),
                     ]),
                     value: offline,
                     onChanged: (value) async {

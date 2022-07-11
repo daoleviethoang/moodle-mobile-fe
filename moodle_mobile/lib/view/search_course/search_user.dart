@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/data/network/apis/search/search_api.dart';
 import 'package:moodle_mobile/data/repository.dart';
 import 'package:moodle_mobile/models/search_user/message_contact.dart';
@@ -20,7 +21,7 @@ class SearchUser extends SearchDelegate<MessageContact?> {
       IconButton(
         icon: const Icon(
           Icons.clear,
-          color: Colors.blue,
+          color: MoodleColors.blue,
         ),
         onPressed: () {
           query = '';
@@ -34,7 +35,7 @@ class SearchUser extends SearchDelegate<MessageContact?> {
     return IconButton(
       icon: Icon(
         Icons.arrow_back,
-        color: Colors.blue,
+        color: MoodleColors.blue,
       ),
       onPressed: () {
         close(context, null);

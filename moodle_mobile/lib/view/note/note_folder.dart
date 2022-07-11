@@ -1,7 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:moodle_mobile/constants/dimens.dart';
 import 'package:moodle_mobile/models/note/note.dart';
+import 'package:moodle_mobile/models/note/note_search_delegate.dart';
 import 'package:moodle_mobile/models/note/notes.dart';
 import 'package:moodle_mobile/view/common/content_item.dart';
 import 'package:moodle_mobile/view/common/data_card.dart';
@@ -42,6 +44,17 @@ class _NoteFolderState extends State<NoteFolder> {
 
   Widget _body = Container();
 
+  late FocusNode _searchFocusNode;
+
+  List<Note> get _searchNotes {
+    final lists = _notes.values.toList();
+    final notes = <Note>[];
+    for (final list in lists) {
+      notes.addAll(list);
+    }
+    return notes;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -63,15 +76,13 @@ class _NoteFolderState extends State<NoteFolder> {
         _notes = {null: widget.notes.recent};
         break;
     }
+    _searchFocusNode = FocusNode();
   }
 
   void _initBody() {
     _body = ListView(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       children: [
-        Container(height: 8),
-        // TODO: Search box
-        const LoadingCard(text: 'Search box puts here'),
         Container(height: 12),
         ..._notes.keys.map((cid) {
           return SectionItem(
@@ -134,6 +145,23 @@ class _NoteFolderState extends State<NoteFolder> {
               return Text(AppLocalizations.of(context)!.recent_notes);
           }
         }),
+        actions: [
+          IconButton(
+            iconSize: Dimens.appbar_icon_size,
+            icon: const Icon(Icons.search),
+            onPressed: () {
+              showSearch(
+                context: context,
+                delegate: NoteSearchDelegate(
+                  context,
+                  _searchNotes,
+                  widget.token,
+                  hint: AppLocalizations.of(context)!.note_search,
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: _body,
     );

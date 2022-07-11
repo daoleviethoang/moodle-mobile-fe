@@ -117,6 +117,7 @@
   "not_participant_course": "Bạn chưa tham gia môn này",
   "note_deleted": "Ghi chú đã được xóa",
   "note_is_important": "Ghi chú quan trọng",
+  "note_search": "Tìm kiếm ghi chú",
   "notes": "Ghi chú",
   "nothing_yet": "Chưa có gì ở đây cả.",
   "noti_context": "<b>{article}</b><br/> trong <b>{name}</b>",
