@@ -338,6 +338,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   }
 
   void _initNotesTab() {
+    print('${_notes.all.map((e) => e.txtFiltered)}');
     _notesTab = SingleChildScrollView(
       child: AnimatedOpacity(
         opacity: (_notes.isEmpty) ? .5 : 1,
@@ -346,10 +347,9 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
           children: [
             Container(height: 6),
             NoteAddTextField(onTap: () async {
-              // FIXME: UI not refreshing after adding note
               await _openNoteDialog(context);
               await queryNotes();
-              setState(() => _initNotesTab());
+              setState(() {});
             }),
             Container(height: 6),
             AnimatedOpacity(
@@ -553,10 +553,10 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   Future queryNotes() async {
     _notes.replace(
         fromNotes: await NotesService().getCourseNotes(
-          token,
-          _courseId,
-          _course?.displayname,
-        ));
+      token,
+      _courseId,
+      _course?.displayname,
+    ));
   }
 
   Future queryData() async {

@@ -106,7 +106,6 @@ class _NoteCardState extends State<NoteCard> {
   void initState() {
     super.initState();
     _token = widget.token;
-    _note = widget.note;
   }
 
   void _initCardBase() {
@@ -232,6 +231,7 @@ class _NoteCardState extends State<NoteCard> {
   @override
   Widget build(BuildContext context) {
     if (_hiding && !_loading) return Container();
+    _note = widget.note; // ensure widget will be update after adding note
     _initCardBase();
 
     return IgnorePointer(
