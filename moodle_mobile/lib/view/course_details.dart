@@ -62,13 +62,12 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   Widget _eventsTab = Container();
   Widget _gradesTab = Container();
   Widget _peopleTab = Container();
+  Exception? errored;
 
   // TabBar data
   TabController? _tabController;
   final _tabs = <Widget>[];
   var _index = 0;
-
-  // endregion
 
   // region Index getters
 
@@ -413,7 +412,6 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   }
 
   void _initNotesTab() {
-    print('${_notes.all.map((e) => e.txtFiltered)}');
     _notesTab = SingleChildScrollView(
       child: AnimatedOpacity(
         opacity: (_notes.isEmpty) ? .5 : 1,
@@ -722,6 +720,14 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
           builder: (context, data) {
             final hasError = data.hasError;
             final hasData = _content.isNotEmpty && _course != null;
+            if (hasError) {
+              if (kDebugMode) {
+                print('${data.error}');
+              }
+              errored = data.error as Exception;
+            } else if (errored != null) {
+              errored = null;
+            }
             return NestedScrollView(
               floatHeaderSlivers: true,
               headerSliverBuilder: (context, innerBoxIsScrolled) {
@@ -782,29 +788,46 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                   ),
                 ];
               },
-              body: hasError
-                  ? Center(
-                      child: ErrorCard(
-                          text: AppLocalizations.of(context)!.error_connect))
-                  : !hasData
-                      ? const LoadingCard()
-                      : AnimatedOpacity(
-                          opacity: hasData ? 1.0 : 0.0,
-                          duration: const Duration(milliseconds: 1200),
-                          child: SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                Container(height: 12),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20),
-                                  child: _body[_index],
-                                ),
-                                Container(height: 12),
-                              ],
+              body: Stack(
+                alignment: Alignment.topCenter,
+                children: [
+                  AnimatedOpacity(
+                    opacity: hasData ? 1 : 0,
+                    duration: const Duration(milliseconds: 1200),
+                    child: IgnorePointer(
+                      ignoring: !hasData,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            Container(height: 12),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              child: _body.isNotEmpty
+                                  ? _body[_index]
+                                  : Container(),
                             ),
-                          ),
+                            Container(height: 12),
+                          ],
                         ),
+                      ),
+                    ),
+                  ),
+                  AnimatedOpacity(
+                      opacity: (hasError) ? 1 : 0,
+                      duration: const Duration(milliseconds: 300),
+                      child: IgnorePointer(
+                        ignoring: !hasError,
+                        child: ErrorCard(
+                            text: AppLocalizations.of(context)!.error_connect),
+                      )),
+                  AnimatedOpacity(
+                      opacity: (!hasData) ? 1 : 0,
+                      duration: const Duration(milliseconds: 300),
+                      child: IgnorePointer(
+                          ignoring: hasData, child: const LoadingCard())),
+                ],
+              ),
             );
           }),
     );

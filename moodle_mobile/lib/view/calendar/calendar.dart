@@ -154,6 +154,8 @@ class _CalendarScreenState extends State<CalendarScreen>
                 print('${data.error}');
               }
               errored = data.error as Exception;
+            } else if (errored != null) {
+              errored = null;
             }
             return RefreshIndicator(
               onRefresh: () async => setState(() => _events.clear()),
@@ -187,8 +189,7 @@ class _CalendarScreenState extends State<CalendarScreen>
                               duration: const Duration(milliseconds: 300),
                               child: IgnorePointer(
                                   ignoring: _events.isNotEmpty,
-                                  child: const CircularProgressIndicator
-                                      .adaptive())),
+                                  child: const LoadingCard())),
                         ],
                       ),
                       Align(
