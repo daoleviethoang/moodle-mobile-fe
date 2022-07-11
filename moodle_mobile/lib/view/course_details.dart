@@ -30,6 +30,7 @@ import 'package:moodle_mobile/view/activity/activity_screen.dart';
 import 'package:moodle_mobile/view/common/content_item.dart';
 import 'package:moodle_mobile/view/common/custom_text_field.dart';
 import 'package:moodle_mobile/view/common/data_card.dart';
+import 'package:moodle_mobile/view/common/tab_item.dart';
 import 'package:moodle_mobile/view/enrol/enrol.dart';
 import 'package:moodle_mobile/view/forum/forum_announcement_scren.dart';
 import 'package:moodle_mobile/view/forum/forum_screen.dart';
@@ -51,9 +52,7 @@ class CourseDetailsScreen extends StatefulWidget {
 
 class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     with TickerProviderStateMixin {
-  TabController? _tabController;
-  final _tabs = <Widget>[];
-  var _index = 0;
+  // Body data
   final _body = <Widget>[];
   Widget _homeTab = Container();
   Widget _notesTab = Container();
@@ -63,6 +62,33 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   Widget _eventsTab = Container();
   Widget _gradesTab = Container();
   Widget _peopleTab = Container();
+
+  // TabBar data
+  TabController? _tabController;
+  final _tabs = <Widget>[];
+  var _index = 0;
+
+  // endregion
+
+  // region Index getters
+
+  int get _homeIndex => _body.indexOf(_homeTab);
+
+  int get _notesIndex => _body.indexOf(_notesTab);
+
+  int get _activityIndex => _body.indexOf(_activityTab);
+
+  int get _announcementsIndex => _body.indexOf(_announcementsTab);
+
+  int get _discussionsIndex => _body.indexOf(_discussionsTab);
+
+  int get _eventsIndex => _body.indexOf(_eventsTab);
+
+  int get _gradesIndex => _body.indexOf(_gradesTab);
+
+  int get _peopleIndex => _body.indexOf(_peopleTab);
+
+  // endregion
 
   late int _courseId;
   late UserStore _userStore;
@@ -130,7 +156,13 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     } finally {
       if (_homeTab is! Container) {
         _body.add(_homeTab);
-        _tabs.add(Tab(child: Text(str.home)));
+        _tabs.add(CourseDetailsTab(
+          currentIndex: _index,
+          index: _homeIndex,
+          icon: const Icon(CupertinoIcons.house),
+          activeIcon: const Icon(CupertinoIcons.house_fill),
+          text: Text(str.home),
+        ));
       }
     }
     try {
@@ -140,7 +172,13 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     } finally {
       if (_notesTab is! Container) {
         _body.add(_notesTab);
-        _tabs.add(Tab(child: Text(str.notes)));
+        _tabs.add(CourseDetailsTab(
+          currentIndex: _index,
+          index: _notesIndex,
+          icon: const Icon(CupertinoIcons.doc),
+          activeIcon: const Icon(CupertinoIcons.doc_fill),
+          text: Text(str.notes),
+        ));
       }
     }
     try {
@@ -150,7 +188,13 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     } finally {
       if (_activityTab is! Container) {
         _body.add(_activityTab);
-        _tabs.add(Tab(child: Text(str.activity)));
+        _tabs.add(CourseDetailsTab(
+          currentIndex: _index,
+          index: _activityIndex,
+          icon: const Icon(CupertinoIcons.photo_on_rectangle),
+          activeIcon: const Icon(CupertinoIcons.photo_fill_on_rectangle_fill),
+          text: Text(str.activity),
+        ));
       }
     }
     try {
@@ -160,7 +204,13 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     } finally {
       if (_announcementsTab is! Container) {
         _body.add(_announcementsTab);
-        _tabs.add(Tab(child: Text(str.announcement)));
+        _tabs.add(CourseDetailsTab(
+          currentIndex: _index,
+          index: _announcementsIndex,
+          icon: const Icon(CupertinoIcons.bell),
+          activeIcon: const Icon(CupertinoIcons.bell_fill),
+          text: Text(str.announcement),
+        ));
       }
     }
     try {
@@ -170,7 +220,13 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     } finally {
       if (_discussionsTab is! Container) {
         _body.add(_discussionsTab);
-        _tabs.add(Tab(child: Text(str.discussion)));
+        _tabs.add(CourseDetailsTab(
+          currentIndex: _index,
+          index: _discussionsIndex,
+          icon: const Icon(CupertinoIcons.bubble_left_bubble_right),
+          activeIcon: const Icon(CupertinoIcons.bubble_left_bubble_right_fill),
+          text: Text(str.discussion),
+        ));
       }
     }
     try {
@@ -180,7 +236,13 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     } finally {
       if (_eventsTab is! Container) {
         _body.add(_eventsTab);
-        _tabs.add(Tab(child: Text(str.events)));
+        _tabs.add(CourseDetailsTab(
+          currentIndex: _index,
+          index: _eventsIndex,
+          icon: const Icon(Icons.calendar_month_outlined),
+          activeIcon: const Icon(Icons.calendar_month),
+          text: Text(str.events),
+        ));
       }
     }
     try {
@@ -190,7 +252,13 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     } finally {
       if (_gradesTab is! Container) {
         _body.add(_gradesTab);
-        _tabs.add(Tab(child: Text(str.grades)));
+        _tabs.add(CourseDetailsTab(
+          currentIndex: _index,
+          index: _gradesIndex,
+          icon: const Icon(CupertinoIcons.checkmark_circle),
+          activeIcon: const Icon(CupertinoIcons.checkmark_circle_fill),
+          text: Text(str.grades),
+        ));
       }
     }
     try {
@@ -200,7 +268,13 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     } finally {
       if (_peopleTab is! Container) {
         _body.add(_peopleTab);
-        _tabs.add(Tab(child: Text(str.participants)));
+        _tabs.add(CourseDetailsTab(
+          currentIndex: _index,
+          index: _peopleIndex,
+          icon: const Icon(CupertinoIcons.person_3),
+          activeIcon: const Icon(CupertinoIcons.person_3_fill),
+          text: Text(str.participants),
+        ));
       }
     }
 
@@ -255,9 +329,9 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                         final name = m.name?.toLowerCase() ?? '';
                         var newIndex = -1;
                         if (name.contains(announcementModuleName)) {
-                          newIndex = _body.indexOf(_announcementsTab);
+                          newIndex = _announcementsIndex;
                         } else if (name.contains(discussionModuleName)) {
-                          newIndex = _body.indexOf(_discussionsTab);
+                          newIndex = _discussionsIndex;
                         }
                         if (newIndex != -1) {
                           setState(() {
@@ -529,6 +603,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
 
   // endregion
 
+  // region Data queries
+
   Future<Lti> queryLti(int toolid) async {
     try {
       return await LtiService().getLti(
@@ -636,6 +712,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     }
   }
 
+  // endregion
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -688,15 +766,16 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                     ),
                     bottom: hasData && _tabController != null
                         ? TabBar(
+                            tabs: _tabs,
+                            controller: _tabController,
+                            isScrollable: true,
                             indicatorPadding: const EdgeInsets.all(4),
                             indicator: const BoxDecoration(
                               color: MoodleColors.blueDark,
                               borderRadius:
                                   BorderRadius.all(Radius.circular(8)),
                             ),
-                            isScrollable: true,
-                            controller: _tabController,
-                            tabs: _tabs,
+                            unselectedLabelStyle: const TextStyle(fontSize: 0),
                             onTap: (value) => setState(() => _index = value),
                           )
                         : null,
