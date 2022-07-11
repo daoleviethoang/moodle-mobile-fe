@@ -261,6 +261,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                         }
                         if (newIndex != -1) {
                           setState(() {
+                            _index = newIndex;
                             _tabController?.animateTo(newIndex);
                           });
                           return;
