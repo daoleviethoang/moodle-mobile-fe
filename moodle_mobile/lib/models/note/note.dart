@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:moodle_mobile/constants/vars.dart';
 import 'package:moodle_mobile/data/network/apis/course/course_detail_service.dart';
+import 'package:moodle_mobile/data/network/apis/notes/notes_service.dart';
 
 part 'note.g.dart';
 
@@ -11,16 +12,22 @@ class Note {
   static String doneChar = '✔';
   static String importantChar = '⭐';
 
-  /// Returns noteid or id if either is not null
+  /// Returns `noteid` or `id` if either is not null
   @JsonKey(ignore: true)
+  // ignore: deprecated_member_use_from_same_package
   int get nid => noteid ?? id ?? -1;
 
-  /// Returns text or content if either is not null
+  /// Returns text or content if either is not null.<br/>
+  /// If txt has a `doneChar` at the beginning, it `isDone`.<br/>
+  /// If txt has an `importantChar` at the beginning, it `isImportant`.<br/>
+  /// If the note both `isDone` and `isImportant`, it has the following format:
+  /// `$doneChar $importantChar $txtFiltered`
   @JsonKey(ignore: true)
+  // ignore: deprecated_member_use_from_same_package
   String get txt => text ?? content ?? '';
 
-  /// Returns text or content if either is not null,
-  /// filtering out doneChar and importantChar if present
+  /// Returns `text` or `content` if either is not null,
+  /// filtering out `doneChar` and `importantChar` if present
   @JsonKey(ignore: true)
   String get txtFiltered {
     var _txt = txt;
@@ -33,23 +40,33 @@ class Note {
     return _txt;
   }
 
-  /// DONT USE THIS, use nid instead
+  /// Returns pure text from txt (by striping all HTML tags)
+  String get txtFormatted => Bidi.stripHtmlIfNeeded(txtFiltered);
+
+  @Deprecated('use nid instead')
   int? noteid;
+
   int? userid;
+
   /// 'personal', 'course' or 'site'
   /// Or note state (i.e. draft, public, site)
   String? publishstate;
+
   int? courseid;
-  /// DONT USE THIS, use txt instead
+
+  @Deprecated('use txt instead')
   String? text;
+
   /// (1 = HTML, 0 = MOODLE, 2 = PLAIN or 4 = MARKDOWN)
   int? format;
 
   // Only in core_notes_get_course_notes
-  /// DONT USE THIS, use nid instead
+  @Deprecated('use nid instead')
   int? id;
-  /// DONT USE THIS, use txt instead
+
+  @Deprecated('use txt instead')
   String? content;
+
   int? created;
   int? lastmodified;
   int? usermodified;
@@ -75,15 +92,19 @@ class Note {
     this.clientnoteid,
   });
 
-  /// Change text or content depending on which is not null,
-  /// must include doneChar and/or importantChar when isDone/isImportant is true
-  /// or else their status will be lost.
-  /// That requirement is not needed if you use txtFiltered setter instead.
+  /// Change text or content depending on which is not null. <br/>
+  /// Must include `doneChar` and/or `importantChar` when either/both is true
+  /// or else their status will be lost. <br/>
+  /// That requirement is not needed if you use `txtFiltered` setter instead.
   set txt(String value) {
+    // ignore: deprecated_member_use_from_same_package
     if (text != null) {
+      // ignore: deprecated_member_use_from_same_package
       text = value;
     }
+    // ignore: deprecated_member_use_from_same_package
     if (content != null) {
+      // ignore: deprecated_member_use_from_same_package
       content = value;
     }
   }
@@ -94,10 +115,14 @@ class Note {
     value = '${isDone ? '$doneChar ' : ''}'
         '${isImportant ? '$importantChar ' : ''}'
         '$value';
+    // ignore: deprecated_member_use_from_same_package
     if (text != null) {
+      // ignore: deprecated_member_use_from_same_package
       text = value;
     }
+    // ignore: deprecated_member_use_from_same_package
     if (content != null) {
+      // ignore: deprecated_member_use_from_same_package
       content = value;
     }
   }
@@ -118,7 +143,8 @@ class Note {
   }
 
   @JsonKey(ignore: true)
-  bool get isImportant => txt.startsWith(importantChar);
+  bool get isImportant =>
+      txt.startsWith('${isDone ? '$doneChar ' : ''}$importantChar');
 
   bool get isNotImportant => !isImportant;
 
@@ -156,6 +182,16 @@ class Note {
           '$courseid';
     }
     return courseName!;
+  }
+
+  Future<Note?> refreshData(String token) async {
+    final notes = await NotesService().getCourseNotes(token, courseid!);
+    final newNote = notes.getById(nid);
+    if (newNote != null) {
+      txt = newNote.txt;
+      return this;
+    }
+    return null;
   }
 
   factory Note.fromJson(Map<String, dynamic> json) => _$NoteFromJson(json);

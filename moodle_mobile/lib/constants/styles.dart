@@ -57,6 +57,9 @@ class MoodleStyles {
     fontWeight: FontWeight.bold,
   );
 
+  static const TextStyle noteTimestampStyle =
+      TextStyle(fontSize: 12, color: MoodleColors.gray);
+
   static const TextStyle noteSeeAllStyle = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.bold,

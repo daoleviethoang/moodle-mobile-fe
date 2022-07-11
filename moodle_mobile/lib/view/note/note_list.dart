@@ -10,7 +10,6 @@ import 'package:moodle_mobile/data/network/apis/notes/notes_service.dart';
 import 'package:moodle_mobile/models/note/note.dart';
 import 'package:moodle_mobile/models/note/notes.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
-import 'package:moodle_mobile/view/common/custom_text_field.dart';
 import 'package:moodle_mobile/view/common/data_card.dart';
 import 'package:moodle_mobile/view/common/menu_item.dart';
 
@@ -32,6 +31,14 @@ class _NoteListState extends State<NoteList> {
 
   late UserStore _userStore;
   Observable<bool>? _searchOpenFlag;
+
+  String get token => _userStore.user.token;
+
+  _onCheckbox(bool value, Note note) => NotesService().toggleDone(token, note);
+
+  _onPressed(Note note) => _openNoteDialog(context, note);
+
+  _onDelete(Note note) => NotesService().deleteNote(token, note);
 
   @override
   void initState() {
@@ -65,10 +72,10 @@ class _NoteListState extends State<NoteList> {
                 builder: (context) => NoteFolder(
                   notes: _notes,
                   type: NoteFolderType.all,
-              token: _userStore.user.token,
-              onCheckbox: (value, note) async =>
-                  await NotesService().toggleDone(_userStore.user.token, note),
-              onPressed: (note) => _openNoteDialog(context, note),
+                  token: token,
+                  onCheckbox: _onCheckbox,
+                  onPressed: _onPressed,
+                  onDelete: _onDelete,
                 ),
               ),
             ),
@@ -83,10 +90,10 @@ class _NoteListState extends State<NoteList> {
                 builder: (context) => NoteFolder(
                   notes: _notes,
                   type: NoteFolderType.important,
-              token: _userStore.user.token,
-              onCheckbox: (value, note) async =>
-                  await NotesService().toggleDone(_userStore.user.token, note),
-              onPressed: (note) => _openNoteDialog(context, note),
+                  token: token,
+                  onCheckbox: _onCheckbox,
+                  onPressed: _onPressed,
+                  onDelete: _onDelete,
                 ),
               ),
             ),
@@ -101,10 +108,10 @@ class _NoteListState extends State<NoteList> {
                 builder: (context) => NoteFolder(
                   notes: _notes,
                   type: NoteFolderType.done,
-              token: _userStore.user.token,
-              onCheckbox: (value, note) async =>
-                  await NotesService().toggleDone(_userStore.user.token, note),
-              onPressed: (note) => _openNoteDialog(context, note),
+                  token: token,
+                  onCheckbox: _onCheckbox,
+                  onPressed: _onPressed,
+                  onDelete: _onDelete,
                 ),
               ),
             ),
@@ -119,10 +126,10 @@ class _NoteListState extends State<NoteList> {
                 builder: (context) => NoteFolder(
                   notes: _notes,
                   type: NoteFolderType.other,
-              token: _userStore.user.token,
-              onCheckbox: (value, note) async =>
-                  await NotesService().toggleDone(_userStore.user.token, note),
-              onPressed: (note) => _openNoteDialog(context, note),
+                  token: token,
+                  onCheckbox: _onCheckbox,
+                  onPressed: _onPressed,
+                  onDelete: _onDelete,
                 ),
               ),
             ),
@@ -139,9 +146,28 @@ class _NoteListState extends State<NoteList> {
           children: [
             Align(
               alignment: Alignment.centerLeft,
-              child: Text(
-                AppLocalizations.of(context)!.recent_notes,
-                style: MoodleStyles.sectionHeaderStyle,
+              child: Wrap(
+                children: [
+                  Text(
+                    AppLocalizations.of(context)!.recent_notes,
+                    style: MoodleStyles.sectionHeaderStyle,
+                  ),
+                  Container(width: 4),
+                  SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircleAvatar(
+                      backgroundColor: Colors.grey,
+                      foregroundColor: Colors.white,
+                      child: FittedBox(
+                        child: Padding(
+                          padding: const EdgeInsets.all(2),
+                          child: Text('${_notes.recent.length}'),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             Positioned(
@@ -153,10 +179,10 @@ class _NoteListState extends State<NoteList> {
                     builder: (context) => NoteFolder(
                       notes: _notes,
                       type: NoteFolderType.recent,
-              token: _userStore.user.token,
-              onCheckbox: (value, note) async =>
-                  await NotesService().toggleDone(_userStore.user.token, note),
-              onPressed: (note) => _openNoteDialog(context, note),
+                      token: token,
+                      onCheckbox: _onCheckbox,
+                      onPressed: _onPressed,
+                      onDelete: _onDelete,
                     ),
                   ),
                 ),
@@ -175,15 +201,15 @@ class _NoteListState extends State<NoteList> {
               AppLocalizations.of(context)!.no_notes,
             ),
           ),
-        ..._notes.recent.map((n) {
+        ..._notes.recent.take(5).map((n) {
           return Padding(
             padding: const EdgeInsets.only(bottom: 8),
             child: NoteCard(
               n,
-              _userStore.user.token,
-              onCheckbox: (value) async =>
-                  await NotesService().toggleDone(_userStore.user.token, n),
-              onPressed: () => _openNoteDialog(context, n),
+              token,
+              onCheckbox: (value) => _onCheckbox(value, n),
+              onPressed: () => _onPressed(n),
+              onDelete: () => _onDelete(n),
             ),
           );
         })
@@ -193,27 +219,23 @@ class _NoteListState extends State<NoteList> {
 
   // endregion
 
-  void _openNoteDialog(BuildContext context, [Note? n]) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      isDismissible: false,
-      enableDrag: false,
-      builder: (context) => NoteEditDialog(
-        token: _userStore.user.token,
-        uid: _userStore.user.id,
-        cid: null,
-        note: n,
-      ),
-    ).then((result) {
-      if (result.runtimeType is Note) queryData();
-    });
-  }
+  Future _openNoteDialog(BuildContext context, [Note? n]) async =>
+      await showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        isDismissible: false,
+        enableDrag: false,
+        builder: (context) => NoteEditDialog(
+          token: token,
+          uid: _userStore.user.id,
+          cid: null,
+          note: n,
+        ),
+      );
 
   Future queryData() async {
     _notes.replace(
-        fromNotes: await NotesService()
-            .getNotes(_userStore.user.token, _userStore.user.id));
+        fromNotes: await NotesService().getNotes(token, _userStore.user.id));
     _initFolderView();
     _initHighlightView();
   }
@@ -255,13 +277,6 @@ class _NoteListState extends State<NoteList> {
                           ),
                         ),
                       ],
-                    ),
-                    Container(height: 6),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      child: NoteAddTextField(
-                        onTap: () => _openNoteDialog(context),
-                      ),
                     ),
                     Container(height: 6),
                     if (_notes.isNotEmpty)

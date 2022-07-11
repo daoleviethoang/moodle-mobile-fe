@@ -345,9 +345,12 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
         child: Column(
           children: [
             Container(height: 6),
-            NoteAddTextField(
-              onTap: () => _openNoteDialog(context),
-            ),
+            NoteAddTextField(onTap: () async {
+              // FIXME: UI not refreshing after adding note
+              await _openNoteDialog(context);
+              await queryNotes();
+              setState(() => _initNotesTab());
+            }),
             Container(height: 6),
             AnimatedOpacity(
               opacity: (_notes.isEmpty) ? 1 : 0,
@@ -358,15 +361,15 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                     Center(child: Text(AppLocalizations.of(context)!.no_notes)),
               ),
             ),
-            ..._notes.importantFirst.map((n) {
+            ..._notes.all.map((n) {
               return Padding(
                 padding: const EdgeInsets.only(bottom: 8),
                 child: NoteCard(
                   n,
                   token,
-                  onCheckbox: (value) async =>
-                      await NotesService().toggleDone(token, n),
+                  onCheckbox: (value) => NotesService().toggleDone(token, n),
                   onPressed: () => _openNoteDialog(context, n),
+                  onDelete: () => NotesService().deleteNote(token, n),
                 ),
               );
             })
@@ -376,22 +379,19 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     );
   }
 
-  void _openNoteDialog(BuildContext context, [Note? n]) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      isDismissible: false,
-      enableDrag: false,
-      builder: (context) => NoteEditDialog(
-        token: token,
-        uid: _userStore.user.id,
-        cid: _courseId,
-        note: n,
-      ),
-    ).then((result) {
-      if (result.runtimeType is Note) queryData();
-    });
-  }
+  Future _openNoteDialog(BuildContext context, [Note? n]) async =>
+      await showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        isDismissible: false,
+        enableDrag: false,
+        builder: (context) => NoteEditDialog(
+          token: token,
+          uid: _userStore.user.id,
+          cid: _courseId,
+          note: n,
+        ),
+      );
 
   void _initActivityTab() {
     if (!hasActivitySection) {
@@ -550,6 +550,15 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     }
   }
 
+  Future queryNotes() async {
+    _notes.replace(
+        fromNotes: await NotesService().getCourseNotes(
+          token,
+          _courseId,
+          _course?.displayname,
+        ));
+  }
+
   Future queryData() async {
     try {
       _content = await CourseContentService().getCourseContent(
@@ -564,12 +573,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
         token,
         _courseId,
       );
-      _notes.replace(
-          fromNotes: await NotesService().getCourseNotes(
-        token,
-        _courseId,
-        _course?.displayname,
-      ));
+      await queryNotes();
       _siteInfo = await SiteInfoApi().getSiteInfo(token);
       await CourseService().triggerViewCourse(
         token,

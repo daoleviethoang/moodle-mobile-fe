@@ -67,7 +67,7 @@ class NotesService {
             'userid': note.userid,
             'publishstate': note.publishstate,
             'courseid': note.courseid,
-            'text': note.text,
+            'text': note.txt,
             'format': note.format,
           }
         ],
@@ -115,6 +115,22 @@ class NotesService {
     try {
       await setNote(token, note);
       return note.isDone;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future deleteNote(String token, Note note) async {
+    try {
+      Dio dio = Http().client;
+      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': Wsfunction.DELETE_NOTES,
+        'moodlewsrestformat': 'json',
+        'notes': [[note.nid]],
+      });
+
+      if (kDebugMode) print(res.data);
     } catch (e) {
       rethrow;
     }
