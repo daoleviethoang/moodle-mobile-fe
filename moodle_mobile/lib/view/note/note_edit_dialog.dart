@@ -73,7 +73,7 @@ class _NoteEditDialogState extends State<NoteEditDialog> {
       textAlignVertical: TextAlignVertical.top,
       autofocus: widget.note == null,
       onChanged: (value) =>
-          setState(() => _note.txt = value),
+          setState(() => _note.txtFiltered = value),
     );
   }
 

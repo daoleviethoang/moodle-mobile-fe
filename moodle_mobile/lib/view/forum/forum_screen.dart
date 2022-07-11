@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
+import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/data/network/apis/forum/forum_api.dart';
 import 'package:moodle_mobile/models/forum/forum_discussion.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
@@ -185,7 +186,7 @@ class _PostCardState extends State<PostCard> {
                                 widget.article!,
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.blue),
+                                    color: MoodleColors.blue),
                               ),
                             ],
                           ),

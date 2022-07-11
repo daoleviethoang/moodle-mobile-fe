@@ -458,7 +458,7 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                                         .length
                                         .toString() +
                                     " files",
-                                rightTextColor: Colors.blue,
+                                rightTextColor: MoodleColors.blue,
                               ),
                               const SizedBox(
                                 height: 15,
@@ -471,7 +471,7 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                                         " " +
                                         AppLocalizations.of(context)!.comments +
                                         "...",
-                                rightTextColor: Colors.blue,
+                                rightTextColor: MoodleColors.blue,
                               ),
                               const SizedBox(
                                 height: 15,

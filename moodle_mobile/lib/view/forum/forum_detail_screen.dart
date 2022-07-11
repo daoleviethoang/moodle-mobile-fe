@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/view/common/content_item.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
@@ -99,7 +100,7 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                                   _forumPost[len - 1].author!.fullname!,
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.blue),
+                                      color: MoodleColors.blue),
                                 ),
                                 //SizedBox(height: 20),
                                 Text(
@@ -293,7 +294,7 @@ class ReplyCard extends StatelessWidget {
                         Text(AppLocalizations.of(context)!.forum_by),
                         Text(
                           name!,
-                          style: TextStyle(color: Colors.blue),
+                          style: TextStyle(color: MoodleColors.blue),
                         ),
                       ],
                     ),

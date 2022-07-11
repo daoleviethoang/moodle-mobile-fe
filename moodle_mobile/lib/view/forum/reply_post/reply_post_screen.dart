@@ -241,7 +241,7 @@ class _ReplyPostScreenState extends State<ReplyPostScreen> {
                                     files.remove(e);
                                   });
                                 },
-                                backgroundColor: Colors.blue),
+                                backgroundColor: MoodleColors.blue),
                           ),
                         )
                         .toList(),
@@ -373,7 +373,7 @@ class ReplyBox extends StatelessWidget {
                       padding: const EdgeInsets.only(left: 8.0),
                       child: Text(
                         article!,
-                        style: TextStyle(color: Colors.blue),
+                        style: TextStyle(color: MoodleColors.blue),
                       ),
                     ),
                   ],

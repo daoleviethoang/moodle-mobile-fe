@@ -1,5 +1,12 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:moodle_mobile/constants/dimens.dart';
+import 'package:moodle_mobile/models/note/note.dart';
+import 'package:moodle_mobile/models/note/note_search_delegate.dart';
+import 'package:moodle_mobile/models/note/notes.dart';
+import 'package:moodle_mobile/view/common/content_item.dart';
+import 'package:moodle_mobile/view/common/data_card.dart';
 
 enum NoteFolderType {
   all,
@@ -10,11 +17,21 @@ enum NoteFolderType {
 }
 
 class NoteFolder extends StatefulWidget {
+  final Notes notes;
   final NoteFolderType type;
+  final String token;
+  final Function(bool, Note)? onCheckbox;
+  final Function(Note)? onPressed;
+  final Function(Note)? onDelete;
 
   const NoteFolder({
     Key? key,
+    required this.notes,
     required this.type,
+    required this.token,
+    this.onCheckbox,
+    this.onPressed,
+    this.onDelete,
   }) : super(key: key);
 
   @override
@@ -22,18 +39,90 @@ class NoteFolder extends StatefulWidget {
 }
 
 class _NoteFolderState extends State<NoteFolder> {
+  late Map<int?, List<Note>> _notes;
   late NoteFolderType _type;
 
   Widget _body = Container();
+
+  late FocusNode _searchFocusNode;
+
+  List<Note> get _searchNotes {
+    final lists = _notes.values.toList();
+    final notes = <Note>[];
+    for (final list in lists) {
+      notes.addAll(list);
+    }
+    return notes;
+  }
 
   @override
   void initState() {
     super.initState();
     _type = widget.type;
+    switch (_type) {
+      case NoteFolderType.all:
+        _notes = widget.notes.byCourse;
+        break;
+      case NoteFolderType.important:
+        _notes = {null: widget.notes.important};
+        break;
+      case NoteFolderType.done:
+        _notes = {null: widget.notes.done};
+        break;
+      case NoteFolderType.other:
+        _notes = {null: widget.notes.other};
+        break;
+      case NoteFolderType.recent:
+        _notes = {null: widget.notes.recent};
+        break;
+    }
+    _searchFocusNode = FocusNode();
   }
 
   void _initBody() {
-    _body = Container();
+    _body = ListView(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      children: [
+        Container(height: 12),
+        ..._notes.keys.map((cid) {
+          return SectionItem(
+            header: cid == null
+                ? null
+                : FutureBuilder(
+              future: _notes[cid]!.first.getCourseName(context, widget.token),
+              builder: (context, snapshot) {
+                String courseName = '…';
+                if (snapshot.hasData) {
+                  courseName = snapshot.data as String;
+                } else if (snapshot.hasError) {
+                  if (kDebugMode) print(snapshot.error);
+                  return Container();
+                }
+                return HeaderItem(text: courseName);
+              },
+            ),
+            body: _notes[cid]?.map((n) {
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: NoteCard(
+                  n,
+                  widget.token,
+                  onCheckbox: widget.onCheckbox == null
+                      ? null
+                      : (value) => widget.onCheckbox!(value, n),
+                  onPressed: widget.onPressed == null
+                      ? null
+                      : () => widget.onPressed!(n),
+                  onDelete: widget.onDelete == null
+                      ? null
+                      : () => widget.onDelete!(n),
+                ),
+              );
+            }).toList(),
+          );
+        })
+      ],
+    );
   }
 
   @override
@@ -56,6 +145,23 @@ class _NoteFolderState extends State<NoteFolder> {
               return Text(AppLocalizations.of(context)!.recent_notes);
           }
         }),
+        actions: [
+          IconButton(
+            iconSize: Dimens.appbar_icon_size,
+            icon: const Icon(Icons.search),
+            onPressed: () {
+              showSearch(
+                context: context,
+                delegate: NoteSearchDelegate(
+                  context,
+                  _searchNotes,
+                  widget.token,
+                  hint: AppLocalizations.of(context)!.note_search,
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: _body,
     );

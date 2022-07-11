@@ -280,7 +280,7 @@ class _MenuScreenState extends State<MenuScreen> {
                       children: [
                         // m.MenuItem(
                         //   title: AppLocalizations.of(context)!.change_password,
-                        //   color: Colors.blue,
+                        //   color: MoodleColors.blue,
                         //   icon: const Icon(Icons.password_rounded),
                         //   fullWidth: true,
                         //   onPressed: () {},

@@ -445,15 +445,20 @@ class RichTextCard extends StatelessWidget {
   final String? text;
   final Map<String, Style>? style;
   final Map<bool Function(RenderContext), CustomRender>? customData;
+  final bool hasPadding;
 
-  const RichTextCard(
-      {Key? key, required this.text, this.style, this.customData})
-      : super(key: key);
+  const RichTextCard({
+    Key? key,
+    required this.text,
+    this.style,
+    this.customData,
+    this.hasPadding = true,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: EdgeInsets.symmetric(vertical: hasPadding ? 8 : 0),
       child: Html(
         data: text ?? '',
         style: style ?? MoodleStyles.htmlStyle,
@@ -552,8 +557,13 @@ class LineItem extends StatelessWidget {
 // region Section
 
 class SectionItem extends StatefulWidget {
+  /// The title of the section, will be hidden if is null or is container
   final Widget? header;
+
+  /// A list of item contained in the section
   final List<Widget>? body;
+
+  /// Whether a separator is displayed between sections
   final bool hasSeparator;
 
   const SectionItem({
@@ -575,7 +585,7 @@ class _SectionItemState extends State<SectionItem> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (widget.header != null) ...[
+        if (widget.header != null && widget.header is! Container) ...[
           GestureDetector(
             onTap: () => setState(() => _expanded = !_expanded),
             child: Row(
