@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -53,7 +55,8 @@ class _CalendarScreenState extends State<CalendarScreen>
   Map<String, List<Event>> _events = {};
   Observable<bool>? _jumpOpenFlag;
 
-  Exception? errored;
+  Exception? _errored;
+  Timer? _refreshErrorTimer;
 
   @override
   void initState() {
@@ -139,73 +142,74 @@ class _CalendarScreenState extends State<CalendarScreen>
   // region Calendar tab
 
   void _initCalendarTabView() {
-    _calendarTabView = VisibilityDetector(
-      key: const Key('calendar_tab'),
-      onVisibilityChanged: (info) {
-        if (info.visibleFraction > .5) {
-          if (errored != null) setState(() => _events.clear());
-        }
-      },
-      child: FutureBuilder(
-          future: queryData(),
-          builder: (context, data) {
-            if (data.hasError) {
-              if (kDebugMode) {
-                print('${data.error}');
-              }
-              errored = data.error as Exception;
-            } else if (errored != null) {
-              errored = null;
+    _calendarTabView = FutureBuilder(
+        future: queryData(),
+        builder: (context, data) {
+          if (data.hasError) {
+            if (kDebugMode) {
+              print('${data.error}');
             }
-            return RefreshIndicator(
-              onRefresh: () async => setState(() => _events.clear()),
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Column(
-                    children: [
-                      Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          AnimatedOpacity(
-                            opacity: (_events.isEmpty) ? .5 : 1,
+            _errored = data.error as Exception;
+            _refreshErrorTimer ??=
+                Timer.periodic(const Duration(seconds: 5), (timer) async {
+              if (_errored != null) {
+                setState(() => _events.clear());
+              } else {
+                timer.cancel();
+                _refreshErrorTimer = null;
+              }
+            });
+          } else if (_errored != null) {
+            _errored = null;
+          }
+          return RefreshIndicator(
+            onRefresh: () async => setState(() => _events.clear()),
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  children: [
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        AnimatedOpacity(
+                          opacity: (_events.isEmpty) ? .5 : 1,
+                          duration: const Duration(milliseconds: 300),
+                          child: IgnorePointer(
+                            ignoring: _events.isEmpty,
+                            child: _monthView,
+                          ),
+                        ),
+                        AnimatedOpacity(
+                            opacity: (data.hasError) ? 1 : 0,
                             duration: const Duration(milliseconds: 300),
                             child: IgnorePointer(
-                              ignoring: _events.isEmpty,
-                              child: _monthView,
-                            ),
-                          ),
-                          AnimatedOpacity(
-                              opacity: (data.hasError) ? 1 : 0,
-                              duration: const Duration(milliseconds: 300),
-                              child: IgnorePointer(
-                                ignoring: !data.hasError,
-                                child: ErrorCard(
-                                    text: AppLocalizations.of(context)!
-                                        .err_get_calendar),
-                              )),
-                          AnimatedOpacity(
-                              opacity: (_events.isEmpty) ? 1 : 0,
-                              duration: const Duration(milliseconds: 300),
-                              child: IgnorePointer(
-                                  ignoring: _events.isNotEmpty,
-                                  child: const LoadingCard())),
-                        ],
+                              ignoring: !data.hasError,
+                              child: ErrorCard(
+                                  text: AppLocalizations.of(context)!
+                                      .err_get_calendar),
+                            )),
+                        AnimatedOpacity(
+                            opacity: (_events.isEmpty) ? 1 : 0,
+                            duration: const Duration(milliseconds: 300),
+                            child: IgnorePointer(
+                                ignoring: _events.isNotEmpty,
+                                child: const LoadingCard())),
+                      ],
+                    ),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 12, left: 12),
+                        child: _dayView,
                       ),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 12, left: 12),
-                          child: _dayView,
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-            );
-          }),
-    );
+            ),
+          );
+        });
   }
 
   void _initMonthView() {

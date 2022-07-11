@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:auto_size_text/auto_size_text.dart';
@@ -62,7 +63,9 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   Widget _eventsTab = Container();
   Widget _gradesTab = Container();
   Widget _peopleTab = Container();
-  Exception? errored;
+
+  Exception? _errored;
+  Timer? _refreshErrorTimer;
 
   // TabBar data
   TabController? _tabController;
@@ -724,9 +727,18 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
               if (kDebugMode) {
                 print('${data.error}');
               }
-              errored = data.error as Exception;
-            } else if (errored != null) {
-              errored = null;
+              _errored = data.error as Exception;
+              _refreshErrorTimer ??=
+                  Timer.periodic(const Duration(seconds: 5), (timer) async {
+                    if (_errored != null) {
+                      setState(() {});
+                    } else {
+                      timer.cancel();
+                      _refreshErrorTimer = null;
+                    }
+                  });
+            } else if (_errored != null) {
+              _errored = null;
             }
             return NestedScrollView(
               floatHeaderSlivers: true,
