@@ -186,17 +186,9 @@ class _NoteCardState extends State<NoteCard> {
                     ),
                     Container(height: 4),
                     Builder(builder: (context) {
-                      final htmlStyle = MoodleStyles.htmlStyle
-                        ..addAll({
-                          '*': Style(
-                            textDecoration: _note.isDone
-                                ? TextDecoration.lineThrough
-                                : TextDecoration.none,
-                          ),
-                        });
                       return RichTextCard(
                         text: _note.txtFiltered,
-                        style: htmlStyle,
+                        style: MoodleStyles.noteTextStyle(_note.isDone),
                         hasPadding: false,
                       );
                     }),
