@@ -416,41 +416,40 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
 
   void _initNotesTab() {
     _notesTab = SingleChildScrollView(
-      child: AnimatedOpacity(
-        opacity: (_notes.isEmpty) ? .5 : 1,
-        duration: const Duration(milliseconds: 300),
-        child: Column(
-          children: [
-            Container(height: 6),
-            NoteAddTextField(onTap: () async {
-              await _openNoteDialog(context);
-              await queryNotes();
-              setState(() {});
-            }),
-            Container(height: 6),
-            AnimatedOpacity(
-              opacity: (_notes.isEmpty) ? 1 : 0,
-              duration: const Duration(milliseconds: 300),
+      child: Column(
+        children: [
+          Container(height: 6),
+          NoteAddTextField(onTap: () async {
+            await _openNoteDialog(context);
+            await queryNotes();
+            setState(() {});
+          }),
+          Container(height: 6),
+          AnimatedOpacity(
+            opacity: (_notes.isEmpty) ? 1 : 0,
+            duration: const Duration(milliseconds: 300),
+            child: Padding(
+              padding: const EdgeInsets.only(top: 16),
               child: Opacity(
                 opacity: .5,
                 child:
                     Center(child: Text(AppLocalizations.of(context)!.no_notes)),
               ),
             ),
-            ..._notes.all.map((n) {
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: NoteCard(
-                  n,
-                  token,
-                  onCheckbox: (value) => NotesService().toggleDone(token, n),
-                  onPressed: () => _openNoteDialog(context, n),
-                  onDelete: () => NotesService().deleteNote(token, n),
-                ),
-              );
-            })
-          ],
-        ),
+          ),
+          ..._notes.all.map((n) {
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: NoteCard(
+                n,
+                token,
+                onCheckbox: (value) => NotesService().toggleDone(token, n),
+                onPressed: () => _openNoteDialog(context, n),
+                onDelete: () => NotesService().deleteNote(token, n),
+              ),
+            );
+          })
+        ],
       ),
     );
   }
