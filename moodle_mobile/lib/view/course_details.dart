@@ -341,37 +341,35 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                 case ModuleName.folder:
                   return Container();
                 case ModuleName.forum:
-                  return Builder(
-                    builder: (context) {
-                      // Check if this is Announcements/Discussion Forum
-                      var newIndex = -1;
-                      var newTitle = title;
-                      if (_content.first == c) {
-                        final name = title.toLowerCase();
-                        if (name.contains(announcementModuleName)) {
-                          newIndex = _announcementsIndex;
-                          newTitle = AppLocalizations.of(context)!.announcement;
-                        } else if (name.contains(discussionModuleName)) {
-                          newIndex = _discussionsIndex;
-                          newTitle = AppLocalizations.of(context)!.discussion;
-                        }
+                  return Builder(builder: (context) {
+                    // Check if this is Announcements/Discussion Forum
+                    var newIndex = -1;
+                    var newTitle = title;
+                    if (_content.first == c) {
+                      final name = title.toLowerCase();
+                      if (name.contains(announcementModuleName)) {
+                        newIndex = _announcementsIndex;
+                        newTitle = AppLocalizations.of(context)!.announcement;
+                      } else if (name.contains(discussionModuleName)) {
+                        newIndex = _discussionsIndex;
+                        newTitle = AppLocalizations.of(context)!.discussion;
                       }
-
-                      return ForumItem(
-                        title: newTitle,
-                        onPressed: () {
-                          // Switch to Announcements/Discussion Forum
-                          if (newIndex != -1) {
-                            _tabController?.animateTo(newIndex);
-                            return;
-                          }
-                          // Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
-                          //   return ForumScreen();
-                          // })))
-                        },
-                      );
                     }
-                  );
+
+                    return ForumItem(
+                      title: newTitle,
+                      onPressed: () {
+                        // Switch to Announcements/Discussion Forum
+                        if (newIndex != -1) {
+                          _tabController?.animateTo(newIndex);
+                          return;
+                        }
+                        // Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
+                        //   return ForumScreen();
+                        // })))
+                      },
+                    );
+                  });
                 case ModuleName.label:
                   return RichTextCard(text: m.description ?? '');
                 case ModuleName.lti:
@@ -753,6 +751,11 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
               _errored = data.error as Exception;
               _refreshErrorTimer ??=
                   Timer.periodic(const Duration(seconds: 5), (timer) async {
+                if (!mounted) {
+                  timer.cancel();
+                  _refreshErrorTimer = null;
+                  return;
+                }
                 if (_errored != null) {
                   setState(() {});
                 } else {
