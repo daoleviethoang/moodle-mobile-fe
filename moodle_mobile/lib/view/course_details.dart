@@ -429,7 +429,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
             opacity: (_notes.isEmpty) ? 1 : 0,
             duration: const Duration(milliseconds: 300),
             child: Padding(
-              padding: const EdgeInsets.only(top: 16),
+              padding: EdgeInsets.only(top: _notes.isEmpty ? 16 : 0),
               child: Opacity(
                 opacity: .5,
                 child:
@@ -729,13 +729,13 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
               _errored = data.error as Exception;
               _refreshErrorTimer ??=
                   Timer.periodic(const Duration(seconds: 5), (timer) async {
-                    if (_errored != null) {
-                      setState(() {});
-                    } else {
-                      timer.cancel();
-                      _refreshErrorTimer = null;
-                    }
-                  });
+                if (_errored != null) {
+                  setState(() {});
+                } else {
+                  timer.cancel();
+                  _refreshErrorTimer = null;
+                }
+              });
             } else if (_errored != null) {
               _errored = null;
             }
@@ -754,7 +754,14 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                         shape: const CircleBorder(),
                       ),
                       child: const Icon(CupertinoIcons.back),
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () {
+                        if (_index != _homeIndex) {
+                          setState(() => _index = _homeIndex);
+                          _tabController?.animateTo(_homeIndex);
+                        } else {
+                          Navigator.pop(context);
+                        }
+                      },
                     ),
                     flexibleSpace: FlexibleSpaceBar(
                       background: Container(
