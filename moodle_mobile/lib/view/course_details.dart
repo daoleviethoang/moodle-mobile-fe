@@ -34,6 +34,7 @@ import 'package:moodle_mobile/view/common/data_card.dart';
 import 'package:moodle_mobile/view/common/tab_item.dart';
 import 'package:moodle_mobile/view/enrol/enrol.dart';
 import 'package:moodle_mobile/view/forum/forum_announcement_scren.dart';
+import 'package:moodle_mobile/view/forum/forum_discussion_screen.dart';
 import 'package:moodle_mobile/view/forum/forum_screen.dart';
 import 'package:moodle_mobile/view/grade_in_one_course.dart';
 import 'package:moodle_mobile/view/note/note_edit_dialog.dart';
@@ -341,37 +342,44 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                 case ModuleName.folder:
                   return Container();
                 case ModuleName.forum:
-                  return Builder(
-                    builder: (context) {
-                      // Check if this is Announcements/Discussion Forum
-                      var newIndex = -1;
-                      var newTitle = title;
-                      if (_content.first == c) {
-                        final name = title.toLowerCase();
-                        if (name.contains(announcementModuleName)) {
-                          newIndex = _announcementsIndex;
-                          newTitle = AppLocalizations.of(context)!.announcement;
-                        } else if (name.contains(discussionModuleName)) {
-                          newIndex = _discussionsIndex;
-                          newTitle = AppLocalizations.of(context)!.discussion;
-                        }
+                  return Builder(builder: (context) {
+                    // Check if this is Announcements/Discussion Forum
+                    var newIndex = -1;
+                    var newTitle = title;
+                    if (_content.first == c) {
+                      final name = title.toLowerCase();
+                      if (name.contains(announcementModuleName)) {
+                        newIndex = _announcementsIndex;
+                        newTitle = AppLocalizations.of(context)!.announcement;
+                      } else if (name.contains(discussionModuleName)) {
+                        newIndex = _discussionsIndex;
+                        newTitle = AppLocalizations.of(context)!.discussion;
                       }
-
-                      return ForumItem(
-                        title: newTitle,
-                        onPressed: () {
-                          // Switch to Announcements/Discussion Forum
-                          if (newIndex != -1) {
-                            _tabController?.animateTo(newIndex);
-                            return;
-                          }
-                          // Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
-                          //   return ForumScreen();
-                          // })))
-                        },
-                      );
                     }
-                  );
+
+                    return ForumItem(
+                      title: newTitle,
+                      onPressed: () {
+                        // Switch to Announcements/Discussion Forum
+                        if (newIndex != -1) {
+                          _tabController?.animateTo(newIndex);
+                          return;
+                        }
+                        Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                            builder: (BuildContext context) {
+                              return ForumScreen(
+                                courseId: _courseId,
+                                forumId: m.instance,
+                                forumName: m.name,
+                              );
+                            },
+                          ),
+                        );
+                      },
+                    );
+                  });
                 case ModuleName.label:
                   return RichTextCard(text: m.description ?? '');
                 case ModuleName.lti:
@@ -683,11 +691,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
       _initBody();
     } catch (e) {
       if (e.toString() == "errorcoursecontextnotvalid") {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) {
-          return EnrolScreen(
-            courseId: widget.courseId,
-          );
-        }));
+        _showEnrolScreen();
       } else {
         rethrow;
       }
@@ -726,14 +730,16 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
       }
     } catch (e) {
       if (e.toString() == "errorcoursecontextnotvalid") {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) {
-          return EnrolScreen(
-            courseId: widget.courseId,
-          );
-        }));
+        _showEnrolScreen();
       }
       rethrow;
     }
+  }
+
+  void _showEnrolScreen() {
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) {
+      return EnrolScreen(courseId: widget.courseId);
+    }));
   }
 
   // endregion
@@ -753,6 +759,11 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
               _errored = data.error as Exception;
               _refreshErrorTimer ??=
                   Timer.periodic(const Duration(seconds: 5), (timer) async {
+                if (!mounted) {
+                  timer.cancel();
+                  _refreshErrorTimer = null;
+                  return;
+                }
                 if (_errored != null) {
                   setState(() {});
                 } else {

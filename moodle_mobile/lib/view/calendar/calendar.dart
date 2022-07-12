@@ -59,9 +59,6 @@ class _CalendarScreenState extends State<CalendarScreen>
   Exception? _errored;
   Timer? _refreshErrorTimer;
 
-  Exception? _errored;
-  Timer? _refreshErrorTimer;
-
   @override
   void initState() {
     super.initState();
@@ -160,6 +157,11 @@ class _CalendarScreenState extends State<CalendarScreen>
             _errored = data.error as Exception;
             _refreshErrorTimer ??=
                 Timer.periodic(const Duration(seconds: 5), (timer) async {
+              if (!mounted) {
+                timer.cancel();
+                _refreshErrorTimer = null;
+                return;
+              }
               if (_errored != null) {
                 setState(() => _events.clear());
               } else {
