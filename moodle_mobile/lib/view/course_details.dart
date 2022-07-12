@@ -53,7 +53,8 @@ class CourseDetailsScreen extends StatefulWidget {
 
 class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     with TickerProviderStateMixin {
-  // Body data
+  // region Body data
+
   final _body = <Widget>[];
   Widget _homeTab = Container();
   Widget _notesTab = Container();
@@ -64,13 +65,30 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   Widget _gradesTab = Container();
   Widget _peopleTab = Container();
 
+  /// Wrap each child in body in a scroll view and padding
+  List<Widget> get _bodyWrapper {
+    if (_body.isEmpty) return [Container()];
+
+    return _body.map((w) {
+      return SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
+        child: w,
+      );
+    }).toList();
+  }
+
   Exception? _errored;
   Timer? _refreshErrorTimer;
 
-  // TabBar data
+  // endregion
+
+  // region TabBar data
   TabController? _tabController;
   final _tabs = <Widget>[];
-  var _index = 0;
+
+  int get _index => _tabController?.index ?? 0;
+
+  // endregion
 
   // region Index getters
 
@@ -323,30 +341,36 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                 case ModuleName.folder:
                   return Container();
                 case ModuleName.forum:
-                  return ForumItem(
-                    title: title,
-                    onPressed: () {
-                      // Switch to special module
+                  return Builder(
+                    builder: (context) {
+                      // Check if this is Announcements/Discussion Forum
+                      var newIndex = -1;
+                      var newTitle = title;
                       if (_content.first == c) {
-                        final name = m.name?.toLowerCase() ?? '';
-                        var newIndex = -1;
+                        final name = title.toLowerCase();
                         if (name.contains(announcementModuleName)) {
                           newIndex = _announcementsIndex;
+                          newTitle = AppLocalizations.of(context)!.announcement;
                         } else if (name.contains(discussionModuleName)) {
                           newIndex = _discussionsIndex;
-                        }
-                        if (newIndex != -1) {
-                          setState(() {
-                            _index = newIndex;
-                            _tabController?.animateTo(newIndex);
-                          });
-                          return;
+                          newTitle = AppLocalizations.of(context)!.discussion;
                         }
                       }
-                      // Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
-                      //   return ForumScreen();
-                      // })))
-                    },
+
+                      return ForumItem(
+                        title: newTitle,
+                        onPressed: () {
+                          // Switch to Announcements/Discussion Forum
+                          if (newIndex != -1) {
+                            _tabController?.animateTo(newIndex);
+                            return;
+                          }
+                          // Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
+                          //   return ForumScreen();
+                          // })))
+                        },
+                      );
+                    }
                   );
                 case ModuleName.label:
                   return RichTextCard(text: m.description ?? '');
@@ -416,41 +440,40 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
 
   void _initNotesTab() {
     _notesTab = SingleChildScrollView(
-      child: AnimatedOpacity(
-        opacity: (_notes.isEmpty) ? .5 : 1,
-        duration: const Duration(milliseconds: 300),
-        child: Column(
-          children: [
-            Container(height: 6),
-            NoteAddTextField(onTap: () async {
-              await _openNoteDialog(context);
-              await queryNotes();
-              setState(() {});
-            }),
-            Container(height: 6),
-            AnimatedOpacity(
-              opacity: (_notes.isEmpty) ? 1 : 0,
-              duration: const Duration(milliseconds: 300),
+      child: Column(
+        children: [
+          Container(height: 6),
+          NoteAddTextField(onTap: () async {
+            await _openNoteDialog(context);
+            await queryNotes();
+            setState(() {});
+          }),
+          Container(height: 6),
+          AnimatedOpacity(
+            opacity: (_notes.isEmpty) ? 1 : 0,
+            duration: const Duration(milliseconds: 300),
+            child: Padding(
+              padding: EdgeInsets.only(top: _notes.isEmpty ? 16 : 0),
               child: Opacity(
                 opacity: .5,
                 child:
                     Center(child: Text(AppLocalizations.of(context)!.no_notes)),
               ),
             ),
-            ..._notes.all.map((n) {
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: NoteCard(
-                  n,
-                  token,
-                  onCheckbox: (value) => NotesService().toggleDone(token, n),
-                  onPressed: () => _openNoteDialog(context, n),
-                  onDelete: () => NotesService().deleteNote(token, n),
-                ),
-              );
-            })
-          ],
-        ),
+          ),
+          ..._notes.all.map((n) {
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: NoteCard(
+                n,
+                token,
+                onCheckbox: (value) => NotesService().toggleDone(token, n),
+                onPressed: () => _openNoteDialog(context, n),
+                onDelete: () => NotesService().deleteNote(token, n),
+              ),
+            );
+          })
+        ],
       ),
     );
   }
@@ -730,13 +753,13 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
               _errored = data.error as Exception;
               _refreshErrorTimer ??=
                   Timer.periodic(const Duration(seconds: 5), (timer) async {
-                    if (_errored != null) {
-                      setState(() {});
-                    } else {
-                      timer.cancel();
-                      _refreshErrorTimer = null;
-                    }
-                  });
+                if (_errored != null) {
+                  setState(() {});
+                } else {
+                  timer.cancel();
+                  _refreshErrorTimer = null;
+                }
+              });
             } else if (_errored != null) {
               _errored = null;
             }
@@ -755,7 +778,13 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                         shape: const CircleBorder(),
                       ),
                       child: const Icon(CupertinoIcons.back),
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () {
+                        if (_index != _homeIndex) {
+                          _tabController?.animateTo(_homeIndex);
+                        } else {
+                          Navigator.pop(context);
+                        }
+                      },
                     ),
                     flexibleSpace: FlexibleSpaceBar(
                       background: Container(
@@ -794,7 +823,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                                   BorderRadius.all(Radius.circular(8)),
                             ),
                             unselectedLabelStyle: const TextStyle(fontSize: 0),
-                            onTap: (value) => setState(() => _index = value),
+                            onTap: (value) => _tabController?.animateTo(value),
                           )
                         : null,
                   ),
@@ -808,21 +837,11 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                     duration: const Duration(milliseconds: 1200),
                     child: IgnorePointer(
                       ignoring: !hasData,
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            Container(height: 12),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20),
-                              child: _body.isNotEmpty
-                                  ? _body[_index]
-                                  : Container(),
-                            ),
-                            Container(height: 12),
-                          ],
-                        ),
-                      ),
+                      child: _tabController == null
+                          ? Container()
+                          : TabBarView(
+                              controller: _tabController,
+                              children: _bodyWrapper),
                     ),
                   ),
                   AnimatedOpacity(

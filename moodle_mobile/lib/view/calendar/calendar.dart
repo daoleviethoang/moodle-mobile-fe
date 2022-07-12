@@ -54,6 +54,10 @@ class _CalendarScreenState extends State<CalendarScreen>
   late UserStore _userStore;
   Map<String, List<Event>> _events = {};
   Observable<bool>? _jumpOpenFlag;
+  final noteSearchShowFlag = Observable<bool>(false);
+
+  Exception? _errored;
+  Timer? _refreshErrorTimer;
 
   Exception? _errored;
   Timer? _refreshErrorTimer;
@@ -72,7 +76,11 @@ class _CalendarScreenState extends State<CalendarScreen>
     _jumpOpenFlag?.observe((p0) {
       if (_jumpOpenFlag?.value ?? false) {
         _jumpOpenFlag?.toggle();
-        _jumpToDate();
+        if (_tabController.index == 0) {
+          _jumpToDate();
+        } else {
+          noteSearchShowFlag.toggle();
+        }
       }
     });
   }
@@ -461,7 +469,7 @@ class _CalendarScreenState extends State<CalendarScreen>
   // region Note tab
 
   void _initNoteTabView() {
-    _noteTabView = const NoteList();
+    _noteTabView = NoteList(searchShowFlag: noteSearchShowFlag);
   }
 
   // endregion

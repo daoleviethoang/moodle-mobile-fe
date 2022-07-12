@@ -60,6 +60,17 @@ class MoodleStyles {
   static const TextStyle noteTimestampStyle =
       TextStyle(fontSize: 12, color: MoodleColors.gray);
 
+  static Map<String, Style> noteTextStyle(bool isDone) {
+    final html = htmlStyle;
+    html.addAll({
+      '*': Style(
+        textDecoration:
+            isDone ? TextDecoration.lineThrough : TextDecoration.none,
+      ),
+    });
+    return html;
+  }
+
   static const TextStyle noteSeeAllStyle = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.bold,
@@ -67,7 +78,8 @@ class MoodleStyles {
     decoration: TextDecoration.none,
   );
 
-  static Map<String, Style> htmlStyle = {
+  static Map<String, Style> get htmlStyle => {
+    'div': Style(textOverflow: TextOverflow.visible),
     'h1': Style(fontSize: const FontSize(19)),
     'h2': Style(fontSize: const FontSize(17.5)),
     'h3': Style(fontSize: const FontSize(16)),

@@ -455,12 +455,18 @@ class RichTextCard extends StatelessWidget {
     this.hasPadding = true,
   }) : super(key: key);
 
+  String get _textFormatted {
+    var txt = text ?? '';
+    txt = txt.replaceAll(RegExp(r'<br/?>'), '<div/>');
+    return txt;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: hasPadding ? 8 : 0),
       child: Html(
-        data: text ?? '',
+        data: _textFormatted,
         style: style ?? MoodleStyles.htmlStyle,
         onImageTap: (url, cxt, attributes, element) {
           Navigator.of(context).push(MaterialPageRoute(
