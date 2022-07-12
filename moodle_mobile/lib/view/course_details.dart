@@ -341,27 +341,36 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                 case ModuleName.folder:
                   return Container();
                 case ModuleName.forum:
-                  return ForumItem(
-                    title: title,
-                    onPressed: () {
-                      // Switch to special module
+                  return Builder(
+                    builder: (context) {
+                      // Check if this is Announcements/Discussion Forum
+                      var newIndex = -1;
+                      var newTitle = title;
                       if (_content.first == c) {
-                        final name = m.name?.toLowerCase() ?? '';
-                        var newIndex = -1;
+                        final name = title.toLowerCase();
                         if (name.contains(announcementModuleName)) {
                           newIndex = _announcementsIndex;
+                          newTitle = AppLocalizations.of(context)!.announcement;
                         } else if (name.contains(discussionModuleName)) {
                           newIndex = _discussionsIndex;
-                        }
-                        if (newIndex != -1) {
-                          _tabController?.animateTo(newIndex);
-                          return;
+                          newTitle = AppLocalizations.of(context)!.discussion;
                         }
                       }
-                      // Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
-                      //   return ForumScreen();
-                      // })))
-                    },
+
+                      return ForumItem(
+                        title: newTitle,
+                        onPressed: () {
+                          // Switch to Announcements/Discussion Forum
+                          if (newIndex != -1) {
+                            _tabController?.animateTo(newIndex);
+                            return;
+                          }
+                          // Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
+                          //   return ForumScreen();
+                          // })))
+                        },
+                      );
+                    }
                   );
                 case ModuleName.label:
                   return RichTextCard(text: m.description ?? '');
