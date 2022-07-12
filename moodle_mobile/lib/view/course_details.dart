@@ -53,7 +53,8 @@ class CourseDetailsScreen extends StatefulWidget {
 
 class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     with TickerProviderStateMixin {
-  // Body data
+  // region Body data
+
   final _body = <Widget>[];
   Widget _homeTab = Container();
   Widget _notesTab = Container();
@@ -64,13 +65,30 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   Widget _gradesTab = Container();
   Widget _peopleTab = Container();
 
+  /// Wrap each child in body in a scroll view and padding
+  List<Widget> get _bodyWrapper {
+    if (_body.isEmpty) return [Container()];
+
+    return _body.map((w) {
+      return SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
+        child: w,
+      );
+    }).toList();
+  }
+
   Exception? _errored;
   Timer? _refreshErrorTimer;
 
-  // TabBar data
+  // endregion
+
+  // region TabBar data
   TabController? _tabController;
   final _tabs = <Widget>[];
-  var _index = 0;
+
+  int get _index => _tabController?.index ?? 0;
+
+  // endregion
 
   // region Index getters
 
@@ -336,10 +354,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                           newIndex = _discussionsIndex;
                         }
                         if (newIndex != -1) {
-                          setState(() {
-                            _index = newIndex;
-                            _tabController?.animateTo(newIndex);
-                          });
+                          _tabController?.animateTo(newIndex);
                           return;
                         }
                       }
@@ -756,7 +771,6 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                       child: const Icon(CupertinoIcons.back),
                       onPressed: () {
                         if (_index != _homeIndex) {
-                          setState(() => _index = _homeIndex);
                           _tabController?.animateTo(_homeIndex);
                         } else {
                           Navigator.pop(context);
@@ -800,7 +814,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                                   BorderRadius.all(Radius.circular(8)),
                             ),
                             unselectedLabelStyle: const TextStyle(fontSize: 0),
-                            onTap: (value) => setState(() => _index = value),
+                            onTap: (value) => _tabController?.animateTo(value),
                           )
                         : null,
                   ),
@@ -814,21 +828,11 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                     duration: const Duration(milliseconds: 1200),
                     child: IgnorePointer(
                       ignoring: !hasData,
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            Container(height: 12),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20),
-                              child: _body.isNotEmpty
-                                  ? _body[_index]
-                                  : Container(),
-                            ),
-                            Container(height: 12),
-                          ],
-                        ),
-                      ),
+                      child: _tabController == null
+                          ? Container()
+                          : TabBarView(
+                              controller: _tabController,
+                              children: _bodyWrapper),
                     ),
                   ),
                   AnimatedOpacity(
