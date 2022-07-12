@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +10,7 @@ import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/data/network/apis/notes/notes_service.dart';
 import 'package:moodle_mobile/models/note/note.dart';
+import 'package:moodle_mobile/models/note/note_search_delegate.dart';
 import 'package:moodle_mobile/models/note/notes.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/data_card.dart';
@@ -17,7 +20,9 @@ import 'note_edit_dialog.dart';
 import 'note_folder.dart';
 
 class NoteList extends StatefulWidget {
-  const NoteList({Key? key}) : super(key: key);
+  final Observable<bool>? searchShowFlag;
+
+  const NoteList({Key? key, this.searchShowFlag}) : super(key: key);
 
   @override
   _NoteListState createState() => _NoteListState();
@@ -30,7 +35,7 @@ class _NoteListState extends State<NoteList> {
   final _notes = Notes();
 
   late UserStore _userStore;
-  Observable<bool>? _searchOpenFlag;
+  Observable<bool>? _searchShowFlag;
 
   String get token => _userStore.user.token;
 
@@ -44,6 +49,13 @@ class _NoteListState extends State<NoteList> {
   void initState() {
     super.initState();
     _userStore = GetIt.instance<UserStore>();
+    _searchShowFlag = widget.searchShowFlag;
+    _searchShowFlag?.observe((p0) {
+      if (_searchShowFlag?.value ?? false) {
+        _searchShowFlag?.toggle();
+        _showSearch();
+      }
+    });
   }
 
   // region Init widgets
@@ -218,6 +230,18 @@ class _NoteListState extends State<NoteList> {
   }
 
   // endregion
+
+  void _showSearch() {
+    showSearch(
+      context: context,
+      delegate: NoteSearchDelegate(
+        context,
+        _notes.all,
+        token,
+        hint: AppLocalizations.of(context)!.note_search,
+      ),
+    );
+  }
 
   Future _openNoteDialog(BuildContext context, [Note? n]) async =>
       await showModalBottomSheet(
