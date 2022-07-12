@@ -213,7 +213,7 @@ class SubmissionItem extends StatelessWidget {
       onPressed: () {
         Navigator.push(
             context,
-            MaterialPageRoute(
+            CupertinoPageRoute(
                 builder: (context) => AssignmentScreen(
                       title: title,
                       assignInstanceId: submissionId,
@@ -254,7 +254,7 @@ class QuizItem extends StatelessWidget {
       onPressed: () {
         Navigator.push(
           context,
-          MaterialPageRoute(
+          CupertinoPageRoute(
             builder: (context) => QuizScreen(
               title: title,
               quizInstanceId: quizInstanceId,

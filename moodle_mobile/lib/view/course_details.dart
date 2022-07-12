@@ -34,6 +34,7 @@ import 'package:moodle_mobile/view/common/data_card.dart';
 import 'package:moodle_mobile/view/common/tab_item.dart';
 import 'package:moodle_mobile/view/enrol/enrol.dart';
 import 'package:moodle_mobile/view/forum/forum_announcement_scren.dart';
+import 'package:moodle_mobile/view/forum/forum_discussion_screen.dart';
 import 'package:moodle_mobile/view/forum/forum_screen.dart';
 import 'package:moodle_mobile/view/grade_in_one_course.dart';
 import 'package:moodle_mobile/view/note/note_edit_dialog.dart';
@@ -364,9 +365,18 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                           _tabController?.animateTo(newIndex);
                           return;
                         }
-                        // Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
-                        //   return ForumScreen();
-                        // })))
+                        Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                            builder: (BuildContext context) {
+                              return ForumScreen(
+                                courseId: _courseId,
+                                forumId: m.instance,
+                                forumName: m.name,
+                              );
+                            },
+                          ),
+                        );
                       },
                     );
                   });
@@ -681,11 +691,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
       _initBody();
     } catch (e) {
       if (e.toString() == "errorcoursecontextnotvalid") {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) {
-          return EnrolScreen(
-            courseId: widget.courseId,
-          );
-        }));
+        _showEnrolScreen();
       } else {
         rethrow;
       }
@@ -724,14 +730,16 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
       }
     } catch (e) {
       if (e.toString() == "errorcoursecontextnotvalid") {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) {
-          return EnrolScreen(
-            courseId: widget.courseId,
-          );
-        }));
+        _showEnrolScreen();
       }
       rethrow;
     }
+  }
+
+  void _showEnrolScreen() {
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) {
+      return EnrolScreen(courseId: widget.courseId);
+    }));
   }
 
   // endregion
