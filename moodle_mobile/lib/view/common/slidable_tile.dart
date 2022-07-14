@@ -13,6 +13,7 @@ class SlidableTile extends StatelessWidget {
       {Key? key,
       this.isNotification = true,
       this.isStarred = false,
+      this.isRead = true,
       required this.nameInfo,
       required this.message,
       required this.onDeletePress,
@@ -22,6 +23,7 @@ class SlidableTile extends StatelessWidget {
 
   final bool isNotification;
   final bool isStarred;
+  final bool isRead;
   final String nameInfo;
   final ConversationMessageModel? message;
   final VoidCallback? onDeletePress;
@@ -87,13 +89,16 @@ class SlidableTile extends StatelessWidget {
         ),
         title: Row(
           children: [
-            Padding(
-              padding: const EdgeInsets.only(right: 2),
-              child: Text(
-                nameInfo,
-                style:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+            Container(width: 2),
+            if (!isRead)
+              const Padding(
+                padding: EdgeInsets.only(right: 6),
+                child: Icon(Icons.circle, color: Colors.blue, size: 8),
               ),
+            Text(
+              nameInfo,
+              style:
+                  const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
             ),
             if (isStarred)
               const Padding(
@@ -111,7 +116,9 @@ class SlidableTile extends StatelessWidget {
             ? AutoSizeText(
                 '$messageContent  ·  $timeCreated',
                 maxLines: 1,
-                style: MoodleStyles.messageContentStyle,
+                style: MoodleStyles.messageContentStyle.copyWith(
+                  fontWeight: isRead ? null : FontWeight.bold,
+                ),
                 overflowReplacement: Row(
                   children: [
                     Expanded(
@@ -119,7 +126,9 @@ class SlidableTile extends StatelessWidget {
                         messageContent,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: MoodleStyles.messageContentStyle,
+                        style: MoodleStyles.messageContentStyle.copyWith(
+                          fontWeight: isRead ? null : FontWeight.bold,
+                        ),
                       ),
                     ),
                     Text('  ·  $timeCreated',
