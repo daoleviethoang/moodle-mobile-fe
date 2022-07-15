@@ -10,6 +10,7 @@ class ConversationDetailStore = _ConversationDetailStore
 
 abstract class _ConversationDetailStore with Store {
   final Repository _repository;
+
   _ConversationDetailStore(this._repository, this.conversationId);
 
   @observable
@@ -30,9 +31,16 @@ abstract class _ConversationDetailStore with Store {
             "Get list message success: ${listMessages.length} with user ${userId}");
       }
     } catch (e) {
-      if (kDebugMode) {
-        print("Get message error: $e");
-      }
+      if (kDebugMode) print("Get message error: $e");
+    }
+  }
+
+  @action
+  Future markMessageRead(String token, int userId, int conversationId) async {
+    try {
+      await _repository.markMessageRead(token, userId, conversationId);
+    } catch (e) {
+      if (kDebugMode) print("Get message error: $e");
     }
   }
 

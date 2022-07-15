@@ -177,6 +177,26 @@ class ConversationApi {
     }
   }
 
+  Future<void> markMessageRead(
+      String token, int userId, int conversationId) async {
+    try {
+      Dio dio = Http().client;
+      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': Wsfunction.MARK_MESSAGES_AS_READ,
+        'moodlewsrestformat': 'json',
+        'userid': userId,
+        'conversationid': conversationId,
+      });
+
+    } catch (e) {
+      if (kDebugMode) {
+        print("Mark message read Api error: $e");
+      }
+      rethrow;
+    }
+  }
+
   Future<ConversationMessageModel> sentMessage(
       String token, int conversationId, String text) async {
     try {

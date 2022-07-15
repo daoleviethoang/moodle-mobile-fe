@@ -81,6 +81,8 @@ class Repository {
           int userId, int conversationId, int newest, int limit) =>
       _conversationApi.detailConversation(
           token, userId, conversationId, newest, limit);
+  Future markMessageRead(String token, int userId, int conversationId) =>
+      _conversationApi.markMessageRead(token, userId, conversationId);
   Future sentMessage(String token, int conversationId, String text) =>
       _conversationApi.sentMessage(token, conversationId, text);
   Future sentMessageWithoutConversationId(
