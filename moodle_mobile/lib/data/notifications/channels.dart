@@ -21,10 +21,18 @@ class CalendarChannel extends NotificationDetails {
 }
 
 class MessengerChannel extends NotificationDetails {
-  const MessengerChannel()
+  final String? memberAvatar;
+
+  MessengerChannel({this.memberAvatar})
       : super(
-          android: const AndroidNotificationDetails('mes', 'Messenger',
-              channelDescription: 'Messages received in Moodle'),
+          android: AndroidNotificationDetails(
+            'mes',
+            'Messenger',
+            channelDescription: 'Messages received in Moodle',
+            largeIcon: memberAvatar != null
+                ? FilePathAndroidBitmap(memberAvatar)
+                : null,
+          ),
           iOS: const IOSNotificationDetails(),
         );
 }
