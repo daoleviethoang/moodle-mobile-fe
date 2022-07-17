@@ -1,6 +1,5 @@
-import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:background_fetch/background_fetch.dart';
 
-import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/data/notifications/notification_helper.dart';
 import 'package:moodle_mobile/models/conversation/conversation.dart';
@@ -9,7 +8,7 @@ import 'package:moodle_mobile/store/conversation/conversation_store.dart';
 /// A preset of events that can be listened for by BgService
 abstract class BgEvent {
   final String event;
-  final void Function(Map<String, dynamic>? event)? onData;
+  final Future Function(Map<String, dynamic>? event) onData;
   final Function(Object error)? onError;
   final void Function()? onDone;
   final bool? cancelOnError;
@@ -24,43 +23,21 @@ abstract class BgEvent {
 
   @override
   String toString() => event;
+
+  Future register([int? id]) => BackgroundFetch.scheduleTask(TaskConfig(
+        taskId: '$event${id ?? ''}',
+        delay: 15 * 60 * 1000,
+        periodic: true,
+        startOnBoot: true,
+        stopOnTerminate: false,
+        enableHeadless: true,
+        // requiresNetworkConnectivity: true,
+      ));
 }
 
-// region Built-in events
-
-class SetAsForeground extends BgEvent {
-  AndroidServiceInstance service;
-
-  SetAsForeground(this.service)
-      : super(
-          event: 'setAsForeground',
-          onData: (event) => service.setAsForegroundService(),
-        );
+class FetchAll extends BgEvent {
+  FetchAll() : super(event: 'fetchAll', onData: (event) async {});
 }
-
-class SetAsBackground extends BgEvent {
-  AndroidServiceInstance service;
-
-  SetAsBackground(this.service)
-      : super(
-          event: 'setAsBackground',
-          onData: (event) => service.setAsBackgroundService(),
-        );
-}
-
-class StopService extends BgEvent {
-  ServiceInstance service;
-
-  StopService(this.service)
-      : super(
-          event: 'stopService',
-          onData: (event) => service.stopSelf(),
-        );
-}
-
-// endregion
-
-// region Moodle events
 
 class FetchMessage extends BgEvent {
   FetchMessage()
@@ -68,12 +45,21 @@ class FetchMessage extends BgEvent {
           event: 'fetchMessage',
           onData: (event) async {
             if (event == null) {
-              throw(Exception('Data is null'));
+              throw (Exception('Data is null'));
             }
-            final conversationStore = GetIt.instance<ConversationStore>();
-            List<ConversationModel> list = await conversationStore
-                .getListConversation(event['token'], event['userId']);
-            NotificationHelper.showMessengerNotification(list.last);
+            final token = '${event['token']}';
+            final uid = '${event['userid']}';
+
+            // Get list of conversations
+            final store = GetIt.instance<ConversationStore>();
+            await store.getListConversation(token, int.parse(uid));
+            List<ConversationModel> cv = store.listConversation;
+            for (ConversationModel c in cv) {
+              // Notify latest message
+              if (!c.isRead) {
+                await NotificationHelper.showMessengerNotification(c);
+              }
+            }
           },
         );
 }
@@ -82,11 +68,20 @@ class FetchNotification extends BgEvent {
   FetchNotification()
       : super(
           event: 'fetchNotification',
-          onData: (event) {
+          onData: (event) async {
             print('fetchNotification');
             print(event);
           },
         );
 }
 
-// endregion
+class FetchCalendar extends BgEvent {
+  FetchCalendar()
+      : super(
+          event: 'fetchCalendar',
+          onData: (event) async {
+            print('fetchCalendar');
+            print(event);
+          },
+        );
+}

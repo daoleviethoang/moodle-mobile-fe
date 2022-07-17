@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -73,6 +74,11 @@ class MessengerNotification extends Notification {
     return filePath;
   }
 
+  Future<String> _downloadAndGetBase64(String url) async {
+    final http.Response response = await http.get(Uri.parse(url));
+    return base64Encode(response.bodyBytes);
+  }
+
   @override
   Future show(FlutterLocalNotificationsPlugin localNotifications) async {
     super.show(localNotifications);
@@ -80,15 +86,17 @@ class MessengerNotification extends Notification {
     // Get from member avatar
     final from =
         data.members.where((m) => m.id == data.message?.userIdFrom).first;
-    final String? memberAvatarPath =
-        await _downloadAndSaveFile(from.profileImageURL, '${from.id}');
-    final details = MessengerChannel(memberAvatar: memberAvatarPath);
+    // final String? memberAvatarPath =
+    //     await _downloadAndSaveFile(from.profileImageURL, '${from.id}');
+    print(from.profileImageURL);
+    final base64 = await _downloadAndGetBase64(from.profileImageURL);
+    final details = MessengerChannel(memberAvatarBase64: base64);
 
     // Show notification
     localNotifications.show(
       data.id,
       from.fullname,
-      Bidi.stripHtmlIfNeeded(data.message?.text ?? ''),
+      Bidi.stripHtmlIfNeeded(data.message?.text ?? '').trim(),
       details,
       payload: '${details.android?.channelId},${data.id}',
     );
