@@ -7,12 +7,12 @@ part 'last_updated_data.g.dart';
 @JsonSerializable()
 class LastUpdateData {
   Map<int, String>? _messages;
-  List<int>? _events;
+  Map<int, int>? _events;
   List<int>? _notifications;
 
   LastUpdateData({
     Map<int, String>? messages,
-    List<int>? events,
+    Map<int, int>? events,
     List<int>? notifications,
   })  : _messages = messages,
         _events = events,
@@ -20,25 +20,29 @@ class LastUpdateData {
 
   Map<int, String> get messages => _messages ?? {};
 
-  List<int> get events => _events ?? [];
+  Map<int, int> get events => _events ?? {};
 
   List<int> get notifications => _notifications ?? [];
 
   set messages(Map<int, String> value) => _messages = value;
 
-  set events(List<int> value) => _events = value;
+  set events(Map<int, int> value) => _events = value;
 
   set notifications(List<int> value) => _notifications = value;
 
+  /// Record each From member's new & latest messages
+  /// (which will not be notified again)
   Map<int, String> addMessage(int id, String messageContent) {
     _messages ??= {};
     _messages?.addAll({id: messageContent});
     return messages;
   }
 
-  List<int> addEvent(int id) {
-    _events ??= [];
-    _events?.add(id);
+  /// Record each event's notify time
+  /// (in minutes: 2-day-worth, 1-day-worth, etc.)
+  Map<int, int> addEvent(int id, int minutes) {
+    _events ??= {};
+    _events?.addAll({id: minutes});
     return events;
   }
 

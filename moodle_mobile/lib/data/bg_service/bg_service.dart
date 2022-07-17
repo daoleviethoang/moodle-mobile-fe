@@ -25,7 +25,7 @@ class BgService {
     final userApi = UserApi(DioClient(Dio()));
     final userInfo = await userApi.getUserInfo(token, username);
     final lastUpdated = LastUpdateData.fromJson(
-        jsonDecode(sp.getString(Preferences.lastUpdated) ?? '{}'));
+        jsonDecode('{}'));
     if (kDebugMode) print(lastUpdated);
     return {
       'token': token,

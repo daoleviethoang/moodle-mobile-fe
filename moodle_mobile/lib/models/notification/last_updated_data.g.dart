@@ -11,7 +11,9 @@ LastUpdateData _$LastUpdateDataFromJson(Map<String, dynamic> json) =>
       messages: (json['messages'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(int.parse(k), e as String),
       ),
-      events: (json['events'] as List<dynamic>?)?.map((e) => e as int).toList(),
+      events: (json['events'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(int.parse(k), e as int),
+      ),
       notifications: (json['notifications'] as List<dynamic>?)
           ?.map((e) => e as int)
           .toList(),
@@ -20,6 +22,6 @@ LastUpdateData _$LastUpdateDataFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$LastUpdateDataToJson(LastUpdateData instance) =>
     <String, dynamic>{
       'messages': instance.messages.map((k, e) => MapEntry(k.toString(), e)),
-      'events': instance.events,
+      'events': instance.events.map((k, e) => MapEntry(k.toString(), e)),
       'notifications': instance.notifications,
     };

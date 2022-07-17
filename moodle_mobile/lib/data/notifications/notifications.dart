@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
@@ -43,17 +41,44 @@ class TextNotification extends Notification {
 
 class CalendarNotification extends Notification {
   final Event data;
+  final int minutesLeft;
   final details = const CalendarChannel();
 
-  CalendarNotification(this.data) : super();
+  CalendarNotification(this.data, this.minutesLeft) : super();
+
+  String _parseDuration(Duration d, String locale) {
+    String dayString = 'd', hourString = 'h', minuteString = 'm';
+    if (locale.startsWith('en')) {
+      dayString = 'day(s)';
+      hourString = 'hour(s)';
+      minuteString = 'minutes';
+    } else if (locale.startsWith('vi')) {
+      dayString = 'ngày';
+      hourString = 'giờ';
+      minuteString = 'phút';
+    }
+    final daysLeft = d.inDays > 0 ? '${d.inDays} $dayString ' : '';
+    final hoursLeft = (d.inHours % 24) > 0 ? '${d.inHours} $hourString ' : '';
+    final minutesLeft =
+        (d.inMinutes % 60) > 0 ? '${d.inMinutes} $minuteString ' : '';
+    if (locale.startsWith('en')) {
+      return '$daysLeft$hoursLeft$minutesLeft til due time.';
+    } else if (locale.startsWith('vi')) {
+      return 'Còn $daysLeft$hoursLeft$minutesLeft';
+    } else {
+      return '$daysLeft$hoursLeft$minutesLeft';
+    }
+  }
 
   @override
   Future show(FlutterLocalNotificationsPlugin localNotifications) async {
     super.show(localNotifications);
+    final locale = Platform.localeName;
+    final description = _parseDuration(Duration(minutes: minutesLeft), locale);
     localNotifications.show(
       data.id ?? 0,
       data.name,
-      data.description,
+      description,
       details,
       payload: '${details.android?.channelId},${data.id},${data.instance}',
     );
