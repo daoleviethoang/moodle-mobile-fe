@@ -122,6 +122,7 @@ dependencies:
       url: https://github.com/super-alpha-team/alpha_quiz.git
       ref: b6b2a6a
   visibility_detector: ^0.3.3
+  path_provider: ^2.0.11
 
 dev_dependencies:
   flutter_test:

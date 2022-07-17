@@ -53,6 +53,14 @@ class Repository {
     return _sharedPreferencesHelper.saveBaseUrl(baseUrl);
   }
 
+  String? get lastUpdated {
+    return _sharedPreferencesHelper.lastUpdated;
+  }
+
+  Future<bool> saveLastUpdated(String lastUpdated) {
+    return _sharedPreferencesHelper.saveLastUpdated(lastUpdated);
+  }
+
   // User Login
   Future<String> login(String username, String password, String service) =>
       _userApi.login(username, password, service);
@@ -81,6 +89,8 @@ class Repository {
           int userId, int conversationId, int newest, int limit) =>
       _conversationApi.detailConversation(
           token, userId, conversationId, newest, limit);
+  Future markMessageRead(String token, int userId, int conversationId) =>
+      _conversationApi.markMessageRead(token, userId, conversationId);
   Future sentMessage(String token, int conversationId, String text) =>
       _conversationApi.sentMessage(token, conversationId, text);
   Future sentMessageWithoutConversationId(

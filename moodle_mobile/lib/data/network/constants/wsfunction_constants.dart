@@ -60,6 +60,8 @@ class Wsfunction {
       'mod_forum_set_subscription_state';
 
   // message
+  static const String MARK_MESSAGES_AS_READ =
+      "core_message_mark_all_conversation_messages_as_read";
   static const String CORE_MESSAGE_SEND_MESSAGES_TO_CONVERSATION =
       "core_message_send_messages_to_conversation";
   static const String CORE_MESSAGE_GET_CONVERSATION_MESSAGES =

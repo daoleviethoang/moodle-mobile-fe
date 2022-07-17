@@ -66,6 +66,7 @@ class _MessageListState extends State<MessageList> {
                 return Observer(builder: (_) {
                   return SlidableTile(
                       isNotification: !cons[index].isMuted,
+                      isRead: cons[index].isRead,
                       nameInfo: cons[index].members[0].fullname,
                       message: cons[index].message,
                       onDeletePress: () {

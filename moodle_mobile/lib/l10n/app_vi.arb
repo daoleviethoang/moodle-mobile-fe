@@ -121,6 +121,7 @@
   "note_is_important": "Ghi chú quan trọng",
   "note_search": "Tìm kiếm ghi chú",
   "notes": "Ghi chú",
+  "notes_unsupported": "Ghi chú chưa được hỗ trợ, vui lòng liên hệ với quản trị viên của hệ thống Moodle.",
   "nothing_yet": "Chưa có gì ở đây cả.",
   "noti_context": "<b>{article}</b><br/> trong <b>{name}</b>",
   "noti_permission": "Quyền thông báo cho ứng dụng đã bị vô hiệu, một số chức năng của app sẽ không thể hoạt động.",

@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class ImportantChannel extends NotificationDetails {
@@ -21,10 +23,20 @@ class CalendarChannel extends NotificationDetails {
 }
 
 class MessengerChannel extends NotificationDetails {
-  const MessengerChannel()
+  final String? memberAvatar;
+  final String? memberAvatarBase64;
+
+  MessengerChannel({this.memberAvatar, this.memberAvatarBase64})
       : super(
-          android: const AndroidNotificationDetails('mes', 'Messenger',
-              channelDescription: 'Messages received in Moodle'),
+          android: AndroidNotificationDetails(
+            'mes',
+            'Messenger',
+            channelDescription: 'Messages received in Moodle',
+            // FIXME: Failed to create image decoder with message 'unimplemented'
+            largeIcon: memberAvatarBase64 != null
+                ? ByteArrayAndroidBitmap.fromBase64String(memberAvatarBase64)
+                : null,
+          ),
           iOS: const IOSNotificationDetails(),
         );
 }

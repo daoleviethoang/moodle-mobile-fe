@@ -50,6 +50,10 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
     // Update message list
     _refreshTimer =
         Timer.periodic(Vars.refreshInterval, (t) async => getListMessage());
+
+    // Mark messages as read
+    _conversationDetailStore.markMessageRead(_userStore.user.token,
+        _userStore.user.id, _conversationDetailStore.conversationId!);
   }
 
   Future getListMessage() async {

@@ -50,6 +50,16 @@ mixin _$ConversationDetailStore on _ConversationDetailStore, Store {
         .run(() => super.getListMessage(token, userId, conversationId));
   }
 
+  late final _$markMessageReadAsyncAction =
+      AsyncAction('_ConversationDetailStore.markMessageRead', context: context);
+
+  @override
+  Future<dynamic> markMessageRead(
+      String token, int userId, int conversationId) {
+    return _$markMessageReadAsyncAction
+        .run(() => super.markMessageRead(token, userId, conversationId));
+  }
+
   late final _$sentMessageAsyncAction =
       AsyncAction('_ConversationDetailStore.sentMessage', context: context);
 

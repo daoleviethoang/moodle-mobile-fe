@@ -152,6 +152,7 @@
   "note_is_important": "Important note",
   "note_search": "Search for notes",
   "notes": "Notes",
+  "notes_unsupported": "Notes are not supported yet, please ask your Moodle administrator.",
   "nothing_yet": "Nothing here yet.",
   "noti_context": "<b>{article}</b><br/> in <b>{name}</b>",
   "noti_permission": "Notification permission has been denied, some functions will not be able to work",
