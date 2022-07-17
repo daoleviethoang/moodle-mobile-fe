@@ -10,9 +10,12 @@ import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/data/network/apis/calendar/calendar_service.dart';
 import 'package:moodle_mobile/data/network/apis/module/module_service.dart';
+import 'package:moodle_mobile/data/network/apis/site_info/site_info_api.dart';
+import 'package:moodle_mobile/data/network/constants/wsfunction_constants.dart';
 import 'package:moodle_mobile/models/calendar/event.dart';
 import 'package:moodle_mobile/models/module/module.dart';
 import 'package:moodle_mobile/models/module/module_course.dart';
+import 'package:moodle_mobile/models/site_info/site_info.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/content_item.dart';
 import 'package:moodle_mobile/view/common/custom_button.dart';
@@ -55,9 +58,17 @@ class _CalendarScreenState extends State<CalendarScreen>
   Map<String, List<Event>> _events = {};
   Observable<bool>? _jumpOpenFlag;
   final noteSearchShowFlag = Observable<bool>(false);
+  SiteInfo? _siteInfo;
 
   Exception? _errored;
   Timer? _refreshErrorTimer;
+
+  bool get hasNoteSection {
+    return _siteInfo?.functions?.any(
+          (element) => element.name == Wsfunction.UPDATE_NOTE,
+        ) ??
+        false;
+  }
 
   @override
   void initState() {
@@ -456,6 +467,7 @@ class _CalendarScreenState extends State<CalendarScreen>
         _userStore.user.token,
         _focusedDay,
       );
+      _siteInfo = await SiteInfoApi().getSiteInfo(_userStore.user.token);
       _initMonthView();
       _initDayView();
       setState(() {
@@ -471,6 +483,11 @@ class _CalendarScreenState extends State<CalendarScreen>
   // region Note tab
 
   void _initNoteTabView() {
+    if (!hasNoteSection) {
+      _noteTabView =
+          Center(child: Text(AppLocalizations.of(context)!.notes_unsupported));
+      return;
+    }
     _noteTabView = NoteList(searchShowFlag: noteSearchShowFlag);
   }
 

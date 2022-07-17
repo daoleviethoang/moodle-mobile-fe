@@ -17,6 +17,7 @@ import 'package:moodle_mobile/data/network/apis/lti/lti_service.dart';
 import 'package:moodle_mobile/data/network/apis/module/module_service.dart';
 import 'package:moodle_mobile/data/network/apis/notes/notes_service.dart';
 import 'package:moodle_mobile/data/network/apis/site_info/site_info_api.dart';
+import 'package:moodle_mobile/data/network/constants/wsfunction_constants.dart';
 import 'package:moodle_mobile/models/calendar/event.dart';
 import 'package:moodle_mobile/models/contact/contact.dart';
 import 'package:moodle_mobile/models/course/course_content.dart';
@@ -129,7 +130,15 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
 
   bool get hasActivitySection {
     return _siteInfo?.functions?.any(
-            (element) => element.name == "local_modulews_add_section_course") ??
+          (element) => element.name == Wsfunction.LOCAL_ADD_SECTION_COURSE,
+        ) ??
+        false;
+  }
+
+  bool get hasNoteSection {
+    return _siteInfo?.functions?.any(
+          (element) => element.name == Wsfunction.UPDATE_NOTE,
+        ) ??
         false;
   }
 
@@ -447,6 +456,10 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   }
 
   void _initNotesTab() {
+    if (!hasNoteSection) {
+      _notesTab = Container();
+      return;
+    }
     _notesTab = SingleChildScrollView(
       child: Column(
         children: [
