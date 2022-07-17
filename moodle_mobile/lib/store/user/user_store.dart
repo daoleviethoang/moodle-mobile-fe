@@ -39,15 +39,16 @@ abstract class _UserStore with Store {
   @observable
   bool isLoginFailed = false;
 
+  @observable
+  int lastUpdated = 0;
+
   @action
   Future login(String username, String password, bool rememberAccount) async {
     try {
       String token =
           await _repository.login(username, password, 'moodle_mobile_app');
       user = await _repository.getUserInfo(token, username);
-      if (kDebugMode) {
-        print("here userstore");
-      }
+      if (kDebugMode) print("here userstore");
 
       if (rememberAccount) {
         // Save to shared references
@@ -67,9 +68,7 @@ abstract class _UserStore with Store {
 
       isLogin = true;
     } catch (e) {
-      if (kDebugMode) {
-        print("Login error: $e");
-      }
+      if (kDebugMode) print("Login error: $e");
       isLoginFailed = true;
       isLogin = false;
     }
@@ -78,14 +77,10 @@ abstract class _UserStore with Store {
   @action
   Future reGetUserInfo(String token, String username) async {
     try {
-      if (kDebugMode) {
-        print("setUserStore");
-      }
+      if (kDebugMode) print("setUserStore");
       user = await _repository.getUserInfo(token, username);
     } catch (e) {
-      if (kDebugMode) {
-        print("re get user info error: $e");
-      }
+      if (kDebugMode) print("re get user info error: $e");
     }
   }
 
@@ -94,9 +89,7 @@ abstract class _UserStore with Store {
     try {
       _repository.saveBaseUrl(baseUrl);
     } catch (e) {
-      if (kDebugMode) {
-        print("Save baseurl error: $e");
-      }
+      if (kDebugMode) print("Save baseurl error: $e");
     }
   }
 
@@ -118,9 +111,7 @@ abstract class _UserStore with Store {
       isLogin = true;
       isLoading = false;
     } catch (e) {
-      if (kDebugMode) {
-        print("Check is login error: $e");
-      }
+      if (kDebugMode) print("Check is login error: $e");
       isLogin = false;
       isLoading = false;
     }
@@ -140,20 +131,29 @@ abstract class _UserStore with Store {
       _repository.saveUsername(username);
 
       user = await _repository.getUserInfo(token, username);
-      print(user.fullname);
+
       if (kDebugMode) {
+        print(user.fullname);
         print("here userstore");
       }
 
       isLogin = true;
       isLoading = false;
     } catch (e) {
-      if (kDebugMode) {
-        print("Set user error: $e");
-      }
+      if (kDebugMode) print("Set user error: $e");
       isLoginFailed = true;
       isLogin = false;
       isLoading = false;
+    }
+  }
+
+  @action
+  Future setLastUpdated() async {
+    try {
+      lastUpdated = DateTime.now().millisecondsSinceEpoch;
+      _repository.saveLastUpdated(lastUpdated);
+    } catch (e) {
+      if (kDebugMode) print("Set last updated error: $e");
     }
   }
 

@@ -4,4 +4,5 @@ class Preferences {
   static const String auth_token = "authToken";
   static const String username = "username";
   static const String base_url = "baseUrl";
+  static const String lastUpdated = "lastUpdated";
 }

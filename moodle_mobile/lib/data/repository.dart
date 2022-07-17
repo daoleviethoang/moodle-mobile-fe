@@ -53,6 +53,14 @@ class Repository {
     return _sharedPreferencesHelper.saveBaseUrl(baseUrl);
   }
 
+  int? get lastUpdated {
+    return _sharedPreferencesHelper.lastUpdated;
+  }
+
+  Future<bool> saveLastUpdated(int lastUpdated) {
+    return _sharedPreferencesHelper.saveLastUpdated(lastUpdated);
+  }
+
   // User Login
   Future<String> login(String username, String password, String service) =>
       _userApi.login(username, password, service);

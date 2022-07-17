@@ -38,4 +38,13 @@ class SharedPreferenceHelper {
   Future<bool> saveBaseUrl(String baseUrl) async {
     return _sharedPreference.setString(Preferences.base_url, baseUrl);
   }
+
+  int? get lastUpdated {
+    return _sharedPreference.getInt(Preferences.lastUpdated) ??
+        DateTime.now().millisecondsSinceEpoch;
+  }
+
+  Future<bool> saveLastUpdated(int lastUpdated) {
+    return _sharedPreference.setInt(Preferences.lastUpdated, lastUpdated);
+  }
 }
