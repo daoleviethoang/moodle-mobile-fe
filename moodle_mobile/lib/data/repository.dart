@@ -53,11 +53,11 @@ class Repository {
     return _sharedPreferencesHelper.saveBaseUrl(baseUrl);
   }
 
-  int? get lastUpdated {
+  String? get lastUpdated {
     return _sharedPreferencesHelper.lastUpdated;
   }
 
-  Future<bool> saveLastUpdated(int lastUpdated) {
+  Future<bool> saveLastUpdated(String lastUpdated) {
     return _sharedPreferencesHelper.saveLastUpdated(lastUpdated);
   }
 

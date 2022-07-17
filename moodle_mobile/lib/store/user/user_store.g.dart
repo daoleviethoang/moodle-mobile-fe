@@ -71,6 +71,22 @@ mixin _$UserStore on _UserStore, Store {
     });
   }
 
+  late final _$lastUpdatedAtom =
+      Atom(name: '_UserStore.lastUpdated', context: context);
+
+  @override
+  int get lastUpdated {
+    _$lastUpdatedAtom.reportRead();
+    return super.lastUpdated;
+  }
+
+  @override
+  set lastUpdated(int value) {
+    _$lastUpdatedAtom.reportWrite(value, super.lastUpdated, () {
+      super.lastUpdated = value;
+    });
+  }
+
   late final _$loginAsyncAction =
       AsyncAction('_UserStore.login', context: context);
 
@@ -106,6 +122,15 @@ mixin _$UserStore on _UserStore, Store {
     return _$setUserAsyncAction.run(() => super.setUser(token, username));
   }
 
+  late final _$setLastUpdatedAsyncAction =
+      AsyncAction('_UserStore.setLastUpdated', context: context);
+
+  @override
+  Future<dynamic> setLastUpdated(LastUpdateData lastUpdate) {
+    return _$setLastUpdatedAsyncAction
+        .run(() => super.setLastUpdated(lastUpdate));
+  }
+
   late final _$_UserStoreActionController =
       ActionController(name: '_UserStore', context: context);
 
@@ -137,7 +162,8 @@ mixin _$UserStore on _UserStore, Store {
 user: ${user},
 isLogin: ${isLogin},
 isLoading: ${isLoading},
-isLoginFailed: ${isLoginFailed}
+isLoginFailed: ${isLoginFailed},
+lastUpdated: ${lastUpdated}
     ''';
   }
 }

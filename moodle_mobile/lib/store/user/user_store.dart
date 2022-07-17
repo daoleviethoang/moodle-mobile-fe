@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:mobx/mobx.dart';
 import 'package:moodle_mobile/data/network/constants/endpoints.dart';
 import 'package:moodle_mobile/data/repository.dart';
+import 'package:moodle_mobile/models/notification/last_updated_data.dart';
 import 'package:moodle_mobile/models/user.dart';
 import 'package:moodle_mobile/models/user_login.dart';
 import 'package:moodle_mobile/sqllite/sql.dart';
@@ -148,10 +149,9 @@ abstract class _UserStore with Store {
   }
 
   @action
-  Future setLastUpdated() async {
+  Future setLastUpdated(LastUpdateData lastUpdate) async {
     try {
-      lastUpdated = DateTime.now().millisecondsSinceEpoch;
-      _repository.saveLastUpdated(lastUpdated);
+      _repository.saveLastUpdated('$lastUpdated');
     } catch (e) {
       if (kDebugMode) print("Set last updated error: $e");
     }

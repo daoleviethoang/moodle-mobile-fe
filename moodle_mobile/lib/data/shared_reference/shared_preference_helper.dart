@@ -39,12 +39,11 @@ class SharedPreferenceHelper {
     return _sharedPreference.setString(Preferences.base_url, baseUrl);
   }
 
-  int? get lastUpdated {
-    return _sharedPreference.getInt(Preferences.lastUpdated) ??
-        DateTime.now().millisecondsSinceEpoch;
+  String? get lastUpdated {
+    return _sharedPreference.getString(Preferences.lastUpdated) ?? '';
   }
 
-  Future<bool> saveLastUpdated(int lastUpdated) {
-    return _sharedPreference.setInt(Preferences.lastUpdated, lastUpdated);
+  Future<bool> saveLastUpdated(String lastUpdated) {
+    return _sharedPreference.setString(Preferences.lastUpdated, lastUpdated);
   }
 }
