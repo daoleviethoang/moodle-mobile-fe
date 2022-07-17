@@ -24,7 +24,6 @@ import 'package:moodle_mobile/view/common/data_card.dart';
 import 'package:moodle_mobile/view/note/note_list.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:visibility_detector/visibility_detector.dart';
 
 class CalendarScreen extends StatefulWidget {
   final Observable<bool>? jumpOpenFlag;
