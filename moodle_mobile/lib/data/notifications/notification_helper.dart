@@ -68,6 +68,7 @@ class NotificationHelper {
   static Future showMessengerNotification(ConversationModel data) async =>
       MessengerNotification(data).show(_localNotifications!);
 
-  static Future showMoodleNotification(NotificationDetail data) async =>
-      MoodleNotification(data).show(_localNotifications!);
+  static Future showMoodleNotification(NotificationDetail data,
+          {String courseName = ''}) async =>
+      MoodleNotification(data, courseName).show(_localNotifications!);
 }

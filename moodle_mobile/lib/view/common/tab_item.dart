@@ -61,10 +61,11 @@ class _CourseDetailsTabState extends State<CourseDetailsTab> {
           children: [
             // FIXME: icon and activeIcon has a delay before updating.
             // FIXME: if (isActive) _activeIcon! else _icon!,
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4),
-              child: _activeIcon!,
-            ),
+            if (_icon is! Container)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                child: _activeIcon!,
+              ),
             _text!,
           ],
         ),

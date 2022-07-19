@@ -58,9 +58,7 @@ abstract class _ConversationStore with Store {
       isLoading = false;
     } catch (e) {
       // In loi neu trong qua trinh xu ly co loi xay ra
-      if (kDebugMode) {
-        print("Get conversations error: $e");
-      }
+      if (kDebugMode) print("Get conversations error: $e");
     }
   }
 
@@ -86,9 +84,7 @@ abstract class _ConversationStore with Store {
         }
       }
     } catch (e) {
-      if (kDebugMode) {
-        print("Mute conversation error: $e");
-      }
+      if (kDebugMode) print("Mute conversation error: $e");
     }
   }
 
@@ -109,9 +105,7 @@ abstract class _ConversationStore with Store {
         }
       }
     } catch (e) {
-      if (kDebugMode) {
-        print("Mute conversation error: $e");
-      }
+      if (kDebugMode) print("Mute conversation error: $e");
     }
   }
 
@@ -126,9 +120,16 @@ abstract class _ConversationStore with Store {
         listConversation.removeWhere((element) => element.id == conversationId);
       }
     } catch (e) {
-      if (kDebugMode) {
-        print("Delete conversation error: $e");
-      }
+      if (kDebugMode) print("Delete conversation error: $e");
+    }
+  }
+
+  Future<int> getUnreadCount(String token, [int useridto = 0]) async {
+    try {
+      return await _repository.getUnreadCount(token, useridto);
+    } catch (e) {
+      if (kDebugMode) print("Get unread count error: $e");
+      return 0;
     }
   }
 }

@@ -78,10 +78,18 @@ class Wsfunction {
       "core_message_get_conversation_between_users";
   static const String CORE_MESSAGE_SEND_MESSAGE_WITHOUT_CONVERSATIONID =
       "core_message_send_instant_messages";
+  static const String MARK_MESSAGES_AS_READ =
+      "core_message_mark_all_conversation_messages_as_read";
+  static const String GET_UNREAD_MESSAGES_COUNT =
+      "core_message_get_unread_conversations_count";
 
   //notification
   static const String MESSAGE_POPUP_GET_POPUP_NOTIFICATION =
       'message_popup_get_popup_notifications';
+  static const String MARK_ALL_NOTIFICATION_AS_READ =
+      'core_message_mark_all_notifications_as_read';
+  static const String GET_UNREAD_NOTIFICATIONS_COUNT =
+      "message_popup_get_unread_popup_notification_count";
 
   //notification preference
   static const String CORE_MESSAGE_GET_USER_NOTIFICATION_PREFERENCES =
