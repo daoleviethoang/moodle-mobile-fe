@@ -25,7 +25,7 @@ class BgService {
     final userApi = UserApi(DioClient(Dio()));
     final userInfo = await userApi.getUserInfo(token, username);
     final lastUpdated = LastUpdateData.fromJson(
-        jsonDecode('{}'));
+        jsonDecode(sp.getString(Preferences.lastUpdated) ?? '{}'));
     if (kDebugMode) print(lastUpdated);
     return {
       'token': token,
@@ -81,12 +81,16 @@ class BgService {
     // Abort if data not valid
     final data = await _data;
     if (data['token'] == null || data['userid'] == null) {
-      if (kDebugMode) print('$logTag data not valid : $data');
+      if (kDebugMode) print('$logTag data not valid: $data');
       return;
     }
 
     // Get event from id
-    if (kDebugMode) print("$logTag Event received $taskId");
+    final now = DateTime.now();
+    if (kDebugMode) {
+      print("$logTag Event received $taskId "
+          "at ${now.hour}:${now.minute}:${now.second}");
+    }
     BgEvent? ev;
     if (taskId.startsWith('${FetchAll()}')) {
       _onFetch('${FetchMessage()}');

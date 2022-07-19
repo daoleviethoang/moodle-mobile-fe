@@ -130,16 +130,17 @@ class MessengerNotification extends Notification {
 
 class MoodleNotification extends Notification {
   final NotificationDetail data;
+  final String courseName;
   final details = const NotificationsChannel();
 
-  MoodleNotification(this.data) : super();
+  MoodleNotification(this.data, [this.courseName = '']) : super();
 
   @override
   Future show(FlutterLocalNotificationsPlugin localNotifications) async {
     super.show(localNotifications);
     localNotifications.show(
       data.id ?? 0,
-      data.subject,
+      courseName,
       data.smallmessage,
       details,
       payload:

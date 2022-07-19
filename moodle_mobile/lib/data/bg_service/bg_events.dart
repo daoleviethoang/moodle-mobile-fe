@@ -2,12 +2,15 @@ import 'package:background_fetch/background_fetch.dart';
 
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/data/network/apis/calendar/calendar_service.dart';
+import 'package:moodle_mobile/data/network/apis/course/course_detail_service.dart';
 import 'package:moodle_mobile/data/network/apis/course/course_service.dart';
+import 'package:moodle_mobile/data/network/apis/notification/notification_api.dart';
 import 'package:moodle_mobile/data/notifications/notification_helper.dart';
 import 'package:moodle_mobile/models/calendar/event.dart';
 import 'package:moodle_mobile/models/conversation/conversation.dart';
 import 'package:moodle_mobile/models/course/course.dart';
 import 'package:moodle_mobile/models/notification/last_updated_data.dart';
+import 'package:moodle_mobile/models/notification/notification.dart';
 import 'package:moodle_mobile/store/conversation/conversation_store.dart';
 
 /// A preset of events that can be listened for by BgService
@@ -133,10 +136,8 @@ class FetchCalendar extends BgEvent {
               final nextNotify = minutes[nextIndex];
 
               // Notify event with minutes left
-              await NotificationHelper.showCalendarNotification(
-                e,
-                minutesLeft: nextNotify
-              );
+              await NotificationHelper.showCalendarNotification(e,
+                  minutesLeft: nextNotify);
               lastUpdated.addEvent(id, nextNotify);
             }
             return lastUpdated;
@@ -149,9 +150,37 @@ class FetchNotification extends BgEvent {
       : super(
           event: 'fetchCalendar',
           onData: (event) async {
-            print('fetchCalendar');
-            print(event);
-            return null;
+            if (event == null) {
+              throw (Exception('Data is null'));
+            }
+            final token = '${event['token']}';
+            final uid = '${event['userid']}';
+            LastUpdateData lastUpdated = event['lastUpdated'];
+
+            // Get list of upcoming events in enrolled courses (last 2 months)
+            final notificationPopup = await NotificationApi.fetchPopup(token);
+            final details = notificationPopup?.notificationDetail ?? [];
+            for (NotificationDetail d in details) {
+              if (d.read ?? false) continue;
+              // Get course name
+              final courseId = d.customdata?.courseId ?? '-1';
+              final course = await CourseDetailService()
+                  .getCourseById(token, int.parse(courseId));
+              final courseName = course.displayname ?? '';
+
+              // Notify latest notification
+              final id = d.id ?? -1;
+              final messageContent = d.fullmessage ?? '';
+              final notiData = lastUpdated.notifications;
+              if (notiData.contains(id) && messageContent.isNotEmpty) {
+                await NotificationHelper.showMoodleNotification(
+                  d,
+                  courseName: courseName,
+                );
+                lastUpdated.addNotification(id);
+              }
+            }
+            return lastUpdated;
           },
         );
 }
