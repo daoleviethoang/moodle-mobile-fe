@@ -189,8 +189,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
         _tabs.add(CourseDetailsTab(
           currentIndex: _index,
           index: _homeIndex,
-          icon: const Icon(CupertinoIcons.house),
-          activeIcon: const Icon(CupertinoIcons.house_fill),
+          // icon: const Icon(CupertinoIcons.house),
+          // activeIcon: const Icon(CupertinoIcons.house_fill),
           text: Text(str.home),
         ));
       }
@@ -205,8 +205,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
         _tabs.add(CourseDetailsTab(
           currentIndex: _index,
           index: _notesIndex,
-          icon: const Icon(CupertinoIcons.doc),
-          activeIcon: const Icon(CupertinoIcons.doc_fill),
+          // icon: const Icon(CupertinoIcons.doc),
+          // activeIcon: const Icon(CupertinoIcons.doc_fill),
           text: Text(str.notes),
         ));
       }
@@ -221,8 +221,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
         _tabs.add(CourseDetailsTab(
           currentIndex: _index,
           index: _activityIndex,
-          icon: const Icon(CupertinoIcons.photo_on_rectangle),
-          activeIcon: const Icon(CupertinoIcons.photo_fill_on_rectangle_fill),
+          // icon: const Icon(CupertinoIcons.photo_on_rectangle),
+          // activeIcon: const Icon(CupertinoIcons.photo_fill_on_rectangle_fill),
           text: Text(str.activity),
         ));
       }
@@ -237,8 +237,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
         _tabs.add(CourseDetailsTab(
           currentIndex: _index,
           index: _announcementsIndex,
-          icon: const Icon(CupertinoIcons.bell),
-          activeIcon: const Icon(CupertinoIcons.bell_fill),
+          // icon: const Icon(CupertinoIcons.bell),
+          // activeIcon: const Icon(CupertinoIcons.bell_fill),
           text: Text(str.announcement),
         ));
       }
@@ -253,8 +253,9 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
         _tabs.add(CourseDetailsTab(
           currentIndex: _index,
           index: _discussionsIndex,
-          icon: const Icon(CupertinoIcons.bubble_left_bubble_right),
-          activeIcon: const Icon(CupertinoIcons.bubble_left_bubble_right_fill),
+          // icon: const Icon(CupertinoIcons.bubble_left_bubble_right),
+          // activeIcon: const Icon(CupertinoIcons
+          // .bubble_left_bubble_right_fill),
           text: Text(str.discussion),
         ));
       }
@@ -269,8 +270,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
         _tabs.add(CourseDetailsTab(
           currentIndex: _index,
           index: _eventsIndex,
-          icon: const Icon(Icons.calendar_month_outlined),
-          activeIcon: const Icon(Icons.calendar_month),
+          // icon: const Icon(Icons.calendar_month_outlined),
+          // activeIcon: const Icon(Icons.calendar_month),
           text: Text(str.events),
         ));
       }
@@ -285,8 +286,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
         _tabs.add(CourseDetailsTab(
           currentIndex: _index,
           index: _gradesIndex,
-          icon: const Icon(CupertinoIcons.checkmark_circle),
-          activeIcon: const Icon(CupertinoIcons.checkmark_circle_fill),
+          // icon: const Icon(CupertinoIcons.checkmark_circle),
+          // activeIcon: const Icon(CupertinoIcons.checkmark_circle_fill),
           text: Text(str.grades),
         ));
       }
@@ -301,8 +302,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
         _tabs.add(CourseDetailsTab(
           currentIndex: _index,
           index: _peopleIndex,
-          icon: const Icon(CupertinoIcons.person_3),
-          activeIcon: const Icon(CupertinoIcons.person_3_fill),
+          // icon: const Icon(CupertinoIcons.person_3),
+          // activeIcon: const Icon(CupertinoIcons.person_3_fill),
           text: Text(str.participants),
         ));
       }
@@ -563,10 +564,10 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   }
 
   void _initEventsTab() {
-    // if (_events.isEmpty) {
-    //   _eventsTab = Container();
-    //   return;
-    // }
+    if (_events.isEmpty) {
+      _eventsTab = Container();
+      return;
+    }
     _eventsTab = SizedBox(
       height: MediaQuery.of(context).size.height - 100,
       child: Column(
@@ -846,7 +847,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                               borderRadius:
                                   BorderRadius.all(Radius.circular(8)),
                             ),
-                            unselectedLabelStyle: const TextStyle(fontSize: 0),
+                            // unselectedLabelStyle: const TextStyle(fontSize: 0),
                             onTap: (value) => _tabController?.animateTo(value),
                           )
                         : null,
