@@ -66,6 +66,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
         _loading = false;
       });
     });
+    await NotificationApi.markAllAsRead(_userStore.user.token);
     //getName(temp!);
   }
 

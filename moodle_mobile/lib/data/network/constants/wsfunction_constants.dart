@@ -82,6 +82,8 @@ class Wsfunction {
   //notification
   static const String MESSAGE_POPUP_GET_POPUP_NOTIFICATION =
       'message_popup_get_popup_notifications';
+  static const String MARK_ALL_NOTIFICATION_AS_READ =
+      'core_message_mark_all_notifications_as_read';
 
   //notification preference
   static const String CORE_MESSAGE_GET_USER_NOTIFICATION_PREFERENCES =
