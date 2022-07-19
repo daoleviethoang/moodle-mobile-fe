@@ -85,6 +85,9 @@ class Repository {
           String token, int userId, int conversationId) =>
       _conversationApi.deleteConversation(token, userId, conversationId);
 
+  Future<int> getUnreadCount(String token, [int useridto = 0]) =>
+      _conversationApi.getUnreadCount(token, useridto);
+
   Future<List<ConversationMessageModel>> detailConversation(String token,
           int userId, int conversationId, int newest, int limit) =>
       _conversationApi.detailConversation(

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:moodle_mobile/data/network/constants/endpoints.dart';
@@ -192,6 +191,24 @@ class ConversationApi {
     } catch (e) {
       if (kDebugMode) {
         print("Mark message read Api error: $e");
+      }
+      rethrow;
+    }
+  }
+
+  Future<int> getUnreadCount(String token, [int useridto = 0]) async {
+    try {
+      Dio dio = Http().client;
+      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': Wsfunction.GET_UNREAD_MESSAGES_COUNT,
+        'moodlewsrestformat': 'json',
+        'useridto': useridto,
+      });
+      return res.data;
+    } catch (e) {
+      if (kDebugMode) {
+        print("Get unread count Api error: $e");
       }
       rethrow;
     }

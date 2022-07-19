@@ -36,4 +36,25 @@ class NotificationApi {
       if (kDebugMode) print('!!!!!!!!!!$e');
     }
   }
+
+  static Future<int> getUnreadCount(String token,
+      {String useridto = '0'}) async {
+    try {
+      Dio dio = Http().client;
+      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': Wsfunction.GET_UNREAD_NOTIFICATIONS_COUNT,
+        'moodlewsrestformat': 'json',
+        'useridto': useridto,
+      });
+      if (res.data is Map) {
+        if (res.data['errorcode'] == 'accessdenied') return 0;
+        throw Exception(res.data);
+      }
+      return res.data;
+    } catch (e) {
+      if (kDebugMode) print('!!!!!!!!!!$e');
+      return 0;
+    }
+  }
 }
