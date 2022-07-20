@@ -1,17 +1,18 @@
 import 'package:background_fetch/background_fetch.dart';
+import 'package:dio/dio.dart';
 
-import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/data/network/apis/calendar/calendar_service.dart';
+import 'package:moodle_mobile/data/network/apis/conversation/conversation_api.dart';
 import 'package:moodle_mobile/data/network/apis/course/course_detail_service.dart';
 import 'package:moodle_mobile/data/network/apis/course/course_service.dart';
 import 'package:moodle_mobile/data/network/apis/notification/notification_api.dart';
+import 'package:moodle_mobile/data/network/dio_client.dart';
 import 'package:moodle_mobile/data/notifications/notification_helper.dart';
 import 'package:moodle_mobile/models/calendar/event.dart';
 import 'package:moodle_mobile/models/conversation/conversation.dart';
 import 'package:moodle_mobile/models/course/course.dart';
 import 'package:moodle_mobile/models/notification/last_updated_data.dart';
 import 'package:moodle_mobile/models/notification/notification.dart';
-import 'package:moodle_mobile/store/conversation/conversation_store.dart';
 
 /// A preset of events that can be listened for by BgService
 abstract class BgEvent {
@@ -60,9 +61,9 @@ class FetchMessage extends BgEvent {
             LastUpdateData lastUpdated = event['lastUpdated'];
 
             // Get list of conversations
-            final store = GetIt.instance<ConversationStore>();
-            await store.getListConversation(token, int.parse(uid));
-            List<ConversationModel> cv = store.listConversation;
+            final conversationApi = ConversationApi(DioClient(Dio()));
+            List<ConversationModel> cv = await conversationApi
+                .getConversationInfo(token, int.parse(uid));
             for (ConversationModel c in cv) {
               // Notify latest message
               if (c.isRead) continue;
