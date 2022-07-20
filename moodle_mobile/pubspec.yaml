@@ -123,6 +123,7 @@ dependencies:
       ref: b6b2a6a
   visibility_detector: ^0.3.3
   path_provider: ^2.0.11
+  flutter_emoji: ^2.4.0
 
 dev_dependencies:
   flutter_test:

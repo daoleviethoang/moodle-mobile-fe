@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_emoji/flutter_emoji.dart';
 import 'package:moodle_mobile/data/network/constants/endpoints.dart';
 import 'package:moodle_mobile/data/network/constants/wsfunction_constants.dart';
 import 'package:moodle_mobile/data/network/dio_client.dart';
@@ -13,6 +14,7 @@ class ConversationApi {
   final DioClient _dioClient;
 
   ConversationApi(this._dioClient);
+
   Future<List<ConversationModel>> getConversationInfo(
       String token, int userid) async {
     try {
@@ -187,7 +189,6 @@ class ConversationApi {
         'userid': userId,
         'conversationid': conversationId,
       });
-
     } catch (e) {
       if (kDebugMode) {
         print("Mark message read Api error: $e");
@@ -230,7 +231,7 @@ class ConversationApi {
       return ConversationMessageModel(
           id: res.data[0]['id'],
           userIdFrom: res.data[0]['useridfrom'],
-          text: text,
+          text: _getFilteredText(text),
           timeCreated: res.data[0]['timecreated']);
     } catch (e) {
       if (kDebugMode) {
@@ -283,7 +284,7 @@ class ConversationApi {
       return ConversationMessageModel(
           id: res.data[0]['msgid'],
           userIdFrom: res.data[0]['useridfrom'],
-          text: text,
+          text: _getFilteredText(text),
           conversationId: res.data[0]['conversationid'],
           timeCreated: res.data[0]['timecreated']);
     } catch (e) {
@@ -292,5 +293,18 @@ class ConversationApi {
       }
       rethrow;
     }
+  }
+
+  String _getFilteredText(String text) {
+    // Filter emojis
+    final parser = EmojiParser();
+    final emojis = parser.parseEmojis(text).toSet().toList();
+    for (String e in emojis) {
+      if (kDebugMode) print('Found emoji: $e');
+      final i = text.indexOf(e);
+      text = text.replaceAll(e, '&#${text.codeUnitAt(i)};');
+    }
+    if (kDebugMode) print('New text: $text');
+    return text;
   }
 }
