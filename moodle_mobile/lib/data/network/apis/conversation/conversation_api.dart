@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:charset/charset.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_emoji/flutter_emoji.dart';
@@ -168,6 +169,7 @@ class ConversationApi {
             text: res.data['messages'][i]['text'],
             timeCreated: res.data['messages'][i]['timecreated']));
       }
+      debugPrint(listMessageDetail.last.text);
 
       return listMessageDetail;
     } catch (e) {
@@ -218,6 +220,7 @@ class ConversationApi {
   Future<ConversationMessageModel> sentMessage(
       String token, int conversationId, String text) async {
     try {
+      text = _getFilteredText(text);
       Dio dio = Http().client;
       final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
         'wstoken': token,
@@ -225,13 +228,13 @@ class ConversationApi {
         'moodlewsrestformat': 'json',
         'messages[0][text]': text,
         'conversationid': conversationId,
-        'messages[0][textformat]': 1
+        'messages[0][textformat]': 0
       });
 
       return ConversationMessageModel(
           id: res.data[0]['id'],
           userIdFrom: res.data[0]['useridfrom'],
-          text: _getFilteredText(text),
+          text: text,
           timeCreated: res.data[0]['timecreated']);
     } catch (e) {
       if (kDebugMode) {
@@ -270,6 +273,7 @@ class ConversationApi {
   Future sentMessageWithoutConversationId(
       String token, String text, int userId, int userIdFrom) async {
     try {
+      text = _getFilteredText(text);
       Dio dio = Http().client;
       final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
         'wstoken': token,
@@ -278,13 +282,13 @@ class ConversationApi {
         'moodlewsrestformat': 'json',
         'messages[0][text]': text,
         'messages[0][touserid]': userIdFrom,
-        'messages[0][textformat]': 1
+        'messages[0][textformat]': 0
       });
 
       return ConversationMessageModel(
           id: res.data[0]['msgid'],
           userIdFrom: res.data[0]['useridfrom'],
-          text: _getFilteredText(text),
+          text: text,
           conversationId: res.data[0]['conversationid'],
           timeCreated: res.data[0]['timecreated']);
     } catch (e) {
@@ -301,8 +305,10 @@ class ConversationApi {
     final emojis = parser.parseEmojis(text).toSet().toList();
     for (String e in emojis) {
       if (kDebugMode) print('Found emoji: $e');
-      final i = text.indexOf(e);
-      text = text.replaceAll(e, '&#${text.codeUnitAt(i)};');
+      final bits = utf32.encode(e);
+      final replace =
+          bits.map((b) => b.toRadixString(16).padLeft(2, '0')).join();
+      text = text.replaceAll(e, '&#x$replace;');
     }
     if (kDebugMode) print('New text: $text');
     return text;
