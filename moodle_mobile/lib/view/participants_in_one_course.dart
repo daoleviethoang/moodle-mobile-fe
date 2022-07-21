@@ -38,7 +38,7 @@ class _ParticipantsInOneCourseState extends State<ParticipantsInOneCourse> {
   @override
   Widget build(BuildContext context) {
     return isLoad
-        ? CircularProgressIndicator()
+        ? const Center(child: CircularProgressIndicator())
         : SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

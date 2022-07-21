@@ -33,7 +33,6 @@ class ParticipantListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(avatar + "&token=" + userStore.user.token);
     return Padding(
       padding: const EdgeInsets.all(10),
       child: ListTile(

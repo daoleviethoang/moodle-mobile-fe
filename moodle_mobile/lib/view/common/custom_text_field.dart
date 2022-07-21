@@ -38,7 +38,7 @@ class CustomTextFieldWidget extends StatelessWidget {
       elevation: elevation,
       borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
       child: TextField(
-        keyboardType: TextInputType.visiblePassword,
+        //keyboardType: TextInputType.visiblePassword,
         readOnly: readonly,
         controller: controller,
         obscureText: hidePass,

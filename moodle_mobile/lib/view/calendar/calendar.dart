@@ -483,8 +483,10 @@ class _CalendarScreenState extends State<CalendarScreen>
 
   void _initNoteTabView() {
     if (!hasNoteSection) {
-      _noteTabView =
-          Center(child: Text(AppLocalizations.of(context)!.notes_unsupported));
+      _noteTabView = Center(
+          child: Padding(
+              padding: const EdgeInsets.only(left: 8),
+              child: Text(AppLocalizations.of(context)!.notes_unsupported)));
       return;
     }
     _noteTabView = NoteList(searchShowFlag: noteSearchShowFlag);
