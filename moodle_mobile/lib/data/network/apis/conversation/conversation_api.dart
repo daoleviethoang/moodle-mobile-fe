@@ -221,6 +221,9 @@ class ConversationApi {
       String token, int conversationId, String text) async {
     try {
       text = _getFilteredText(text);
+      if (correctText(text) == false) {
+        throw "Send empty text";
+      }
       Dio dio = Http().client;
       final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
         'wstoken': token,
@@ -274,6 +277,9 @@ class ConversationApi {
       String token, String text, int userId, int userIdFrom) async {
     try {
       text = _getFilteredText(text);
+      if (correctText(text) == false) {
+        throw "Send empty text";
+      }
       Dio dio = Http().client;
       final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
         'wstoken': token,
@@ -312,5 +318,12 @@ class ConversationApi {
     }
     if (kDebugMode) print('New text: $text');
     return text;
+  }
+
+  bool correctText(String text) {
+    if (text.isEmpty) {
+      return false;
+    }
+    return true;
   }
 }
