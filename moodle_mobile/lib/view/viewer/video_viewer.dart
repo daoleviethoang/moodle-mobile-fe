@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:moodle_mobile/data/network/apis/file/file_api.dart';
+import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoViewer extends StatefulWidget {
@@ -20,12 +23,14 @@ class _VideoViewerState extends State<VideoViewer> {
   late String _title;
   late String _url;
   late Widget _body;
+  late UserStore _userStore;
   late VideoPlayerController _videoController;
   var _videoPlaying = true;
 
   @override
   void initState() {
     super.initState();
+    _userStore = GetIt.instance<UserStore>();
     _title = widget.title ?? '';
     _url = widget.url;
     _videoController = VideoPlayerController.network(_url)
@@ -99,6 +104,18 @@ class _VideoViewerState extends State<VideoViewer> {
     );
   }
 
+  downloadFile() async {
+    String fileName = "";
+    if (_url.isNotEmpty) {
+      List<String> list = _url.split('/');
+      fileName = list.length > 1 ? list.last : _title;
+    } else {
+      return;
+    }
+
+    await FileApi().downloadFile(_userStore.user.token, _url, fileName);
+  }
+
   @override
   Widget build(BuildContext context) {
     _initBody();
@@ -124,7 +141,7 @@ class _VideoViewerState extends State<VideoViewer> {
               padding: EdgeInsets.zero,
               shape: const CircleBorder(),
             ),
-            child: const Icon(Icons.download),
+            child: const Icon(Icons.download, size: 24),
             onPressed: () {},
           ),
         ],

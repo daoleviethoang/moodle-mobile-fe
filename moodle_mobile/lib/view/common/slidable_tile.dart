@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
@@ -97,8 +98,7 @@ class SlidableTile extends StatelessWidget {
               ),
             Text(
               nameInfo,
-              style:
-                  const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
             ),
             if (isStarred)
               const Padding(
@@ -113,29 +113,34 @@ class SlidableTile extends StatelessWidget {
           ],
         ),
         subtitle: message != null
-            ? AutoSizeText(
-                '$messageContent  ·  $timeCreated',
-                maxLines: 1,
-                style: MoodleStyles.messageContentStyle.copyWith(
-                  fontWeight: isRead ? null : FontWeight.bold,
-                ),
-                overflowReplacement: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        messageContent,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: MoodleStyles.messageContentStyle.copyWith(
-                          fontWeight: isRead ? null : FontWeight.bold,
+            ? Builder(builder: (context) {
+                if (Bidi.stripHtmlIfNeeded(messageContent).trim().isEmpty) {
+                  messageContent = AppLocalizations.of(context)!.multimedia;
+                }
+                return AutoSizeText(
+                  '$messageContent  ·  $timeCreated',
+                  maxLines: 1,
+                  style: MoodleStyles.messageContentStyle.copyWith(
+                    fontWeight: isRead ? null : FontWeight.bold,
+                  ),
+                  overflowReplacement: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          messageContent,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: MoodleStyles.messageContentStyle.copyWith(
+                            fontWeight: isRead ? null : FontWeight.bold,
+                          ),
                         ),
                       ),
-                    ),
-                    Text('  ·  $timeCreated',
-                        style: MoodleStyles.messageContentStyle),
-                  ],
-                ),
-              )
+                      Text('  ·  $timeCreated',
+                          style: MoodleStyles.messageContentStyle),
+                    ],
+                  ),
+                );
+              })
             : const Text(''),
       ),
     );

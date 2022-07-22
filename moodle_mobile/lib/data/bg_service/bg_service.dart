@@ -36,6 +36,7 @@ class BgService {
 
   /// Init the service to the device
   static Future<void> initBackgroundService() async {
+    if (kIsWeb) return;
     // Register to receive BackgroundFetch events after app is terminated.
     // Requires {stopOnTerminate: false, enableHeadless: true}
     await _initPlatformState();

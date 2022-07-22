@@ -1,10 +1,13 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/data/network/apis/file/file_api.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:photo_view/photo_view.dart';
 
 class ImageViewer extends StatefulWidget {
@@ -32,8 +35,8 @@ class _ImageViewerState extends State<ImageViewer> {
 
   @override
   void initState() {
-    _userStore = GetIt.instance<UserStore>();
     super.initState();
+    _userStore = GetIt.instance<UserStore>();
     _title = widget.title;
     _url = widget.url;
     _base64 = widget.base64;
@@ -56,8 +59,14 @@ class _ImageViewerState extends State<ImageViewer> {
     if (_url.isNotEmpty) {
       List<String> list = _url.split('/');
       fileName = list.length > 1 ? list.last : _title;
+    } else if (_base64.isNotEmpty) {
+      Uint8List bytes = base64.decode(_base64);
+      String dir = (await getApplicationDocumentsDirectory()).path;
+      File file = File('$dir/${DateTime.now().millisecondsSinceEpoch}.png');
+      await file.writeAsBytes(bytes);
+      return;
     } else {
-      fileName = DateTime.now().microsecondsSinceEpoch.toString() + ".png";
+      return;
     }
 
     await FileApi().downloadFile(_userStore.user.token, _url, fileName);
@@ -93,7 +102,7 @@ class _ImageViewerState extends State<ImageViewer> {
                     padding: EdgeInsets.zero,
                     shape: const CircleBorder(),
                   ),
-                  child: const Icon(Icons.download),
+                  child: const Icon(Icons.download, size: 24),
                   onPressed: () async {
                     await downloadFile();
                   },

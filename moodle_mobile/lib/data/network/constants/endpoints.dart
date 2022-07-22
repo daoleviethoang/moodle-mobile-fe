@@ -18,19 +18,15 @@ class Endpoints {
 
   // Add more endpoints here when we need to call to different API
   // user endpoints
-  static get login {
-    return baseUrl + "/login/token.php";
-  }
+  static get login => "$baseUrl/login/token.php";
 
-  static get forgetPass {
-    return baseUrl + "/lib/ajax/service-nologin.php";
-  }
+  static get forgetPass => "$baseUrl/lib/ajax/service-nologin.php";
 
-  static get webserviceServer {
-    return baseUrl + "/webservice/rest/server.php";
-  }
+  static get webserviceServer => "$baseUrl/webservice/rest/server.php";
 
-  static get uploadFile {
-    return baseUrl + "/webservice/upload.php";
-  }
+  static get uploadFile => "$baseUrl/webservice/upload.php";
+
+  static const imgurServer = 'https://api.imgur.com';
+  static const imgurGenerateToken = '$imgurServer/oauth2/token';
+  static const imgurUploadImage = '$imgurServer/3/image';
 }
