@@ -73,9 +73,7 @@ class ConversationApi {
 
       return listConversation;
     } catch (e) {
-      if (kDebugMode) {
-        print('$e');
-      }
+      if (kDebugMode) print('$e');
       rethrow;
     }
   }
@@ -98,9 +96,7 @@ class ConversationApi {
 
       return res.data;
     } catch (e) {
-      if (kDebugMode) {
-        print("API error: $e");
-      }
+      if (kDebugMode) print("API error: $e");
       rethrow;
     }
   }
@@ -119,9 +115,7 @@ class ConversationApi {
 
       return res.data;
     } catch (e) {
-      if (kDebugMode) {
-        print("API error: $e");
-      }
+      if (kDebugMode) print("API error: $e");
       rethrow;
     }
   }
@@ -140,9 +134,7 @@ class ConversationApi {
 
       return res.data;
     } catch (e) {
-      if (kDebugMode) {
-        print("API error: $e");
-      }
+      if (kDebugMode) print("API error: $e");
       rethrow;
     }
   }
@@ -173,9 +165,7 @@ class ConversationApi {
 
       return listMessageDetail;
     } catch (e) {
-      if (kDebugMode) {
-        print("API error: $e");
-      }
+      if (kDebugMode) print("API error: $e");
       rethrow;
     }
   }
@@ -192,9 +182,7 @@ class ConversationApi {
         'conversationid': conversationId,
       });
     } catch (e) {
-      if (kDebugMode) {
-        print("Mark message read Api error: $e");
-      }
+      if (kDebugMode) print("Mark message read Api error: $e");
       rethrow;
     }
   }
@@ -210,9 +198,7 @@ class ConversationApi {
       });
       return res.data;
     } catch (e) {
-      if (kDebugMode) {
-        print("Get unread count Api error: $e");
-      }
+      if (kDebugMode) print("Get unread count Api error: $e");
       rethrow;
     }
   }
@@ -240,9 +226,7 @@ class ConversationApi {
           text: text,
           timeCreated: res.data[0]['timecreated']);
     } catch (e) {
-      if (kDebugMode) {
-        print("Sent message Api error: $e");
-      }
+      if (kDebugMode) print("Sent message Api error: $e");
       rethrow;
     }
   }
@@ -266,9 +250,7 @@ class ConversationApi {
       }
       return res.data['id'];
     } catch (e) {
-      if (kDebugMode) {
-        print("Sent message Api error: $e");
-      }
+      if (kDebugMode) print("Sent message Api error: $e");
       rethrow;
     }
   }
@@ -298,17 +280,15 @@ class ConversationApi {
           conversationId: res.data[0]['conversationid'],
           timeCreated: res.data[0]['timecreated']);
     } catch (e) {
-      if (kDebugMode) {
-        print("Sent message Api error: $e");
-      }
+      if (kDebugMode) print("Sent message Api error: $e");
       rethrow;
     }
   }
 
   String _getFilteredText(String text) {
     // Filter emojis
-    final parser = EmojiParser();
-    final emojis = parser.parseEmojis(text).toSet().toList();
+    final emojis = EmojiParser().parseEmojis(text).toSet().toList();
+    if (emojis.isEmpty) return text;
     for (String e in emojis) {
       if (kDebugMode) print('Found emoji: $e');
       final bits = utf32.encode(e);

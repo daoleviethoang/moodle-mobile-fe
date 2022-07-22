@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:moodle_mobile/constants/styles.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:moodle_mobile/view/common/content_item.dart';
 
 class CustomTextFieldLeft extends StatelessWidget {
   const CustomTextFieldLeft({Key? key, required this.messageText})
       : super(key: key);
   final String messageText;
+
+  bool get noText => Bidi.stripHtmlIfNeeded(messageText).trim().isEmpty;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -32,41 +34,12 @@ class CustomTextFieldLeft extends StatelessWidget {
               constraints: BoxConstraints(
                   maxWidth: MediaQuery.of(context).size.width * 2 / 3),
               child: Container(
-                padding: const EdgeInsets.only(
-                    left: Dimens.default_padding,
-                    right: Dimens.default_padding),
-                child: Html(
-                  data: messageText,
-                  onLinkTap: (url, cxt, attributes, element) async {
-                    await showGeneralDialog(
-                      context: context,
-                      pageBuilder: (context, ani1, ani2) {
-                        return AlertDialog(
-                          title: Text(AppLocalizations.of(context)!.open_link),
-                          content: Text(url ?? ''),
-                          shape: const RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(16))),
-                          actions: [
-                            TextButton(
-                              onPressed: () async => Navigator.pop(context),
-                              child: Text(AppLocalizations.of(context)!.cancel),
-                            ),
-                            TextButton(
-                              onPressed: () async {
-                                Navigator.pop(context);
-                                await launchUrl(
-                                  Uri.parse(url ?? ''),
-                                  mode: LaunchMode.externalApplication,
-                                );
-                              },
-                              child: Text(AppLocalizations.of(context)!.open),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  },
+                padding: const EdgeInsets.symmetric(
+                    horizontal: Dimens.default_padding),
+                child: RichTextCard(
+                  text: messageText,
+                  style: MoodleStyles.leftMessageTextStyle,
+                  hasPadding: noText,
                 ),
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.all(
@@ -86,6 +59,8 @@ class CustomTextFieldRight extends StatelessWidget {
       : super(key: key);
   final String messageText;
 
+  bool get noText => Bidi.stripHtmlIfNeeded(messageText).trim().isEmpty;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -98,41 +73,12 @@ class CustomTextFieldRight extends StatelessWidget {
             constraints: BoxConstraints(
                 maxWidth: MediaQuery.of(context).size.width * 2 / 3),
             child: Container(
-              padding: const EdgeInsets.only(
-                  left: Dimens.default_padding, right: Dimens.default_padding),
-              child: Html(
-                data: messageText,
-                style: {"body": Style(color: MoodleColors.white)},
-                onLinkTap: (url, cxt, attributes, element) async {
-                  await showGeneralDialog(
-                    context: context,
-                    pageBuilder: (context, ani1, ani2) {
-                      return AlertDialog(
-                        title: Text(AppLocalizations.of(context)!.open_link),
-                        content: Text(url ?? ''),
-                        shape: const RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(16))),
-                        actions: [
-                          TextButton(
-                            onPressed: () async => Navigator.pop(context),
-                            child: Text(AppLocalizations.of(context)!.cancel),
-                          ),
-                          TextButton(
-                            onPressed: () async {
-                              Navigator.pop(context);
-                              await launchUrl(
-                                Uri.parse(url ?? ''),
-                                mode: LaunchMode.externalApplication,
-                              );
-                            },
-                            child: Text(AppLocalizations.of(context)!.open),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                },
+              padding: const EdgeInsets.symmetric(
+                  horizontal: Dimens.default_padding),
+              child: RichTextCard(
+                text: messageText,
+                style: MoodleStyles.rightMessageTextStyle,
+                hasPadding: noText,
               ),
               decoration: const BoxDecoration(
                 borderRadius: BorderRadius.all(

@@ -464,7 +464,8 @@ class RichTextCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: hasPadding ? 8 : 0),
+      padding: EdgeInsets.symmetric(
+          vertical: hasPadding ? Dimens.default_padding : 0),
       child: Html(
         data: _textFormatted,
         style: style ?? MoodleStyles.htmlStyle,
@@ -472,7 +473,8 @@ class RichTextCard extends StatelessWidget {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (_) => ImageViewer(
                     title: AppLocalizations.of(context)!.image,
-                    base64: url?.split(',')[1] ?? '',
+                    url: url != null && !url.contains(',') ? url : '',
+                    base64: (url ?? '').contains(',') ? url!.split(',')[1] : '',
                   )));
         },
         customRenders: customData ?? {},

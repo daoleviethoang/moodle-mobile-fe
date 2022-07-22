@@ -79,22 +79,28 @@ class MoodleStyles {
   );
 
   static Map<String, Style> get htmlStyle => {
-    'div': Style(textOverflow: TextOverflow.visible),
-    'h1': Style(fontSize: const FontSize(19)),
-    'h2': Style(fontSize: const FontSize(17.5)),
-    'h3': Style(fontSize: const FontSize(16)),
-    'a': Style(
-      fontSize: FontSize.medium,
-      fontWeight: FontWeight.bold,
-      color: MoodleColors.blue,
-      textDecoration: TextDecoration.none,
-    ),
-  };
+        'div': Style(textOverflow: TextOverflow.visible),
+        'h1': Style(fontSize: const FontSize(19)),
+        'h2': Style(fontSize: const FontSize(17.5)),
+        'h3': Style(fontSize: const FontSize(16)),
+        'a': Style(
+          fontSize: FontSize.medium,
+          fontWeight: FontWeight.bold,
+          color: MoodleColors.blue,
+          textDecoration: TextDecoration.none,
+        ),
+      };
 
   static const TextStyle messageContentStyle =
       TextStyle(fontSize: 12, color: MoodleColors.gray);
 
-  static Style rightMessageTextStyle = Style(color: MoodleColors.white);
+  static Map<String, Style> get leftMessageTextStyle => htmlStyle;
+
+  static Map<String, Style> get rightMessageTextStyle {
+    final html = htmlStyle;
+    html.addAll({"body": Style(color: MoodleColors.white)});
+    return html;
+  }
 
   static const TextStyle notificationTimestampStyle = TextStyle(
       fontSize: 13, fontWeight: FontWeight.bold, color: MoodleColors.blue);
