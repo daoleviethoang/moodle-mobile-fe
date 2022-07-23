@@ -118,10 +118,12 @@ class MessengerNotification extends Notification {
     final details = MessengerChannel(memberAvatarBase64: base64);
 
     // Show notification
+    var text = Bidi.stripHtmlIfNeeded(data.message?.text ?? '').trim();
+    if (text.isEmpty) text = '🖼';
     localNotifications.show(
       data.id,
       from.fullname,
-      Bidi.stripHtmlIfNeeded(data.message?.text ?? '').trim(),
+      text,
       details,
       payload: '${details.android?.channelId},${data.id}',
     );
