@@ -1,8 +1,14 @@
+import 'dart:io';
+
+import 'package:document_scanner_flutter/configs/configs.dart';
+import 'package:document_scanner_flutter/document_scanner_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/constants/colors.dart';
+import 'package:moodle_mobile/constants/dimens.dart';
 import 'package:moodle_mobile/data/network/apis/assignment/assignment_api.dart';
 import 'package:moodle_mobile/data/network/apis/file/file_api.dart';
 import 'package:moodle_mobile/models/assignment/assignment.dart';
@@ -46,6 +52,7 @@ class _FilesAssignmentScreenState extends State<FilesAssignmentScreen> {
   int mbSize = 0;
   bool disable = false;
   bool isLoading = false;
+  bool isSaveFile = false;
 
   double caculateMbSize() {
     double sum = 0;
@@ -106,6 +113,182 @@ class _FilesAssignmentScreenState extends State<FilesAssignmentScreen> {
       return true;
     }
     return false;
+  }
+
+  Widget buildBottomDialog(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.only(top: 8, bottom: 20, left: 10, right: 10),
+      decoration: const BoxDecoration(
+        color: MoodleColors.grey_bottom_bar,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(Dimens.default_sheet_radius),
+          topRight: Radius.circular(Dimens.default_sheet_radius),
+        ),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Container(
+            margin: const EdgeInsets.only(bottom: 20),
+            height: 5,
+            width: 134,
+            decoration: const BoxDecoration(
+              color: MoodleColors.line_bottom_bar,
+              borderRadius: BorderRadius.all(Radius.circular(5)),
+            ),
+          ),
+          Container(
+            width: double.infinity,
+            margin: const EdgeInsets.only(bottom: 8),
+            decoration: const BoxDecoration(
+              color: MoodleColors.white,
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+            ),
+            child: Padding(
+              padding:
+                  const EdgeInsets.only(left: 30, bottom: 5, top: 5, right: 30),
+              child: TextButton.icon(
+                onPressed: () async {
+                  await getFileFromStorage();
+                  Navigator.pop(context);
+                },
+                icon: const Icon(
+                  Icons.library_add,
+                  color: MoodleColors.black,
+                  size: 30,
+                ),
+                label: Padding(
+                  padding: const EdgeInsets.only(left: 20),
+                  child: Text(
+                    AppLocalizations.of(context)!.get_file_from_storage,
+                    style: const TextStyle(
+                        color: MoodleColors.black, fontSize: 16),
+                  ),
+                ),
+                style: TextButton.styleFrom(
+                  alignment: Alignment.centerLeft,
+                  primary: MoodleColors.white,
+                ),
+              ),
+            ),
+          ),
+          Container(
+            width: double.infinity,
+            decoration: const BoxDecoration(
+              color: MoodleColors.white,
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+            ),
+            child: Padding(
+              padding:
+                  const EdgeInsets.only(left: 30, bottom: 5, top: 5, right: 30),
+              child: TextButton.icon(
+                onPressed: () async {
+                  await scanFile();
+                  Navigator.pop(context);
+                },
+                icon: const Icon(
+                  Icons.document_scanner,
+                  color: MoodleColors.black,
+                  size: 30,
+                ),
+                label: Padding(
+                  padding: const EdgeInsets.only(left: 20),
+                  child: Text(
+                    AppLocalizations.of(context)!.scan_file_camera,
+                    style: const TextStyle(
+                        color: MoodleColors.black, fontSize: 16),
+                  ),
+                ),
+                style: TextButton.styleFrom(
+                  alignment: Alignment.centerLeft,
+                  primary: MoodleColors.white,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  getFileFromStorage() async {
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles();
+      if (result != null) {
+        PlatformFile file = result.files.first;
+        // check size more than condition
+        if (file.size + caculateByteSize() > widget.maxByteSize) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(AppLocalizations.of(context)!.file_size_bigger),
+              backgroundColor: Colors.red));
+          return;
+        }
+        // check number file more than condition
+        if (files.length == widget.maxFileCount) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(AppLocalizations.of(context)!.number_file_full),
+              backgroundColor: Colors.red));
+          return;
+        }
+        // check file same name
+        bool check = checkOverwrite(file);
+        if (check == true) return;
+        // add file
+        files.add(FileUpload(
+            filename: file.name,
+            filepath: file.path ?? "",
+            timeModified: DateTime.now(),
+            filesize: file.size));
+        setState(() {
+          files.sort(((a, b) => a.filename.compareTo(b.filename)));
+          if (sortASC == false) {
+            files.reversed;
+          }
+        });
+      }
+    } catch (error) {
+      print(error.toString());
+    }
+  }
+
+  scanFile() async {
+    try {
+      File? scannedDoc = await DocumentScannerFlutter.launchForPdf(context,
+          source: ScannerFileSource.CAMERA); // Or ScannerFileSource.GALLERY
+      if (scannedDoc != null) {
+        String fileName = scannedDoc.path.split('/').last;
+        int byte = scannedDoc.readAsBytesSync().lengthInBytes;
+
+        if (byte + caculateByteSize() > widget.maxByteSize) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(AppLocalizations.of(context)!.file_size_bigger),
+              backgroundColor: Colors.red));
+          return;
+        }
+        // check number file more than condition
+        if (files.length == widget.maxFileCount) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(AppLocalizations.of(context)!.number_file_full),
+              backgroundColor: Colors.red));
+          return;
+        }
+
+        files.add(FileUpload(
+            filename: fileName,
+            filepath: scannedDoc.path,
+            timeModified: DateTime.now(),
+            filesize: byte));
+        setState(() {
+          files.sort(((a, b) => a.filename.compareTo(b.filename)));
+          if (sortASC == false) {
+            files.reversed;
+          }
+        });
+      }
+    } on PlatformException {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Platform exception"), backgroundColor: Colors.red));
+    }
   }
 
   @override
@@ -278,6 +461,7 @@ class _FilesAssignmentScreenState extends State<FilesAssignmentScreen> {
                           return FileAssignmentTile(
                             file: files[index],
                             rename: rename,
+                            canEdit: widget.canEdit,
                             delete: delete,
                             index: index,
                           );
@@ -292,6 +476,9 @@ class _FilesAssignmentScreenState extends State<FilesAssignmentScreen> {
                         onPressed: disable
                             ? null
                             : () async {
+                                setState(() {
+                                  isSaveFile = true;
+                                });
                                 try {
                                   int? itemId = await FileApi()
                                       .uploadMultipleFile(
@@ -302,18 +489,15 @@ class _FilesAssignmentScreenState extends State<FilesAssignmentScreen> {
                                         widget.assignId,
                                         itemId);
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                            content: Text(
-                                                AppLocalizations.of(context)!
-                                                    .submit_success),
+                                        const SnackBar(
+                                            content: Text("Submit success"),
                                             backgroundColor: Colors.green));
                                     widget.reload();
                                   } else {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                            content: Text(
-                                                AppLocalizations.of(context)!
-                                                    .can_not_found_file),
+                                        const SnackBar(
+                                            content:
+                                                Text("Can't found any file"),
                                             backgroundColor: Colors.red));
                                   }
                                 } catch (e) {
@@ -322,8 +506,16 @@ class _FilesAssignmentScreenState extends State<FilesAssignmentScreen> {
                                           content: Text(e.toString()),
                                           backgroundColor: Colors.red));
                                 }
+                                setState(() {
+                                  isSaveFile = false;
+                                });
                               },
-                      )
+                      ),
+                      isSaveFile
+                          ? const Center(
+                              child: CircularProgressIndicator(),
+                            )
+                          : Container(),
                     ],
                   ),
                 ),
@@ -342,46 +534,17 @@ class _FilesAssignmentScreenState extends State<FilesAssignmentScreen> {
                   ? null
                   : () async {
                       try {
-                        FilePickerResult? result =
-                            await FilePicker.platform.pickFiles();
-                        if (result != null) {
-                          PlatformFile file = result.files.first;
-                          // check size more than condition
-                          if (file.size + caculateByteSize() >
-                              widget.maxByteSize) {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content: Text(AppLocalizations.of(context)!
-                                    .file_size_bigger),
-                                backgroundColor: Colors.red));
-                            return;
-                          }
-                          // check number file more than condition
-                          if (files.length == widget.maxFileCount) {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content: Text(AppLocalizations.of(context)!
-                                    .number_file_full),
-                                backgroundColor: Colors.red));
-                            return;
-                          }
-                          // check file same name
-                          bool check = checkOverwrite(file);
-                          if (check == true) return;
-                          // add file
-                          files.add(FileUpload(
-                              filename: file.name,
-                              filepath: file.path ?? "",
-                              timeModified: DateTime.now(),
-                              filesize: file.size));
-                          setState(() {
-                            files.sort(
-                                ((a, b) => a.filename.compareTo(b.filename)));
-                            if (sortASC == false) {
-                              files.reversed;
-                            }
-                          });
-                        }
-                      } catch (error) {
-                        print(error.toString());
+                        showModalBottomSheet(
+                          context: context,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                          ),
+                          builder: (builder) => buildBottomDialog(builder),
+                        );
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(e.toString()),
+                            backgroundColor: Colors.red));
                       }
                     },
             ),

@@ -52,7 +52,7 @@ android {
 
     defaultConfig {
         applicationId "vn.edu.hcmus.moodle_mobile"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 30
         versionCode 12
         versionName "1.0.12"

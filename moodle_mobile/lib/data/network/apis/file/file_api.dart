@@ -68,20 +68,35 @@ class FileApi {
     try {
       final status = await Permission.storage.request();
       if (status.isGranted) {
-        var storage = await pathProvider.getExternalStorageDirectory();
-        Dio dio = Http().client;
-        await FlutterDownloader.enqueue(
-          url: fileUrl + "?token=$token",
-          savedDir: storage!.path,
-          fileName: fileName,
-          showNotification:
-              true, // show download progress in status bar (for Android)
-          openFileFromNotification:
-              true, // click on notification to open downloaded file (for Android)
-        );
-        return;
+        if (Platform.isIOS) {
+          var externalDir =
+              await pathProvider.getApplicationDocumentsDirectory();
+          await FlutterDownloader.enqueue(
+            url: fileUrl + "?token=$token",
+            savedDir: externalDir.path,
+            fileName: fileName,
+            showNotification:
+                true, // show download progress in status bar (for Android)
+            openFileFromNotification:
+                true, // click on notification to open downloaded file (for Android)
+          );
+          return;
+        } else if (Platform.isAndroid) {
+          var externalDir = await pathProvider.getExternalStorageDirectory();
+          await FlutterDownloader.enqueue(
+            url: fileUrl + "?token=$token",
+            savedDir: externalDir!.path,
+            fileName: fileName,
+            saveInPublicStorage: true,
+            showNotification:
+                true, // show download progress in status bar (for Android)
+            openFileFromNotification:
+                true, // click on notification to open downloaded file (for Android)
+          );
+          return;
+        }
       } else {
-        throw "App don't have permission download";
+        return;
       }
     } catch (e) {
       print(e.toString());
