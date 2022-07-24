@@ -35,6 +35,7 @@ import 'package:moodle_mobile/view/common/custom_text_field.dart';
 import 'package:moodle_mobile/view/common/data_card.dart';
 import 'package:moodle_mobile/view/common/tab_item.dart';
 import 'package:moodle_mobile/view/enrol/enrol.dart';
+import 'package:moodle_mobile/view/forum/add_post/add_poll_screen.dart';
 import 'package:moodle_mobile/view/forum/forum_announcement_scren.dart';
 import 'package:moodle_mobile/view/forum/forum_discussion_screen.dart';
 import 'package:moodle_mobile/view/forum/forum_screen.dart';
@@ -761,7 +762,15 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     final icons = [Icons.add, Icons.link, Icons.poll];
     return FabWithIcons(
       icons: icons,
-      onIconTapped: (index) {},
+      onIconTapped: (index) {
+        if (index == 2) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (builder) =>
+                      AddPollScreen(courseId: widget.courseId)));
+        }
+      },
     );
   }
 

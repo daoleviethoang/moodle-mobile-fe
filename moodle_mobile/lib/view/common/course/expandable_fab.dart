@@ -68,7 +68,10 @@ class FabWithIconsState extends State<FabWithIcons>
         }
       },
       tooltip: 'Increment',
-      child: Icon(Icons.add),
+      child: Icon(
+        Icons.add,
+        color: Colors.white,
+      ),
       elevation: 2.0,
     );
   }
