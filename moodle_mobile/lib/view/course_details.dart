@@ -30,6 +30,7 @@ import 'package:moodle_mobile/models/note/notes.dart';
 import 'package:moodle_mobile/models/site_info/site_info.dart';
 import 'package:moodle_mobile/view/activity/activity_screen.dart';
 import 'package:moodle_mobile/view/common/content_item.dart';
+import 'package:moodle_mobile/view/common/course/expandable_fab.dart';
 import 'package:moodle_mobile/view/common/custom_text_field.dart';
 import 'package:moodle_mobile/view/common/data_card.dart';
 import 'package:moodle_mobile/view/common/tab_item.dart';
@@ -756,11 +757,20 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     }));
   }
 
+  Widget _buildFab(BuildContext context) {
+    final icons = [Icons.add, Icons.link, Icons.poll];
+    return FabWithIcons(
+      icons: icons,
+      onIconTapped: (index) {},
+    );
+  }
+
   // endregion
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: _buildFab(context),
       body: FutureBuilder(
           future: queryData(),
           builder: (context, data) {
