@@ -3,9 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/constants/colors.dart';
+import 'package:moodle_mobile/data/firebase/firestore/polls_service.dart';
 import 'package:moodle_mobile/data/network/apis/forum/forum_api.dart';
 import 'package:moodle_mobile/models/assignment/file_assignment.dart';
 import 'package:moodle_mobile/models/forum/forum_course.dart';
+import 'package:moodle_mobile/models/poll/poll.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/chipTitle.dart';
 import 'package:moodle_mobile/view/common/custom_button.dart';
@@ -243,7 +245,17 @@ class _AddPollScreenState extends State<AddPollScreen> {
               ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () async {
+          print('test');
+          pollController.removeWhere((element) => element.text.isEmpty);
+          Poll temp = Poll(
+            content: contentController.text,
+            subject: subjectController.text,
+            options: pollController.map((e) => e.text).toList(),
+          );
+          await PollService.setPoll(widget.courseId.toString(), temp);
+          Navigator.pop(context, true);
+        },
         backgroundColor: Theme.of(context).primaryColor,
         child: const Icon(
           Icons.check,
