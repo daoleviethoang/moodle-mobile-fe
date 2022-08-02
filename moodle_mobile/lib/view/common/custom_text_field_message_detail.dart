@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:intl/intl.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
+import 'package:moodle_mobile/constants/matcher.dart';
 import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/view/common/content_item.dart';
+import 'package:moodle_mobile/view/common/image_view.dart';
+import 'package:moodle_mobile/view/viewer/image_viewer.dart';
 
 class CustomTextFieldLeft extends StatelessWidget {
   const CustomTextFieldLeft({Key? key, required this.messageText})
@@ -37,10 +41,30 @@ class CustomTextFieldLeft extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(
                     horizontal: Dimens.default_padding),
                 child: RichTextCard(
-                  text: messageText,
-                  style: MoodleStyles.leftMessageTextStyle,
-                  hasPadding: noText,
-                ),
+                    text: messageText,
+                    style: MoodleStyles.leftMessageTextStyle,
+                    hasPadding: noText,
+                    customData: {
+                      imgMatcher(): CustomRender.widget(
+                          widget: (renderContext, buildChildren) {
+                        final attrs = renderContext.tree.element?.attributes;
+                        final url = attrs?['src'] ?? '';
+                        return RoundedImageView(
+                          imageUrl: url,
+                          width: double.infinity,
+                          height: null,
+                          fit: BoxFit.fitWidth,
+                          placeholder: const Icon(Icons.broken_image_rounded),
+                          onClick: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) => ImageViewer(
+                                      title: 'Image',
+                                      url: url,
+                                    )));
+                          },
+                        );
+                      }),
+                    }),
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.all(
                     Radius.circular(Dimens.default_border_radius * 3),
@@ -76,10 +100,30 @@ class CustomTextFieldRight extends StatelessWidget {
               padding: const EdgeInsets.symmetric(
                   horizontal: Dimens.default_padding),
               child: RichTextCard(
-                text: messageText,
-                style: MoodleStyles.rightMessageTextStyle,
-                hasPadding: noText,
-              ),
+                  text: messageText,
+                  style: MoodleStyles.rightMessageTextStyle,
+                  hasPadding: noText,
+                  customData: {
+                    imgMatcher(): CustomRender.widget(
+                        widget: (renderContext, buildChildren) {
+                      final attrs = renderContext.tree.element?.attributes;
+                      final url = attrs?['src'] ?? '';
+                      return RoundedImageView(
+                        imageUrl: url,
+                        width: double.infinity,
+                        height: null,
+                        fit: BoxFit.fitWidth,
+                        placeholder: const Icon(Icons.broken_image_rounded),
+                        onClick: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (_) => ImageViewer(
+                                    title: 'Image',
+                                    url: url,
+                                  )));
+                        },
+                      );
+                    }),
+                  }),
               decoration: const BoxDecoration(
                 borderRadius: BorderRadius.all(
                   Radius.circular(Dimens.default_border_radius * 3),

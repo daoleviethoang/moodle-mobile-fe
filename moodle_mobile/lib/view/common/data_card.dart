@@ -189,36 +189,33 @@ class _NoteCardState extends State<NoteCard> {
                     ),
                     Container(height: 4),
                     Builder(builder: (context) {
-                      // TODO: Images parsing
                       return RichTextCard(
-                        text: _note.txtFiltered,
-                        style: MoodleStyles.noteTextStyle(_note.isDone),
-                        hasPadding: false,
-                        customData: {
-                          imgMatcher(): CustomRender.widget(
-                            widget: (renderContext, buildChildren) {
+                          text: _note.txtFiltered,
+                          style: MoodleStyles.noteTextStyle(_note.isDone),
+                          hasPadding: false,
+                          customData: {
+                            imgMatcher(): CustomRender.widget(
+                                widget: (renderContext, buildChildren) {
                               final attrs =
                                   renderContext.tree.element?.attributes;
-                              final src = (attrs?['src'] ?? "about:blank");
-                              return InkWell(
-                                onTap: () {
+                              final url = attrs?['src'] ?? '';
+                              return RoundedImageView(
+                                imageUrl: url,
+                                width: double.infinity,
+                                height: null,
+                                fit: BoxFit.fitWidth,
+                                placeholder:
+                                    const Icon(Icons.broken_image_rounded),
+                                onClick: () {
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (_) => ImageViewer(
                                             title: 'Image',
-                                            url: src,
+                                            url: url,
                                           )));
                                 },
-                                child: RoundedImageView(
-                                  imageUrl: src,
-                                  placeholder: const Center(
-                                    child: CircularProgressIndicator(),
-                                  ),
-                                ),
                               );
-                            },
-                          ),
-                        },
-                      );
+                            }),
+                          });
                     }),
                   ],
                 ),

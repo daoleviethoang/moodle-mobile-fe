@@ -441,7 +441,6 @@ class EventItem extends StatelessWidget {
 
 // region Cards
 
-// TODO: override image widget
 class RichTextCard extends StatelessWidget {
   final String? text;
   final Map<String, Style>? style;

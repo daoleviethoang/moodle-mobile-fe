@@ -1,12 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:moodle_mobile/constants/colors.dart';
 
 class ImageView extends StatelessWidget {
   final String imageUrl;
   final Widget placeholder;
-  final double width;
-  final double height;
+  final double? width;
+  final double? height;
   final BoxFit fit;
   final Color? color;
 
@@ -23,7 +24,7 @@ class ImageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: color ?? Theme.of(context).primaryColor.withOpacity(.75),
+      color: color ?? MoodleColors.blue.withOpacity(.75),
       child: Builder(builder: (context) {
         if (Uri.tryParse(imageUrl) == null) {
           return Image.memory(
@@ -61,8 +62,8 @@ class ImageView extends StatelessWidget {
 class CircleImageView extends StatelessWidget {
   final String imageUrl;
   final Widget placeholder;
-  final double width;
-  final double height;
+  final double? width;
+  final double? height;
   final BoxFit fit;
   final Color? color;
 
@@ -94,8 +95,8 @@ class CircleImageView extends StatelessWidget {
 class RoundedImageView extends StatelessWidget {
   final String imageUrl;
   final Widget placeholder;
-  final double width;
-  final double height;
+  final double? width;
+  final double? height;
   final BoxFit fit;
   final Color? color;
   final BorderRadius borderRadius;
