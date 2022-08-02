@@ -82,12 +82,12 @@ class FetchMessage extends BgEvent {
 
 class FetchCalendar extends BgEvent {
   static const List<int> minutes = [
-    60 * 24 * 7,
-    60 * 24 * 2,
-    60 * 24,
-    60 * 12,
-    60 * 6,
-    60 * 2,
+    60 * 24 * 7, // 10080
+    60 * 24 * 2, // 2880
+    60 * 24, // 1440
+    60 * 12, // 720
+    60 * 6, // 360
+    60 * 2, // 120
     60,
     30,
     15,
@@ -120,25 +120,29 @@ class FetchCalendar extends BgEvent {
             }
             for (Event e in events) {
               // Get last notified minute
-              final time = DateTime.fromMillisecondsSinceEpoch(
-                  (e.timestart ?? 0) * 1000);
+              // If not exist, this event is new and will be notified
+              // If the last minute is already notified, skip
               final evData = lastUpdated.events;
               final id = e.id ?? -1;
-              final lastNotified = evData[id];
-              if (lastNotified == minutes.last) continue;
+              final lastNotified = evData[id] ?? minutes.first;
+              if (lastNotified <= minutes.last) continue;
 
               // Get next notify minute
+              // If the next one haven't passed yet (-1), skip
+              final time = DateTime.fromMillisecondsSinceEpoch(
+                  (e.timestart ?? 0) * 1000);
               final now = DateTime.now();
-              final nextIndex = minutes.lastIndexWhere((m) {
+              final nextIndexes =
+                  minutes.sublist(minutes.indexOf(lastNotified) + 1);
+              final nextNotify = nextIndexes.lastWhere((m) {
+                // Get the minute right before now
                 final nextTime = time.subtract(Duration(minutes: m));
                 return now.isAfter(nextTime);
-              });
-              if (nextIndex == -1) continue;
-              final nextNotify = minutes[nextIndex];
+              }, orElse: () => -1);
+              if (nextNotify == -1) continue;
 
               // Notify event with minutes left
-              await NotificationHelper.showCalendarNotification(e,
-                  minutesLeft: nextNotify);
+              await NotificationHelper.showCalendarNotification(e);
               lastUpdated.addEvent(id, nextNotify);
             }
             return lastUpdated;
