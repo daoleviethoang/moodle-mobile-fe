@@ -1,12 +1,6 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
-import 'dart:typed_data';
 
-import 'package:file_picker/file_picker.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/constants/vars.dart';
@@ -161,32 +155,10 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
   }
 
   void _onImagePressed() async {
-    FilePickerResult? result =
-        await FilePicker.platform.pickFiles(type: FileType.image);
-    if (result == null) return;
-    final path = result.files[0].path;
-    if (path == null) return;
-    final compressed = await _compressFile(path);
-    final base64 = base64Encode(compressed.toList());
-    final url = await ImgurService.uploadImage(base64);
-    if (url.isEmpty) return;
-    _textEditingController.text = '<img src="$url" alt="image"/>';
+    final base64 = await ImgurService.pickImage();
+    final text = await ImgurService.uploadImageForHtml(base64);
+    _textEditingController.text = text;
     _onSendPressed();
-  }
-
-  Future<Uint8List> _compressFile(String path) async {
-    final file = File(path);
-    final result = await FlutterImageCompress.compressWithFile(
-      path,
-      format: CompressFormat.jpeg,
-      minHeight: 1920,
-      minWidth: 1080,
-      quality: 50,
-    ) ?? Uint8List(0);
-    if (kDebugMode) {
-      print('Compressed ${await file.length()} to ${result.length}');
-    }
-    return result;
   }
 
   void _onSendPressed() async {

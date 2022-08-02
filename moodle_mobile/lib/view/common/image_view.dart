@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 class ImageView extends StatelessWidget {
@@ -22,27 +24,36 @@ class ImageView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: color ?? Theme.of(context).primaryColor.withOpacity(.75),
-      child: Image.network(
-        imageUrl,
-        width: width,
-        height: height,
-        fit: fit,
-        loadingBuilder: (context, child, progress) {
-          return (progress == null)
-              ? child
-              : Center(
-                  child: CircularProgressIndicator(
-                    value: progress.expectedTotalBytes != null
-                        ? progress.cumulativeBytesLoaded /
-                            progress.expectedTotalBytes!
-                        : null,
-                  ),
-                );
-        },
-        errorBuilder: (context, exception, stackTrace) {
-          return placeholder;
-        },
-      ),
+      child: Builder(builder: (context) {
+        if (Uri.tryParse(imageUrl) == null) {
+          return Image.memory(
+            base64Decode(imageUrl),
+            width: width,
+            height: height,
+            fit: fit,
+            errorBuilder: (_, __, ___) => placeholder,
+          );
+        }
+        return Image.network(
+          imageUrl,
+          width: width,
+          height: height,
+          fit: fit,
+          loadingBuilder: (context, child, progress) {
+            return (progress == null)
+                ? child
+                : Center(
+                    child: CircularProgressIndicator(
+                      value: progress.expectedTotalBytes != null
+                          ? progress.cumulativeBytesLoaded /
+                              progress.expectedTotalBytes!
+                          : null,
+                    ),
+                  );
+          },
+          errorBuilder: (_, __, ___) => placeholder,
+        );
+      }),
     );
   }
 }
