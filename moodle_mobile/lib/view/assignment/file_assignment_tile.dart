@@ -17,10 +17,12 @@ class FileAssignmentTile extends StatefulWidget {
   final Int2StringVoidFunc rename;
   final Int2VoidFunc delete;
   final int index;
+  final bool canEdit;
   const FileAssignmentTile({
     Key? key,
     required this.file,
     required this.rename,
+    required this.canEdit,
     required this.delete,
     required this.index,
   }) : super(key: key);
@@ -78,16 +80,14 @@ class _FileAssignmentTileState extends State<FileAssignmentTile> {
   }
 
   void handleClick(String value) {
-    switch (action.indexOf(value)) {
-      case 0:
-        _showReNameDialog();
-        break;
-      case 1:
-        downloadFile();
-        break;
-      case 2:
-        widget.delete(widget.index);
-        break;
+    if (value == AppLocalizations.of(context)!.rename) {
+      _showReNameDialog();
+    }
+    if (value == AppLocalizations.of(context)!.download) {
+      downloadFile();
+    }
+    if (value == AppLocalizations.of(context)!.delete) {
+      widget.delete(widget.index);
     }
   }
 
@@ -163,6 +163,10 @@ class _FileAssignmentTileState extends State<FileAssignmentTile> {
                   itemBuilder: (BuildContext context) {
                     if (widget.file.fileUrl == "") {
                       action.remove(AppLocalizations.of(context)!.download);
+                    }
+                    if (widget.canEdit == false) {
+                      action.remove(AppLocalizations.of(context)!.rename);
+                      action.remove(AppLocalizations.of(context)!.delete);
                     }
                     return action.map((String choice) {
                       return PopupMenuItem<String>(

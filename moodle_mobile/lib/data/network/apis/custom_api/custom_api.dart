@@ -44,7 +44,6 @@ class CustomApi {
       if (e.toString() == "dml_missing_record_exception") {
         throw e.toString();
       }
-      print(e.toString());
       throw "Can't add section to course";
     }
   }
