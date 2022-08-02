@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:moodle_mobile/data/bg_service/bg_events.dart';
 import 'package:moodle_mobile/data/notifications/notifications.dart';
 import 'package:moodle_mobile/models/calendar/event.dart';
 import 'package:moodle_mobile/models/conversation/conversation.dart';
@@ -60,10 +59,8 @@ class NotificationHelper {
           [Map<String, dynamic>? attachment]) async =>
       TextNotification(data, attachment).show(_localNotifications!);
 
-  static Future showCalendarNotification(Event data,
-          {int? minutesLeft}) async =>
-      CalendarNotification(data, minutesLeft ?? FetchCalendar.minutes[1])
-          .show(_localNotifications!);
+  static Future showCalendarNotification(Event data) async =>
+      CalendarNotification(data).show(_localNotifications!);
 
   static Future showMessengerNotification(ConversationModel data) async =>
       MessengerNotification(data).show(_localNotifications!);

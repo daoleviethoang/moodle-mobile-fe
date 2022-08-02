@@ -41,12 +41,14 @@ class TextNotification extends Notification {
 
 class CalendarNotification extends Notification {
   final Event data;
-  final int minutesLeft;
   final details = const CalendarChannel();
 
-  CalendarNotification(this.data, this.minutesLeft) : super();
+  CalendarNotification(this.data) : super();
 
-  String _parseDuration(Duration d, String locale) {
+  String _parseDuration(String locale) {
+    final time =
+        DateTime.fromMillisecondsSinceEpoch((data.timestart ?? 0) * 1000);
+    Duration d = time.difference(DateTime.now()).abs();
     String dayString = 'd', hourString = 'h', minuteString = 'm';
     if (locale.startsWith('en')) {
       dayString = 'day(s)';
@@ -57,10 +59,12 @@ class CalendarNotification extends Notification {
       hourString = 'giờ';
       minuteString = 'phút';
     }
-    final daysLeft = d.inDays > 0 ? '${d.inDays} $dayString ' : '';
-    final hoursLeft = (d.inHours % 24) > 0 ? '${d.inHours} $hourString ' : '';
-    final minutesLeft =
-        (d.inMinutes % 60) > 0 ? '${d.inMinutes} $minuteString ' : '';
+    final days = d.inDays;
+    final hours = d.inHours % 24;
+    final minutes = d.inMinutes % 60;
+    final daysLeft = days > 0 ? '$days $dayString ' : '';
+    final hoursLeft = hours > 0 ? '$hours $hourString ' : '';
+    final minutesLeft = minutes > 0 ? '$minutes $minuteString ' : '';
     if (locale.startsWith('en')) {
       return '$daysLeft$hoursLeft$minutesLeft til due time.';
     } else if (locale.startsWith('vi')) {
@@ -74,7 +78,7 @@ class CalendarNotification extends Notification {
   Future show(FlutterLocalNotificationsPlugin localNotifications) async {
     super.show(localNotifications);
     final locale = Platform.localeName;
-    final description = _parseDuration(Duration(minutes: minutesLeft), locale);
+    final description = _parseDuration(locale);
     localNotifications.show(
       data.id ?? 0,
       data.name,
