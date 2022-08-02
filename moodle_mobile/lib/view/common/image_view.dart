@@ -1,10 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:moodle_mobile/constants/colors.dart';
 
 class ImageView extends StatelessWidget {
   final String imageUrl;
   final Widget placeholder;
-  final double width;
-  final double height;
+  final double? width;
+  final double? height;
   final BoxFit fit;
   final Color? color;
 
@@ -21,28 +24,37 @@ class ImageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: color ?? Theme.of(context).primaryColor.withOpacity(.75),
-      child: Image.network(
-        imageUrl,
-        width: width,
-        height: height,
-        fit: fit,
-        loadingBuilder: (context, child, progress) {
-          return (progress == null)
-              ? child
-              : Center(
-                  child: CircularProgressIndicator(
-                    value: progress.expectedTotalBytes != null
-                        ? progress.cumulativeBytesLoaded /
-                            progress.expectedTotalBytes!
-                        : null,
-                  ),
-                );
-        },
-        errorBuilder: (context, exception, stackTrace) {
-          return placeholder;
-        },
-      ),
+      color: color ?? MoodleColors.blue.withOpacity(.75),
+      child: Builder(builder: (context) {
+        if (Uri.tryParse(imageUrl) == null) {
+          return Image.memory(
+            base64Decode(imageUrl),
+            width: width,
+            height: height,
+            fit: fit,
+            errorBuilder: (_, __, ___) => placeholder,
+          );
+        }
+        return Image.network(
+          imageUrl,
+          width: width,
+          height: height,
+          fit: fit,
+          loadingBuilder: (context, child, progress) {
+            return (progress == null)
+                ? child
+                : Center(
+                    child: CircularProgressIndicator(
+                      value: progress.expectedTotalBytes != null
+                          ? progress.cumulativeBytesLoaded /
+                              progress.expectedTotalBytes!
+                          : null,
+                    ),
+                  );
+          },
+          errorBuilder: (_, __, ___) => placeholder,
+        );
+      }),
     );
   }
 }
@@ -50,8 +62,8 @@ class ImageView extends StatelessWidget {
 class CircleImageView extends StatelessWidget {
   final String imageUrl;
   final Widget placeholder;
-  final double width;
-  final double height;
+  final double? width;
+  final double? height;
   final BoxFit fit;
   final Color? color;
 
@@ -83,8 +95,8 @@ class CircleImageView extends StatelessWidget {
 class RoundedImageView extends StatelessWidget {
   final String imageUrl;
   final Widget placeholder;
-  final double width;
-  final double height;
+  final double? width;
+  final double? height;
   final BoxFit fit;
   final Color? color;
   final BorderRadius borderRadius;

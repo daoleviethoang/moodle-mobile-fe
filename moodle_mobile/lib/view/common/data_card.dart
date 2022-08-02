@@ -7,8 +7,11 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
+import 'package:moodle_mobile/constants/matcher.dart';
 import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/models/note/note.dart';
+import 'package:moodle_mobile/view/common/image_view.dart';
+import 'package:moodle_mobile/view/viewer/image_viewer.dart';
 
 import 'content_item.dart';
 
@@ -187,10 +190,32 @@ class _NoteCardState extends State<NoteCard> {
                     Container(height: 4),
                     Builder(builder: (context) {
                       return RichTextCard(
-                        text: _note.txtFiltered,
-                        style: MoodleStyles.noteTextStyle(_note.isDone),
-                        hasPadding: false,
-                      );
+                          text: _note.txtFiltered,
+                          style: MoodleStyles.noteTextStyle(_note.isDone),
+                          hasPadding: false,
+                          customData: {
+                            imgMatcher(): CustomRender.widget(
+                                widget: (renderContext, buildChildren) {
+                              final attrs =
+                                  renderContext.tree.element?.attributes;
+                              final url = attrs?['src'] ?? '';
+                              return RoundedImageView(
+                                imageUrl: url,
+                                width: double.infinity,
+                                height: null,
+                                fit: BoxFit.fitWidth,
+                                placeholder:
+                                    const Icon(Icons.broken_image_rounded),
+                                onClick: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (_) => ImageViewer(
+                                            title: 'Image',
+                                            url: url,
+                                          )));
+                                },
+                              );
+                            }),
+                          });
                     }),
                   ],
                 ),

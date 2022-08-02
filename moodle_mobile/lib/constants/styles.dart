@@ -98,7 +98,7 @@ class MoodleStyles {
 
   static Map<String, Style> get rightMessageTextStyle {
     final html = htmlStyle;
-    html.addAll({"body": Style(color: MoodleColors.white)});
+    html.addAll({'body': Style(color: MoodleColors.white)});
     return html;
   }
 
