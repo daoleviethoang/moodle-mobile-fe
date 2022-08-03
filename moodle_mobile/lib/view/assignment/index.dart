@@ -479,8 +479,17 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                               overDue
                                   ? Container()
                                   : CustomButtonWidget(
-                                      textButton: AppLocalizations.of(context)!
-                                          .view_file_submission,
+                                      textButton: (attempt
+                                                      .submission
+                                                      ?.plugins?[0]
+                                                      .fileareas?[0]
+                                                      .files ??
+                                                  [])
+                                              .isEmpty
+                                          ? AppLocalizations.of(context)!
+                                              .submit_file
+                                          : AppLocalizations.of(context)!
+                                              .view_file_submission,
                                       onPressed: () {
                                         Navigator.of(context).push(
                                           MaterialPageRoute(
