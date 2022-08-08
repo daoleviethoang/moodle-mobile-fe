@@ -442,6 +442,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.4.0"
+  flutter_hooks:
+    dependency: transitive
+    description:
+      name: flutter_hooks
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.18.5+1"
   flutter_html:
     dependency: "direct main"
     description:
@@ -538,6 +545,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.6"
+  flutter_polls:
+    dependency: "direct main"
+    description:
+      name: flutter_polls
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.9"
   flutter_slidable:
     dependency: "direct main"
     description:
@@ -919,6 +933,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.11.1"
+  percent_indicator:
+    dependency: transitive
+    description:
+      name: percent_indicator
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.2.2"
   permission_handler:
     dependency: "direct main"
     description:
