@@ -39,6 +39,13 @@ class _ForumAnnouncementScreenState extends State<ForumAnnouncementScreen> {
   void Sort() {
     setState(() {
       sortDesc = !sortDesc;
+      _forumDiscussion.sort(((a, b) {
+        if (sortDesc == false) {
+          return a.name?.compareTo(b.name ?? "") ?? 0;
+        } else {
+          return b.name?.compareTo(a.name ?? "") ?? 0;
+        }
+      }));
     });
   }
 
@@ -49,6 +56,7 @@ class _ForumAnnouncementScreenState extends State<ForumAnnouncementScreen> {
       setState(() {
         _forumDiscussion = value!;
       });
+      Sort();
     });
   }
 

@@ -35,6 +35,13 @@ class _ForumDiscussionScreenState extends State<ForumDiscussionScreen> {
   void Sort() {
     setState(() {
       sortDesc = !sortDesc;
+      _forumDiscussion.sort(((a, b) {
+        if (sortDesc == false) {
+          return a.name?.compareTo(b.name ?? "") ?? 0;
+        } else {
+          return b.name?.compareTo(a.name ?? "") ?? 0;
+        }
+      }));
     });
   }
 
@@ -45,6 +52,7 @@ class _ForumDiscussionScreenState extends State<ForumDiscussionScreen> {
       setState(() {
         _forumDiscussion = value!;
       });
+      Sort();
     });
   }
 
@@ -217,7 +225,8 @@ class _PostCardState extends State<PostCard> {
                     ),
                     Text(AppLocalizations.of(context)!.forum_subscrible),
                     Spacer(),
-                    Text(widget.relyNum.toString() + AppLocalizations.of(context)!.forum_replies),
+                    Text(widget.relyNum.toString() +
+                        AppLocalizations.of(context)!.forum_replies),
                   ],
                 ),
               )
