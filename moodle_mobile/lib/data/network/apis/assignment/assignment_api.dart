@@ -120,7 +120,7 @@ class AssignmentApi {
       Dio dio = Http().client;
       final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
         'wstoken': token,
-        'wsfunction': "mod_assign_list_participants",
+        'wsfunction': Wsfunction.MOD_ASSIGN_GET_LIST_PARTICIPANTS,
         "moodlewsrestformat": "json",
         'assignid': assignInstanceId,
         'groupid': 0,
@@ -139,6 +139,91 @@ class AssignmentApi {
     } catch (e) {
       print(e.toString());
       throw "Can't get list submited user";
+    }
+  }
+
+  Future<bool> saveGrade(
+    String token,
+    int assignInstanceId,
+    int userid,
+    double grade,
+    String feedBackText,
+    int? fileItemId,
+  ) async {
+    try {
+      Dio dio = Http().client;
+      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': Wsfunction.MOD_ASSIGN_SAVE_GRADE,
+        "moodlewsrestformat": "json",
+        'assignmentid': assignInstanceId,
+        'userid': userid,
+        'grade': grade,
+        'attemptnumber': -1,
+        'addattempt': 0,
+        'applytoall': 0,
+        'workflowstate': "grade",
+        'plugindata[assignfeedbackcomments_editor][text]': feedBackText,
+        'plugindata[assignfeedbackcomments_editor][format]': 0,
+      });
+      if (res.data is Map<String, dynamic> && res.data["exception"] != null) {
+        throw res.data["exception"];
+      }
+      return true;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
+  Future<AttemptAssignment> getAssignmentOfStudent(
+      String token, int assignInstanceId, int userId) async {
+    try {
+      Dio dio = Http().client;
+      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': Wsfunction.MOD_ASSIGN_GET_SUBMISSION_STATUS,
+        "moodlewsrestformat": "json",
+        'assignid': assignInstanceId,
+        'userid': userId,
+      });
+      if (res.data["exception"] != null) {
+        throw res.data["exception"];
+      }
+      final data = res.data['lastattempt'] as Map<String, dynamic>;
+      AttemptAssignment temp = AttemptAssignment.fromJson(data);
+      return temp;
+    } catch (e) {
+      print(e.toString());
+      throw "Can't get last attempt assignment";
+    }
+  }
+
+  Future<FeedBack> getAssignmentFeedbackAndGradeOfStudent(
+      String token, int assignInstanceId, int userId) async {
+    try {
+      Dio dio = Http().client;
+      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': Wsfunction.MOD_ASSIGN_GET_SUBMISSION_STATUS,
+        "moodlewsrestformat": "json",
+        'assignid': assignInstanceId,
+        'userid': userId,
+      });
+
+      if (res.data["exception"] != null) {
+        throw res.data["exception"];
+      }
+      if (res.data["feedback"] == null) {
+        return FeedBack();
+      }
+
+      FeedBack feedback = FeedBack.fromJson(res.data["feedback"]);
+
+      return feedback;
+    } catch (e) {
+      print(e.toString());
+      throw "Can't get feedback";
     }
   }
 }

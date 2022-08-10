@@ -1,34 +1,24 @@
-import 'dart:io';
-
-import 'package:document_scanner_flutter/configs/configs.dart';
-import 'package:document_scanner_flutter/document_scanner_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get_it/get_it.dart';
-import 'package:moodle_mobile/constants/colors.dart';
-import 'package:moodle_mobile/constants/dimens.dart';
 import 'package:moodle_mobile/data/network/apis/assignment/assignment_api.dart';
-import 'package:moodle_mobile/data/network/apis/file/file_api.dart';
-import 'package:moodle_mobile/models/assignment/assignment.dart';
 import 'package:moodle_mobile/models/assignment/attemp_assignment.dart';
 import 'package:moodle_mobile/models/assignment/feedback.dart';
 import 'package:moodle_mobile/models/assignment/file_assignment.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:moodle_mobile/models/assignment/files_assignment.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/assignment/file_assignment_teacher_tile.dart';
-import 'package:moodle_mobile/view/assignment/file_assignment_tile.dart';
-import 'package:moodle_mobile/view/common/custom_button.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class FilesAssignmentTeacherScreen extends StatefulWidget {
   final int assignId;
+  final int userId;
 
   const FilesAssignmentTeacherScreen({
     Key? key,
     required this.assignId,
+    required this.userId,
   }) : super(key: key);
 
   @override
@@ -49,8 +39,8 @@ class _FilesAssignmentTeacherScreenState
       isLoading = true;
     });
 
-    AttemptAssignment temp2 = await readAttempt(widget.assignId);
-    FeedBack temp3 = await readFeedBack(widget.assignId);
+    AttemptAssignment temp2 = await readAttempt();
+    FeedBack temp3 = await readFeedBack();
 
     setState(() {
       attempt = temp2;
@@ -59,14 +49,13 @@ class _FilesAssignmentTeacherScreenState
     });
   }
 
-  Future<AttemptAssignment> readAttempt(int assignInstanceId) async {
+  Future<AttemptAssignment> readAttempt() async {
     try {
-      AttemptAssignment assign = await AssignmentApi()
-          .getAssignment(_userStore.user.token, assignInstanceId);
-      if (assign.submission == null) {
-        assign = await AssignmentApi()
-            .getAssignment(_userStore.user.token, assignInstanceId);
-      }
+      AttemptAssignment assign = await AssignmentApi().getAssignmentOfStudent(
+        _userStore.user.token,
+        widget.assignId,
+        widget.userId,
+      );
       return assign;
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -75,10 +64,14 @@ class _FilesAssignmentTeacherScreenState
     return AttemptAssignment();
   }
 
-  Future<FeedBack> readFeedBack(int assignInstanceId) async {
+  Future<FeedBack> readFeedBack() async {
     try {
-      FeedBack feedBack = await AssignmentApi().getAssignmentFeedbackAndGrade(
-          _userStore.user.token, assignInstanceId);
+      FeedBack feedBack =
+          await AssignmentApi().getAssignmentFeedbackAndGradeOfStudent(
+        _userStore.user.token,
+        widget.assignId,
+        widget.userId,
+      );
       return feedBack;
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -97,12 +90,10 @@ class _FilesAssignmentTeacherScreenState
       for (Files item
           in attempt.submission?.plugins?[0].fileareas?[0].files ?? []) {
         if (item.fileurl != null) {
-          var file = await DefaultCacheManager()
-              .getSingleFile(item.fileurl! + "?token=" + _userStore.user.token);
           setState(() {
             files.add(FileUpload(
                 filename: item.filename ?? "",
-                filepath: file.path,
+                filepath: "",
                 filesize: item.filesize ?? 0,
                 timeModified: DateTime.fromMillisecondsSinceEpoch(
                     item.timemodified! * 1000),

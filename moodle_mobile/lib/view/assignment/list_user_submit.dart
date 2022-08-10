@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:moodle_mobile/models/assignment/user_submited.dart';
+import 'package:moodle_mobile/view/assignment/files_assignment_for_teacher.dart';
 
 class ListUserSubmited extends StatelessWidget {
   final List<UserSubmited> userSubmiteds;
@@ -45,7 +46,17 @@ class ListUserSubmited extends StatelessWidget {
               children: userSubmiteds
                   .map(
                     (e) => ListTile(
-                      onTap: e.submitted == false ? null : () {},
+                      onTap: e.submitted == false
+                          ? null
+                          : () {
+                              Navigator.of(context)
+                                  .push(MaterialPageRoute(builder: (_) {
+                                return FilesAssignmentTeacherScreen(
+                                  assignId: assignmentId,
+                                  userId: e.id ?? 0,
+                                );
+                              }));
+                            },
                       title: Text(
                         e.fullname ?? "",
                       ),
