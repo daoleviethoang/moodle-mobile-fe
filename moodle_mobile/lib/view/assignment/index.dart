@@ -42,7 +42,9 @@ class AssignmentScreen extends StatefulWidget {
 class _AssignmentScreenState extends State<AssignmentScreen> {
   Assignment assignment = Assignment();
   AttemptAssignment attempt = AttemptAssignment();
+  List<UserSubmited> users = [];
   List<UserSubmited> userSubmiteds = [];
+  List<UserSubmited> userSubmitedNeedGrade = [];
   bool isLoading = false;
   String dateDiff = "";
   Color dateDiffColor = Colors.grey;
@@ -167,13 +169,8 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
         ? FeedBack()
         : await readFeedBack(widget.assignInstanceId);
 
-    if (isTeacher == true) {
-      List<UserSubmited> temp4 =
-          await readUserSubmited(widget.assignInstanceId);
-      setState(() {
-        userSubmiteds = temp4;
-      });
-    }
+    getListUserSubmit();
+
     setState(() {
       assignment = temp;
       attempt = temp2;
@@ -181,6 +178,22 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
       isLoading = false;
     });
     dateDiffSubmit();
+  }
+
+  void getListUserSubmit() async {
+    if (isTeacher == true) {
+      List<UserSubmited> temp4 =
+          await readUserSubmited(widget.assignInstanceId);
+      setState(() {
+        users = temp4;
+        userSubmiteds =
+            temp4.where((element) => element.submitted == true).toList();
+        userSubmitedNeedGrade = temp4
+            .where((element) =>
+                element.submitted == true && element.requiregrading == true)
+            .toList();
+      });
+    }
   }
 
   void loadAssignmentAttempt() async {
@@ -331,22 +344,97 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                               const Divider(),
                               ListTile(
                                 tileColor: MoodleColors.grey_soft,
-                                onTap: () {
-                                  Navigator.of(context)
-                                      .push(MaterialPageRoute(builder: (_) {
-                                    return ListUserSubmited(
-                                      userSubmiteds: userSubmiteds,
-                                      title: widget.title,
-                                    );
-                                  }));
-                                },
+                                onTap: users.isEmpty
+                                    ? null
+                                    : () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(builder: (_) {
+                                          return ListUserSubmited(
+                                            userSubmiteds: users,
+                                            title: widget.title,
+                                            haveCheckBox: true,
+                                            assignmentId:
+                                                widget.assignInstanceId,
+                                          );
+                                        }));
+                                      },
+                                title: Text(AppLocalizations.of(context)!
+                                    .number_student),
+                                trailing: Row(
+                                  children: [
+                                    Text(users
+                                        .where((element) =>
+                                            element.submitted == true)
+                                        .length
+                                        .toString()),
+                                    users.isNotEmpty
+                                        ? const Icon(Icons.arrow_forward_ios)
+                                        : Container()
+                                  ],
+                                ),
+                              ),
+                              ListTile(
+                                tileColor: MoodleColors.grey_soft,
+                                onTap: userSubmiteds.isEmpty
+                                    ? null
+                                    : () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(builder: (_) {
+                                          return ListUserSubmited(
+                                            userSubmiteds: userSubmiteds,
+                                            title: widget.title,
+                                            haveCheckBox: false,
+                                            assignmentId:
+                                                widget.assignInstanceId,
+                                          );
+                                        }));
+                                      },
                                 title: Text(AppLocalizations.of(context)!
                                     .number_submission),
-                                trailing: Text(userSubmiteds
-                                    .where(
-                                        (element) => element.submitted == true)
-                                    .length
-                                    .toString()),
+                                trailing: Row(
+                                  children: [
+                                    Text(userSubmiteds
+                                        .where((element) =>
+                                            element.submitted == true)
+                                        .length
+                                        .toString()),
+                                    userSubmiteds.isNotEmpty
+                                        ? const Icon(Icons.arrow_forward_ios)
+                                        : Container()
+                                  ],
+                                ),
+                              ),
+                              ListTile(
+                                tileColor: MoodleColors.grey_soft,
+                                onTap: userSubmitedNeedGrade.isEmpty
+                                    ? null
+                                    : () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(builder: (_) {
+                                          return ListUserSubmited(
+                                            userSubmiteds:
+                                                userSubmitedNeedGrade,
+                                            title: widget.title,
+                                            haveCheckBox: false,
+                                            assignmentId:
+                                                widget.assignInstanceId,
+                                          );
+                                        }));
+                                      },
+                                title: Text(AppLocalizations.of(context)!
+                                    .number_wait_grade),
+                                trailing: Row(
+                                  children: [
+                                    Text(userSubmitedNeedGrade
+                                        .where((element) =>
+                                            element.submitted == true)
+                                        .length
+                                        .toString()),
+                                    userSubmitedNeedGrade.isNotEmpty
+                                        ? const Icon(Icons.arrow_forward_ios)
+                                        : Container()
+                                  ],
+                                ),
                               ),
                             ],
                           ),

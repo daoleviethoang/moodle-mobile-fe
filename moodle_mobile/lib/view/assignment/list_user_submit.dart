@@ -5,10 +5,14 @@ import 'package:moodle_mobile/models/assignment/user_submited.dart';
 class ListUserSubmited extends StatelessWidget {
   final List<UserSubmited> userSubmiteds;
   final String title;
+  final bool haveCheckBox;
+  final int assignmentId;
   const ListUserSubmited({
     Key? key,
     required this.userSubmiteds,
     required this.title,
+    required this.haveCheckBox,
+    required this.assignmentId,
   }) : super(key: key);
 
   @override
@@ -41,15 +45,18 @@ class ListUserSubmited extends StatelessWidget {
               children: userSubmiteds
                   .map(
                     (e) => ListTile(
+                      onTap: e.submitted == false ? null : () {},
                       title: Text(
                         e.fullname ?? "",
                       ),
-                      trailing: Checkbox(
-                        value: e.submitted,
-                        shape: const CircleBorder(),
-                        activeColor: Colors.green,
-                        onChanged: (value) {},
-                      ),
+                      trailing: haveCheckBox
+                          ? Checkbox(
+                              value: e.submitted,
+                              shape: const CircleBorder(),
+                              activeColor: Colors.green,
+                              onChanged: (value) {},
+                            )
+                          : const Icon(Icons.arrow_forward_ios),
                     ),
                   )
                   .toList()),
