@@ -18,6 +18,7 @@ class FilesAssignmentTeacherScreen extends StatefulWidget {
   final int userId;
   final int duedate;
   final UserSubmited usersubmitted;
+  final int assignmentModuleId;
 
   const FilesAssignmentTeacherScreen({
     Key? key,
@@ -25,6 +26,7 @@ class FilesAssignmentTeacherScreen extends StatefulWidget {
     required this.assignId,
     required this.userId,
     required this.usersubmitted,
+    required this.assignmentModuleId,
   }) : super(key: key);
 
   @override

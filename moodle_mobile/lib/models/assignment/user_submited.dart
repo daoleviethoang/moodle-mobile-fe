@@ -4,6 +4,7 @@ class UserSubmited {
   int? recordid;
   bool? submitted;
   bool? requiregrading;
+  String? profileimageurl;
 
   UserSubmited({
     this.id,
@@ -11,6 +12,7 @@ class UserSubmited {
     this.recordid,
     this.submitted,
     this.requiregrading,
+    this.profileimageurl,
   });
 
   UserSubmited.fromJson(Map<String, dynamic> json) {
@@ -19,6 +21,7 @@ class UserSubmited {
     recordid = json['recordid'];
     submitted = json['submitted'];
     requiregrading = json['requiregrading'];
+    profileimageurl = json['profileimageurl'];
   }
 
   Map<String, dynamic> toJson() {
@@ -28,6 +31,7 @@ class UserSubmited {
     data['recordid'] = recordid;
     data['submitted'] = submitted;
     data['requiregrading'] = requiregrading;
+    data['profileimageurl'] = profileimageurl;
     return data;
   }
 }

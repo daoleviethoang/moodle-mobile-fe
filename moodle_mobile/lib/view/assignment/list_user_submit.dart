@@ -12,6 +12,7 @@ class ListUserSubmited extends StatelessWidget {
   final String title;
   final bool haveCheckBox;
   final int assignmentId;
+  final int assignmentModuleId;
   final UserStore userStore;
   final int duedate;
   const ListUserSubmited({
@@ -22,6 +23,7 @@ class ListUserSubmited extends StatelessWidget {
     required this.assignmentId,
     required this.userStore,
     required this.duedate,
+    required this.assignmentModuleId,
   }) : super(key: key);
 
   @override
@@ -62,13 +64,19 @@ class ListUserSubmited extends StatelessWidget {
                             userId: e.id ?? 0,
                             duedate: duedate,
                             usersubmitted: e,
+                            assignmentModuleId: assignmentModuleId,
                           );
                         }));
                       },
                       leading: UserAvatarCommon(
-                          // imageURL: avatar + "&token=" + userStore.user.token,
-                          imageURL:
-                              "https://www.w3schools.com/w3css/lights.jpg"),
+                        imageURL: ((e.profileimageurl ?? "").contains("?"))
+                            ? (e.profileimageurl ??
+                                "" "&token=" + userStore.user.token)
+                            : (e.profileimageurl ??
+                                "" "?token=" + userStore.user.token),
+                        // imageURL:
+                        //     "https://www.w3schools.com/w3css/lights.jpg"
+                      ),
                       title: Padding(
                         padding: EdgeInsets.only(top: 8),
                         child: Text(

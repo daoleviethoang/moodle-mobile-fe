@@ -356,7 +356,9 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                                             assignmentId:
                                                 widget.assignInstanceId,
                                             userStore: _userStore,
-                                            duedate: assignment.duedate??0,
+                                            duedate: assignment.duedate ?? 0,
+                                            assignmentModuleId:
+                                                assignment.cmid ?? 0,
                                           );
                                         }));
                                       },
@@ -378,7 +380,9 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                                             assignmentId:
                                                 widget.assignInstanceId,
                                             userStore: _userStore,
-                                            duedate: assignment.duedate??0,
+                                            duedate: assignment.duedate ?? 0,
+                                            assignmentModuleId:
+                                                assignment.cmid ?? 0,
                                           );
                                         }));
                                       },
@@ -399,9 +403,11 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                                             title: widget.title,
                                             haveCheckBox: false,
                                             assignmentId:
-                                            widget.assignInstanceId,
+                                                widget.assignInstanceId,
                                             userStore: _userStore,
-                                            duedate: assignment.duedate??0,
+                                            duedate: assignment.duedate ?? 0,
+                                            assignmentModuleId:
+                                                assignment.cmid ?? 0,
                                           );
                                         }));
                                       },

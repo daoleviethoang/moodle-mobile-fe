@@ -125,7 +125,7 @@ class AssignmentApi {
         'assignid': assignInstanceId,
         'groupid': 0,
         'filter': 0,
-        'onlyids': 1,
+        'onlyids': 0,
       });
       if (res.data is Map<String, dynamic> && res.data["exception"] != null) {
         throw res.data["exception"];
