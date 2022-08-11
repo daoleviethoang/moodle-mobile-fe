@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/data/network/apis/assignment/assignment_api.dart';
+import 'package:moodle_mobile/models/assignment/assignment.dart';
 import 'package:moodle_mobile/models/assignment/attemp_assignment.dart';
 import 'package:moodle_mobile/models/assignment/feedback.dart';
 import 'package:moodle_mobile/models/assignment/file_assignment.dart';
 import 'package:moodle_mobile/models/assignment/files_assignment.dart';
+import 'package:moodle_mobile/models/assignment/user_submited.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/assignment/file_assignment_teacher_tile.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -14,11 +16,15 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class FilesAssignmentTeacherScreen extends StatefulWidget {
   final int assignId;
   final int userId;
+  final int duedate;
+  final UserSubmited usersubmitted;
 
   const FilesAssignmentTeacherScreen({
     Key? key,
+    required this.duedate,
     required this.assignId,
     required this.userId,
+    required this.usersubmitted,
   }) : super(key: key);
 
   @override
@@ -34,11 +40,10 @@ class _FilesAssignmentTeacherScreenState
   List<FileUpload> files = [];
   bool isLoading = false;
 
-  void loadAssignment() async {
+  Future loadAssignment() async {
     setState(() {
       isLoading = true;
     });
-
     AttemptAssignment temp2 = await readAttempt();
     FeedBack temp3 = await readFeedBack();
 
@@ -56,6 +61,7 @@ class _FilesAssignmentTeacherScreenState
         widget.assignId,
         widget.userId,
       );
+
       return assign;
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -80,6 +86,72 @@ class _FilesAssignmentTeacherScreenState
     return FeedBack();
   }
 
+  dateDiffSubmit(int duedate) {
+    DateTime dueDate = DateTime.fromMillisecondsSinceEpoch(duedate * 1000);
+    var zero = DateTime(0);
+
+    if ((attempt.submission?.status ?? 'new') == 'new') {
+      Duration duration = dueDate.difference(DateTime.now());
+      final dateTime = zero.add(duration.abs());
+      int day = dateTime.day - 1;
+
+      return (dueDate.isAfter(DateTime.now())
+              ? AppLocalizations.of(context)!.due_in
+              : AppLocalizations.of(context)!.overdue_by) +
+          " " +
+          ((day > 0)
+              ? (duration.inDays.abs().toString() +
+                  " " +
+                  AppLocalizations.of(context)!.days +
+                  " " +
+                  dateTime.hour.toString() +
+                  " " +
+                  AppLocalizations.of(context)!.hours)
+              : ((duration.inMinutes.abs() > 0)
+                  ? (dateTime.hour.toString() +
+                      " " +
+                      AppLocalizations.of(context)!.hours +
+                      " " +
+                      dateTime.minute.toString() +
+                      " " +
+                      AppLocalizations.of(context)!.minutes)
+                  : dateTime.second.toString() +
+                      " " +
+                      AppLocalizations.of(context)!.seconds));
+    }
+
+    DateTime modifi = DateTime.fromMillisecondsSinceEpoch(
+        (attempt.submission?.timemodified ?? 0) * 1000);
+    Duration duration = dueDate.difference(modifi);
+    final dateTime = zero.add(duration.abs());
+    int day = dateTime.day - 1;
+    return AppLocalizations.of(context)!.submitted +
+        " " +
+        ((day > 0)
+            ? (duration.inDays.abs().toString() +
+                " " +
+                AppLocalizations.of(context)!.days +
+                " " +
+                dateTime.hour.toString() +
+                " " +
+                AppLocalizations.of(context)!.hours)
+            : ((duration.inMinutes.abs() > 0)
+                ? (dateTime.hour.toString() +
+                    " " +
+                    AppLocalizations.of(context)!.hours +
+                    " " +
+                    dateTime.minute.toString() +
+                    " " +
+                    AppLocalizations.of(context)!.minutes)
+                : dateTime.second.toString() +
+                    " " +
+                    AppLocalizations.of(context)!.seconds)) +
+        " " +
+        (duration.isNegative
+            ? AppLocalizations.of(context)!.late
+            : AppLocalizations.of(context)!.early);
+  }
+
   @override
   void initState() {
     setState(() {
@@ -87,6 +159,7 @@ class _FilesAssignmentTeacherScreenState
     });
     _userStore = GetIt.instance<UserStore>();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      await loadAssignment();
       for (Files item
           in attempt.submission?.plugins?[0].fileareas?[0].files ?? []) {
         if (item.fileurl != null) {
@@ -105,6 +178,7 @@ class _FilesAssignmentTeacherScreenState
         isLoading = false;
       });
     });
+
     super.initState();
   }
 

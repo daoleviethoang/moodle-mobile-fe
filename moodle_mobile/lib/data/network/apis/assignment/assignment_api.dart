@@ -187,6 +187,7 @@ class AssignmentApi {
         'assignid': assignInstanceId,
         'userid': userId,
       });
+
       if (res.data["exception"] != null) {
         throw res.data["exception"];
       }

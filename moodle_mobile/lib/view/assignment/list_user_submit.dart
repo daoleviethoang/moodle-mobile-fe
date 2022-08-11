@@ -13,6 +13,7 @@ class ListUserSubmited extends StatelessWidget {
   final bool haveCheckBox;
   final int assignmentId;
   final UserStore userStore;
+  final int duedate;
   const ListUserSubmited({
     Key? key,
     required this.userSubmiteds,
@@ -20,6 +21,7 @@ class ListUserSubmited extends StatelessWidget {
     required this.haveCheckBox,
     required this.assignmentId,
     required this.userStore,
+    required this.duedate,
   }) : super(key: key);
 
   @override
@@ -52,17 +54,17 @@ class ListUserSubmited extends StatelessWidget {
               children: userSubmiteds
                   .map(
                     (e) => ListTile(
-                      onTap: e.submitted == false
-                          ? null
-                          : () {
-                              Navigator.of(context)
-                                  .push(MaterialPageRoute(builder: (_) {
-                                return FilesAssignmentTeacherScreen(
-                                  assignId: assignmentId,
-                                  userId: e.id ?? 0,
-                                );
-                              }));
-                            },
+                      onTap: () {
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (_) {
+                          return FilesAssignmentTeacherScreen(
+                            assignId: assignmentId,
+                            userId: e.id ?? 0,
+                            duedate: duedate,
+                            usersubmitted: e,
+                          );
+                        }));
+                      },
                       leading: UserAvatarCommon(
                           // imageURL: avatar + "&token=" + userStore.user.token,
                           imageURL:
@@ -76,56 +78,62 @@ class ListUserSubmited extends StatelessWidget {
                       subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            e.requiregrading==false && e.submitted==true ? Container(
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(10)),
-                                color: Colors.green[900],
-                              ),
-                              padding: const EdgeInsets.only(
-                                  left: 10, right: 10, bottom: 5, top: 5),
-                              child: const Text(
-                                'Đã chấm điểm',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ): Container(),
-                            e.submitted==false ? Container(
-                              margin: const EdgeInsets.only(top: 2),
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(10)),
-                                color: Colors.red[900],
-                              ),
-                              padding: const EdgeInsets.only(
-                                  left: 10, right: 10, bottom: 5, top: 5),
-                              child: const Text(
-                                'Không có bài nộp',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ): Container(),
-                            e.submitted==true ? Container(
-                              margin: const EdgeInsets.only(top: 2),
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(10)),
-                                color: Colors.green[900],
-                              ),
-                              padding: const EdgeInsets.only(
-                                  left: 10, right: 10, bottom: 5, top: 5),
-                              child: const Text(
-                                'Đã nộp đẻ chấm điểm',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ): Container()
+                            e.requiregrading == false && e.submitted == true
+                                ? Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(10)),
+                                      color: Colors.green[900],
+                                    ),
+                                    padding: const EdgeInsets.only(
+                                        left: 10, right: 10, bottom: 5, top: 5),
+                                    child: const Text(
+                                      'Đã chấm điểm',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  )
+                                : Container(),
+                            e.submitted == false
+                                ? Container(
+                                    margin: const EdgeInsets.only(top: 2),
+                                    decoration: BoxDecoration(
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(10)),
+                                      color: Colors.red[900],
+                                    ),
+                                    padding: const EdgeInsets.only(
+                                        left: 10, right: 10, bottom: 5, top: 5),
+                                    child: const Text(
+                                      'Không có bài nộp',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  )
+                                : Container(),
+                            e.submitted == true
+                                ? Container(
+                                    margin: const EdgeInsets.only(top: 2),
+                                    decoration: BoxDecoration(
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(10)),
+                                      color: Colors.green[900],
+                                    ),
+                                    padding: const EdgeInsets.only(
+                                        left: 10, right: 10, bottom: 5, top: 5),
+                                    child: const Text(
+                                      'Đã nộp đẻ chấm điểm',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  )
+                                : Container()
                           ]),
                       trailing: Padding(
                         padding: const EdgeInsets.only(top: 15),

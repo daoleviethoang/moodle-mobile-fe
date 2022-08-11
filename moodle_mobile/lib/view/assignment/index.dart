@@ -356,6 +356,7 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                                             assignmentId:
                                                 widget.assignInstanceId,
                                             userStore: _userStore,
+                                            duedate: assignment.duedate??0,
                                           );
                                         }));
                                       },
@@ -377,6 +378,7 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                                             assignmentId:
                                                 widget.assignInstanceId,
                                             userStore: _userStore,
+                                            duedate: assignment.duedate??0,
                                           );
                                         }));
                                       },
@@ -399,6 +401,7 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                                             assignmentId:
                                             widget.assignInstanceId,
                                             userStore: _userStore,
+                                            duedate: assignment.duedate??0,
                                           );
                                         }));
                                       },
