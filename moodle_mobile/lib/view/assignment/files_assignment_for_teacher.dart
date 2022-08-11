@@ -1,17 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/data/network/apis/assignment/assignment_api.dart';
-import 'package:moodle_mobile/models/assignment/assignment.dart';
 import 'package:moodle_mobile/models/assignment/attemp_assignment.dart';
 import 'package:moodle_mobile/models/assignment/feedback.dart';
 import 'package:moodle_mobile/models/assignment/file_assignment.dart';
 import 'package:moodle_mobile/models/assignment/files_assignment.dart';
 import 'package:moodle_mobile/models/assignment/user_submited.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
-import 'package:moodle_mobile/view/assignment/file_assignment_teacher_tile.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:moodle_mobile/view/assignment/file_assignment_teacher_tile.dart';
+import 'package:moodle_mobile/view/common/custom_button_short.dart';
+import 'package:moodle_mobile/view/common/user/user_avatar_common.dart';
 
 class FilesAssignmentTeacherScreen extends StatefulWidget {
   final int assignId;
@@ -186,63 +186,173 @@ class _FilesAssignmentTeacherScreenState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: NestedScrollView(
-        headerSliverBuilder: (context, innerBoxIsScrolled) => [
-          SliverAppBar(
-            floating: true,
-            snap: true,
-            title: Text(
-              AppLocalizations.of(context)!.submission,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-              ),
-            ),
-            leading: TextButton(
-              style: TextButton.styleFrom(
-                primary: Colors.white,
-              ),
-              child: const Icon(CupertinoIcons.back),
-              onPressed: () => Navigator.pop(context),
-            ),
-          ),
-        ],
-        body: isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : SingleChildScrollView(
-                child: Container(
-                  margin: const EdgeInsets.only(left: 10, right: 10, top: 30),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ListView.builder(
-                        padding: const EdgeInsets.only(top: 0),
-                        shrinkWrap: true,
-                        itemCount: files.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return FileAssignmentTeacherTile(
-                            file: files[index],
-                          );
-                        },
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      feedBack.grade == null
-                          ? Column(
-                              // if have grade
-                              children: [],
-                            )
-                          : Column(
-                              // if don't have grade
-                              children: [],
-                            ),
-                    ],
-                  ),
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        body: NestedScrollView(
+          headerSliverBuilder: (context, innerBoxIsScrolled) => [
+            SliverAppBar(
+              floating: true,
+              snap: true,
+              title: Text(
+                AppLocalizations.of(context)!.submission,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
                 ),
               ),
+              leading: TextButton(
+                style: TextButton.styleFrom(
+                  primary: Colors.white,
+                ),
+                child: const Icon(CupertinoIcons.back),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ),
+          ],
+          body: isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : SingleChildScrollView(
+                  child: Container(
+                    margin: const EdgeInsets.only(left: 10, right: 10, top: 10),
+                    height: MediaQuery.of(context).size.height,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ListTile(
+                          leading: const UserAvatarCommon(
+                              // imageURL: avatar + "&token=" + userStore.user.token,
+                              imageURL:
+                                  "https://www.w3schools.com/w3css/lights.jpg"),
+                          title: Padding(
+                            padding: const EdgeInsets.only(top: 8, bottom: 4),
+                            child: Text(
+                              widget.usersubmitted.fullname ?? "",
+                            ),
+                          ),
+                          subtitle: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              widget.usersubmitted.requiregrading == false &&
+                                      widget.usersubmitted.submitted == true
+                                  ? Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(10)),
+                                        color: Colors.green[900],
+                                      ),
+                                      padding: const EdgeInsets.only(
+                                          left: 10,
+                                          right: 10,
+                                          bottom: 5,
+                                          top: 5),
+                                      child: const Text(
+                                        'Đã chấm điểm',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    )
+                                  : Container(),
+                              widget.usersubmitted.submitted == false
+                                  ? Container(
+                                      margin: const EdgeInsets.only(left: 5),
+                                      decoration: BoxDecoration(
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(10)),
+                                        color: Colors.red[900],
+                                      ),
+                                      padding: const EdgeInsets.only(
+                                          left: 10,
+                                          right: 10,
+                                          bottom: 5,
+                                          top: 5),
+                                      child: const Text(
+                                        'Không có bài nộp',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    )
+                                  : Container(),
+                              widget.usersubmitted.submitted == true
+                                  ? Container(
+                                      margin: const EdgeInsets.only(left: 5),
+                                      decoration: BoxDecoration(
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(10)),
+                                        color: Colors.green[900],
+                                      ),
+                                      padding: const EdgeInsets.only(
+                                          left: 10,
+                                          right: 10,
+                                          bottom: 5,
+                                          top: 5),
+                                      child: const Text(
+                                        'Đã nộp đẻ chấm điểm',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    )
+                                  : Container()
+                            ],
+                          ),
+                        ),
+
+                        const TabBar(
+                          tabs: [
+                            Tab(child: Text("Bài nộp")),
+                            Tab(child: Text("Điểm")),
+                          ],
+                          labelColor: Colors.black,
+                          indicatorColor: Colors.orange,
+                          indicatorWeight: 3,
+                        ),
+
+                        Expanded(
+                          flex: 1,
+                          child: TabBarView(children: [
+                            Column(
+                              children: [
+                                ListView.builder(
+                                  padding: const EdgeInsets.only(top: 0),
+                                  shrinkWrap: true,
+                                  itemCount: files.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return FileAssignmentTeacherTile(
+                                      file: files[index],
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                            const Expanded(child: Text("123"))
+                          ]),
+                        )
+
+                        // const SizedBox(
+                        //   height: 10,
+                        // ),
+                        // feedBack.grade == null
+                        //     ? Column(
+                        //         // if have grade
+                        //         children: [],
+                        //       )
+                        //     : Column(
+                        //         // if don't have grade
+                        //         children: [],
+                        //       ),
+                      ],
+                    ),
+                  ),
+                ),
+        ),
       ),
     );
   }
