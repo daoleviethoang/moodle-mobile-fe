@@ -53,7 +53,7 @@ class _CalendarScreenState extends State<CalendarScreen>
 
   late UserStore _userStore;
   Map<String, List<Event>> _events = {};
-  late NavigationStore _navigationStore;
+  late NavigationStore _navStore;
   SiteInfo? _siteInfo;
 
   Exception? _errored;
@@ -76,8 +76,9 @@ class _CalendarScreenState extends State<CalendarScreen>
     );
 
     _userStore = GetIt.instance<UserStore>();
-    WidgetsBinding.instance.addPostFrameCallback(
-        (_) => _navigationStore = context.read<NavigationStore>());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _navStore = context.read<NavigationStore>();
+    });
   }
 
   void _initTabView() {
@@ -103,7 +104,7 @@ class _CalendarScreenState extends State<CalendarScreen>
               blurRadius: 3,
               onPressed: () {
                 _tabController.animateTo(0);
-                _navigationStore.closeNote();
+                _navStore.closeNote();
               },
             ),
           ),
@@ -122,7 +123,7 @@ class _CalendarScreenState extends State<CalendarScreen>
               blurRadius: 3,
               onPressed: () {
                 _tabController.animateTo(1);
-                _navigationStore.openNote();
+                _navStore.openNote();
               },
             ),
           ),
@@ -491,6 +492,21 @@ class _CalendarScreenState extends State<CalendarScreen>
   @override
   Widget build(BuildContext context) {
     _initBody();
-    return _body;
+    return Observer(
+      builder: (context) {
+        // Handle flag in NavigationStore
+        _navStore.calendarJumpShowed;
+        Future.delayed(Duration.zero).then((v) {
+          if (_navStore.calendarJumpShowed) {
+            _navStore.toggleJumpCalendar();
+            if (_tabController.index == 0) {
+              _jumpToDate();
+            }
+          }
+        });
+
+        return _body;
+      }
+    );
   }
 }

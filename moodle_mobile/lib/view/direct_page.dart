@@ -82,24 +82,24 @@ class _DirectScreenState extends State<DirectScreen> {
       AppLocalizations.of(context)!.menu,
     ];
 
-    return getRedirectUI();
+    return Provider(
+      create: (context) => NavigationStore(),
+      child: getRedirectUI(),
+    );
   }
 
   Widget getRedirectUI() {
-    return Provider(
-      create: (context) => NavigationStore(),
-      child: Scaffold(
-        extendBody: true,
-        appBar: getAppBarUI(),
-        body: Center(
-          child: IndexedStack(
-            children: _widgetOptions,
-            index: _selectedIndex,
-          ),
+    return Scaffold(
+      extendBody: true,
+      appBar: getAppBarUI(),
+      body: Center(
+        child: IndexedStack(
+          children: _widgetOptions,
+          index: _selectedIndex,
         ),
-        bottomNavigationBar: getBottomNavBarUI(),
-        floatingActionButton: getFloatingActionButtonUI(),
       ),
+      bottomNavigationBar: getBottomNavBarUI(),
+      floatingActionButton: getFloatingActionButtonUI(),
     );
   }
 
@@ -124,8 +124,14 @@ class _DirectScreenState extends State<DirectScreen> {
               return IconButton(
                   iconSize: Dimens.appbar_icon_size,
                   icon: const Icon(Icons.search),
-                  onPressed: () =>
-                      context.read<NavigationStore>().toggleJumpCalendar());
+                  onPressed: () {
+                    final navStore = context.read<NavigationStore>();
+                    if (navStore.noteOpened) {
+                      navStore.toggleNoteSearch();
+                    } else {
+                      navStore.toggleJumpCalendar();
+                    }
+                  });
             case 2:
               return Row(children: [
                 IconButton(
@@ -268,7 +274,8 @@ class _DirectScreenState extends State<DirectScreen> {
 
   Widget getFloatingActionButtonUI() {
     return Observer(builder: (context) {
-      final noteOpened = context.read<NavigationStore>().noteOpened;
+      final navStore = context.read<NavigationStore>();
+      final noteOpened = navStore.noteOpened;
       final willShow = _selectedIndex == 1 && !noteOpened;
       return AnimatedScale(
         scale: willShow ? 1 : 0,

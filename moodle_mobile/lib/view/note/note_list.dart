@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 import 'package:moodle_mobile/constants/colors.dart';
@@ -31,11 +32,12 @@ class NoteList extends StatefulWidget {
 class _NoteListState extends State<NoteList> {
   Widget _folderView = Container();
   Widget _highlightView = Container();
+  Widget _storeView = Container();
 
   final _notes = Notes();
 
   late UserStore _userStore;
-  late NavigationStore _navigationStore;
+  late NavigationStore _navStore;
 
   String get token => _userStore.user.token;
 
@@ -49,15 +51,8 @@ class _NoteListState extends State<NoteList> {
   void initState() {
     super.initState();
     _userStore = GetIt.instance<UserStore>();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _navigationStore = context.read<NavigationStore>();
-      _navigationStore.calendarJumpShowed.asObservable().observe((p0) {
-        if (p0.newValue ?? false) {
-          _navigationStore.toggleNoteSearch();
-          _showSearch();
-        }
-      });
-    });
+    WidgetsBinding.instance.addPostFrameCallback(
+        (_) => _navStore = context.read<NavigationStore>());
   }
 
   // region Init widgets
@@ -231,6 +226,20 @@ class _NoteListState extends State<NoteList> {
     );
   }
 
+  void _initStoreView() {
+    // Handle flag in NavigationStore
+    _storeView = Observer(builder: (context) {
+      _navStore.noteSearchShowed;
+      Future.delayed(Duration.zero).then((v) {
+        if (_navStore.noteSearchShowed) {
+          _navStore.toggleNoteSearch();
+          _showSearch();
+        }
+      });
+      return Container();
+    });
+  }
+
   // endregion
 
   void _showSearch() {
@@ -264,6 +273,7 @@ class _NoteListState extends State<NoteList> {
         fromNotes: await NotesService().getNotes(token, _userStore.user.id));
     _initFolderView();
     _initHighlightView();
+    _initStoreView();
   }
 
   @override
@@ -310,6 +320,7 @@ class _NoteListState extends State<NoteList> {
                         padding: const EdgeInsets.only(top: 12, left: 12),
                         child: _highlightView,
                       ),
+                    _storeView,
                   ],
                 ),
               ),
