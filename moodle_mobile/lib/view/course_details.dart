@@ -42,6 +42,7 @@ import 'package:moodle_mobile/view/forum/add_post/add_poll_screen.dart';
 import 'package:moodle_mobile/view/forum/forum_announcement_scren.dart';
 import 'package:moodle_mobile/view/forum/forum_discussion_screen.dart';
 import 'package:moodle_mobile/view/forum/forum_screen.dart';
+import 'package:moodle_mobile/view/forum/poll_widget.dart';
 import 'package:moodle_mobile/view/grade_in_one_course.dart';
 import 'package:moodle_mobile/view/note/note_edit_dialog.dart';
 import 'package:moodle_mobile/view/participants_in_one_course.dart';
@@ -101,6 +102,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   // text controller
   TextEditingController urlController = TextEditingController();
   TextEditingController nameController = TextEditingController();
+
   // choose number in add url
   int _sectionChoose = 0;
 
@@ -347,138 +349,145 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   void _initHomeTab() {
     _homeTab = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: _content.map((c) {
-        if (c.name.toLowerCase() == activitySectionName) {
-          return Container();
-        }
-        return SectionItem(
-          header: HeaderItem(text: c.name),
-          body: c.modules.map((m) {
-            try {
-              final title = m.name ?? '';
-              switch (m.modname ?? '') {
-                case ModuleName.assign:
-                  final ms = jsonDecode(m.customdata ?? '')['duedate'];
-                  final dueDate = (ms != null)
-                      ? DateTime.fromMillisecondsSinceEpoch(
-                          jsonDecode(m.customdata ?? '')['duedate'] * 1000)
-                      : null;
-                  return SubmissionItem(
-                    title: title,
-                    submissionId: m.instance ?? 0,
-                    courseId: widget.courseId,
-                    dueDate: dueDate,
-                    isTeacher: isTeacher,
-                  );
-                case ModuleName.chat:
-                  return ChatItem(
-                    title: title,
-                    onPressed: () {},
-                  );
-                case ModuleName.folder:
-                  return Container();
-                case ModuleName.forum:
-                  return Builder(builder: (context) {
-                    // Check if this is Announcements/Discussion Forum
-                    var newIndex = -1;
-                    var newTitle = title;
-                    if (_content.first == c) {
-                      final name = title.toLowerCase();
-                      if (name.contains(announcementModuleName)) {
-                        newIndex = _announcementsIndex;
-                        newTitle = AppLocalizations.of(context)!.announcement;
-                      } else if (name.contains(discussionModuleName)) {
-                        newIndex = _discussionsIndex;
-                        newTitle = AppLocalizations.of(context)!.discussion;
-                      }
-                    }
-
-                    return ForumItem(
-                      title: newTitle,
-                      onPressed: () {
-                        // Switch to Announcements/Discussion Forum
-                        if (newIndex != -1) {
-                          _tabController?.animateTo(newIndex);
-                          return;
+      children: [
+        PollContainer(
+          courseId: '$_courseId',
+          userId: '${_userStore.user.id}',
+          // TODO: poll: _poll,
+        ),
+        ..._content.map((c) {
+          if (c.name.toLowerCase() == activitySectionName) {
+            return Container();
+          }
+          return SectionItem(
+            header: HeaderItem(text: c.name),
+            body: c.modules.map((m) {
+              try {
+                final title = m.name ?? '';
+                switch (m.modname ?? '') {
+                  case ModuleName.assign:
+                    final ms = jsonDecode(m.customdata ?? '')['duedate'];
+                    final dueDate = (ms != null)
+                        ? DateTime.fromMillisecondsSinceEpoch(
+                            jsonDecode(m.customdata ?? '')['duedate'] * 1000)
+                        : null;
+                    return SubmissionItem(
+                      title: title,
+                      submissionId: m.instance ?? 0,
+                      courseId: widget.courseId,
+                      dueDate: dueDate,
+                      isTeacher: isTeacher,
+                    );
+                  case ModuleName.chat:
+                    return ChatItem(
+                      title: title,
+                      onPressed: () {},
+                    );
+                  case ModuleName.folder:
+                    return Container();
+                  case ModuleName.forum:
+                    return Builder(builder: (context) {
+                      // Check if this is Announcements/Discussion Forum
+                      var newIndex = -1;
+                      var newTitle = title;
+                      if (_content.first == c) {
+                        final name = title.toLowerCase();
+                        if (name.contains(announcementModuleName)) {
+                          newIndex = _announcementsIndex;
+                          newTitle = AppLocalizations.of(context)!.announcement;
+                        } else if (name.contains(discussionModuleName)) {
+                          newIndex = _discussionsIndex;
+                          newTitle = AppLocalizations.of(context)!.discussion;
                         }
-                        Navigator.push(
-                          context,
-                          CupertinoPageRoute(
-                            builder: (BuildContext context) {
-                              return ForumScreen(
-                                courseId: _courseId,
-                                forumId: m.instance,
-                                forumName: m.name,
-                              );
-                            },
-                          ),
+                      }
+
+                      return ForumItem(
+                        title: newTitle,
+                        onPressed: () {
+                          // Switch to Announcements/Discussion Forum
+                          if (newIndex != -1) {
+                            _tabController?.animateTo(newIndex);
+                            return;
+                          }
+                          Navigator.push(
+                            context,
+                            CupertinoPageRoute(
+                              builder: (BuildContext context) {
+                                return ForumScreen(
+                                  courseId: _courseId,
+                                  forumId: m.instance,
+                                  forumName: m.name,
+                                );
+                              },
+                            ),
+                          );
+                        },
+                      );
+                    });
+                  case ModuleName.label:
+                    return RichTextCard(text: m.description ?? '');
+                  case ModuleName.lti:
+                    return FutureBuilder(
+                      future: queryLti(m.instance ?? 0),
+                      builder: (context, data) {
+                        if (data.hasError) {
+                          throw Exception(data.error);
+                        }
+                        if (!data.hasData) {
+                          return const LoadingCard();
+                        }
+                        Lti d = data.data as Lti;
+                        return UrlItem(
+                          title: title,
+                          url: d.endpoint ?? '',
+                          id: m.instance!,
                         );
                       },
                     );
-                  });
-                case ModuleName.label:
-                  return RichTextCard(text: m.description ?? '');
-                case ModuleName.lti:
-                  return FutureBuilder(
-                    future: queryLti(m.instance ?? 0),
-                    builder: (context, data) {
-                      if (data.hasError) {
-                        throw Exception(data.error);
-                      }
-                      if (!data.hasData) {
-                        return const LoadingCard();
-                      }
-                      Lti d = data.data as Lti;
-                      return UrlItem(
-                        title: title,
-                        url: d.endpoint ?? '',
-                        id: m.instance!,
-                      );
-                    },
-                  );
-                case ModuleName.page:
-                  return PageItem(
-                    title: title,
-                    onPressed: () {},
-                  );
-                case ModuleName.quiz:
-                  return QuizItem(
-                    title: title,
-                    quizInstanceId: m.instance ?? 0,
-                    courseId: widget.courseId,
-                    isTeacher: isTeacher,
-                  );
-                case ModuleName.resource:
-                  var url = m.contents?[0].fileurl ?? '';
-                  if (url.isNotEmpty) {
-                    url = url.substring(0, url.indexOf('?forcedownload'));
-                    url += '?token=' + token;
-                  }
-                  return DocumentItem(
-                    title: title,
-                    documentUrl: url,
-                  );
-                case ModuleName.url:
-                  return UrlItem(
-                    title: title,
-                    url: m.contents?[0].fileurl ?? '',
-                  );
-                case ModuleName.zoom:
-                  return Container();
-                default:
-                  throw Exception(AppLocalizations.of(context)!
-                      .err_unknown_module(m.modname ?? ''));
+                  case ModuleName.page:
+                    return PageItem(
+                      title: title,
+                      onPressed: () {},
+                    );
+                  case ModuleName.quiz:
+                    return QuizItem(
+                      title: title,
+                      quizInstanceId: m.instance ?? 0,
+                      courseId: widget.courseId,
+                      isTeacher: isTeacher,
+                    );
+                  case ModuleName.resource:
+                    var url = m.contents?[0].fileurl ?? '';
+                    if (url.isNotEmpty) {
+                      url = url.substring(0, url.indexOf('?forcedownload'));
+                      url += '?token=' + token;
+                    }
+                    return DocumentItem(
+                      title: title,
+                      documentUrl: url,
+                    );
+                  case ModuleName.url:
+                    return UrlItem(
+                      title: title,
+                      url: m.contents?[0].fileurl ?? '',
+                    );
+                  case ModuleName.zoom:
+                    return Container();
+                  default:
+                    throw Exception(AppLocalizations.of(context)!
+                        .err_unknown_module(m.modname ?? ''));
+                }
+              } catch (e) {
+                // FIXME: Assignment text is [] instead of string
+                if (kDebugMode) {
+                  print('$m');
+                }
+                return ErrorCard(text: '$e');
               }
-            } catch (e) {
-              // FIXME: Assignment text is [] instead of string
-              if (kDebugMode) {
-                print('$m');
-              }
-              return ErrorCard(text: '$e');
-            }
-          }).toList(),
-        );
-      }).toList(),
+            }).toList(),
+          );
+        }).toList(),
+      ],
     );
   }
 
