@@ -9,15 +9,25 @@ class PollService {
   static FirebaseFirestore get _db => FirebaseHelper.db;
 
   static Future<Poll?> getPollByCouseId(String courseId) async {
-    final doc = await _db.collection(Collections.polls).doc(courseId).get();
-    if (!doc.exists) return null;
-    final poll = Poll.fromJson(doc.data() ?? {});
-    return poll;
+    try {
+      final doc = await _db.collection(Collections.polls).doc(courseId).get();
+      print(doc.exists);
+      if (!doc.exists) return null;
+      final poll = Poll.fromJson(doc.data() ?? {});
+      return poll;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+    //final doc = await _db.collection(Collections.polls).doc(courseId).get();
+
+    // if (!doc.exists) return null;
+    // final poll = Poll.fromJson(doc.data() ?? {});
+    // return poll;
   }
 
   static Future setPoll(String courseId, Poll poll) async {
     await _db.collection(Collections.polls).doc(courseId).set(poll.toJson());
-    print('test2');
   }
 
   static Future votePoll(String courseId, String userID, int optionId) async {
@@ -39,5 +49,20 @@ class PollService {
 
   static Future deletePoll(String courseId) async {
     await _db.collection(Collections.polls).doc(courseId).delete();
+  }
+
+  static Future deleteVote(String courseId, String userID) async {
+    Poll? temp = await getPollByCouseId(courseId);
+    //Check old id
+    final results = temp!.results ?? {};
+    for (int i = 0; i < temp.options!.length; i++) {
+      results['$i'] ??= [];
+      results['$i']!.removeWhere((element) => element == userID);
+    }
+    //update new
+    await _db
+        .collection(Collections.polls)
+        .doc(courseId)
+        .update({'results': results});
   }
 }

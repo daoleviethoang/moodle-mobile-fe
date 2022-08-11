@@ -353,6 +353,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
         PollContainer(
           courseId: '$_courseId',
           userId: '${_userStore.user.id}',
+          isTeacher: isTeacher,
           // TODO: poll: _poll,
         ),
         ..._content.map((c) {

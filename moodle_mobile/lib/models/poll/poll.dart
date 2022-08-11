@@ -9,6 +9,10 @@ class Poll {
   List<String>? options;
   Map<String, List<String>>? results;
 
+  int get voteCount {
+    return results?.values.join().length ?? 0;
+  }
+
   Poll({this.subject, this.content, this.options, this.results});
 
   factory Poll.fromJson(Map<String, dynamic> json) => _$PollFromJson(json);
