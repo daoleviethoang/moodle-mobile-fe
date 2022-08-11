@@ -142,7 +142,7 @@ class QuizApi {
         if (keys[i] != "") {
           map.addAll({
             'data[$i][name]': keys[i],
-            'data[$i][value]': int.parse(values[i])
+            'data[$i][value]': values[i],
           });
         }
       }
@@ -150,7 +150,7 @@ class QuizApi {
       final res =
           await dio.get(Endpoints.webserviceServer, queryParameters: map);
 
-      if (res.data["exception"] != null) {
+      if (res.data is Map<String, dynamic> && res.data["exception"] != null) {
         throw res.data["exception"];
       }
 
@@ -187,13 +187,13 @@ class QuizApi {
         'moodlewsrestformat': 'json',
         'quizid': quizId,
       });
-      if (res.data["exception"] != null) {
+      if (res.data is Map<String, dynamic> && res.data["exception"] != null) {
         throw res.data["exception"];
       }
       if (res.data["hasgrade"] == false) {
         return null;
       }
-      return res.data["grade"];
+      return double.parse(res.data["grade"].toString());
     } catch (e) {
       throw "Can't get grade of quiz $quizId";
     }

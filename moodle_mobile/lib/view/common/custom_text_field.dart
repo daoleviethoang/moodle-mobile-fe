@@ -15,6 +15,7 @@ class CustomTextFieldWidget extends StatelessWidget {
   final Color? fillColor;
   final double elevation;
   final Function()? onTap;
+  final Function(String)? onSubmited;
 
   const CustomTextFieldWidget(
       {Key? key,
@@ -28,6 +29,7 @@ class CustomTextFieldWidget extends StatelessWidget {
       this.fillColor,
       this.elevation = 0,
       this.onTap,
+      this.onSubmited,
       required this.controller,
       required this.borderRadius})
       : super(key: key);
@@ -40,6 +42,7 @@ class CustomTextFieldWidget extends StatelessWidget {
       child: TextField(
         //keyboardType: TextInputType.visiblePassword,
         readOnly: readonly,
+        onSubmitted: onSubmited,
         controller: controller,
         obscureText: hidePass,
         maxLines: maxLines,
