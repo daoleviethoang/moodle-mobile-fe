@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
@@ -16,22 +18,18 @@ import 'package:moodle_mobile/models/calendar/event.dart';
 import 'package:moodle_mobile/models/module/module.dart';
 import 'package:moodle_mobile/models/module/module_course.dart';
 import 'package:moodle_mobile/models/site_info/site_info.dart';
+import 'package:moodle_mobile/store/navigation/navigation_store.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/content_item.dart';
 import 'package:moodle_mobile/view/common/custom_button.dart';
 import 'package:moodle_mobile/view/common/custom_button_short.dart';
 import 'package:moodle_mobile/view/common/data_card.dart';
 import 'package:moodle_mobile/view/note/note_list.dart';
+import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CalendarScreen extends StatefulWidget {
-  final Observable<bool>? jumpOpenFlag;
-
-  const CalendarScreen({
-    Key? key,
-    this.jumpOpenFlag,
-  }) : super(key: key);
+  const CalendarScreen({Key? key}) : super(key: key);
 
   @override
   State<CalendarScreen> createState() => _CalendarScreenState();
@@ -55,8 +53,7 @@ class _CalendarScreenState extends State<CalendarScreen>
 
   late UserStore _userStore;
   Map<String, List<Event>> _events = {};
-  Observable<bool>? _jumpOpenFlag;
-  final noteSearchShowFlag = Observable<bool>(false);
+  late NavigationStore _navigationStore;
   SiteInfo? _siteInfo;
 
   Exception? _errored;
@@ -79,17 +76,8 @@ class _CalendarScreenState extends State<CalendarScreen>
     );
 
     _userStore = GetIt.instance<UserStore>();
-    _jumpOpenFlag = widget.jumpOpenFlag;
-    _jumpOpenFlag?.observe((p0) {
-      if (_jumpOpenFlag?.value ?? false) {
-        _jumpOpenFlag?.toggle();
-        if (_tabController.index == 0) {
-          _jumpToDate();
-        } else {
-          noteSearchShowFlag.toggle();
-        }
-      }
-    });
+    WidgetsBinding.instance.addPostFrameCallback(
+        (_) => _navigationStore = context.read<NavigationStore>());
   }
 
   void _initTabView() {
@@ -113,7 +101,10 @@ class _CalendarScreenState extends State<CalendarScreen>
                   ? MoodleColors.brightGray
                   : MoodleColors.white,
               blurRadius: 3,
-              onPressed: () => _tabController.index = 0,
+              onPressed: () {
+                _tabController.animateTo(0);
+                _navigationStore.closeNote();
+              },
             ),
           ),
         ),
@@ -129,7 +120,10 @@ class _CalendarScreenState extends State<CalendarScreen>
                   ? MoodleColors.brightGray
                   : MoodleColors.white,
               blurRadius: 3,
-              onPressed: () => _tabController.index = 1,
+              onPressed: () {
+                _tabController.animateTo(1);
+                _navigationStore.openNote();
+              },
             ),
           ),
         ),
@@ -489,7 +483,7 @@ class _CalendarScreenState extends State<CalendarScreen>
               child: Text(AppLocalizations.of(context)!.notes_unsupported)));
       return;
     }
-    _noteTabView = NoteList(searchShowFlag: noteSearchShowFlag);
+    _noteTabView = const NoteList();
   }
 
   // endregion

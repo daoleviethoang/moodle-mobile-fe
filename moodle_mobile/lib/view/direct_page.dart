@@ -1,9 +1,10 @@
 import 'dart:async';
 
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
-import 'package:mobx/mobx.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
 import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/data/firebase/messaging/messaging_helper.dart';
@@ -12,6 +13,7 @@ import 'package:moodle_mobile/data/repository.dart';
 import 'package:moodle_mobile/models/course/courses.dart';
 import 'package:moodle_mobile/models/search_user/message_contact.dart';
 import 'package:moodle_mobile/store/conversation/conversation_store.dart';
+import 'package:moodle_mobile/store/navigation/navigation_store.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/calendar/calendar.dart';
 import 'package:moodle_mobile/view/home/home.dart';
@@ -21,8 +23,8 @@ import 'package:moodle_mobile/view/notification_preference/index.dart';
 import 'package:moodle_mobile/view/notifications/notification_screen.dart';
 import 'package:moodle_mobile/view/message/message_screen.dart';
 import 'package:moodle_mobile/view/search_course/search_course.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:moodle_mobile/view/search_course/search_user.dart';
+import 'package:provider/provider.dart';
 
 class DirectScreen extends StatefulWidget {
   const DirectScreen({Key? key}) : super(key: key);
@@ -39,7 +41,6 @@ class _DirectScreenState extends State<DirectScreen> {
   // ignore: prefer_final_fields
   List<Widget> _widgetOptions = [];
   static late List<String> _widgetAppBarTitle;
-  final calendarJumpOpenFlag = Observable<bool>(false);
 
   Timer? _unreadTimer;
   int _unreadMessages = 0;
@@ -60,7 +61,7 @@ class _DirectScreenState extends State<DirectScreen> {
     setState(() {
       _widgetOptions = <Widget>[
         const HomeScreen(),
-        CalendarScreen(jumpOpenFlag: calendarJumpOpenFlag),
+        const CalendarScreen(),
         const MessageScreen(),
         const NotificationScreen(),
         const MenuScreen(),
@@ -85,16 +86,20 @@ class _DirectScreenState extends State<DirectScreen> {
   }
 
   Widget getRedirectUI() {
-    return Scaffold(
-      extendBody: true,
-      appBar: getAppBarUI(),
-      body: Center(
-        child: IndexedStack(
-          children: _widgetOptions,
-          index: _selectedIndex,
+    return Provider(
+      create: (context) => NavigationStore(),
+      child: Scaffold(
+        extendBody: true,
+        appBar: getAppBarUI(),
+        body: Center(
+          child: IndexedStack(
+            children: _widgetOptions,
+            index: _selectedIndex,
+          ),
         ),
+        bottomNavigationBar: getBottomNavBarUI(),
+        floatingActionButton: getFloatingActionButtonUI(),
       ),
-      bottomNavigationBar: getBottomNavBarUI(),
     );
   }
 
@@ -119,7 +124,8 @@ class _DirectScreenState extends State<DirectScreen> {
               return IconButton(
                   iconSize: Dimens.appbar_icon_size,
                   icon: const Icon(Icons.search),
-                  onPressed: () => calendarJumpOpenFlag.toggle());
+                  onPressed: () =>
+                      context.read<NavigationStore>().toggleJumpCalendar());
             case 2:
               return Row(children: [
                 IconButton(
@@ -258,5 +264,23 @@ class _DirectScreenState extends State<DirectScreen> {
             onTap: _onItemTapped,
           );
         });
+  }
+
+  Widget getFloatingActionButtonUI() {
+    return Observer(builder: (context) {
+      final noteOpened = context.read<NavigationStore>().noteOpened;
+      final willShow = _selectedIndex == 1 && !noteOpened;
+      return AnimatedScale(
+        scale: willShow ? 1 : 0,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+        child: FloatingActionButton(
+          onPressed: () {
+            _onItemTapped(2);
+          },
+          child: const Icon(Icons.add, color: Colors.white),
+        ),
+      );
+    });
   }
 }
