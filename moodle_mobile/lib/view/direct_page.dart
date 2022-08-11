@@ -282,9 +282,7 @@ class _DirectScreenState extends State<DirectScreen> {
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeOut,
         child: FloatingActionButton(
-          onPressed: () {
-            _onItemTapped(2);
-          },
+          onPressed: () => navStore.toggleEventAdd(),
           child: const Icon(Icons.add, color: Colors.white),
         ),
       );

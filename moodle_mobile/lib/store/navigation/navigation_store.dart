@@ -14,6 +14,9 @@ abstract class _NavigationStore with Store {
   @observable
   bool noteOpened = false;
 
+  @observable
+  bool eventAddShowed = false;
+
   @action
   void toggleJumpCalendar() => calendarJumpShowed = !calendarJumpShowed;
 
@@ -25,4 +28,7 @@ abstract class _NavigationStore with Store {
 
   @action
   void closeNote() => noteOpened = false;
+
+  @action
+  void toggleEventAdd() => eventAddShowed = !eventAddShowed;
 }

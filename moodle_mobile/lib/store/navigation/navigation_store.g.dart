@@ -57,6 +57,22 @@ mixin _$NavigationStore on _NavigationStore, Store {
     });
   }
 
+  late final _$eventAddShowedAtom =
+      Atom(name: '_NavigationStore.eventAddShowed', context: context);
+
+  @override
+  bool get eventAddShowed {
+    _$eventAddShowedAtom.reportRead();
+    return super.eventAddShowed;
+  }
+
+  @override
+  set eventAddShowed(bool value) {
+    _$eventAddShowedAtom.reportWrite(value, super.eventAddShowed, () {
+      super.eventAddShowed = value;
+    });
+  }
+
   late final _$_NavigationStoreActionController =
       ActionController(name: '_NavigationStore', context: context);
 
@@ -105,11 +121,23 @@ mixin _$NavigationStore on _NavigationStore, Store {
   }
 
   @override
+  void toggleEventAdd() {
+    final _$actionInfo = _$_NavigationStoreActionController.startAction(
+        name: '_NavigationStore.toggleEventAdd');
+    try {
+      return super.toggleEventAdd();
+    } finally {
+      _$_NavigationStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 calendarJumpShowed: ${calendarJumpShowed},
 noteSearchShowed: ${noteSearchShowed},
-noteOpened: ${noteOpened}
+noteOpened: ${noteOpened},
+eventAddShowed: ${eventAddShowed}
     ''';
   }
 }

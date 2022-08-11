@@ -7,7 +7,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
-import 'package:mobx/mobx.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/data/network/apis/calendar/calendar_service.dart';
@@ -27,6 +26,8 @@ import 'package:moodle_mobile/view/common/data_card.dart';
 import 'package:moodle_mobile/view/note/note_list.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
+
+import 'event_edit_dialog.dart';
 
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({Key? key}) : super(key: key);
@@ -357,6 +358,17 @@ class _CalendarScreenState extends State<CalendarScreen>
     );
   }
 
+  Future<void> _eventAdd() async => await showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        isDismissible: false,
+        enableDrag: false,
+        builder: (context) => EventEditDialog(
+          token: _userStore.user.token,
+          uid: _userStore.user.id,
+        ),
+      );
+
   void _initDayView() {
     _dayView = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -492,21 +504,26 @@ class _CalendarScreenState extends State<CalendarScreen>
   @override
   Widget build(BuildContext context) {
     _initBody();
-    return Observer(
-      builder: (context) {
-        // Handle flag in NavigationStore
-        _navStore.calendarJumpShowed;
-        Future.delayed(Duration.zero).then((v) {
-          if (_navStore.calendarJumpShowed) {
-            _navStore.toggleJumpCalendar();
-            if (_tabController.index == 0) {
-              _jumpToDate();
-            }
+    return Observer(builder: (context) {
+      // Handle flag in NavigationStore
+      _navStore.calendarJumpShowed;
+      _navStore.eventAddShowed;
+      Future.delayed(Duration.zero).then((v) {
+        if (_navStore.calendarJumpShowed) {
+          _navStore.toggleJumpCalendar();
+          if (_tabController.index == 0) {
+            _jumpToDate();
           }
-        });
+        }
+        if (_navStore.eventAddShowed) {
+          _navStore.toggleEventAdd();
+          if (_tabController.index == 0) {
+            _eventAdd();
+          }
+        }
+      });
 
-        return _body;
-      }
-    );
+      return _body;
+    });
   }
 }
