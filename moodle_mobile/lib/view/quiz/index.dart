@@ -201,16 +201,27 @@ class _QuizScreenState extends State<QuizScreen> {
                                   const SizedBox(
                                     height: 15,
                                   ),
-                                  Text(AppLocalizations.of(context)!
-                                          .attempt_allow +
-                                      " ${quiz.attempts ?? 0}"),
+                                  quiz.attempts == 0
+                                      ? Text(AppLocalizations.of(context)!
+                                              .attempt_allow +
+                                          " " +
+                                          AppLocalizations.of(context)!.unlimit)
+                                      : Text(AppLocalizations.of(context)!
+                                              .attempt_allow +
+                                          " ${quiz.attempts ?? 0}"),
                                   const SizedBox(
                                     height: 20,
                                   ),
-                                  Text(AppLocalizations.of(context)!
-                                          .time_limit +
-                                      " ${(quiz.timelimit ?? 0) / 60} " +
-                                      AppLocalizations.of(context)!.minutes),
+                                  quiz.timelimit == 0
+                                      ? Text(AppLocalizations.of(context)!
+                                              .time_limit +
+                                          " " +
+                                          AppLocalizations.of(context)!.unlimit)
+                                      : Text(AppLocalizations.of(context)!
+                                              .time_limit +
+                                          " ${(quiz.timelimit ?? 0) / 60} " +
+                                          AppLocalizations.of(context)!
+                                              .minutes),
                                 ],
                               ),
                             ),
@@ -372,7 +383,8 @@ class _QuizScreenState extends State<QuizScreen> {
                               height: 15,
                             ),
                             if (lastAttempt.state == "finished" &&
-                                (quiz.attempts ?? 0) > numAttempt)
+                                    ((quiz.attempts ?? 0) > numAttempt) ||
+                                quiz.attempts == 0)
                               Center(
                                 child: CustomButtonShort(
                                   text: AppLocalizations.of(context)!
@@ -386,10 +398,13 @@ class _QuizScreenState extends State<QuizScreen> {
                                       return QuizDoScreen(
                                         title: widget.title,
                                         attemptId: attempt.id ?? 0,
-                                        endTime:
-                                            DateTime.fromMillisecondsSinceEpoch(
-                                                    (attempt.timestart ?? 0) *
-                                                        1000)
+                                        endTime: quiz.timelimit == 0
+                                            ? 0
+                                            : DateTime
+                                                    .fromMillisecondsSinceEpoch(
+                                                        (attempt.timestart ??
+                                                                0) *
+                                                            1000)
                                                 .add(Duration(
                                                     seconds:
                                                         quiz.timelimit ?? 0))
@@ -404,6 +419,9 @@ class _QuizScreenState extends State<QuizScreen> {
                                   textColor: Colors.white,
                                 ),
                               ),
+                            const SizedBox(
+                              height: 10,
+                            ),
                             if (lastAttempt.state == "inprogress")
                               Center(
                                 child: CustomButtonShort(
@@ -415,11 +433,13 @@ class _QuizScreenState extends State<QuizScreen> {
                                       return QuizDoScreen(
                                         title: widget.title,
                                         attemptId: lastAttempt.id ?? 0,
-                                        endTime:
-                                            DateTime.fromMillisecondsSinceEpoch(
-                                                    (lastAttempt.timestart ??
-                                                            0) *
-                                                        1000)
+                                        endTime: quiz.timelimit == 0
+                                            ? 0
+                                            : DateTime
+                                                    .fromMillisecondsSinceEpoch(
+                                                        (lastAttempt.timestart ??
+                                                                0) *
+                                                            1000)
                                                 .add(Duration(
                                                     seconds:
                                                         quiz.timelimit ?? 0))

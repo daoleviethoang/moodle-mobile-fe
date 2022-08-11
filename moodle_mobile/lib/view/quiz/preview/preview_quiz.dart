@@ -4,8 +4,11 @@ import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/data/network/apis/quiz/quiz_api.dart';
 import 'package:moodle_mobile/models/quiz/quizData.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
+import 'package:moodle_mobile/view/quiz/preview/type/essay_quiz.dart';
 import 'package:moodle_mobile/view/quiz/preview/type/multi_choice_quiz.dart';
+import 'package:moodle_mobile/view/quiz/preview/type/number_quiz.dart';
 import 'package:moodle_mobile/view/quiz/preview/type/one_choice_quiz.dart';
+import 'package:moodle_mobile/view/quiz/preview/type/short_answer_quiz.dart';
 import 'package:moodle_mobile/view/quiz/question_tile.dart';
 
 class QuizPreviewScreen extends StatefulWidget {
@@ -122,6 +125,48 @@ class _QuizPreviewScreenState extends State<QuizPreviewScreen> {
                                       question: question,
                                       index: index + 1);
                                 }
+                              }
+                              if (question.type == "essay") {
+                                return QuestionTile(
+                                    content: Container(
+                                      margin: const EdgeInsets.only(top: 10),
+                                      child: EssayQuiz(
+                                        uniqueId: uniqueId,
+                                        slot: slot,
+                                        token: _userStore.user.token,
+                                        html: question.html ?? "",
+                                      ),
+                                    ),
+                                    question: question,
+                                    index: index + 1);
+                              }
+                              if (question.type == "numerical") {
+                                return QuestionTile(
+                                    content: Container(
+                                      margin: const EdgeInsets.only(top: 10),
+                                      child: NumberQuiz(
+                                        uniqueId: uniqueId,
+                                        slot: slot,
+                                        token: _userStore.user.token,
+                                        html: question.html ?? "",
+                                      ),
+                                    ),
+                                    question: question,
+                                    index: index + 1);
+                              }
+                              if (question.type == "shortanswer") {
+                                return QuestionTile(
+                                    content: Container(
+                                      margin: const EdgeInsets.only(top: 10),
+                                      child: ShortAnswerQuiz(
+                                        uniqueId: uniqueId,
+                                        slot: slot,
+                                        token: _userStore.user.token,
+                                        html: question.html ?? "",
+                                      ),
+                                    ),
+                                    question: question,
+                                    index: index + 1);
                               }
                               return QuestionTile(
                                   content: Container(
