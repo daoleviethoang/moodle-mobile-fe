@@ -132,6 +132,7 @@ dependencies:
   flutter_emoji: ^2.4.0
   charset: ^1.0.1
   flutter_image_compress: ^1.1.0
+  badges: ^2.0.3
 
 dev_dependencies:
   flutter_test:
@@ -193,3 +194,4 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+  

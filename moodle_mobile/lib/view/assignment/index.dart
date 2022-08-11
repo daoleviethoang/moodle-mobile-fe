@@ -355,6 +355,7 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                                             haveCheckBox: true,
                                             assignmentId:
                                                 widget.assignInstanceId,
+                                            userStore: _userStore,
                                           );
                                         }));
                                       },
@@ -375,6 +376,7 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                                             haveCheckBox: false,
                                             assignmentId:
                                                 widget.assignInstanceId,
+                                            userStore: _userStore,
                                           );
                                         }));
                                       },
@@ -395,7 +397,8 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                                             title: widget.title,
                                             haveCheckBox: false,
                                             assignmentId:
-                                                widget.assignInstanceId,
+                                            widget.assignInstanceId,
+                                            userStore: _userStore,
                                           );
                                         }));
                                       },
