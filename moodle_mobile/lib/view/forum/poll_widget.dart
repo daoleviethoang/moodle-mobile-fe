@@ -5,6 +5,7 @@ import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/data/firebase/firestore/polls_service.dart';
 import 'package:moodle_mobile/models/poll/poll.dart';
 import 'package:flutter_polls/flutter_polls.dart';
+import 'package:moodle_mobile/view/forum/add_post/edit_poll_screen.dart';
 
 class PollContainer extends StatefulWidget {
   final String? courseId;
@@ -81,17 +82,28 @@ class _PollContainerState extends State<PollContainer> {
                 border: Border.all(color: Colors.amber, width: 2)),
             child: Stack(
               children: [
-                if (widget.isTeacher)
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: IconButton(
-                        padding: EdgeInsets.zero,
-                        constraints: BoxConstraints(),
-                        onPressed: () {},
-                        icon: Icon(
-                          Icons.edit,
-                        )),
-                  ),
+                //if (widget.isTeacher)
+                Align(
+                  alignment: Alignment.topRight,
+                  child: IconButton(
+                      padding: EdgeInsets.zero,
+                      constraints: BoxConstraints(),
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(
+                          builder: (context) {
+                            return EditPollScreen(
+                              courseId: widget.courseId!,
+                              poll: poll!,
+                            );
+                          },
+                        )).then((_) {
+                          fetch();
+                        });
+                      },
+                      icon: Icon(
+                        Icons.edit,
+                      )),
+                ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

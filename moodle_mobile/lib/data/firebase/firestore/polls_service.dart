@@ -51,6 +51,14 @@ class PollService {
     await _db.collection(Collections.polls).doc(courseId).delete();
   }
 
+  static Future updatePoll(
+      String courseId, String subject, String content) async {
+    await _db
+        .collection(Collections.polls)
+        .doc(courseId)
+        .update({'subject': subject, 'content': content});
+  }
+
   static Future deleteVote(String courseId, String userID) async {
     Poll? temp = await getPollByCouseId(courseId);
     //Check old id
