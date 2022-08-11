@@ -343,7 +343,7 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                                     ),
                               const Divider(),
                               ListTile(
-                                tileColor: MoodleColors.grey_soft,
+                                tileColor: MoodleColors.white,
                                 onTap: users.isEmpty
                                     ? null
                                     : () {
@@ -360,21 +360,10 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                                       },
                                 title: Text(AppLocalizations.of(context)!
                                     .number_student),
-                                trailing: Row(
-                                  children: [
-                                    Text(users
-                                        .where((element) =>
-                                            element.submitted == true)
-                                        .length
-                                        .toString()),
-                                    users.isNotEmpty
-                                        ? const Icon(Icons.arrow_forward_ios)
-                                        : Container()
-                                  ],
-                                ),
+                                trailing: Text(users.length.toString()),
                               ),
                               ListTile(
-                                tileColor: MoodleColors.grey_soft,
+                                tileColor: MoodleColors.white,
                                 onTap: userSubmiteds.isEmpty
                                     ? null
                                     : () {
@@ -391,21 +380,10 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                                       },
                                 title: Text(AppLocalizations.of(context)!
                                     .number_submission),
-                                trailing: Row(
-                                  children: [
-                                    Text(userSubmiteds
-                                        .where((element) =>
-                                            element.submitted == true)
-                                        .length
-                                        .toString()),
-                                    userSubmiteds.isNotEmpty
-                                        ? const Icon(Icons.arrow_forward_ios)
-                                        : Container()
-                                  ],
-                                ),
+                                trailing: Text(userSubmiteds.length.toString()),
                               ),
                               ListTile(
-                                tileColor: MoodleColors.grey_soft,
+                                tileColor: MoodleColors.white,
                                 onTap: userSubmitedNeedGrade.isEmpty
                                     ? null
                                     : () {
@@ -423,18 +401,8 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                                       },
                                 title: Text(AppLocalizations.of(context)!
                                     .number_wait_grade),
-                                trailing: Row(
-                                  children: [
-                                    Text(userSubmitedNeedGrade
-                                        .where((element) =>
-                                            element.submitted == true)
-                                        .length
-                                        .toString()),
-                                    userSubmitedNeedGrade.isNotEmpty
-                                        ? const Icon(Icons.arrow_forward_ios)
-                                        : Container()
-                                  ],
-                                ),
+                                trailing: Text(
+                                    userSubmitedNeedGrade.length.toString()),
                               ),
                             ],
                           ),
