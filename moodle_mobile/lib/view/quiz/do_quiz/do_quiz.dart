@@ -16,6 +16,7 @@ import 'package:moodle_mobile/view/quiz/do_quiz/type/one_choice_do_quiz.dart';
 import 'package:moodle_mobile/view/quiz/do_quiz/type/short_answer_do_quiz.dart';
 import 'package:moodle_mobile/view/quiz/question_tile.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class QuizDoScreen extends StatefulWidget {
   final int attemptId;
@@ -122,6 +123,8 @@ class _QuizDoScreenState extends State<QuizDoScreen> {
         points = quizData?.questions?.map((e) => e.maxmark ?? 1).toList() ?? [];
         complete = quizData?.questions?.map((e) => false).toList() ?? [];
       });
+
+      checkTypeQuiz();
     } catch (e) {
       setState(() {
         error = true;
@@ -198,6 +201,24 @@ class _QuizDoScreenState extends State<QuizDoScreen> {
       },
     );
     return check;
+  }
+
+  checkTypeQuiz() {
+    List<Question> list = quizData?.questions ?? [];
+    bool check = list.every(
+      (question) {
+        if (question.type == "multichoice") return true;
+        if (question.type == "essay") return true;
+        if (question.type == "numerical") return true;
+        if (question.type == "shortanswer") return true;
+        return false;
+      },
+    );
+    if (check == false) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(AppLocalizations.of(context)!.quiz_type_dont_support),
+          backgroundColor: Colors.red));
+    }
   }
 
   _buildMainContent() {

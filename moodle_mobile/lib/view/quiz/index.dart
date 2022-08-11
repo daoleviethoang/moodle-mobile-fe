@@ -48,11 +48,11 @@ class _QuizScreenState extends State<QuizScreen> {
   void initState() {
     _userStore = GetIt.instance<UserStore>();
     super.initState();
-    if (widget.isTeacher != null) {
-      isTeacher = widget.isTeacher!;
-    } else {
-      checkIsTeacher();
-    }
+    // if (widget.isTeacher != null) {
+    //   isTeacher = widget.isTeacher!;
+    // } else {
+    //   checkIsTeacher();
+    // }
     load();
   }
 
@@ -145,317 +145,273 @@ class _QuizScreenState extends State<QuizScreen> {
             : SingleChildScrollView(
                 child: Container(
                   margin: const EdgeInsets.only(left: 10, right: 10, top: 20),
-                  child: isTeacher
-                      ? Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      quiz.timeopen == null
+                          ? Container()
+                          : DateAssignmentTile(
+                              date: (quiz.timeopen ?? 0) * 1000,
+                              title: AppLocalizations.of(context)!.opened,
+                              iconColor: Colors.grey,
+                              backgroundIconColor:
+                                  const Color.fromARGB(255, 217, 217, 217),
+                            ),
+                      quiz.timeclose == null
+                          ? Container()
+                          : DateAssignmentTile(
+                              date: (quiz.timeclose ?? 0) * 1000,
+                              title: AppLocalizations.of(context)!.due,
+                              iconColor: Colors.green,
+                              backgroundIconColor: Colors.greenAccent,
+                            ),
+                      const Divider(),
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            quiz.timeopen == null
-                                ? Container()
-                                : DateAssignmentTile(
-                                    date: (quiz.timeopen ?? 0) * 1000,
-                                    title: AppLocalizations.of(context)!.opened,
-                                    iconColor: Colors.grey,
-                                    backgroundIconColor: const Color.fromARGB(
-                                        255, 217, 217, 217),
-                                  ),
-                            quiz.timeclose == null
-                                ? Container()
-                                : DateAssignmentTile(
-                                    date: (quiz.timeclose ?? 0) * 1000,
-                                    title: AppLocalizations.of(context)!.due,
-                                    iconColor: Colors.green,
-                                    backgroundIconColor: Colors.greenAccent,
-                                  ),
-                            const Divider(),
-                          ],
-                        )
-                      : Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            quiz.timeopen == null
-                                ? Container()
-                                : DateAssignmentTile(
-                                    date: (quiz.timeopen ?? 0) * 1000,
-                                    title: AppLocalizations.of(context)!.opened,
-                                    iconColor: Colors.grey,
-                                    backgroundIconColor: const Color.fromARGB(
-                                        255, 217, 217, 217),
-                                  ),
-                            quiz.timeclose == null
-                                ? Container()
-                                : DateAssignmentTile(
-                                    date: (quiz.timeclose ?? 0) * 1000,
-                                    title: AppLocalizations.of(context)!.due,
-                                    iconColor: Colors.green,
-                                    backgroundIconColor: Colors.greenAccent,
-                                  ),
-                            const Divider(),
-                            Container(
-                              width: MediaQuery.of(context).size.width,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  const SizedBox(
-                                    height: 15,
-                                  ),
-                                  quiz.attempts == 0
-                                      ? Text(AppLocalizations.of(context)!
-                                              .attempt_allow +
-                                          " " +
-                                          AppLocalizations.of(context)!.unlimit)
-                                      : Text(AppLocalizations.of(context)!
-                                              .attempt_allow +
-                                          " ${quiz.attempts ?? 0}"),
-                                  const SizedBox(
-                                    height: 20,
-                                  ),
-                                  quiz.timelimit == 0
-                                      ? Text(AppLocalizations.of(context)!
-                                              .time_limit +
-                                          " " +
-                                          AppLocalizations.of(context)!.unlimit)
-                                      : Text(AppLocalizations.of(context)!
-                                              .time_limit +
-                                          " ${(quiz.timelimit ?? 0) / 60} " +
-                                          AppLocalizations.of(context)!
-                                              .minutes),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            Card(
-                              child: Html(
-                                data: quiz.intro ?? "",
-                                shrinkWrap: true,
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              AppLocalizations.of(context)!.summary_attempt,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 22),
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            Container(
-                              padding: const EdgeInsets.only(
-                                left: 20,
-                              ),
-                              width: MediaQuery.of(context).size.width,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Expanded(
-                                      child: Text(
-                                    AppLocalizations.of(context)!.state,
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                    textScaleFactor: 1.1,
-                                  )),
-                                  Expanded(
-                                    child: Center(
-                                      child: Text(
-                                        AppLocalizations.of(context)!.grade +
-                                            "/10",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                        textScaleFactor: 1.1,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const Divider(),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            Container(
-                              padding: const EdgeInsets.only(
-                                left: 20,
-                              ),
-                              width: MediaQuery.of(context).size.width,
-                              child: Row(
-                                children: [
-                                  lastAttempt.state == "finished"
-                                      ? Expanded(
-                                          child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.stretch,
-                                          children: [
-                                            Text(
-                                              AppLocalizations.of(context)!
-                                                  .finished,
-                                              style: TextStyle(
-                                                  color: MoodleColors.blue,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            const SizedBox(
-                                              height: 5,
-                                            ),
-                                            if (lastAttempt.id != null)
-                                              Text(AppLocalizations.of(context)!
-                                                      .submitted +
-                                                  " " +
-                                                  dayOfWeek.format(DateTime
-                                                      .fromMillisecondsSinceEpoch(
-                                                          (lastAttempt.timefinish ??
-                                                                  0) *
-                                                              1000))),
-                                            if (lastAttempt.id != null)
-                                              Text(formatDate.format(DateTime
-                                                  .fromMillisecondsSinceEpoch(
-                                                      (lastAttempt.timefinish ??
-                                                              0) *
-                                                          1000))),
-                                          ],
-                                        ))
-                                      : Expanded(
-                                          child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.stretch,
-                                          children: [
-                                            Text(""),
-                                            Text(
-                                              AppLocalizations.of(context)!
-                                                  .unfinished,
-                                              style: TextStyle(
-                                                  color: MoodleColors.blue,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            const SizedBox(
-                                              height: 5,
-                                            ),
-                                            Text(""),
-                                          ],
-                                        )),
-                                  Expanded(
-                                      child: Center(
-                                          child: Text(
-                                              grade?.toStringAsFixed(2) ??
-                                                  AppLocalizations.of(context)!
-                                                      .not_graded))),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            const Divider(),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            if (lastAttempt.id != null &&
-                                lastAttempt.state == "finished" &&
-                                lastAttempt.preview == 0)
-                              Center(
-                                child: CustomButtonShort(
-                                  text: AppLocalizations.of(context)!
-                                      .preview_last,
-                                  onPressed: () {
-                                    Navigator.of(context)
-                                        .push(MaterialPageRoute(builder: (_) {
-                                      return QuizPreviewScreen(
-                                        title: widget.title,
-                                        attemptId: lastAttempt.id ?? 0,
-                                      );
-                                    }));
-                                  },
-                                  bgColor: MoodleColors.blue,
-                                  blurRadius: 0,
-                                  textColor: Colors.white,
-                                ),
-                              ),
                             const SizedBox(
                               height: 15,
                             ),
-                            if (lastAttempt.state == "finished" &&
-                                    ((quiz.attempts ?? 0) > numAttempt) ||
-                                quiz.attempts == 0)
-                              Center(
-                                child: CustomButtonShort(
-                                  text: AppLocalizations.of(context)!
-                                      .start_attempt,
-                                  onPressed: () async {
-                                    Attempt attempt = await QuizApi().startQuiz(
-                                        _userStore.user.token,
-                                        widget.quizInstanceId);
-                                    Navigator.of(context)
-                                        .push(MaterialPageRoute(builder: (_) {
-                                      return QuizDoScreen(
-                                        title: widget.title,
-                                        attemptId: attempt.id ?? 0,
-                                        endTime: quiz.timelimit == 0
-                                            ? 0
-                                            : DateTime
-                                                    .fromMillisecondsSinceEpoch(
-                                                        (attempt.timestart ??
-                                                                0) *
-                                                            1000)
-                                                .add(Duration(
-                                                    seconds:
-                                                        quiz.timelimit ?? 0))
-                                                .millisecondsSinceEpoch,
-                                      );
-                                    })).then((value) async {
-                                      await load();
-                                    });
-                                  },
-                                  bgColor: MoodleColors.blue,
-                                  blurRadius: 0,
-                                  textColor: Colors.white,
-                                ),
-                              ),
+                            quiz.attempts == 0
+                                ? Text(AppLocalizations.of(context)!
+                                        .attempt_allow +
+                                    " " +
+                                    AppLocalizations.of(context)!.unlimit)
+                                : Text(AppLocalizations.of(context)!
+                                        .attempt_allow +
+                                    " ${quiz.attempts ?? 0}"),
                             const SizedBox(
-                              height: 10,
+                              height: 20,
                             ),
-                            if (lastAttempt.state == "inprogress")
-                              Center(
-                                child: CustomButtonShort(
-                                  text: AppLocalizations.of(context)!
-                                      .continue_attempt,
-                                  onPressed: () async {
-                                    Navigator.of(context)
-                                        .push(MaterialPageRoute(builder: (_) {
-                                      return QuizDoScreen(
-                                        title: widget.title,
-                                        attemptId: lastAttempt.id ?? 0,
-                                        endTime: quiz.timelimit == 0
-                                            ? 0
-                                            : DateTime
-                                                    .fromMillisecondsSinceEpoch(
-                                                        (lastAttempt.timestart ??
-                                                                0) *
-                                                            1000)
-                                                .add(Duration(
-                                                    seconds:
-                                                        quiz.timelimit ?? 0))
-                                                .millisecondsSinceEpoch,
-                                      );
-                                    })).then((value) async {
-                                      await load();
-                                    });
-                                  },
-                                  bgColor: MoodleColors.blue,
-                                  blurRadius: 0,
-                                  textColor: Colors.white,
-                                ),
-                              ),
+                            quiz.timelimit == 0
+                                ? Text(
+                                    AppLocalizations.of(context)!.time_limit +
+                                        " " +
+                                        AppLocalizations.of(context)!.unlimit)
+                                : Text(
+                                    AppLocalizations.of(context)!.time_limit +
+                                        " ${(quiz.timelimit ?? 0) / 60} " +
+                                        AppLocalizations.of(context)!.minutes),
                           ],
                         ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Card(
+                        child: Html(
+                          data: quiz.intro ?? "",
+                          shrinkWrap: true,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Text(
+                        AppLocalizations.of(context)!.summary_attempt,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 22),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                        padding: const EdgeInsets.only(
+                          left: 20,
+                        ),
+                        width: MediaQuery.of(context).size.width,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Expanded(
+                                child: Text(
+                              AppLocalizations.of(context)!.state,
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                              textScaleFactor: 1.1,
+                            )),
+                            Expanded(
+                              child: Center(
+                                child: Text(
+                                  AppLocalizations.of(context)!.grade + "/10",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                  textScaleFactor: 1.1,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Divider(),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Container(
+                        padding: const EdgeInsets.only(
+                          left: 20,
+                        ),
+                        width: MediaQuery.of(context).size.width,
+                        child: Row(
+                          children: [
+                            lastAttempt.state == "finished"
+                                ? Expanded(
+                                    child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      Text(
+                                        AppLocalizations.of(context)!.finished,
+                                        style: TextStyle(
+                                            color: MoodleColors.blue,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      const SizedBox(
+                                        height: 5,
+                                      ),
+                                      if (lastAttempt.id != null)
+                                        Text(AppLocalizations.of(context)!
+                                                .submitted +
+                                            " " +
+                                            dayOfWeek.format(DateTime
+                                                .fromMillisecondsSinceEpoch(
+                                                    (lastAttempt.timefinish ??
+                                                            0) *
+                                                        1000))),
+                                      if (lastAttempt.id != null)
+                                        Text(formatDate.format(
+                                            DateTime.fromMillisecondsSinceEpoch(
+                                                (lastAttempt.timefinish ?? 0) *
+                                                    1000))),
+                                    ],
+                                  ))
+                                : Expanded(
+                                    child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      Text(""),
+                                      Text(
+                                        AppLocalizations.of(context)!
+                                            .unfinished,
+                                        style: TextStyle(
+                                            color: MoodleColors.blue,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      const SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text(""),
+                                    ],
+                                  )),
+                            Expanded(
+                                child: Center(
+                                    child: Text(grade?.toStringAsFixed(2) ??
+                                        AppLocalizations.of(context)!
+                                            .not_graded))),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      const Divider(),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      if (lastAttempt.id != null &&
+                          lastAttempt.state == "finished" &&
+                          lastAttempt.preview == 0)
+                        Center(
+                          child: CustomButtonShort(
+                            text: AppLocalizations.of(context)!.preview_last,
+                            onPressed: () {
+                              Navigator.of(context)
+                                  .push(MaterialPageRoute(builder: (_) {
+                                return QuizPreviewScreen(
+                                  title: widget.title,
+                                  attemptId: lastAttempt.id ?? 0,
+                                );
+                              }));
+                            },
+                            bgColor: MoodleColors.blue,
+                            blurRadius: 0,
+                            textColor: Colors.white,
+                          ),
+                        ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      if (lastAttempt.state == "finished" &&
+                              ((quiz.attempts ?? 0) > numAttempt) ||
+                          quiz.attempts == 0)
+                        Center(
+                          child: CustomButtonShort(
+                            text: AppLocalizations.of(context)!.start_attempt,
+                            onPressed: () async {
+                              Attempt attempt = await QuizApi().startQuiz(
+                                  _userStore.user.token, widget.quizInstanceId);
+                              Navigator.of(context)
+                                  .push(MaterialPageRoute(builder: (_) {
+                                return QuizDoScreen(
+                                  title: widget.title,
+                                  attemptId: attempt.id ?? 0,
+                                  endTime: quiz.timelimit == 0
+                                      ? 0
+                                      : DateTime.fromMillisecondsSinceEpoch(
+                                              (attempt.timestart ?? 0) * 1000)
+                                          .add(Duration(
+                                              seconds: quiz.timelimit ?? 0))
+                                          .millisecondsSinceEpoch,
+                                );
+                              })).then((value) async {
+                                await load();
+                              });
+                            },
+                            bgColor: MoodleColors.blue,
+                            blurRadius: 0,
+                            textColor: Colors.white,
+                          ),
+                        ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      if (lastAttempt.state == "inprogress")
+                        Center(
+                          child: CustomButtonShort(
+                            text:
+                                AppLocalizations.of(context)!.continue_attempt,
+                            onPressed: () async {
+                              Navigator.of(context)
+                                  .push(MaterialPageRoute(builder: (_) {
+                                return QuizDoScreen(
+                                  title: widget.title,
+                                  attemptId: lastAttempt.id ?? 0,
+                                  endTime: quiz.timelimit == 0
+                                      ? 0
+                                      : DateTime.fromMillisecondsSinceEpoch(
+                                              (lastAttempt.timestart ?? 0) *
+                                                  1000)
+                                          .add(Duration(
+                                              seconds: quiz.timelimit ?? 0))
+                                          .millisecondsSinceEpoch,
+                                );
+                              })).then((value) async {
+                                await load();
+                              });
+                            },
+                            bgColor: MoodleColors.blue,
+                            blurRadius: 0,
+                            textColor: Colors.white,
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
               ),
       ),

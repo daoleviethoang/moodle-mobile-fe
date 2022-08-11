@@ -186,6 +186,7 @@
   "personal": "Personal",
   "planning": "Planning",
   "preview_last": "Preview last",
+  "quiz_type_dont_support": "There is an unsupported question type in this quiz, do you want to start this quiz?",
   "recent_notes": "Recent notes",
   "rely_discussion": "Rely discussion",
   "remember_account": "Remember account",
