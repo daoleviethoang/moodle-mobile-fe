@@ -117,7 +117,14 @@ class _NoteEditDialogState extends State<NoteEditDialog> {
     _initContentInput();
 
     return WillPopScope(
-      onWillPop: () => _cancelPressed(),
+      onWillPop: () async {
+        if (_canceling) {
+          _cancelPressed();
+        } else {
+          _cancelConfirmPressed();
+        }
+        return true;
+      },
       child: Form(
         key: _formKey,
         child: SingleChildScrollView(

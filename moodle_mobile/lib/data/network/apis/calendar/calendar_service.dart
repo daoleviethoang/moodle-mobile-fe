@@ -75,34 +75,37 @@ class CalendarService {
     }
   }
 
-  Future<Event?> createEvent(String token, Event event) async {
-    // try {
-    //   Dio dio = Http().client;
-    //   final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
-    //     'wstoken': token,
-    //     'wsfunction': Wsfunction.CREATE_EVENTS,
-    //     'moodlewsrestformat': 'json',
-    //     'events': [
-    //       {
-    //         'userid': event.userid,
-    //         'publishstate': event.publishstate,
-    //         'courseid': event.courseid,
-    //         'text': event.txt,
-    //         'format': event.format,
-    //       }
-    //     ],
-    //   });
-    //
-    //   return res.data[0]['eventid'] as int;
-    // } catch (e) {
-    //   rethrow;
-    // }
+  Future<Event> createEvent(String token, Event event) async {
+    try {
+      Dio dio = Http().client;
+      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': Wsfunction.CREATE_EVENTS,
+        'moodlewsrestformat': 'json',
+        'events': [
+          {
+            'name': event.name,
+            'description': event.description,
+            //'userid': event.userid,
+            'eventtype': event.eventtype,
+            'format': event.format,
+            'timestart': event.timestart,
+            'timeduration': event.timeduration,
+          }
+        ],
+      });
+      if (kDebugMode) print(res);
+
+      return event;
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<Event> updateEvent(String token, Event event) async =>
-      throw 'Not implemented';
+      throw 'Unimplemented';
 
-  Future<Event?> setEvent(String token, Event event) async {
+  Future<Event> setEvent(String token, Event event) async {
     try {
       if (kDebugMode) print(event.id);
       if (event.id == -1) {

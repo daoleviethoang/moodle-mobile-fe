@@ -216,7 +216,7 @@ class _CalendarScreenState extends State<CalendarScreen>
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Padding(
-                        padding: const EdgeInsets.only(top: 12, left: 12),
+                        padding: const EdgeInsets.only(left: 12),
                         child: _dayView,
                       ),
                     ),
@@ -358,7 +358,7 @@ class _CalendarScreenState extends State<CalendarScreen>
     );
   }
 
-  Future<void> _eventAdd() async => await showModalBottomSheet(
+  Future<void> _eventAdd([DateTime? day]) async => await showModalBottomSheet(
         context: context,
         isScrollControlled: true,
         isDismissible: false,
@@ -366,6 +366,7 @@ class _CalendarScreenState extends State<CalendarScreen>
         builder: (context) => EventEditDialog(
           token: _userStore.user.token,
           uid: _userStore.user.id,
+          preselected: day,
         ),
       );
 
@@ -375,12 +376,28 @@ class _CalendarScreenState extends State<CalendarScreen>
       children: [
         // Day view header
         Padding(
-          padding: const EdgeInsets.only(bottom: 12),
-          child: Text(
-            AppLocalizations.of(context)!.events_on(
-                DateFormat.MMMMd(Localizations.localeOf(context).languageCode)
-                    .format(_selectedDay)),
-            style: MoodleStyles.sectionHeaderStyle,
+          padding: const EdgeInsets.only(top: 4),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  AppLocalizations.of(context)!.events_on(
+                      DateFormat.MMMMd(Localizations.localeOf(context).languageCode)
+                          .format(_selectedDay)),
+                  style: MoodleStyles.sectionHeaderStyle,
+                ),
+              ),
+              TextButton(
+                style: TextButton.styleFrom(
+                  primary: Theme.of(context).colorScheme.onSurface,
+                  padding: EdgeInsets.zero,
+                  shape: const CircleBorder(),
+                  fixedSize: const Size.fromHeight(16),
+                ),
+                child: const Icon(Icons.add),
+                onPressed: () => _eventAdd(_selectedDay),
+              ),
+            ],
           ),
         ),
 

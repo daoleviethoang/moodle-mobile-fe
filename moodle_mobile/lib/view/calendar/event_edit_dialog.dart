@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
 import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/data/network/apis/calendar/calendar_service.dart';
@@ -15,6 +16,7 @@ class EventEditDialog extends StatefulWidget {
   final int uid;
   final int? cid;
   final Event? event;
+  final DateTime? preselected;
 
   const EventEditDialog({
     Key? key,
@@ -22,6 +24,7 @@ class EventEditDialog extends StatefulWidget {
     required this.uid,
     this.cid,
     this.event,
+    this.preselected,
   }) : super(key: key);
 
   @override
@@ -40,6 +43,7 @@ class _EventEditDialogState extends State<EventEditDialog> {
   var _canceling = false;
 
   bool get _eventInvalid =>
+      _event.isEmpty ||
       (_event.timestart ?? 0) < DateTime.now().millisecondsSinceEpoch ~/ 1000;
 
   DateTime get now {
@@ -59,17 +63,12 @@ class _EventEditDialogState extends State<EventEditDialog> {
     _uid = widget.uid;
     _cid = widget.cid ?? 0;
     _event = widget.event ??
-        Event(
-          id: -1,
-          name: '',
-          description: '',
+        Event.empty(
           userid: _uid,
           courseid: _cid,
-          eventtype: 'user',
-          format: 1,
-          descriptionformat: 1,
-          timestart: now.millisecondsSinceEpoch ~/ 1000,
-          timeduration: 0,
+          timestart: (widget.preselected?.millisecondsSinceEpoch ??
+                  now.millisecondsSinceEpoch) ~/
+              1000,
         );
   }
 
@@ -115,7 +114,6 @@ class _EventEditDialogState extends State<EventEditDialog> {
   _initTimeInput() {
     final initialTime =
         DateTime.fromMillisecondsSinceEpoch((_event.timestart ?? 0) * 1000);
-    print('${initialTime.year}-${initialTime.month}-${initialTime.day}');
     _timeInput = Column(
       children: [
         SizedBox(
@@ -154,14 +152,22 @@ class _EventEditDialogState extends State<EventEditDialog> {
             color: CupertinoColors.tertiarySystemFill,
             child: SizedBox(
               height: 280,
-              child: CalendarDatePicker(
-                initialDate: initialTime,
-                firstDate: now,
-                lastDate: DateTime(2100),
-                onDateChanged: (value) => _timeUpdated(
-                  year: value.year,
-                  month: value.month,
-                  day: value.day,
+              child: Theme(
+                data: ThemeData(
+                  colorScheme: const ColorScheme.light(
+                    primary: MoodleColors.blue,
+                    onPrimary: Colors.white,
+                  ),
+                ),
+                child: CalendarDatePicker(
+                  initialDate: initialTime,
+                  firstDate: now,
+                  lastDate: DateTime(2100),
+                  onDateChanged: (value) => _timeUpdated(
+                    year: value.year,
+                    month: value.month,
+                    day: value.day,
+                  ),
                 ),
               ),
             ),
@@ -234,7 +240,14 @@ class _EventEditDialogState extends State<EventEditDialog> {
     _initTimeInput();
 
     return WillPopScope(
-      onWillPop: () => _cancelPressed(),
+      onWillPop: () async {
+        if (_canceling) {
+          _cancelPressed();
+        } else {
+          _cancelConfirmPressed();
+        }
+        return true;
+      },
       child: Form(
         key: _formKey,
         child: SingleChildScrollView(

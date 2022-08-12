@@ -102,8 +102,20 @@ class Event {
     this.maxdayerror,
     this.draggable,
     this.cm,
-  this.format,
+    this.format,
   });
+
+  Event.empty({
+    required this.userid,
+    required this.courseid,
+    required this.timestart,
+  })  : id = -1,
+        name = '',
+        description = '',
+        eventtype = 'user',
+        format = 1,
+        descriptionformat = 1,
+        timeduration = 0;
 
   bool get isEmpty => name?.isEmpty ?? true;
 
@@ -119,7 +131,7 @@ class Event {
   }
 
   @override
-  bool operator == (Object other) {
+  bool operator ==(Object other) {
     return other is Event && id == other.id;
   }
 
