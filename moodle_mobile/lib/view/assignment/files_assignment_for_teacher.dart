@@ -1,15 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:moodle_mobile/constants/colors.dart';
+import 'package:moodle_mobile/constants/dimens.dart';
 import 'package:moodle_mobile/data/network/apis/assignment/assignment_api.dart';
+import 'package:moodle_mobile/data/network/apis/user/user_api.dart';
+import 'package:moodle_mobile/data/network/dio_client.dart';
+import 'package:moodle_mobile/di/service_locator.dart';
 import 'package:moodle_mobile/models/assignment/attemp_assignment.dart';
 import 'package:moodle_mobile/models/assignment/feedback.dart';
 import 'package:moodle_mobile/models/assignment/file_assignment.dart';
 import 'package:moodle_mobile/models/assignment/files_assignment.dart';
 import 'package:moodle_mobile/models/assignment/user_submited.dart';
 import 'package:moodle_mobile/models/comment/comment.dart';
+import 'package:moodle_mobile/models/user/user_overview.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:moodle_mobile/view/assignment/file_assignment_teacher_tile.dart';
@@ -45,6 +51,9 @@ class _FilesAssignmentTeacherScreenState
   late UserStore _userStore;
   List<FileUpload> files = [];
   bool isLoading = false;
+  UserOverview? _userOverview;
+  TextEditingController gradeController = TextEditingController();
+  TextEditingController commentController = TextEditingController();
 
   Future loadAssignment() async {
     setState(() {
@@ -52,6 +61,21 @@ class _FilesAssignmentTeacherScreenState
     });
     AttemptAssignment temp2 = await readAttempt();
     FeedBack temp3 = await readFeedBack();
+    if ((temp3.grade?.grader) != null) {
+      List<UserOverview> list = await UserApi(getIt<DioClient>())
+          .getUserById(_userStore.user.token, temp3.grade!.grader!);
+      print(list.toString());
+      if (list.isNotEmpty) {
+        setState(() {
+          _userOverview = list[0];
+          gradeController = TextEditingController(
+            text: double.tryParse(temp3.grade?.grade ?? "")?.toString() ?? "",
+          );
+          commentController = TextEditingController(
+              text: temp3.plugins?[0].editorfields?[0].text ?? "");
+        });
+      }
+    }
 
     if (widget.assignmentModuleId != 0 && temp2.submission?.id != 0) {
       Comment _comment =
@@ -232,6 +256,32 @@ class _FilesAssignmentTeacherScreenState
                 child: const Icon(CupertinoIcons.back),
                 onPressed: () => Navigator.pop(context),
               ),
+              actions: [
+                // isLoading == false && widget.usersubmitted.submitted == true
+                IconButton(
+                    onPressed: () async {
+                      var dou = double.tryParse(gradeController.text);
+                      if (dou == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text("Input grade invalid"),
+                          backgroundColor: Colors.red,
+                        ));
+                        return;
+                      }
+                      print("auo");
+                      var check = await AssignmentApi().saveGrade(
+                          _userStore.user.token,
+                          widget.assignId,
+                          widget.usersubmitted.id ?? 0,
+                          dou,
+                          commentController.text);
+                      if (check == true) {
+                        Navigator.pop(context);
+                      }
+                    },
+                    iconSize: Dimens.appbar_icon_size,
+                    icon: Icon(CupertinoIcons.checkmark, color: Colors.white))
+              ],
             ),
           ],
           body: isLoading
@@ -245,10 +295,24 @@ class _FilesAssignmentTeacherScreenState
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         ListTile(
-                          leading: const UserAvatarCommon(
-                              // imageURL: avatar + "&token=" + userStore.user.token,
-                              imageURL:
-                                  "https://www.w3schools.com/w3css/lights.jpg"),
+                          leading: UserAvatarCommon(
+                            // imageURL: avatar + "&token=" + userStore.user.token,
+                            imageURL: ((widget.usersubmitted.profileimageurl ??
+                                        "")
+                                    .contains("?"))
+                                ? ((widget.usersubmitted.profileimageurl
+                                            ?.replaceAll("pluginfile.php",
+                                                "webservice/pluginfile.php") ??
+                                        "") +
+                                    "&token=" +
+                                    _userStore.user.token)
+                                : ((widget.usersubmitted.profileimageurl
+                                            ?.replaceAll("pluginfile.php",
+                                                "webservice/pluginfile.php") ??
+                                        "") +
+                                    "?token=" +
+                                    _userStore.user.token),
+                          ),
                           title: Padding(
                             padding: const EdgeInsets.only(top: 8, bottom: 4),
                             child: Text(
@@ -433,7 +497,13 @@ class _FilesAssignmentTeacherScreenState
                                     child:
                                         Text("Được chấm bởi giáo viên teacher"),
                                   ),
-                                  subtitle: Text("Comments"),
+                                  subtitle: Text(
+                                    "Comments (" +
+                                        (comment.comments?.length.toString() ??
+                                            "0") +
+                                        ")",
+                                    style: TextStyle(color: MoodleColors.blue),
+                                  ),
                                   trailing: Padding(
                                     padding: const EdgeInsets.only(top: 15),
                                     child: const Icon(Icons.arrow_forward_ios),
@@ -452,6 +522,7 @@ class _FilesAssignmentTeacherScreenState
                                 Padding(
                                   padding: EdgeInsets.only(left: 16.0),
                                   child: TextField(
+                                    controller: gradeController,
                                     style: TextStyle(fontSize: 14),
                                   ),
                                 ),
@@ -479,37 +550,81 @@ class _FilesAssignmentTeacherScreenState
                                   ),
                                   subtitle: Padding(
                                     padding: EdgeInsets.only(top: 16),
-                                    child: Text(
-                                        feedBack.plugins?[0].editorfields?[0]
-                                                .text ??
-                                            "",
+                                    child: TextField(
+                                        controller: commentController,
                                         style: TextStyle(
                                             fontSize: 14,
                                             color: MoodleColors.gray)),
                                   ),
-                                  trailing: Icon(Icons.edit),
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.only(top: 20.0),
-                                  child: ListTile(
-                                    leading: UserAvatarCommon(
-                                        imageURL:
-                                            "https://www.w3schools.com/w3css/lights.jpg"),
-                                    title: Padding(
-                                      padding: EdgeInsets.only(top: 4),
-                                      child: Text("Grade by teacher teacher "),
-                                    ),
-                                    subtitle: Padding(
-                                      padding: EdgeInsets.only(top: 8),
-                                      child: Text(
-                                          "thứ năm, 11 tháng 8 2022, 7:57 CH"),
-                                    ),
-                                    trailing: Padding(
-                                      padding: EdgeInsets.only(top: 15),
-                                      child: Icon(Icons.arrow_forward_ios),
-                                    ),
-                                  ),
-                                ),
+                                feedBack.grade == null
+                                    ? Container()
+                                    : Padding(
+                                        padding: EdgeInsets.only(top: 20.0),
+                                        child: ListTile(
+                                          onTap: () {},
+                                          leading: UserAvatarCommon(
+                                              imageURL: ((_userOverview
+                                                              ?.profileimageurl ??
+                                                          "")
+                                                      .contains("?"))
+                                                  ? ((_userOverview
+                                                              ?.profileimageurl
+                                                              ?.replaceAll(
+                                                                  "pluginfile.php",
+                                                                  "webservice/pluginfile.php") ??
+                                                          "") +
+                                                      "&token=" +
+                                                      _userStore.user.token)
+                                                  : ((_userOverview
+                                                              ?.profileimageurl
+                                                              ?.replaceAll(
+                                                                  "pluginfile.php",
+                                                                  "webservice/pluginfile.php") ??
+                                                          "") +
+                                                      "?token=" +
+                                                      _userStore.user.token)),
+                                          title: Padding(
+                                            padding: EdgeInsets.only(top: 4),
+                                            child: Text("Grade by teacher" +
+                                                (_userOverview?.fullname ??
+                                                    "")),
+                                          ),
+                                          subtitle: Padding(
+                                            padding: EdgeInsets.only(top: 8),
+                                            child: Builder(builder: (context) {
+                                              final date = DateTime
+                                                  .fromMillisecondsSinceEpoch(
+                                                      (feedBack.grade
+                                                                  ?.timemodified ??
+                                                              0) *
+                                                          1000);
+                                              final str = (date ==
+                                                      DateTime
+                                                          .fromMillisecondsSinceEpoch(
+                                                              0))
+                                                  ? "Not modified"
+                                                  : DateFormat(
+                                                          "EEEE, dd MMMM yyyy, hh:mmaa",
+                                                          Localizations
+                                                                  .localeOf(
+                                                                      context)
+                                                              .languageCode)
+                                                      .format(date);
+                                              return Text(str,
+                                                  style: TextStyle(
+                                                      fontSize: 14,
+                                                      color:
+                                                          MoodleColors.gray));
+                                            }),
+                                          ),
+                                          trailing: Padding(
+                                            padding: EdgeInsets.only(top: 15),
+                                            child:
+                                                Icon(Icons.arrow_forward_ios),
+                                          ),
+                                        ),
+                                      ),
                               ],
                             )
                           ]),

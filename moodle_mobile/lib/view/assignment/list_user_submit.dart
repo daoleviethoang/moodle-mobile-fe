@@ -70,10 +70,16 @@ class ListUserSubmited extends StatelessWidget {
                       },
                       leading: UserAvatarCommon(
                         imageURL: ((e.profileimageurl ?? "").contains("?"))
-                            ? (e.profileimageurl ??
-                                "" "&token=" + userStore.user.token)
-                            : (e.profileimageurl ??
-                                "" "?token=" + userStore.user.token),
+                            ? ((e.profileimageurl?.replaceAll("pluginfile.php",
+                                        "webservice/pluginfile.php") ??
+                                    "") +
+                                "&token=" +
+                                userStore.user.token)
+                            : ((e.profileimageurl?.replaceAll("pluginfile.php",
+                                        "webservice/pluginfile.php") ??
+                                    "") +
+                                "?token=" +
+                                userStore.user.token),
                         // imageURL:
                         //     "https://www.w3schools.com/w3css/lights.jpg"
                       ),
