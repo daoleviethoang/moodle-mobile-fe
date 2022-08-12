@@ -12,8 +12,10 @@ import 'package:moodle_mobile/models/assignment/assignment.dart';
 import 'package:moodle_mobile/models/assignment/attemp_assignment.dart';
 import 'package:moodle_mobile/models/assignment/feedback.dart';
 import 'package:moodle_mobile/models/assignment/user_submited.dart';
+import 'package:moodle_mobile/models/comment/comment.dart';
 import 'package:moodle_mobile/models/contact/contact.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
+import 'package:moodle_mobile/view/assignment/comment_assignment/comment_detail.dart';
 import 'package:moodle_mobile/view/assignment/date_assignment_tile.dart';
 import 'package:moodle_mobile/view/assignment/files_assignment.dart';
 import 'package:moodle_mobile/view/assignment/list_user_submit.dart';
@@ -52,6 +54,7 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
   bool overDue = false;
   bool error = false;
   FeedBack feedback = FeedBack();
+  Comment comment = Comment();
   late Timer _timer;
   bool isTeacher = false;
 
@@ -108,6 +111,18 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
           SnackBar(content: Text(e.toString()), backgroundColor: Colors.red));
     }
     return Assignment();
+  }
+
+  Future<Comment> readComment(int assignCmdId, int submissionId) async {
+    try {
+      Comment _comment = await AssignmentApi().getAssignmentComment(
+          _userStore.user.token, assignCmdId, submissionId, 0);
+      return _comment;
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString()), backgroundColor: Colors.red));
+    }
+    return Comment();
   }
 
   Future<AttemptAssignment> ReadData2(int assignInstanceId) async {
@@ -168,6 +183,13 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
     FeedBack temp3 = isTeacher == true
         ? FeedBack()
         : await readFeedBack(widget.assignInstanceId);
+
+    if (temp.cmid != null && temp2.submission?.id != null) {
+      Comment _comment = await readComment(temp.cmid!, temp2.submission!.id!);
+      setState(() {
+        comment = _comment;
+      });
+    }
 
     getListUserSubmit();
 
@@ -535,11 +557,38 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                                 leftText: AppLocalizations.of(context)!
                                     .submission_comments,
                                 rightText:
-                                    (feedback.plugins?.length ?? 0).toString() +
+                                    (comment.comments?.length ?? 0).toString() +
                                         " " +
                                         AppLocalizations.of(context)!.comments +
                                         "...",
                                 rightTextColor: MoodleColors.blue,
+                                rightTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (_) {
+                                        return CommentAssignmentDetailScreen(
+                                          comment: comment,
+                                          reLoadComment: () async {
+                                            if (assignment.cmid != null &&
+                                                attempt.submission?.id !=
+                                                    null) {
+                                              Comment _comment =
+                                                  await readComment(
+                                                      assignment.cmid!,
+                                                      attempt.submission!.id!);
+                                              setState(() {
+                                                comment = _comment;
+                                              });
+                                            }
+                                          },
+                                          userStore: _userStore,
+                                          assignCmdId: assignment.cmid!,
+                                          submissionId: attempt.submission!.id!,
+                                        );
+                                      },
+                                    ),
+                                  );
+                                },
                               ),
                               const SizedBox(
                                 height: 15,

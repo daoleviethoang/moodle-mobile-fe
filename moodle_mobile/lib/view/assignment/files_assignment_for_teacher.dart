@@ -7,6 +7,7 @@ import 'package:moodle_mobile/models/assignment/feedback.dart';
 import 'package:moodle_mobile/models/assignment/file_assignment.dart';
 import 'package:moodle_mobile/models/assignment/files_assignment.dart';
 import 'package:moodle_mobile/models/assignment/user_submited.dart';
+import 'package:moodle_mobile/models/comment/comment.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:moodle_mobile/view/assignment/file_assignment_teacher_tile.dart';
@@ -38,6 +39,7 @@ class _FilesAssignmentTeacherScreenState
     extends State<FilesAssignmentTeacherScreen> {
   AttemptAssignment attempt = AttemptAssignment();
   FeedBack feedBack = FeedBack();
+  Comment comment = Comment();
   late UserStore _userStore;
   List<FileUpload> files = [];
   bool isLoading = false;
@@ -49,11 +51,31 @@ class _FilesAssignmentTeacherScreenState
     AttemptAssignment temp2 = await readAttempt();
     FeedBack temp3 = await readFeedBack();
 
+    if (widget.assignmentModuleId != 0 && temp2.submission?.id != 0) {
+      Comment _comment =
+          await readComment(widget.assignmentModuleId, temp2.submission!.id!);
+      setState(() {
+        comment = _comment;
+      });
+    }
+
     setState(() {
       attempt = temp2;
       feedBack = temp3;
       isLoading = false;
     });
+  }
+
+  Future<Comment> readComment(int assignCmdId, int submissionId) async {
+    try {
+      Comment _comment = await AssignmentApi().getAssignmentComment(
+          _userStore.user.token, assignCmdId, submissionId, 0);
+      return _comment;
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString()), backgroundColor: Colors.red));
+    }
+    return Comment();
   }
 
   Future<AttemptAssignment> readAttempt() async {

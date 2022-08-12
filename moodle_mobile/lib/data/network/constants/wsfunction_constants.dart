@@ -49,6 +49,10 @@ class Wsfunction {
       "mod_assign_list_participants";
   static const String MOD_ASSIGN_SAVE_GRADE = "mod_assign_save_grade";
 
+  //comment
+  static const String CORE_COMMENT_GET_COMMENTS = "core_comment_get_comments";
+  static const String CORE_COMMENT_ADD_COMMENTS = "core_comment_add_comments";
+
   //forum
   static const String MOD_FORUM_GET_FORUMS_BY_COURSES =
       "mod_forum_get_forums_by_courses";

@@ -9,6 +9,7 @@ import 'package:moodle_mobile/models/assignment/assignment.dart';
 import 'package:moodle_mobile/models/assignment/attemp_assignment.dart';
 import 'package:moodle_mobile/models/assignment/feedback.dart';
 import 'package:moodle_mobile/models/assignment/user_submited.dart';
+import 'package:moodle_mobile/models/comment/comment.dart';
 
 class AssignmentApi {
   saveAssignment(String token, int assignid, int itemid) async {
@@ -225,6 +226,62 @@ class AssignmentApi {
     } catch (e) {
       print(e.toString());
       throw "Can't get feedback";
+    }
+  }
+
+  Future<Comment> getAssignmentComment(
+      String token, int assignCmdId, int submissionId, int page) async {
+    try {
+      Dio dio = Http().client;
+      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': Wsfunction.CORE_COMMENT_GET_COMMENTS,
+        "moodlewsrestformat": "json",
+        'contextlevel': "module",
+        'instanceid': assignCmdId,
+        "component": "assignsubmission_comments",
+        "itemid": submissionId,
+        "area": "submission_comments",
+        "page": page,
+      });
+
+      if (res.data is Map<String, dynamic> && res.data["exception"] != null) {
+        throw res.data["exception"];
+      }
+
+      Comment comment = Comment.fromJson(res.data);
+
+      return comment;
+    } catch (e) {
+      print(e.toString());
+      throw "Can't get comment";
+    }
+  }
+
+  Future<bool> sendAssignmentComment(
+      String token, int assignCmdId, int submissionId, String conttent) async {
+    try {
+      Dio dio = Http().client;
+      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': Wsfunction.CORE_COMMENT_ADD_COMMENTS,
+        "moodlewsrestformat": "json",
+        'comments[0][contextlevel]': "module",
+        'comments[0][instanceid]': assignCmdId,
+        "comments[0][component]": "assignsubmission_comments",
+        "comments[0][itemid]": submissionId,
+        "comments[0][area]": "submission_comments",
+        "comments[0][content]": conttent,
+      });
+
+      if (res.data is Map<String, dynamic> && res.data["exception"] != null) {
+        throw res.data["exception"];
+      }
+
+      return true;
+    } catch (e) {
+      print(e.toString());
+      throw "Can't send comment";
     }
   }
 }
