@@ -50,8 +50,7 @@ class CalendarService {
     return events;
   }
 
-  Future<List<Event>> getUpcomingByCourse(
-      String token, int courseId) async {
+  Future<List<Event>> getUpcomingByCourse(String token, int courseId) async {
     try {
       Dio dio = Http().client;
       final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
@@ -72,6 +71,46 @@ class CalendarService {
       if (kDebugMode) {
         print('$e');
       }
+      rethrow;
+    }
+  }
+
+  Future<Event?> createEvent(String token, Event event) async {
+    // try {
+    //   Dio dio = Http().client;
+    //   final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+    //     'wstoken': token,
+    //     'wsfunction': Wsfunction.CREATE_EVENTS,
+    //     'moodlewsrestformat': 'json',
+    //     'events': [
+    //       {
+    //         'userid': event.userid,
+    //         'publishstate': event.publishstate,
+    //         'courseid': event.courseid,
+    //         'text': event.txt,
+    //         'format': event.format,
+    //       }
+    //     ],
+    //   });
+    //
+    //   return res.data[0]['eventid'] as int;
+    // } catch (e) {
+    //   rethrow;
+    // }
+  }
+
+  Future<Event> updateEvent(String token, Event event) async =>
+      throw 'Not implemented';
+
+  Future<Event?> setEvent(String token, Event event) async {
+    try {
+      if (kDebugMode) print(event.id);
+      if (event.id == -1) {
+        return await createEvent(token, event);
+      } else {
+        return await updateEvent(token, event);
+      }
+    } catch (e) {
       rethrow;
     }
   }

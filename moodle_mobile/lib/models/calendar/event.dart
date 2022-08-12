@@ -105,7 +105,7 @@ class Event {
   this.format,
   });
 
-  bool get isEmpty => (name?.isEmpty ?? true) && (description?.isEmpty ?? true);
+  bool get isEmpty => name?.isEmpty ?? true;
 
   bool get isNotEmpty => !isEmpty;
 
