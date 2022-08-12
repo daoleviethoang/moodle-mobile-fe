@@ -9,10 +9,14 @@ import 'package:moodle_mobile/models/quiz/question.dart';
 import 'package:moodle_mobile/models/quiz/quizData.dart';
 import 'package:moodle_mobile/models/quiz/quiz_save.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
-import 'package:moodle_mobile/view/quiz/do_quiz/type/multi_choice_quiz.dart';
-import 'package:moodle_mobile/view/quiz/do_quiz/type/one_choice_quiz.dart';
+import 'package:moodle_mobile/view/quiz/do_quiz/type/essay_do_quiz.dart';
+import 'package:moodle_mobile/view/quiz/do_quiz/type/multi_choice_do_quiz.dart';
+import 'package:moodle_mobile/view/quiz/do_quiz/type/number_do_quiz.dart';
+import 'package:moodle_mobile/view/quiz/do_quiz/type/one_choice_do_quiz.dart';
+import 'package:moodle_mobile/view/quiz/do_quiz/type/short_answer_do_quiz.dart';
 import 'package:moodle_mobile/view/quiz/question_tile.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class QuizDoScreen extends StatefulWidget {
   final int attemptId;
@@ -51,7 +55,9 @@ class _QuizDoScreenState extends State<QuizDoScreen> {
         return true;
       } catch (e) {
         if (kDebugMode) {
-          print("Can't save quiz: ${list[index].values}");
+          print(e);
+          print(
+              "Can't save quiz: ${list[index].answers} ${list[index].values}");
         }
       }
     }
@@ -117,6 +123,8 @@ class _QuizDoScreenState extends State<QuizDoScreen> {
         points = quizData?.questions?.map((e) => e.maxmark ?? 1).toList() ?? [];
         complete = quizData?.questions?.map((e) => false).toList() ?? [];
       });
+
+      checkTypeQuiz();
     } catch (e) {
       setState(() {
         error = true;
@@ -193,6 +201,24 @@ class _QuizDoScreenState extends State<QuizDoScreen> {
       },
     );
     return check;
+  }
+
+  checkTypeQuiz() {
+    List<Question> list = quizData?.questions ?? [];
+    bool check = list.every(
+      (question) {
+        if (question.type == "multichoice") return true;
+        if (question.type == "essay") return true;
+        if (question.type == "numerical") return true;
+        if (question.type == "shortanswer") return true;
+        return false;
+      },
+    );
+    if (check == false) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(AppLocalizations.of(context)!.quiz_type_dont_support),
+          backgroundColor: Colors.red));
+    }
   }
 
   _buildMainContent() {
@@ -272,6 +298,60 @@ class _QuizDoScreenState extends State<QuizDoScreen> {
                               question: question,
                               index: question.number ?? 1);
                         }
+                      }
+                      if (question.type == "essay") {
+                        return QuestionTile(
+                            content: Container(
+                              margin: const EdgeInsets.only(top: 10),
+                              child: EssayDoQuiz(
+                                uniqueId: uniqueId,
+                                slot: slot,
+                                index: index,
+                                html: question.html ?? "",
+                                token: _userStore.user.token,
+                                setData: setDataSave,
+                                setComplete: setComplete,
+                                sequenceCheck: question.sequencecheck ?? 0,
+                              ),
+                            ),
+                            question: question,
+                            index: index + 1);
+                      }
+                      if (question.type == "numerical") {
+                        return QuestionTile(
+                            content: Container(
+                              margin: const EdgeInsets.only(top: 10),
+                              child: NumberDoQuiz(
+                                uniqueId: uniqueId,
+                                slot: slot,
+                                index: index,
+                                html: question.html ?? "",
+                                token: _userStore.user.token,
+                                setData: setDataSave,
+                                setComplete: setComplete,
+                                sequenceCheck: question.sequencecheck ?? 0,
+                              ),
+                            ),
+                            question: question,
+                            index: index + 1);
+                      }
+                      if (question.type == "shortanswer") {
+                        return QuestionTile(
+                            content: Container(
+                              margin: const EdgeInsets.only(top: 10),
+                              child: ShortAnswerDoQuiz(
+                                uniqueId: uniqueId,
+                                slot: slot,
+                                index: index,
+                                html: question.html ?? "",
+                                token: _userStore.user.token,
+                                setData: setDataSave,
+                                setComplete: setComplete,
+                                sequenceCheck: question.sequencecheck ?? 0,
+                              ),
+                            ),
+                            question: question,
+                            index: index + 1);
                       }
                       return QuestionTile(
                           content: Container(
@@ -390,14 +470,16 @@ class _QuizDoScreenState extends State<QuizDoScreen> {
                     const SizedBox(
                       height: 5,
                     ),
-                    CountdownTimer(
-                      textStyle: TextStyle(fontSize: 18),
-                      endTime: widget.endTime,
-                      onEnd: () async {
-                        await endQuiz();
-                        Navigator.pop(context);
-                      },
-                    ),
+                    widget.endTime == 0
+                        ? Container()
+                        : CountdownTimer(
+                            textStyle: TextStyle(fontSize: 18),
+                            endTime: widget.endTime,
+                            onEnd: () async {
+                              await endQuiz();
+                              Navigator.pop(context);
+                            },
+                          ),
                   ],
                 )),
           ),
