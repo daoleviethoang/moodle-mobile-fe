@@ -10,6 +10,7 @@ import 'package:intl/intl.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
 import 'package:moodle_mobile/constants/styles.dart';
+import 'package:moodle_mobile/data/network/apis/calendar/calendar_service.dart';
 import 'package:moodle_mobile/models/calendar/event.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/assignment/index.dart';
@@ -19,6 +20,7 @@ import 'package:moodle_mobile/view/viewer/image_viewer.dart';
 import 'package:moodle_mobile/view/viewer/video_viewer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'custom_button.dart';
 import 'image_view.dart';
 
 // region Icon and text
@@ -202,13 +204,15 @@ class SubmissionItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dueString = DateFormat(
+      'HH:mm, dd MMMM, yyyy',
+      Localizations.localeOf(context).languageCode,
+    ).format(dueDate ?? DateTime.now());
     return m.MenuItem(
       icon: const Icon(CupertinoIcons.doc),
       color: MoodleColors.blue,
       title: title,
-      subtitle: (dueDate == null)
-          ? null
-          : DateFormat('HH:mm, dd MMMM, yyyy').format(dueDate!),
+      subtitle: (dueDate == null) ? null : dueString,
       fullWidth: true,
       onPressed: () {
         Navigator.push(
@@ -243,13 +247,15 @@ class QuizItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dueString = DateFormat(
+      'HH:mm, dd MMMM, yyyy',
+      Localizations.localeOf(context).languageCode,
+    ).format(openDate ?? DateTime.now());
     return m.MenuItem(
       icon: const Icon(CupertinoIcons.question_square),
       color: MoodleColors.blue,
       title: title,
-      subtitle: (openDate == null)
-          ? null
-          : DateFormat('HH:mm, dd MMMM, yyyy').format(openDate!),
+      subtitle: (openDate == null) ? null : dueString,
       fullWidth: true,
       onPressed: () {
         Navigator.push(
@@ -365,74 +371,181 @@ class ZoomItem extends StatelessWidget {
   }
 }
 
-class EventItem extends StatelessWidget {
+class EventItem extends StatefulWidget {
   final String title;
   final DateTime date;
+  final String token;
   final Event event;
 
   const EventItem({
     Key? key,
     required this.title,
     required this.date,
+    required this.token,
     required this.event,
   }) : super(key: key);
 
   @override
+  State<EventItem> createState() => _EventItemState();
+}
+
+class _EventItemState extends State<EventItem> {
+  bool _hiding = false;
+
+  String getDueString(BuildContext context) => DateFormat(
+        'HH:mm, dd MMMM, yyyy',
+        Localizations.localeOf(context).languageCode,
+      ).format(widget.date);
+
+  @override
   Widget build(BuildContext context) {
-    return m.MenuItem(
-      icon: const Icon(CupertinoIcons.calendar),
-      color: MoodleColors.blue,
-      title: title,
-      subtitle: DateFormat('HH:mm, dd MMMM, yyyy').format(date),
-      fullWidth: true,
-      onPressed: () => _onPressed(context),
+    return AnimatedScale(
+      scale: _hiding ? 0 : 1,
+      alignment: Alignment.topCenter,
+      duration: const Duration(milliseconds: 300),
+      onEnd: () {
+        if (_hiding) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+                content: Text(AppLocalizations.of(context)!.event_deleted)),
+          );
+        }
+      },
+      child: m.MenuItem(
+        icon: const Icon(CupertinoIcons.calendar),
+        color: MoodleColors.blue,
+        title: widget.title,
+        subtitle: getDueString(context),
+        fullWidth: true,
+        onPressed: () => _onPressed(context),
+      ),
     );
   }
 
-  void _onPressed(BuildContext context) {
-    showModalBottomSheet(
+  void _onPressed(BuildContext context) async {
+    await showModalBottomSheet(
       context: context,
-      builder: (builder) => Container(
-        height: 300,
-        padding: const EdgeInsets.only(top: 8, bottom: 20, left: 10, right: 10),
-        decoration: const BoxDecoration(
-          color: MoodleColors.grey_bottom_bar,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(Dimens.default_sheet_radius),
-            topRight: Radius.circular(Dimens.default_sheet_radius),
-          ),
-        ),
+      isScrollControlled: true,
+      builder: (builder) => SingleChildScrollView(
         child: Column(
-          mainAxisSize: MainAxisSize.max,
           children: [
-            SizedBox(
-              height: 30,
-              child: Text(
-                event.name ?? AppLocalizations.of(context)!.no_name,
-                style: const TextStyle(fontWeight: FontWeight.bold),
-                textScaleFactor: 1.8,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(height: 20),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      widget.title,
+                      textAlign: TextAlign.left,
+                      softWrap: true,
+                      style: MoodleStyles.bottomSheetTitleStyle,
+                    ),
+                  ),
+                  Container(height: 20),
+                  Text(
+                    '${AppLocalizations.of(context)!.due} '
+                    '${getDueString(context)}',
+                    style: MoodleStyles.noteTimestampStyle,
+                  ),
+                  Container(height: 10),
+                  if ((widget.event.description ?? '').isNotEmpty)
+                    ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: MediaQuery.of(context).size.height * 0.25,
+                        minWidth: MediaQuery.of(context).size.width,
+                        maxWidth: MediaQuery.of(context).size.width,
+                      ),
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: CupertinoColors.tertiarySystemFill,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Text(
+                            widget.event.description!,
+                            textAlign: TextAlign.left,
+                            softWrap: true,
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                        ),
+                      ),
+                    ),
+                  Container(height: 20),
+                  CustomButtonWidget(
+                    onPressed: () async {
+                      await _onDeletePressed(context);
+                    },
+                    textButton: AppLocalizations.of(context)!.mark_done_delete,
+                    useWarningColor: true,
+                    filled: false,
+                  ),
+                ],
               ),
             ),
-            const SizedBox(
-              height: 5,
-            ),
-            Container(
-              height: 230,
-              padding: const EdgeInsets.only(
-                  left: Dimens.default_padding, right: Dimens.default_padding),
-              child: Html(
-                  data: event.description ??
-                      AppLocalizations.of(context)!.no_description),
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(Dimens.default_border_radius * 3),
-                ),
-                color: MoodleColors.brightGray,
-              ),
-            ),
+            Container(height: Dimens.default_padding_double),
+            Container(height: MediaQuery.of(context).viewInsets.bottom),
           ],
         ),
       ),
+    );
+  }
+
+  Future<void> _onDeletePressed(BuildContext context) async {
+    Navigator.of(context).pop();
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(AppLocalizations.of(context)!.mark_done_delete),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(AppLocalizations.of(context)!.mark_done_delete_confirm),
+              Container(height: 10),
+              Text(
+                widget.title,
+                textAlign: TextAlign.left,
+                softWrap: true,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              Container(height: 10),
+              Text(
+                widget.event.description!,
+                textAlign: TextAlign.left,
+                softWrap: true,
+                maxLines: 5,
+                overflow: TextOverflow.fade,
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              child: Text(AppLocalizations.of(context)!.cancel),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            TextButton(
+              child: Text(
+                AppLocalizations.of(context)!.delete,
+                style: TextStyle(color: Theme.of(context).errorColor),
+              ),
+              onPressed: () async {
+                final result = await CalendarService()
+                    .deleteEvent(widget.token, widget.event.id!);
+                if (result) setState(() => _hiding = true);
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

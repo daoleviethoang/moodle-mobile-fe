@@ -43,7 +43,12 @@ class CustomButtonWidget extends StatelessWidget {
                 Radius.circular(Dimens.default_border_radius)),
             side: filled
                 ? BorderSide.none
-                : const BorderSide(color: MoodleColors.blue, width: 2),
+                : BorderSide(
+                    color: useWarningColor
+                        ? Theme.of(context).errorColor
+                        : MoodleColors.blue,
+                    width: 2,
+                  ),
           ),
         ),
       ),

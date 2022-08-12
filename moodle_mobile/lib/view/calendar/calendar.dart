@@ -457,6 +457,7 @@ class _CalendarScreenState extends State<CalendarScreen>
               return EventItem(
                 title: title,
                 date: dueDate,
+                token: _userStore.user.token,
                 event: e,
               );
             default:

@@ -117,4 +117,22 @@ class CalendarService {
       rethrow;
     }
   }
+
+  Future<bool> deleteEvent(String token, int eid) async {
+    try {
+      Dio dio = Http().client;
+      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': Wsfunction.DELETE_EVENTS,
+        'moodlewsrestformat': 'json',
+        'events': [
+          {'eventid': eid, 'repeat': 0}
+        ],
+      });
+      if (kDebugMode) print(res);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 }

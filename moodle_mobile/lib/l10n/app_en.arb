@@ -140,6 +140,8 @@
   "login_invalid": "Invalid login, please try again",
   "logout": "Logout",
   "mail_subject": "[Moodle%20Mobile%20App%20-%20Report%20a%20problem]",
+  "mark_done_delete": "Mark done and delete",
+  "mark_done_delete_confirm": "Are you sure to mark done and delete this event?",
   "max_file_size": "Maximum files size :",
   "menu": "Menu",
   "message_settings": "Messenger settings",
@@ -237,5 +239,8 @@
   "user_details": "User details",
   "user_not_exist": "User not exist in server",
   "username": "Username",
-  "view_file_submission": "View file submission"
+  "view_file_submission": "View file submission",
+  "event_deleted": "Event is deleted",
+  "no": "No",
+  "yes": "Yes"
 }
