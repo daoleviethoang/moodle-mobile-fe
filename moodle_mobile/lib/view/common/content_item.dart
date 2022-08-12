@@ -21,9 +21,9 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'image_view.dart';
 
-class _ModuleWrapper extends StatelessWidget {
+class _ModuleWrapper extends StatefulWidget {
   final bool? completed;
-  final Function(bool)? onCompletionChange;
+  final Function(bool?)? onCompletionChange;
   final Widget child;
 
   const _ModuleWrapper({
@@ -34,24 +34,40 @@ class _ModuleWrapper extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<_ModuleWrapper> createState() => _ModuleWrapperState();
+}
+
+class _ModuleWrapperState extends State<_ModuleWrapper> {
+  bool? _completed;
+
+  @override
+  void initState() {
+    super.initState();
+    _completed = widget.completed;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        child,
-        if (completed != null)
+        widget.child,
+        if (widget.completed != null)
           Padding(
             padding: const EdgeInsets.only(left: 32),
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary: completed! ? MoodleColors.blue : Colors.white,
+                primary: _completed! ? MoodleColors.blue : Colors.white,
               ),
-              onPressed: onCompletionChange == null
+              onPressed: widget.onCompletionChange == null
                   ? () {}
-                  : () => onCompletionChange!(!completed!),
+                  : () async {
+                      final c = await widget.onCompletionChange!(_completed);
+                      setState(() => _completed = c);
+                    },
               child: Text("Mark done",
                   style: TextStyle(
-                    color: completed! ? Colors.white : MoodleColors.blue,
+                    color: _completed! ? Colors.white : MoodleColors.blue,
                   )),
             ),
           ),
@@ -62,7 +78,7 @@ class _ModuleWrapper extends StatelessWidget {
 
 class ModuleItem extends StatelessWidget {
   final bool? completed;
-  final Function(bool)? onCompletionChange;
+  final Function(bool?)? onCompletionChange;
 
   final Widget? icon;
   final Widget? image;
@@ -107,7 +123,7 @@ class ModuleItem extends StatelessWidget {
 
 class ForumItem extends StatelessWidget {
   final bool? completed;
-  final Function(bool)? onCompletionChange;
+  final Function(bool?)? onCompletionChange;
 
   final String title;
   final VoidCallback? onPressed;
@@ -136,7 +152,7 @@ class ForumItem extends StatelessWidget {
 
 class ChatItem extends StatelessWidget {
   final bool? completed;
-  final Function(bool)? onCompletionChange;
+  final Function(bool?)? onCompletionChange;
 
   final String title;
   final VoidCallback? onPressed;
@@ -165,7 +181,7 @@ class ChatItem extends StatelessWidget {
 
 class DocumentItem extends StatelessWidget {
   final bool? completed;
-  final Function(bool)? onCompletionChange;
+  final Function(bool?)? onCompletionChange;
 
   final String title;
   final String documentUrl;
@@ -208,7 +224,7 @@ class DocumentItem extends StatelessWidget {
 
 class VideoItem extends StatelessWidget {
   final bool? completed;
-  final Function(bool)? onCompletionChange;
+  final Function(bool?)? onCompletionChange;
 
   final String title;
   final String videoUrl;
@@ -244,7 +260,7 @@ class VideoItem extends StatelessWidget {
 
 class UrlItem extends StatelessWidget {
   final bool? completed;
-  final Function(bool)? onCompletionChange;
+  final Function(bool?)? onCompletionChange;
 
   final String title;
   final String url;
@@ -303,7 +319,7 @@ class UrlItem extends StatelessWidget {
 
 class SubmissionItem extends StatelessWidget {
   final bool? completed;
-  final Function(bool)? onCompletionChange;
+  final Function(bool?)? onCompletionChange;
 
   final String title;
   final int submissionId;
@@ -351,7 +367,7 @@ class SubmissionItem extends StatelessWidget {
 
 class QuizItem extends StatelessWidget {
   final bool? completed;
-  final Function(bool)? onCompletionChange;
+  final Function(bool?)? onCompletionChange;
 
   final String title;
   final int courseId;
@@ -401,7 +417,7 @@ class QuizItem extends StatelessWidget {
 
 class AttachmentItem extends StatelessWidget {
   final bool? completed;
-  final Function(bool)? onCompletionChange;
+  final Function(bool?)? onCompletionChange;
 
   final String? title;
   final String? attachmentUrl;
@@ -433,7 +449,7 @@ class AttachmentItem extends StatelessWidget {
 
 class PageItem extends StatelessWidget {
   final bool? completed;
-  final Function(bool)? onCompletionChange;
+  final Function(bool?)? onCompletionChange;
 
   final String title;
   final VoidCallback? onPressed;
@@ -462,7 +478,7 @@ class PageItem extends StatelessWidget {
 
 class FolderItem extends StatelessWidget {
   final bool? completed;
-  final Function(bool)? onCompletionChange;
+  final Function(bool?)? onCompletionChange;
 
   final String title;
   final int instanceId;
@@ -492,7 +508,7 @@ class FolderItem extends StatelessWidget {
 
 class ZoomItem extends StatelessWidget {
   final bool? completed;
-  final Function(bool)? onCompletionChange;
+  final Function(bool?)? onCompletionChange;
 
   final String title;
   final int instanceId;
@@ -526,7 +542,7 @@ class ZoomItem extends StatelessWidget {
 
 class EventItem extends StatelessWidget {
   final bool? completed;
-  final Function(bool)? onCompletionChange;
+  final Function(bool?)? onCompletionChange;
 
   final String title;
   final DateTime date;
@@ -609,7 +625,7 @@ class EventItem extends StatelessWidget {
 
 class LabelItem extends StatelessWidget {
   final bool? completed;
-  final Function(bool)? onCompletionChange;
+  final Function(bool?)? onCompletionChange;
 
   final String? text;
   final Map<String, Style>? style;

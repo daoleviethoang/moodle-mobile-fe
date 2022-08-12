@@ -373,6 +373,11 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                             jsonDecode(m.customdata ?? '')['duedate'] * 1000)
                         : null;
                     return SubmissionItem(
+                      completed: m.isCompleted,
+                      onCompletionChange: (val) async {
+                        return await ModuleService()
+                            .markModule(token, m.id!, val);
+                      },
                       title: title,
                       submissionId: m.instance ?? 0,
                       courseId: widget.courseId,
@@ -381,6 +386,11 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                     );
                   case ModuleName.chat:
                     return ChatItem(
+                      completed: m.isCompleted,
+                      onCompletionChange: (val) async {
+                        return await ModuleService()
+                            .markModule(token, m.id!, val);
+                      },
                       title: title,
                       onPressed: () {},
                     );
@@ -403,6 +413,10 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                       }
 
                       return ForumItem(
+                        completed: m.isCompleted,
+                        onCompletionChange: (val) async {
+                          ModuleService().markModule(token, m.id!, val);
+                        },
                         title: newTitle,
                         onPressed: () {
                           // Switch to Announcements/Discussion Forum
@@ -426,7 +440,12 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                       );
                     });
                   case ModuleName.label:
-                    return LabelItem(text: m.description ?? '');
+                    return LabelItem(
+                        completed: m.isCompleted,
+                        onCompletionChange: (val) async {
+                          ModuleService().markModule(token, m.id!, val);
+                        },
+                        text: m.description ?? '');
                   case ModuleName.lti:
                     return FutureBuilder(
                       future: queryLti(m.instance ?? 0),
@@ -439,6 +458,10 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                         }
                         Lti d = data.data as Lti;
                         return UrlItem(
+                          completed: m.isCompleted,
+                          onCompletionChange: (val) async {
+                            ModuleService().markModule(token, m.id!, val);
+                          },
                           title: title,
                           url: d.endpoint ?? '',
                           id: m.instance!,
@@ -447,11 +470,21 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                     );
                   case ModuleName.page:
                     return PageItem(
+                      completed: m.isCompleted,
+                      onCompletionChange: (val) async {
+                        return await ModuleService()
+                            .markModule(token, m.id!, val);
+                      },
                       title: title,
                       onPressed: () {},
                     );
                   case ModuleName.quiz:
                     return QuizItem(
+                      completed: m.isCompleted,
+                      onCompletionChange: (val) async {
+                        return await ModuleService()
+                            .markModule(token, m.id!, val);
+                      },
                       title: title,
                       quizInstanceId: m.instance ?? 0,
                       courseId: widget.courseId,
@@ -464,11 +497,21 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                       url += '?token=' + token;
                     }
                     return DocumentItem(
+                      completed: m.isCompleted,
+                      onCompletionChange: (val) async {
+                        return await ModuleService()
+                            .markModule(token, m.id!, val);
+                      },
                       title: title,
                       documentUrl: url,
                     );
                   case ModuleName.url:
                     return UrlItem(
+                      completed: m.isCompleted,
+                      onCompletionChange: (val) async {
+                        return await ModuleService()
+                            .markModule(token, m.id!, val);
+                      },
                       title: title,
                       url: m.contents?[0].fileurl ?? '',
                     );
