@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:intl/intl.dart';
+import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/data/network/apis/assignment/assignment_api.dart';
 import 'package:moodle_mobile/models/assignment/attemp_assignment.dart';
 import 'package:moodle_mobile/models/assignment/feedback.dart';
@@ -340,7 +342,80 @@ class _FilesAssignmentTeacherScreenState
                           flex: 1,
                           child: TabBarView(children: [
                             Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    top: 16,
+                                    left: 16,
+                                  ),
+                                  child: Text("Time remaining",
+                                      style: TextStyle(fontSize: 16)),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    top: 16,
+                                    left: 18,
+                                  ),
+                                  child: Text(dateDiffSubmit(widget.duedate),
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          color: MoodleColors.gray)),
+                                ),
+                                const Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 16, left: 16),
+                                    child: Text("Editing Status",
+                                        style: TextStyle(fontSize: 16))),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    top: 16,
+                                    left: 18,
+                                  ),
+                                  child: Text(
+                                      (attempt.caneditowner ?? false)
+                                          ? "Student can edit this submission"
+                                          : "Student can't edit this submission",
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.orange[400])),
+                                ),
+                                const Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 16, left: 16),
+                                    child: Text("Last modified",
+                                        style: TextStyle(fontSize: 16))),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.only(top: 16, left: 16),
+                                  child: Builder(builder: (context) {
+                                    final date =
+                                        DateTime.fromMillisecondsSinceEpoch(
+                                            (attempt.submission?.timemodified ??
+                                                    0) *
+                                                1000);
+                                    final str = (date ==
+                                            DateTime.fromMillisecondsSinceEpoch(
+                                                0))
+                                        ? "Not modified"
+                                        : DateFormat(
+                                                "EEEE, dd MMMM yyyy, hh:mmaa",
+                                                Localizations.localeOf(context)
+                                                    .languageCode)
+                                            .format(date);
+                                    return Text(str,
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: MoodleColors.gray));
+                                  }),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.only(top: 16, left: 16),
+                                  child: Text("File submission",
+                                      style: TextStyle(fontSize: 16)),
+                                ),
                                 ListView.builder(
                                   padding: const EdgeInsets.only(top: 0),
                                   shrinkWrap: true,
@@ -352,9 +427,91 @@ class _FilesAssignmentTeacherScreenState
                                     );
                                   },
                                 ),
+                                ListTile(
+                                  title: Padding(
+                                    padding: EdgeInsets.only(top: 4),
+                                    child:
+                                        Text("Được chấm bởi giáo viên teacher"),
+                                  ),
+                                  subtitle: Text("Comments"),
+                                  trailing: Padding(
+                                    padding: const EdgeInsets.only(top: 15),
+                                    child: const Icon(Icons.arrow_forward_ios),
+                                  ),
+                                ),
                               ],
                             ),
-                            const Expanded(child: Text("123"))
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(top: 16, left: 16),
+                                  child: Text("Grade out of 100",
+                                      style: TextStyle(fontSize: 16)),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 16.0),
+                                  child: TextField(
+                                    style: TextStyle(fontSize: 14),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(top: 16, left: 16),
+                                  child: Text("Current grade in grade book",
+                                      style: TextStyle(fontSize: 16)),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(top: 16, left: 18),
+                                  child: Text(
+                                      double.tryParse(
+                                                  feedBack.grade?.grade ?? "")
+                                              ?.toString() ??
+                                          "",
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          color: MoodleColors.gray)),
+                                ),
+                                ListTile(
+                                  title: Padding(
+                                    padding: EdgeInsets.only(top: 16),
+                                    child: Text("Feedback comment",
+                                        style: TextStyle(fontSize: 16)),
+                                  ),
+                                  subtitle: Padding(
+                                    padding: EdgeInsets.only(top: 16),
+                                    child: Text(
+                                        feedBack.plugins?[0].editorfields?[0]
+                                                .text ??
+                                            "",
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: MoodleColors.gray)),
+                                  ),
+                                  trailing: Icon(Icons.edit),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(top: 20.0),
+                                  child: ListTile(
+                                    leading: UserAvatarCommon(
+                                        imageURL:
+                                            "https://www.w3schools.com/w3css/lights.jpg"),
+                                    title: Padding(
+                                      padding: EdgeInsets.only(top: 4),
+                                      child: Text("Grade by teacher teacher "),
+                                    ),
+                                    subtitle: Padding(
+                                      padding: EdgeInsets.only(top: 8),
+                                      child: Text(
+                                          "thứ năm, 11 tháng 8 2022, 7:57 CH"),
+                                    ),
+                                    trailing: Padding(
+                                      padding: EdgeInsets.only(top: 15),
+                                      child: Icon(Icons.arrow_forward_ios),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
                           ]),
                         )
 
