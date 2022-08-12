@@ -20,7 +20,7 @@ class PollContainer extends StatefulWidget {
 }
 
 class _PollContainerState extends State<PollContainer> {
-  late Poll? poll;
+  Poll? poll;
   bool isLoading = false;
 
   List<PollOption> options = [];
@@ -72,6 +72,7 @@ class _PollContainerState extends State<PollContainer> {
 
   @override
   Widget build(BuildContext context) {
+    if (poll == null) return Container();
     return isLoading == false
         ? Container()
         : Container(
