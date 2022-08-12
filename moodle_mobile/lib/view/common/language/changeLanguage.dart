@@ -15,37 +15,37 @@ class _SetListLangTilesState extends State<SetListLangTiles> {
       children: <Widget>[
         ListTile(
           title: Text(AppLocalizations.of(context)!.default_language),
-          leading: Radio<String>(
-              value: "default",
-              groupValue: widget.language,
-              onChanged: (val) {
-                setState(() {
-                  widget.language = val!;
-                });
-              }),
+          onTap: () {
+            setState(() {
+              widget.language = "default";
+            });
+          },
+          leading: widget.language == "default"
+              ? const Icon(Icons.check_circle)
+              : const Icon(Icons.check),
         ),
         ListTile(
           title: Text("English"),
+          onTap: () {
+            setState(() {
+              widget.language = "en";
+            });
+          },
           // ignore: unnecessary_new
-          leading: new Radio<String>(
-              value: "en",
-              groupValue: widget.language,
-              onChanged: (val) {
-                setState(() {
-                  widget.language = val!;
-                });
-              }),
+          leading: widget.language == "en"
+              ? const Icon(Icons.check_circle)
+              : const Icon(Icons.check),
         ),
         ListTile(
           title: Text("Việt Nam"),
-          leading: Radio<String>(
-              value: "vi",
-              groupValue: widget.language,
-              onChanged: (val) {
-                setState(() {
-                  widget.language = val!;
-                });
-              }),
+          onTap: () {
+            setState(() {
+              widget.language = "vi";
+            });
+          },
+          leading: widget.language == "vi"
+              ? const Icon(Icons.check_circle)
+              : const Icon(Icons.check),
         ),
       ],
     );
