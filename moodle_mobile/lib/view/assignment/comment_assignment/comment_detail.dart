@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
 import 'package:moodle_mobile/data/network/apis/assignment/assignment_api.dart';
 import 'package:moodle_mobile/models/comment/comment.dart';
@@ -33,6 +34,33 @@ class _CommentAssignmentDetailScreenState
     extends State<CommentAssignmentDetailScreen> {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _textEditingController = TextEditingController();
+  late Comment _comment;
+
+  @override
+  void initState() {
+    _comment = widget.comment;
+    super.initState();
+  }
+
+  regetComment() async {
+    Comment tempComment =
+        await readComment(widget.assignCmdId, widget.submissionId);
+    setState(() {
+      _comment = tempComment;
+    });
+  }
+
+  Future<Comment> readComment(int assignCmdId, int submissionId) async {
+    try {
+      Comment tempComment = await AssignmentApi().getAssignmentComment(
+          widget.userStore.user.token, assignCmdId, submissionId, 0);
+      return tempComment;
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString()), backgroundColor: Colors.red));
+    }
+    return Comment();
+  }
 
   void _onSendPressed() async {
     if (_textEditingController.text.isEmpty) {
@@ -50,7 +78,8 @@ class _CommentAssignmentDetailScreenState
           SnackBar(content: Text(e.toString()), backgroundColor: Colors.red));
     }
 
-    await widget.reLoadComment();
+    widget.reLoadComment();
+    await regetComment();
 
     _scrollController.animateTo(
       0,
@@ -67,6 +96,7 @@ class _CommentAssignmentDetailScreenState
     } else {
       var url = imgs.first.attributes["src"];
       if (url != null) {
+        url = url.replaceAll("pluginfile.php", "webservice/pluginfile.php");
         if (url.contains("?")) {
           url = url + "&token=" + widget.userStore.user.token;
         } else {
@@ -76,6 +106,15 @@ class _CommentAssignmentDetailScreenState
       }
     }
     return "";
+  }
+
+  bool isSameDay(DateTime date1, DateTime date2) {
+    if (date1.day == date2.day &&
+        date1.month == date2.month &&
+        date1.year == date2.year) {
+      return true;
+    }
+    return false;
   }
 
   @override
@@ -100,28 +139,51 @@ class _CommentAssignmentDetailScreenState
               padding: const EdgeInsets.all(8.0),
               reverse: true,
               controller: _scrollController,
-              itemCount: widget.comment.comments?.length ?? 0,
+              itemCount: _comment.comments?.length ?? 0,
               itemBuilder: (_, int index) {
-                return widget.comment.comments?[index].userid !=
+                bool isSameDate = true;
+
+                final DateTime date = DateTime.fromMillisecondsSinceEpoch(
+                    (_comment.comments?[index].timecreated ?? 0) * 1000);
+
+                // comment widget
+                Widget comment = _comment.comments?[index].userid !=
                         widget.userStore.user.id
                     ? CustomCommentFieldLeft(
-                        senderName:
-                            widget.comment.comments?[index].fullname ?? "",
-                        messageText:
-                            widget.comment.comments?[index].content ?? "",
+                        senderName: _comment.comments?[index].fullname ?? "",
+                        messageText: _comment.comments?[index].content ?? "",
                         urlImage: getUrlImage(
-                          widget.comment.comments?[index].avatar ?? "",
+                          _comment.comments?[index].avatar ?? "",
                         ),
-                      )
+                        hourMinute: DateFormat("hh:mmaa").format(date))
                     : CustomCommentFieldRight(
-                        senderName:
-                            widget.comment.comments?[index].fullname ?? "",
-                        messageText:
-                            widget.comment.comments?[index].content ?? "",
-                        urlImage: getUrlImage(
-                          widget.comment.comments?[index].avatar ?? "",
-                        ),
+                        senderName: _comment.comments?[index].fullname ?? "",
+                        messageText: _comment.comments?[index].content ?? "",
+                        hourMinute: DateFormat("hh:mmaa").format(date),
                       );
+
+                if (index == 0) {
+                  isSameDate = false;
+                } else {
+                  final DateTime prevDate = DateTime.fromMillisecondsSinceEpoch(
+                      (_comment.comments?[index - 1].timecreated ?? 0) * 1000);
+                  isSameDate = isSameDay(date, prevDate);
+                  print(date.toString() +
+                      prevDate.toString() +
+                      isSameDate.toString());
+                }
+
+                if (index == 0 || isSameDate == false) {
+                  return Column(children: [
+                    Text(DateFormat("dd MMMM, yyyy").format(date)),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    comment
+                  ]);
+                } else {
+                  return comment;
+                }
               },
             ),
           ),
@@ -138,19 +200,6 @@ class _CommentAssignmentDetailScreenState
                       borderRadius: Dimens.default_border_radius * 2,
                       maxLines: null,
                       haveLabel: false,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: Dimens.default_padding),
-                    child: TextButton(
-                      style: TextButton.styleFrom(
-                        minimumSize: Size.zero,
-                        padding: const EdgeInsets.all(8),
-                        shape: const CircleBorder(),
-                      ),
-                      onPressed: () {},
-                      child: const Icon(Icons.image_rounded, size: 30),
                     ),
                   ),
                   TextButton(

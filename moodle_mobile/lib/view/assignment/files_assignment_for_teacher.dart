@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:moodle_mobile/constants/colors.dart';
@@ -18,9 +17,10 @@ import 'package:moodle_mobile/models/comment/comment.dart';
 import 'package:moodle_mobile/models/user/user_overview.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:moodle_mobile/view/assignment/comment_assignment/comment_detail.dart';
 import 'package:moodle_mobile/view/assignment/file_assignment_teacher_tile.dart';
-import 'package:moodle_mobile/view/common/custom_button_short.dart';
 import 'package:moodle_mobile/view/common/user/user_avatar_common.dart';
+import 'package:moodle_mobile/view/user_detail/user_detail.dart';
 
 class FilesAssignmentTeacherScreen extends StatefulWidget {
   final int assignId;
@@ -44,7 +44,7 @@ class FilesAssignmentTeacherScreen extends StatefulWidget {
 }
 
 class _FilesAssignmentTeacherScreenState
-    extends State<FilesAssignmentTeacherScreen> {
+    extends State<FilesAssignmentTeacherScreen> with TickerProviderStateMixin {
   AttemptAssignment attempt = AttemptAssignment();
   FeedBack feedBack = FeedBack();
   Comment comment = Comment();
@@ -64,7 +64,6 @@ class _FilesAssignmentTeacherScreenState
     if ((temp3.grade?.grader) != null) {
       List<UserOverview> list = await UserApi(getIt<DioClient>())
           .getUserById(_userStore.user.token, temp3.grade!.grader!);
-      print(list.toString());
       if (list.isNotEmpty) {
         setState(() {
           _userOverview = list[0];
@@ -244,7 +243,7 @@ class _FilesAssignmentTeacherScreenState
               snap: true,
               title: Text(
                 AppLocalizations.of(context)!.submission,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 20,
                 ),
@@ -258,29 +257,34 @@ class _FilesAssignmentTeacherScreenState
               ),
               actions: [
                 // isLoading == false && widget.usersubmitted.submitted == true
-                IconButton(
-                    onPressed: () async {
-                      var dou = double.tryParse(gradeController.text);
-                      if (dou == null) {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text("Input grade invalid"),
-                          backgroundColor: Colors.red,
-                        ));
-                        return;
-                      }
-                      print("auo");
-                      var check = await AssignmentApi().saveGrade(
-                          _userStore.user.token,
-                          widget.assignId,
-                          widget.usersubmitted.id ?? 0,
-                          dou,
-                          commentController.text);
-                      if (check == true) {
-                        Navigator.pop(context);
-                      }
-                    },
-                    iconSize: Dimens.appbar_icon_size,
-                    icon: Icon(CupertinoIcons.checkmark, color: Colors.white))
+
+                widget.usersubmitted.submitted == true
+                    ? IconButton(
+                        onPressed: () async {
+                          var dou = double.tryParse(gradeController.text);
+                          if (dou == null) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text(AppLocalizations.of(context)!
+                                  .input_grade_invalid),
+                              backgroundColor: Colors.red,
+                            ));
+                            return;
+                          }
+                          var check = await AssignmentApi().saveGrade(
+                              _userStore.user.token,
+                              widget.assignId,
+                              widget.usersubmitted.id ?? 0,
+                              dou,
+                              commentController.text);
+                          if (check == true) {
+                            Navigator.pop(context);
+                          }
+                        },
+                        iconSize: Dimens.appbar_icon_size,
+                        icon: const Icon(CupertinoIcons.checkmark,
+                            color: Colors.white),
+                      )
+                    : Container()
               ],
             ),
           ],
@@ -335,9 +339,10 @@ class _FilesAssignmentTeacherScreenState
                                           right: 10,
                                           bottom: 5,
                                           top: 5),
-                                      child: const Text(
-                                        'Đã chấm điểm',
-                                        style: TextStyle(
+                                      child: Text(
+                                        AppLocalizations.of(context)!
+                                            .assignment_was_grading,
+                                        style: const TextStyle(
                                             color: Colors.white,
                                             fontSize: 10,
                                             fontWeight: FontWeight.bold),
@@ -357,9 +362,10 @@ class _FilesAssignmentTeacherScreenState
                                           right: 10,
                                           bottom: 5,
                                           top: 5),
-                                      child: const Text(
-                                        'Không có bài nộp',
-                                        style: TextStyle(
+                                      child: Text(
+                                        AppLocalizations.of(context)!
+                                            .no_submision,
+                                        style: const TextStyle(
                                             color: Colors.white,
                                             fontSize: 10,
                                             fontWeight: FontWeight.bold),
@@ -379,9 +385,10 @@ class _FilesAssignmentTeacherScreenState
                                           right: 10,
                                           bottom: 5,
                                           top: 5),
-                                      child: const Text(
-                                        'Đã nộp đẻ chấm điểm',
-                                        style: TextStyle(
+                                      child: Text(
+                                        AppLocalizations.of(context)!
+                                            .submit_for_grade,
+                                        style: const TextStyle(
                                             color: Colors.white,
                                             fontSize: 10,
                                             fontWeight: FontWeight.bold),
@@ -391,17 +398,21 @@ class _FilesAssignmentTeacherScreenState
                             ],
                           ),
                         ),
-
-                        const TabBar(
+                        TabBar(
                           tabs: [
-                            Tab(child: Text("Bài nộp")),
-                            Tab(child: Text("Điểm")),
+                            Tab(
+                              child: Text(
+                                  AppLocalizations.of(context)!.submission),
+                            ),
+                            Tab(
+                              child: Text(AppLocalizations.of(context)!
+                                  .grade_assignment),
+                            )
                           ],
                           labelColor: Colors.black,
                           indicatorColor: Colors.orange,
                           indicatorWeight: 3,
                         ),
-
                         Expanded(
                           flex: 1,
                           child: TabBarView(children: [
@@ -414,8 +425,9 @@ class _FilesAssignmentTeacherScreenState
                                     top: 16,
                                     left: 16,
                                   ),
-                                  child: Text("Time remaining",
-                                      style: TextStyle(fontSize: 16)),
+                                  child: Text(
+                                      AppLocalizations.of(context)!.time_remain,
+                                      style: const TextStyle(fontSize: 16)),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(
@@ -423,15 +435,17 @@ class _FilesAssignmentTeacherScreenState
                                     left: 18,
                                   ),
                                   child: Text(dateDiffSubmit(widget.duedate),
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           fontSize: 14,
                                           color: MoodleColors.gray)),
                                 ),
-                                const Padding(
+                                Padding(
                                     padding: const EdgeInsets.only(
                                         top: 16, left: 16),
-                                    child: Text("Editing Status",
-                                        style: TextStyle(fontSize: 16))),
+                                    child: Text(
+                                        AppLocalizations.of(context)!
+                                            .edit_status,
+                                        style: const TextStyle(fontSize: 16))),
                                 Padding(
                                   padding: const EdgeInsets.only(
                                     top: 16,
@@ -439,17 +453,21 @@ class _FilesAssignmentTeacherScreenState
                                   ),
                                   child: Text(
                                       (attempt.caneditowner ?? false)
-                                          ? "Student can edit this submission"
-                                          : "Student can't edit this submission",
+                                          ? AppLocalizations.of(context)!
+                                              .student_can_edit_submission
+                                          : AppLocalizations.of(context)!
+                                              .student_cant_edit_submission,
                                       style: TextStyle(
                                           fontSize: 14,
                                           color: Colors.orange[400])),
                                 ),
-                                const Padding(
+                                Padding(
                                     padding: const EdgeInsets.only(
                                         top: 16, left: 16),
-                                    child: Text("Last modified",
-                                        style: TextStyle(fontSize: 16))),
+                                    child: Text(
+                                        AppLocalizations.of(context)!
+                                            .last_modified,
+                                        style: const TextStyle(fontSize: 16))),
                                 Padding(
                                   padding:
                                       const EdgeInsets.only(top: 16, left: 16),
@@ -462,14 +480,15 @@ class _FilesAssignmentTeacherScreenState
                                     final str = (date ==
                                             DateTime.fromMillisecondsSinceEpoch(
                                                 0))
-                                        ? "Not modified"
+                                        ? AppLocalizations.of(context)!
+                                            .not_modified
                                         : DateFormat(
                                                 "EEEE, dd MMMM yyyy, hh:mmaa",
                                                 Localizations.localeOf(context)
                                                     .languageCode)
                                             .format(date);
                                     return Text(str,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontSize: 14,
                                             color: MoodleColors.gray));
                                   }),
@@ -477,8 +496,10 @@ class _FilesAssignmentTeacherScreenState
                                 Padding(
                                   padding:
                                       const EdgeInsets.only(top: 16, left: 16),
-                                  child: Text("File submission",
-                                      style: TextStyle(fontSize: 16)),
+                                  child: Text(
+                                      AppLocalizations.of(context)!
+                                          .file_submission,
+                                      style: const TextStyle(fontSize: 16)),
                                 ),
                                 ListView.builder(
                                   padding: const EdgeInsets.only(top: 0),
@@ -492,21 +513,46 @@ class _FilesAssignmentTeacherScreenState
                                   },
                                 ),
                                 ListTile(
+                                  onTap: () {
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(builder: (_) {
+                                      return CommentAssignmentDetailScreen(
+                                        comment: comment,
+                                        reLoadComment: () async {
+                                          if (attempt.submission?.id != null) {
+                                            Comment _comment =
+                                                await readComment(
+                                                    widget.assignmentModuleId,
+                                                    attempt.submission!.id!);
+                                            setState(() {
+                                              comment = _comment;
+                                            });
+                                          }
+                                        },
+                                        userStore: _userStore,
+                                        assignCmdId: widget.assignmentModuleId,
+                                        submissionId:
+                                            attempt.submission?.id ?? 0,
+                                      );
+                                    }));
+                                  },
                                   title: Padding(
-                                    padding: EdgeInsets.only(top: 4),
-                                    child:
-                                        Text("Được chấm bởi giáo viên teacher"),
+                                    padding: const EdgeInsets.only(top: 4),
+                                    child: Text(AppLocalizations.of(context)!
+                                        .submission_comments),
                                   ),
                                   subtitle: Text(
-                                    "Comments (" +
+                                    AppLocalizations.of(context)!.comments +
+                                        " (" +
                                         (comment.comments?.length.toString() ??
                                             "0") +
                                         ")",
-                                    style: TextStyle(color: MoodleColors.blue),
+                                    style: const TextStyle(
+                                        color: MoodleColors.blue),
                                   ),
-                                  trailing: Padding(
-                                    padding: const EdgeInsets.only(top: 15),
-                                    child: const Icon(Icons.arrow_forward_ios),
+                                  trailing: const Padding(
+                                    padding: EdgeInsets.only(top: 15),
+                                    child: Icon(Icons.arrow_forward_ios),
                                   ),
                                 ),
                               ],
@@ -515,44 +561,52 @@ class _FilesAssignmentTeacherScreenState
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Padding(
-                                  padding: EdgeInsets.only(top: 16, left: 16),
-                                  child: Text("Grade out of 100",
-                                      style: TextStyle(fontSize: 16)),
+                                  padding:
+                                      const EdgeInsets.only(top: 16, left: 16),
+                                  child: Text(
+                                      AppLocalizations.of(context)!.grade_float,
+                                      style: const TextStyle(fontSize: 16)),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(left: 16.0),
+                                  padding: const EdgeInsets.only(left: 16.0),
                                   child: TextField(
                                     controller: gradeController,
-                                    style: TextStyle(fontSize: 14),
+                                    style: const TextStyle(fontSize: 14),
                                   ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(top: 16, left: 16),
-                                  child: Text("Current grade in grade book",
-                                      style: TextStyle(fontSize: 16)),
+                                  padding:
+                                      const EdgeInsets.only(top: 16, left: 16),
+                                  child: Text(
+                                      AppLocalizations.of(context)!
+                                          .current_grade,
+                                      style: const TextStyle(fontSize: 16)),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(top: 16, left: 18),
+                                  padding:
+                                      const EdgeInsets.only(top: 16, left: 18),
                                   child: Text(
                                       double.tryParse(
                                                   feedBack.grade?.grade ?? "")
                                               ?.toString() ??
                                           "",
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           fontSize: 14,
                                           color: MoodleColors.gray)),
                                 ),
                                 ListTile(
                                   title: Padding(
-                                    padding: EdgeInsets.only(top: 16),
-                                    child: Text("Feedback comment",
-                                        style: TextStyle(fontSize: 16)),
+                                    padding: const EdgeInsets.only(top: 16),
+                                    child: Text(
+                                        AppLocalizations.of(context)!
+                                            .feedback_comment,
+                                        style: const TextStyle(fontSize: 16)),
                                   ),
                                   subtitle: Padding(
-                                    padding: EdgeInsets.only(top: 16),
+                                    padding: const EdgeInsets.only(top: 16),
                                     child: TextField(
                                         controller: commentController,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontSize: 14,
                                             color: MoodleColors.gray)),
                                   ),
@@ -560,9 +614,19 @@ class _FilesAssignmentTeacherScreenState
                                 feedBack.grade == null
                                     ? Container()
                                     : Padding(
-                                        padding: EdgeInsets.only(top: 20.0),
+                                        padding:
+                                            const EdgeInsets.only(top: 20.0),
                                         child: ListTile(
-                                          onTap: () {},
+                                          onTap: () {
+                                            Navigator.of(context).push(
+                                                MaterialPageRoute(builder: (_) {
+                                              return UserDetailsScreen(
+                                                id: _userOverview?.id ?? 0,
+                                                userStore: _userStore,
+                                                courseName: null,
+                                              );
+                                            }));
+                                          },
                                           leading: UserAvatarCommon(
                                               imageURL: ((_userOverview
                                                               ?.profileimageurl ??
@@ -585,13 +649,15 @@ class _FilesAssignmentTeacherScreenState
                                                       "?token=" +
                                                       _userStore.user.token)),
                                           title: Padding(
-                                            padding: EdgeInsets.only(top: 4),
+                                            padding:
+                                                const EdgeInsets.only(top: 4),
                                             child: Text("Grade by teacher" +
                                                 (_userOverview?.fullname ??
                                                     "")),
                                           ),
                                           subtitle: Padding(
-                                            padding: EdgeInsets.only(top: 8),
+                                            padding:
+                                                const EdgeInsets.only(top: 8),
                                             child: Builder(builder: (context) {
                                               final date = DateTime
                                                   .fromMillisecondsSinceEpoch(
@@ -603,7 +669,9 @@ class _FilesAssignmentTeacherScreenState
                                                       DateTime
                                                           .fromMillisecondsSinceEpoch(
                                                               0))
-                                                  ? "Not modified"
+                                                  ? AppLocalizations.of(
+                                                          context)!
+                                                      .not_modified
                                                   : DateFormat(
                                                           "EEEE, dd MMMM yyyy, hh:mmaa",
                                                           Localizations
@@ -612,13 +680,13 @@ class _FilesAssignmentTeacherScreenState
                                                               .languageCode)
                                                       .format(date);
                                               return Text(str,
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                       fontSize: 14,
                                                       color:
                                                           MoodleColors.gray));
                                             }),
                                           ),
-                                          trailing: Padding(
+                                          trailing: const Padding(
                                             padding: EdgeInsets.only(top: 15),
                                             child:
                                                 Icon(Icons.arrow_forward_ios),
@@ -629,19 +697,6 @@ class _FilesAssignmentTeacherScreenState
                             )
                           ]),
                         )
-
-                        // const SizedBox(
-                        //   height: 10,
-                        // ),
-                        // feedBack.grade == null
-                        //     ? Column(
-                        //         // if have grade
-                        //         children: [],
-                        //       )
-                        //     : Column(
-                        //         // if don't have grade
-                        //         children: [],
-                        //       ),
                       ],
                     ),
                   ),

@@ -15,9 +15,12 @@ class CustomCommentFieldLeft extends StatelessWidget {
     required this.messageText,
     required this.senderName,
     required this.urlImage,
+    required this.hourMinute,
   }) : super(key: key);
   final String messageText;
   final String senderName;
+  final String hourMinute;
+
   final String urlImage;
 
   bool get noText => Bidi.stripHtmlIfNeeded(messageText).trim().isEmpty;
@@ -29,66 +32,75 @@ class CustomCommentFieldLeft extends StatelessWidget {
       child: Row(
         children: [
           ConstrainedBox(
+            constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width * 1 / 7),
+            child: CircleImageView(
+              fit: BoxFit.cover,
+              width: 25,
+              height: 25,
+              imageUrl: urlImage,
+              placeholder: const FittedBox(
+                  child: Padding(
+                padding: EdgeInsets.all(5),
+                child: Icon(Icons.person),
+              )),
+            ),
+          ),
+          ConstrainedBox(
               constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.width * 2 / 3),
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: Dimens.default_padding),
-                child: Column(
-                  children: [
-                    Text(
-                      senderName,
-                      style: const TextStyle(color: MoodleColors.blue),
-                    ),
-                    Row(
-                      children: [
-                        CircleImageView(
-                          fit: BoxFit.cover,
-                          imageUrl: urlImage,
-                          placeholder: const FittedBox(
-                              child: Padding(
-                            padding: EdgeInsets.all(8),
-                            child: Icon(Icons.person),
-                          )),
+                  maxWidth: MediaQuery.of(context).size.width * 5 / 7),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        hourMinute,
+                        textScaleFactor: 0.9,
+                        style: TextStyle(
+                          color: MoodleColors.grey,
                         ),
-                        RichTextCard(
-                            text: messageText,
-                            style: MoodleStyles.leftMessageTextStyle,
-                            hasPadding: noText,
-                            customData: {
-                              imgMatcher(): CustomRender.widget(
-                                  widget: (renderContext, buildChildren) {
-                                final attrs =
-                                    renderContext.tree.element?.attributes;
-                                final url = attrs?['src'] ?? '';
-                                return RoundedImageView(
-                                  imageUrl: url,
-                                  width: double.infinity,
-                                  height: null,
-                                  fit: BoxFit.fitWidth,
-                                  placeholder:
-                                      const Icon(Icons.broken_image_rounded),
-                                  onClick: () {
-                                    Navigator.of(context)
-                                        .push(MaterialPageRoute(
-                                            builder: (_) => ImageViewer(
-                                                  title: 'Image',
-                                                  url: url,
-                                                )));
-                                  },
-                                );
-                              }),
-                            }),
-                      ],
-                    ),
-                  ],
-                ),
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(Dimens.default_border_radius * 3),
+                      ),
+                    ],
                   ),
-                  color: MoodleColors.brightGray,
-                ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: Dimens.default_padding),
+                    child: RichTextCard(
+                        text: messageText,
+                        style: MoodleStyles.leftMessageTextStyle,
+                        hasPadding: noText,
+                        customData: {
+                          imgMatcher(): CustomRender.widget(
+                              widget: (renderContext, buildChildren) {
+                            final attrs =
+                                renderContext.tree.element?.attributes;
+                            final url = attrs?['src'] ?? '';
+                            return RoundedImageView(
+                              imageUrl: url,
+                              width: double.infinity,
+                              height: null,
+                              fit: BoxFit.fitWidth,
+                              placeholder:
+                                  const Icon(Icons.broken_image_rounded),
+                              onClick: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (_) => ImageViewer(
+                                          title: 'Image',
+                                          url: url,
+                                        )));
+                              },
+                            );
+                          }),
+                        }),
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(Dimens.default_border_radius * 3),
+                      ),
+                      color: MoodleColors.brightGray,
+                    ),
+                  ),
+                ],
               )),
         ],
       ),
@@ -101,11 +113,11 @@ class CustomCommentFieldRight extends StatelessWidget {
     Key? key,
     required this.messageText,
     required this.senderName,
-    required this.urlImage,
+    required this.hourMinute,
   }) : super(key: key);
   final String messageText;
   final String senderName;
-  final String urlImage;
+  final String hourMinute;
 
   bool get noText => Bidi.stripHtmlIfNeeded(messageText).trim().isEmpty;
 
@@ -120,26 +132,25 @@ class CustomCommentFieldRight extends StatelessWidget {
           ConstrainedBox(
             constraints: BoxConstraints(
                 maxWidth: MediaQuery.of(context).size.width * 2 / 3),
-            child: Container(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: Dimens.default_padding),
-              child: Column(
-                children: [
-                  Text(
-                    senderName,
-                    style: const TextStyle(color: MoodleColors.blue),
-                  ),
-                  Row(
-                    children: [
-                      CircleImageView(
-                        fit: BoxFit.cover,
-                        imageUrl: urlImage,
-                        placeholder: const FittedBox(
-                            child: Padding(
-                          padding: EdgeInsets.all(8),
-                          child: Icon(Icons.person),
-                        )),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      hourMinute,
+                      textScaleFactor: 0.9,
+                      style: TextStyle(
+                        color: MoodleColors.grey,
                       ),
+                    ),
+                  ],
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: Dimens.default_padding),
+                  child: Column(
+                    children: [
                       RichTextCard(
                           text: messageText,
                           style: MoodleStyles.rightMessageTextStyle,
@@ -169,14 +180,14 @@ class CustomCommentFieldRight extends StatelessWidget {
                           }),
                     ],
                   ),
-                ],
-              ),
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(Dimens.default_border_radius * 3),
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(Dimens.default_border_radius * 3),
+                    ),
+                    color: MoodleColors.blue,
+                  ),
                 ),
-                color: MoodleColors.blue,
-              ),
+              ],
             ),
           ),
         ],
