@@ -51,66 +51,68 @@ class MenuItem extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
-      child: TextButton.icon(
-        style: TextButton.styleFrom(
-          primary: Theme.of(context).colorScheme.surface,
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          minimumSize: Size((fullWidth ?? false) ? double.infinity : 0, 0),
-          alignment: Alignment.centerLeft,
-        ),
-        onPressed: onPressed,
+      child: Column(children: [
+        TextButton.icon(
+          style: TextButton.styleFrom(
+            primary: Theme.of(context).colorScheme.surface,
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            minimumSize: Size((fullWidth ?? false) ? double.infinity : 0, 0),
+            alignment: Alignment.centerLeft,
+          ),
+          onPressed: onPressed,
 
-        // Icon enclosed in a circle on the left
-        icon: Padding(
-          padding: const EdgeInsets.only(right: 4),
-          child: CircleAvatar(
-            backgroundColor: color.withOpacity(.25),
-            foregroundColor: color,
-            child: circleWidget,
+          // Icon enclosed in a circle on the left
+          icon: Padding(
+            padding: const EdgeInsets.only(right: 4),
+            child: CircleAvatar(
+              backgroundColor: color.withOpacity(.25),
+              foregroundColor: color,
+              child: circleWidget,
+            ),
+          ),
+
+          // 1-2 rows of text on the right
+          label: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Title
+              Text(
+                title,
+                softWrap: true,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface,
+                  fontSize: 17.5,
+                  height: 1,
+                ),
+              ),
+
+              // Optional subtitle
+              Builder(builder: (context) {
+                if (subtitle != null) {
+                  if (subtitle!.isNotEmpty) {
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: Text(
+                        subtitle!,
+                        maxLines: 1,
+                        style: TextStyle(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withAlpha(64),
+                          fontSize: 14,
+                          height: 1,
+                        ),
+                      ),
+                    );
+                  }
+                }
+                return const SizedBox.shrink();
+              }),
+            ],
           ),
         ),
-
-        // 1-2 rows of text on the right
-        label: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Title
-            Text(
-              title,
-              softWrap: true,
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onSurface,
-                fontSize: 17.5,
-                height: 1,
-              ),
-            ),
-
-            // Optional subtitle
-            Builder(builder: (context) {
-              if (subtitle != null) {
-                if (subtitle!.isNotEmpty) {
-                  return Padding(
-                    padding: const EdgeInsets.only(top: 8),
-                    child: Text(
-                      subtitle!,
-                      maxLines: 1,
-                      style: TextStyle(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withAlpha(64),
-                        fontSize: 14,
-                        height: 1,
-                      ),
-                    ),
-                  );
-                }
-              }
-              return const SizedBox.shrink();
-            }),
-          ],
-        ),
-      ),
+      ]),
     );
   }
 }
@@ -145,8 +147,8 @@ class MenuCard extends StatelessWidget {
     return Card(
       child: InkWell(
         onTap: onPressed,
-        borderRadius: const BorderRadius.all(
-            Radius.circular(Dimens.default_card_radius)),
+        borderRadius:
+            const BorderRadius.all(Radius.circular(Dimens.default_card_radius)),
         child: Stack(
           children: [
             Align(

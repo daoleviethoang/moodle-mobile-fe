@@ -17,6 +17,8 @@ class Wsfunction {
   // module
   static const String GET_MODULE_BY_ID = "core_course_get_course_module";
   static const String MOD_LTI_GET_TLD = "mod_lti_get_tool_launch_data";
+  static const String MARK_DONE_MODULE =
+      "core_completion_update_activity_completion_status_manually";
 
   //user
   static const String GET_COURSE_GET_CATEGORIES = "core_course_get_categories";

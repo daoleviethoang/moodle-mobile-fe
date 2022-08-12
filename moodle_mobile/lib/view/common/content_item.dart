@@ -21,21 +21,110 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'image_view.dart';
 
+class _ModuleWrapper extends StatelessWidget {
+  final bool? completed;
+  final Function(bool)? onCompletionChange;
+  final Widget child;
+
+  const _ModuleWrapper({
+    Key? key,
+    this.completed,
+    this.onCompletionChange,
+    required this.child,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        child,
+        if (completed != null)
+          Padding(
+            padding: const EdgeInsets.only(left: 32),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: completed! ? MoodleColors.blue : Colors.white,
+              ),
+              onPressed: onCompletionChange == null
+                  ? () {}
+                  : () => onCompletionChange!(!completed!),
+              child: Text("Mark done",
+                  style: TextStyle(
+                    color: completed! ? Colors.white : MoodleColors.blue,
+                  )),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+class ModuleItem extends StatelessWidget {
+  final bool? completed;
+  final Function(bool)? onCompletionChange;
+
+  final Widget? icon;
+  final Widget? image;
+  final Color? color;
+  final String title;
+  final String? subtitle;
+  final bool? fullWidth;
+  final VoidCallback? onPressed;
+
+  const ModuleItem({
+    Key? key,
+    this.completed,
+    this.onCompletionChange,
+    this.icon,
+    this.image,
+    this.color,
+    required this.title,
+    this.subtitle,
+    this.fullWidth,
+    required this.onPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return _ModuleWrapper(
+      completed: completed,
+      onCompletionChange: onCompletionChange,
+      child: m.MenuItem(
+        icon: icon,
+        image: image,
+        color: color,
+        title: title,
+        subtitle: subtitle,
+        fullWidth: fullWidth,
+        onPressed: onPressed,
+      ),
+    );
+  }
+}
+
 // region Icon and text
 
 class ForumItem extends StatelessWidget {
+  final bool? completed;
+  final Function(bool)? onCompletionChange;
+
   final String title;
   final VoidCallback? onPressed;
 
   const ForumItem({
     Key? key,
+    this.completed,
+    this.onCompletionChange,
     required this.title,
     required this.onPressed,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return m.MenuItem(
+    return ModuleItem(
+      completed: completed,
+      onCompletionChange: onCompletionChange,
       icon: const Icon(Icons.forum_outlined),
       color: Colors.amber,
       title: title,
@@ -46,18 +135,25 @@ class ForumItem extends StatelessWidget {
 }
 
 class ChatItem extends StatelessWidget {
+  final bool? completed;
+  final Function(bool)? onCompletionChange;
+
   final String title;
   final VoidCallback? onPressed;
 
   const ChatItem({
     Key? key,
+    this.completed,
+    this.onCompletionChange,
     required this.title,
     required this.onPressed,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return m.MenuItem(
+    return ModuleItem(
+      completed: completed,
+      onCompletionChange: onCompletionChange,
       icon: const Icon(CupertinoIcons.chat_bubble_2),
       color: Colors.amber,
       title: title,
@@ -68,18 +164,25 @@ class ChatItem extends StatelessWidget {
 }
 
 class DocumentItem extends StatelessWidget {
+  final bool? completed;
+  final Function(bool)? onCompletionChange;
+
   final String title;
   final String documentUrl;
 
   const DocumentItem({
     Key? key,
+    this.completed,
+    this.onCompletionChange,
     required this.title,
     required this.documentUrl,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return m.MenuItem(
+    return ModuleItem(
+      completed: completed,
+      onCompletionChange: onCompletionChange,
       icon: const Icon(CupertinoIcons.book),
       color: Colors.pink,
       title: title,
@@ -104,18 +207,25 @@ class DocumentItem extends StatelessWidget {
 }
 
 class VideoItem extends StatelessWidget {
+  final bool? completed;
+  final Function(bool)? onCompletionChange;
+
   final String title;
   final String videoUrl;
 
   const VideoItem({
     Key? key,
+    this.completed,
+    this.onCompletionChange,
     required this.title,
     required this.videoUrl,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return m.MenuItem(
+    return ModuleItem(
+      completed: completed,
+      onCompletionChange: onCompletionChange,
       icon: const Icon(CupertinoIcons.video_camera),
       color: Colors.green,
       title: title,
@@ -133,12 +243,17 @@ class VideoItem extends StatelessWidget {
 }
 
 class UrlItem extends StatelessWidget {
+  final bool? completed;
+  final Function(bool)? onCompletionChange;
+
   final String title;
   final String url;
   final int? id;
 
   const UrlItem({
     Key? key,
+    this.completed,
+    this.onCompletionChange,
     required this.title,
     required this.url,
     this.id,
@@ -146,7 +261,9 @@ class UrlItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return m.MenuItem(
+    return ModuleItem(
+      completed: completed,
+      onCompletionChange: onCompletionChange,
       icon: const Icon(CupertinoIcons.link),
       color: Colors.deepPurple,
       title: title,
@@ -185,6 +302,9 @@ class UrlItem extends StatelessWidget {
 }
 
 class SubmissionItem extends StatelessWidget {
+  final bool? completed;
+  final Function(bool)? onCompletionChange;
+
   final String title;
   final int submissionId;
   final bool? isTeacher;
@@ -193,6 +313,8 @@ class SubmissionItem extends StatelessWidget {
 
   const SubmissionItem({
     Key? key,
+    this.completed,
+    this.onCompletionChange,
     required this.title,
     required this.submissionId,
     this.dueDate,
@@ -202,7 +324,9 @@ class SubmissionItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return m.MenuItem(
+    return ModuleItem(
+      completed: completed,
+      onCompletionChange: onCompletionChange,
       icon: const Icon(CupertinoIcons.doc),
       color: MoodleColors.blue,
       title: title,
@@ -226,6 +350,9 @@ class SubmissionItem extends StatelessWidget {
 }
 
 class QuizItem extends StatelessWidget {
+  final bool? completed;
+  final Function(bool)? onCompletionChange;
+
   final String title;
   final int courseId;
   final int quizInstanceId;
@@ -234,6 +361,8 @@ class QuizItem extends StatelessWidget {
 
   const QuizItem({
     Key? key,
+    this.completed,
+    this.onCompletionChange,
     required this.title,
     required this.isTeacher,
     required this.quizInstanceId,
@@ -243,7 +372,9 @@ class QuizItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return m.MenuItem(
+    return ModuleItem(
+      completed: completed,
+      onCompletionChange: onCompletionChange,
       icon: const Icon(CupertinoIcons.question_square),
       color: MoodleColors.blue,
       title: title,
@@ -269,11 +400,16 @@ class QuizItem extends StatelessWidget {
 }
 
 class AttachmentItem extends StatelessWidget {
+  final bool? completed;
+  final Function(bool)? onCompletionChange;
+
   final String? title;
   final String? attachmentUrl;
 
   const AttachmentItem({
     Key? key,
+    this.completed,
+    this.onCompletionChange,
     this.title,
     this.attachmentUrl,
   }) : super(key: key);
@@ -282,7 +418,9 @@ class AttachmentItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return attachmentUrl == null
         ? Container()
-        : m.MenuItem(
+        : ModuleItem(
+            completed: completed,
+            onCompletionChange: onCompletionChange,
             icon: const Icon(CupertinoIcons.doc),
             color: Colors.grey,
             title: title!,
@@ -294,18 +432,25 @@ class AttachmentItem extends StatelessWidget {
 }
 
 class PageItem extends StatelessWidget {
+  final bool? completed;
+  final Function(bool)? onCompletionChange;
+
   final String title;
   final VoidCallback? onPressed;
 
   const PageItem({
     Key? key,
+    this.completed,
+    this.onCompletionChange,
     required this.title,
     required this.onPressed,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return m.MenuItem(
+    return ModuleItem(
+      completed: completed,
+      onCompletionChange: onCompletionChange,
       icon: const Icon(CupertinoIcons.doc_richtext),
       color: Colors.pink,
       title: title,
@@ -316,18 +461,25 @@ class PageItem extends StatelessWidget {
 }
 
 class FolderItem extends StatelessWidget {
+  final bool? completed;
+  final Function(bool)? onCompletionChange;
+
   final String title;
   final int instanceId;
 
   const FolderItem({
     Key? key,
+    this.completed,
+    this.onCompletionChange,
     required this.title,
     required this.instanceId,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return m.MenuItem(
+    return ModuleItem(
+      completed: completed,
+      onCompletionChange: onCompletionChange,
       icon: const Icon(CupertinoIcons.folder),
       color: Colors.grey,
       title: title,
@@ -339,18 +491,25 @@ class FolderItem extends StatelessWidget {
 }
 
 class ZoomItem extends StatelessWidget {
+  final bool? completed;
+  final Function(bool)? onCompletionChange;
+
   final String title;
   final int instanceId;
 
   const ZoomItem({
     Key? key,
+    this.completed,
+    this.onCompletionChange,
     required this.title,
     required this.instanceId,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return m.MenuItem(
+    return ModuleItem(
+      completed: completed,
+      onCompletionChange: onCompletionChange,
       image: const CircleImageView(
         imageUrl:
             'https://st1.zoom.us/static/6.1.6366/image/new/home/meetings.png',
@@ -366,12 +525,17 @@ class ZoomItem extends StatelessWidget {
 }
 
 class EventItem extends StatelessWidget {
+  final bool? completed;
+  final Function(bool)? onCompletionChange;
+
   final String title;
   final DateTime date;
   final Event event;
 
   const EventItem({
     Key? key,
+    this.completed,
+    this.onCompletionChange,
     required this.title,
     required this.date,
     required this.event,
@@ -379,7 +543,9 @@ class EventItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return m.MenuItem(
+    return ModuleItem(
+      completed: completed,
+      onCompletionChange: onCompletionChange,
       icon: const Icon(CupertinoIcons.calendar),
       color: MoodleColors.blue,
       title: title,
@@ -440,6 +606,40 @@ class EventItem extends StatelessWidget {
 // endregion
 
 // region Cards
+
+class LabelItem extends StatelessWidget {
+  final bool? completed;
+  final Function(bool)? onCompletionChange;
+
+  final String? text;
+  final Map<String, Style>? style;
+  final Map<bool Function(RenderContext), CustomRender>? customData;
+  final bool hasPadding;
+
+  const LabelItem({
+    Key? key,
+    this.completed,
+    this.onCompletionChange,
+    required this.text,
+    this.style,
+    this.customData,
+    this.hasPadding = true,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return _ModuleWrapper(
+      completed: completed,
+      onCompletionChange: onCompletionChange,
+      child: RichTextCard(
+        text: text,
+        style: style,
+        customData: customData,
+        hasPadding: hasPadding,
+      ),
+    );
+  }
+}
 
 class RichTextCard extends StatelessWidget {
   final String? text;

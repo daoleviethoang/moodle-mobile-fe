@@ -426,7 +426,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                       );
                     });
                   case ModuleName.label:
-                    return RichTextCard(text: m.description ?? '');
+                    return LabelItem(text: m.description ?? '');
                   case ModuleName.lti:
                     return FutureBuilder(
                       future: queryLti(m.instance ?? 0),
