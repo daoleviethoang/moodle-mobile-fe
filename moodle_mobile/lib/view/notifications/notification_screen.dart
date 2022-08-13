@@ -52,7 +52,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
     await NotificationApi.fetchPopup(_userStore.user.token).then((value) async {
       List<String> temp = [];
       setState(() => _loading = true);
-      for (var t in value!.notificationDetail!) {
+      for (var t in (value?.notificationDetail ?? [])) {
         await CourseDetailService()
             .getCourseById(
                 _userStore.user.token, int.parse(t.customdata!.courseId!))

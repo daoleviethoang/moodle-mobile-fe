@@ -56,7 +56,7 @@ class _MenuScreenState extends State<MenuScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           titlePadding: const EdgeInsets.fromLTRB(50, 30, 50, 10),
-          title: const Text('Choose your language!'),
+          title: Text(AppLocalizations.of(context)!.choose_your_language),
           content: SingleChildScrollView(
             child: Column(
               children: [

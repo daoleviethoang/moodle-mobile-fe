@@ -560,13 +560,16 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     _activityTab = Builder(builder: (context) {
       int? index =
           activityList.isNotEmpty ? _content.indexOf(activityList.first) : null;
-      return ActivityScreen(
-        sectionIndex: (index == null) ? 0 : index,
-        isTeacher: isTeacher,
-        content: (index == null) ? null : _content[index],
-        courseId: widget.courseId,
-        reGetContent: reGetContentForActivityTab,
-      );
+      if (index != null) {
+        return ActivityScreen(
+          sectionIndex: index,
+          isTeacher: isTeacher,
+          content: index != -1 ? _content[index] : null,
+          courseId: widget.courseId,
+          reGetContent: reGetContentForActivityTab,
+        );
+      }
+      return Container();
     });
   }
 
@@ -1148,7 +1151,9 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                                   BorderRadius.all(Radius.circular(8)),
                             ),
                             // unselectedLabelStyle: const TextStyle(fontSize: 0),
-                            onTap: (value) => _tabController?.animateTo(value),
+                            onTap: (value) => setState(() {
+                              _tabController?.animateTo(value);
+                            }),
                           )
                         : null,
                   ),

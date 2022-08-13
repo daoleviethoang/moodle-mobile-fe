@@ -33,11 +33,11 @@ class _PollContainerState extends State<PollContainer> {
   }
 
   Future<void> fetch() async {
-    await PollService.getPollByCouseId(widget.courseId!).then((value) {
+    await PollService.getPollByCouseId(widget.courseId ?? "0").then((value) {
       setState(() {
         poll = value;
         isLoading = true;
-        options = List.generate(poll!.options!.length, (index) {
+        options = List.generate(poll?.options?.length ?? 0, (index) {
           print(poll?.results?['$index']?.length ?? 0);
           return PollOption(
               id: index,
