@@ -4,25 +4,25 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
-import 'package:mobx/mobx.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/data/network/apis/notes/notes_service.dart';
 import 'package:moodle_mobile/models/note/note.dart';
 import 'package:moodle_mobile/models/note/note_search_delegate.dart';
 import 'package:moodle_mobile/models/note/notes.dart';
+import 'package:moodle_mobile/store/navigation/navigation_store.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/data_card.dart';
 import 'package:moodle_mobile/view/common/menu_item.dart';
+import 'package:provider/provider.dart';
 
 import 'note_edit_dialog.dart';
 import 'note_folder.dart';
 
 class NoteList extends StatefulWidget {
-  final Observable<bool>? searchShowFlag;
-
-  const NoteList({Key? key, this.searchShowFlag}) : super(key: key);
+  const NoteList({Key? key}) : super(key: key);
 
   @override
   _NoteListState createState() => _NoteListState();
@@ -31,11 +31,12 @@ class NoteList extends StatefulWidget {
 class _NoteListState extends State<NoteList> {
   Widget _folderView = Container();
   Widget _highlightView = Container();
+  Widget _storeView = Container();
 
   final _notes = Notes();
 
   late UserStore _userStore;
-  Observable<bool>? _searchShowFlag;
+  late NavigationStore _navStore;
 
   String get token => _userStore.user.token;
 
@@ -49,13 +50,8 @@ class _NoteListState extends State<NoteList> {
   void initState() {
     super.initState();
     _userStore = GetIt.instance<UserStore>();
-    _searchShowFlag = widget.searchShowFlag;
-    _searchShowFlag?.observe((p0) {
-      if (_searchShowFlag?.value ?? false) {
-        _searchShowFlag?.toggle();
-        _showSearch();
-      }
-    });
+    WidgetsBinding.instance.addPostFrameCallback(
+        (_) => _navStore = context.read<NavigationStore>());
   }
 
   // region Init widgets
@@ -229,6 +225,20 @@ class _NoteListState extends State<NoteList> {
     );
   }
 
+  void _initStoreView() {
+    // Handle flag in NavigationStore
+    _storeView = Observer(builder: (context) {
+      _navStore.noteSearchShowed;
+      Future.delayed(Duration.zero).then((v) {
+        if (_navStore.noteSearchShowed) {
+          _navStore.toggleNoteSearch();
+          _showSearch();
+        }
+      });
+      return Container();
+    });
+  }
+
   // endregion
 
   void _showSearch() {
@@ -262,6 +272,7 @@ class _NoteListState extends State<NoteList> {
         fromNotes: await NotesService().getNotes(token, _userStore.user.id));
     _initFolderView();
     _initHighlightView();
+    _initStoreView();
   }
 
   @override
@@ -308,6 +319,7 @@ class _NoteListState extends State<NoteList> {
                         padding: const EdgeInsets.only(top: 12, left: 12),
                         child: _highlightView,
                       ),
+                    _storeView,
                   ],
                 ),
               ),

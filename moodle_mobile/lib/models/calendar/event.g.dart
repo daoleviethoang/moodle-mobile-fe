@@ -14,6 +14,7 @@ Event _$EventFromJson(Map<String, dynamic> json) => Event(
       location: json['location'] as String?,
       categoryid: json['categoryid'] as int?,
       groupid: json['groupid'] as int?,
+      courseid: json['courseid'] as int?,
       userid: json['userid'] as int?,
       repeatid: json['repeatid'] as int?,
       eventcount: json['eventcount'] as int?,
@@ -61,6 +62,7 @@ Event _$EventFromJson(Map<String, dynamic> json) => Event(
       cm: json['cm'] == null
           ? null
           : ModuleCourse.fromJson(json['cm'] as Map<String, dynamic>),
+      format: json['format'] as int?,
     );
 
 Map<String, dynamic> _$EventToJson(Event instance) => <String, dynamic>{
@@ -71,6 +73,7 @@ Map<String, dynamic> _$EventToJson(Event instance) => <String, dynamic>{
       'location': instance.location,
       'categoryid': instance.categoryid,
       'groupid': instance.groupid,
+      'courseid': instance.courseid,
       'userid': instance.userid,
       'repeatid': instance.repeatid,
       'eventcount': instance.eventcount,
@@ -108,4 +111,5 @@ Map<String, dynamic> _$EventToJson(Event instance) => <String, dynamic>{
       'maxdayerror': instance.maxdayerror,
       'draggable': instance.draggable,
       'cm': instance.cm,
+      'format': instance.format,
     };

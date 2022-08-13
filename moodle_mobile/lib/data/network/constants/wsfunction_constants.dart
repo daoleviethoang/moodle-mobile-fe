@@ -26,6 +26,8 @@ class Wsfunction {
   static const String GET_CALENDAR_MONTHLY =
       "core_calendar_get_calendar_monthly_view";
   static const String GET_UPCOMING = "core_calendar_get_calendar_upcoming_view";
+  static const String CREATE_EVENTS = "core_calendar_create_calendar_events";
+  static const String DELETE_EVENTS = "core_calendar_delete_calendar_events";
 
   // note
   static const String CREATE_NOTES = "core_notes_create_notes";

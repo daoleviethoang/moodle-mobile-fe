@@ -50,8 +50,7 @@ class CalendarService {
     return events;
   }
 
-  Future<List<Event>> getUpcomingByCourse(
-      String token, int courseId) async {
+  Future<List<Event>> getUpcomingByCourse(String token, int courseId) async {
     try {
       Dio dio = Http().client;
       final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
@@ -73,6 +72,67 @@ class CalendarService {
         print('$e');
       }
       rethrow;
+    }
+  }
+
+  Future<Event> createEvent(String token, Event event) async {
+    try {
+      Dio dio = Http().client;
+      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': Wsfunction.CREATE_EVENTS,
+        'moodlewsrestformat': 'json',
+        'events': [
+          {
+            'name': event.name,
+            'description': event.description,
+            //'userid': event.userid,
+            'eventtype': event.eventtype,
+            'format': event.format,
+            'timestart': event.timestart,
+            'timeduration': event.timeduration,
+          }
+        ],
+      });
+      if (kDebugMode) print(res);
+
+      return event;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Event> updateEvent(String token, Event event) async =>
+      throw 'Unimplemented';
+
+  Future<Event> setEvent(String token, Event event) async {
+    try {
+      if (kDebugMode) print(event.id);
+      if (event.id == -1) {
+        return await createEvent(token, event);
+      } else {
+        return await updateEvent(token, event);
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<bool> deleteEvent(String token, int eid) async {
+    try {
+      Dio dio = Http().client;
+      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': Wsfunction.DELETE_EVENTS,
+        'moodlewsrestformat': 'json',
+        'events': [
+          {'eventid': eid, 'repeat': 0}
+        ],
+      });
+      if (kDebugMode) print(res);
+      return true;
+    } catch (e) {
+      return false;
     }
   }
 }

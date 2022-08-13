@@ -136,12 +136,13 @@ class MyApp extends StatelessWidget {
                   backgroundColor: Theme.of(context).colorScheme.surface,
                   unselectedItemColor: Theme.of(context).colorScheme.onSurface),
           bottomSheetTheme: const BottomSheetThemeData(
-              shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(Dimens.default_sheet_radius),
-              topRight: Radius.circular(Dimens.default_sheet_radius),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(Dimens.default_sheet_radius),
+                topRight: Radius.circular(Dimens.default_sheet_radius),
+              ),
             ),
-          )),
+          ),
         ),
         home: const SplashScreen(),
         debugShowCheckedModeBanner: false,

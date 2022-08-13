@@ -16,6 +16,7 @@ class Event {
   String? location;
   int? categoryid;
   int? groupid;
+  int? courseid;
   int? userid;
   int? repeatid;
   int? eventcount;
@@ -53,6 +54,7 @@ class Event {
   String? maxdayerror;
   bool? draggable;
   ModuleCourse? cm;
+  int? format;
 
   Event({
     this.id,
@@ -62,6 +64,7 @@ class Event {
     this.location,
     this.categoryid,
     this.groupid,
+    this.courseid,
     this.userid,
     this.repeatid,
     this.eventcount,
@@ -98,8 +101,25 @@ class Event {
     this.maxdaytimestamp,
     this.maxdayerror,
     this.draggable,
-    this.cm
+    this.cm,
+    this.format,
   });
+
+  Event.empty({
+    required this.userid,
+    required this.courseid,
+    required this.timestart,
+  })  : id = -1,
+        name = '',
+        description = '',
+        eventtype = 'user',
+        format = 1,
+        descriptionformat = 1,
+        timeduration = 0;
+
+  bool get isEmpty => name?.isEmpty ?? true;
+
+  bool get isNotEmpty => !isEmpty;
 
   factory Event.fromJson(Map<String, dynamic> json) => _$EventFromJson(json);
 
@@ -111,7 +131,7 @@ class Event {
   }
 
   @override
-  bool operator == (Object other) {
+  bool operator ==(Object other) {
     return other is Event && id == other.id;
   }
 

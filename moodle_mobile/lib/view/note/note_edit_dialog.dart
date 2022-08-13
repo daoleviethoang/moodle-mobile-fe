@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
 import 'package:moodle_mobile/constants/styles.dart';
@@ -117,93 +116,103 @@ class _NoteEditDialogState extends State<NoteEditDialog> {
   Widget build(BuildContext context) {
     _initContentInput();
 
-    return Form(
-      key: _formKey,
-      child: SingleChildScrollView(
-        child: Wrap(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(height: 20),
-                  Text(
-                    (widget.note == null)
-                        ? AppLocalizations.of(context)!.add_note
-                        : AppLocalizations.of(context)!.edit_note,
-                    style: MoodleStyles.bottomSheetTitleStyle,
-                  ),
-                  Container(height: 40),
-                  _contentInput,
-                  Container(height: 20),
-                  Row(
-                    children: [
-                      Container(width: 10),
-                      Expanded(
-                        child: Text(
-                          AppLocalizations.of(context)!.note_is_important,
-                          textAlign: TextAlign.start,
-                          style: MoodleStyles.bottomSheetHeaderStyle,
-                        ),
-                      ),
-                      Switch(
-                        value: _note.isImportant,
-                        onChanged: (value) =>
-                            setState(() => _note.isImportant = value),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 40,
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: AnimatedOpacity(
-                        opacity: _failed ? 1 : 0,
-                        duration: const Duration(milliseconds: 150),
-                        child: AnimatedSlide(
-                          offset: _failed ? Offset.zero : const Offset(.02, 0),
-                          duration: const Duration(milliseconds: 150),
+    return WillPopScope(
+      onWillPop: () async {
+        if (_canceling) {
+          _cancelPressed();
+        } else {
+          _cancelConfirmPressed();
+        }
+        return true;
+      },
+      child: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Wrap(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(height: 20),
+                    Text(
+                      (widget.note == null)
+                          ? AppLocalizations.of(context)!.add_note
+                          : AppLocalizations.of(context)!.edit_note,
+                      style: MoodleStyles.bottomSheetTitleStyle,
+                    ),
+                    Container(height: 40),
+                    _contentInput,
+                    Container(height: 20),
+                    Row(
+                      children: [
+                        Container(width: 10),
+                        Expanded(
                           child: Text(
-                            AppLocalizations.of(context)!.err_note_invalid,
-                            style: const TextStyle(color: Colors.red),
+                            AppLocalizations.of(context)!.note_is_important,
+                            textAlign: TextAlign.start,
+                            style: MoodleStyles.bottomSheetHeaderStyle,
+                          ),
+                        ),
+                        Switch(
+                          value: _note.isImportant,
+                          onChanged: (value) =>
+                              setState(() => _note.isImportant = value),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 40,
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: AnimatedOpacity(
+                          opacity: _failed ? 1 : 0,
+                          duration: const Duration(milliseconds: 150),
+                          child: AnimatedSlide(
+                            offset: _failed ? Offset.zero : const Offset(.02, 0),
+                            duration: const Duration(milliseconds: 150),
+                            child: Text(
+                              AppLocalizations.of(context)!.err_note_invalid,
+                              style: const TextStyle(color: Colors.red),
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  CustomButtonWidget(
-                    onPressed: () => _submitPressed(),
-                    textButton: (widget.note == null)
-                        ? AppLocalizations.of(context)!.add
-                        : AppLocalizations.of(context)!.save,
-                  ),
-                  Container(height: 20),
-                  Stack(
-                    children: [
-                      CustomButtonWidget(
-                        onPressed: () => _cancelPressed(),
-                        textButton: AppLocalizations.of(context)!.cancel,
-                        filled: false,
-                      ),
-                      Visibility(
-                        visible: _canceling,
-                        child: CustomButtonWidget(
-                          onPressed: () => _cancelConfirmPressed(),
-                          textButton:
-                              AppLocalizations.of(context)!.cancel_confirm,
-                          filled: true,
-                          useWarningColor: true,
+                    CustomButtonWidget(
+                      onPressed: () => _submitPressed(),
+                      textButton: (widget.note == null)
+                          ? AppLocalizations.of(context)!.add
+                          : AppLocalizations.of(context)!.save,
+                    ),
+                    Container(height: 20),
+                    Stack(
+                      children: [
+                        CustomButtonWidget(
+                          onPressed: () => _cancelPressed(),
+                          textButton: AppLocalizations.of(context)!.cancel,
+                          filled: false,
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                        Visibility(
+                          visible: _canceling,
+                          child: CustomButtonWidget(
+                            onPressed: () => _cancelConfirmPressed(),
+                            textButton:
+                                AppLocalizations.of(context)!.cancel_confirm,
+                            filled: true,
+                            useWarningColor: true,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Container(height: Dimens.default_padding_double),
-            Container(height: MediaQuery.of(context).viewInsets.bottom),
-          ],
+              Container(height: Dimens.default_padding_double),
+              Container(height: MediaQuery.of(context).viewInsets.bottom),
+            ],
+          ),
         ),
       ),
     );

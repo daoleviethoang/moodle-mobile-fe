@@ -3,9 +3,10 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
-import 'package:mobx/mobx.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/data/network/apis/calendar/calendar_service.dart';
@@ -16,22 +17,20 @@ import 'package:moodle_mobile/models/calendar/event.dart';
 import 'package:moodle_mobile/models/module/module.dart';
 import 'package:moodle_mobile/models/module/module_course.dart';
 import 'package:moodle_mobile/models/site_info/site_info.dart';
+import 'package:moodle_mobile/store/navigation/navigation_store.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/content_item.dart';
 import 'package:moodle_mobile/view/common/custom_button.dart';
 import 'package:moodle_mobile/view/common/custom_button_short.dart';
 import 'package:moodle_mobile/view/common/data_card.dart';
 import 'package:moodle_mobile/view/note/note_list.dart';
+import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import 'event_edit_dialog.dart';
 
 class CalendarScreen extends StatefulWidget {
-  final Observable<bool>? jumpOpenFlag;
-
-  const CalendarScreen({
-    Key? key,
-    this.jumpOpenFlag,
-  }) : super(key: key);
+  const CalendarScreen({Key? key}) : super(key: key);
 
   @override
   State<CalendarScreen> createState() => _CalendarScreenState();
@@ -55,8 +54,7 @@ class _CalendarScreenState extends State<CalendarScreen>
 
   late UserStore _userStore;
   Map<String, List<Event>> _events = {};
-  Observable<bool>? _jumpOpenFlag;
-  final noteSearchShowFlag = Observable<bool>(false);
+  late NavigationStore _navStore;
   SiteInfo? _siteInfo;
 
   Exception? _errored;
@@ -79,16 +77,8 @@ class _CalendarScreenState extends State<CalendarScreen>
     );
 
     _userStore = GetIt.instance<UserStore>();
-    _jumpOpenFlag = widget.jumpOpenFlag;
-    _jumpOpenFlag?.observe((p0) {
-      if (_jumpOpenFlag?.value ?? false) {
-        _jumpOpenFlag?.toggle();
-        if (_tabController.index == 0) {
-          _jumpToDate();
-        } else {
-          noteSearchShowFlag.toggle();
-        }
-      }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _navStore = context.read<NavigationStore>();
     });
   }
 
@@ -113,7 +103,10 @@ class _CalendarScreenState extends State<CalendarScreen>
                   ? MoodleColors.brightGray
                   : MoodleColors.white,
               blurRadius: 3,
-              onPressed: () => _tabController.index = 0,
+              onPressed: () {
+                _tabController.animateTo(0);
+                _navStore.closeNote();
+              },
             ),
           ),
         ),
@@ -129,7 +122,10 @@ class _CalendarScreenState extends State<CalendarScreen>
                   ? MoodleColors.brightGray
                   : MoodleColors.white,
               blurRadius: 3,
-              onPressed: () => _tabController.index = 1,
+              onPressed: () {
+                _tabController.animateTo(1);
+                _navStore.openNote();
+              },
             ),
           ),
         ),
@@ -220,7 +216,7 @@ class _CalendarScreenState extends State<CalendarScreen>
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Padding(
-                        padding: const EdgeInsets.only(top: 12, left: 12),
+                        padding: const EdgeInsets.only(left: 12),
                         child: _dayView,
                       ),
                     ),
@@ -362,18 +358,46 @@ class _CalendarScreenState extends State<CalendarScreen>
     );
   }
 
+  Future<void> _eventAdd([DateTime? day]) async => await showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        isDismissible: false,
+        enableDrag: false,
+        builder: (context) => EventEditDialog(
+          token: _userStore.user.token,
+          uid: _userStore.user.id,
+          preselected: day,
+        ),
+      );
+
   void _initDayView() {
     _dayView = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Day view header
         Padding(
-          padding: const EdgeInsets.only(bottom: 12),
-          child: Text(
-            AppLocalizations.of(context)!.events_on(
-                DateFormat.MMMMd(Localizations.localeOf(context).languageCode)
-                    .format(_selectedDay)),
-            style: MoodleStyles.sectionHeaderStyle,
+          padding: const EdgeInsets.only(top: 4),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  AppLocalizations.of(context)!.events_on(
+                      DateFormat.MMMMd(Localizations.localeOf(context).languageCode)
+                          .format(_selectedDay)),
+                  style: MoodleStyles.sectionHeaderStyle,
+                ),
+              ),
+              TextButton(
+                style: TextButton.styleFrom(
+                  primary: Theme.of(context).colorScheme.onSurface,
+                  padding: EdgeInsets.zero,
+                  shape: const CircleBorder(),
+                  fixedSize: const Size.fromHeight(16),
+                ),
+                child: const Icon(Icons.add),
+                onPressed: () => _eventAdd(_selectedDay),
+              ),
+            ],
           ),
         ),
 
@@ -433,6 +457,7 @@ class _CalendarScreenState extends State<CalendarScreen>
               return EventItem(
                 title: title,
                 date: dueDate,
+                token: _userStore.user.token,
                 event: e,
               );
             default:
@@ -489,7 +514,7 @@ class _CalendarScreenState extends State<CalendarScreen>
               child: Text(AppLocalizations.of(context)!.notes_unsupported)));
       return;
     }
-    _noteTabView = NoteList(searchShowFlag: noteSearchShowFlag);
+    _noteTabView = const NoteList();
   }
 
   // endregion
@@ -497,6 +522,26 @@ class _CalendarScreenState extends State<CalendarScreen>
   @override
   Widget build(BuildContext context) {
     _initBody();
-    return _body;
+    return Observer(builder: (context) {
+      // Handle flag in NavigationStore
+      _navStore.calendarJumpShowed;
+      _navStore.eventAddShowed;
+      Future.delayed(Duration.zero).then((v) {
+        if (_navStore.calendarJumpShowed) {
+          _navStore.toggleJumpCalendar();
+          if (_tabController.index == 0) {
+            _jumpToDate();
+          }
+        }
+        if (_navStore.eventAddShowed) {
+          _navStore.toggleEventAdd();
+          if (_tabController.index == 0) {
+            _eventAdd();
+          }
+        }
+      });
+
+      return _body;
+    });
   }
 }
