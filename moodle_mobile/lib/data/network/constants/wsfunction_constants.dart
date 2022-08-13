@@ -45,6 +45,13 @@ class Wsfunction {
   static const String MOD_ASSIGN_GET_ASSIGNMENTS = "mod_assign_get_assignments";
   static const String MOD_ASSIGN_GET_SUBMISSION_STATUS =
       "mod_assign_get_submission_status";
+  static const String MOD_ASSIGN_GET_LIST_PARTICIPANTS =
+      "mod_assign_list_participants";
+  static const String MOD_ASSIGN_SAVE_GRADE = "mod_assign_save_grade";
+
+  //comment
+  static const String CORE_COMMENT_GET_COMMENTS = "core_comment_get_comments";
+  static const String CORE_COMMENT_ADD_COMMENTS = "core_comment_add_comments";
 
   //forum
   static const String MOD_FORUM_GET_FORUMS_BY_COURSES =

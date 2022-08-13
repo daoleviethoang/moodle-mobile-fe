@@ -11,17 +11,7 @@ class CoursesSearch extends SearchDelegate<CourseOverview?> {
 
   @override
   List<Widget> buildActions(BuildContext context) {
-    return [
-      IconButton(
-        icon: const Icon(
-          Icons.clear,
-          color: MoodleColors.blue,
-        ),
-        onPressed: () {
-          query = '';
-        },
-      )
-    ];
+    return [];
   }
 
   @override

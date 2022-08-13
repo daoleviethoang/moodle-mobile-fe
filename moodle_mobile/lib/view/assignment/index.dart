@@ -12,8 +12,10 @@ import 'package:moodle_mobile/models/assignment/assignment.dart';
 import 'package:moodle_mobile/models/assignment/attemp_assignment.dart';
 import 'package:moodle_mobile/models/assignment/feedback.dart';
 import 'package:moodle_mobile/models/assignment/user_submited.dart';
+import 'package:moodle_mobile/models/comment/comment.dart';
 import 'package:moodle_mobile/models/contact/contact.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
+import 'package:moodle_mobile/view/assignment/comment_assignment/comment_detail.dart';
 import 'package:moodle_mobile/view/assignment/date_assignment_tile.dart';
 import 'package:moodle_mobile/view/assignment/files_assignment.dart';
 import 'package:moodle_mobile/view/assignment/list_user_submit.dart';
@@ -42,7 +44,9 @@ class AssignmentScreen extends StatefulWidget {
 class _AssignmentScreenState extends State<AssignmentScreen> {
   Assignment assignment = Assignment();
   AttemptAssignment attempt = AttemptAssignment();
+  List<UserSubmited> users = [];
   List<UserSubmited> userSubmiteds = [];
+  List<UserSubmited> userSubmitedNeedGrade = [];
   bool isLoading = false;
   String dateDiff = "";
   Color dateDiffColor = Colors.grey;
@@ -50,6 +54,7 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
   bool overDue = false;
   bool error = false;
   FeedBack feedback = FeedBack();
+  Comment comment = Comment();
   late Timer _timer;
   bool isTeacher = false;
 
@@ -106,6 +111,18 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
           SnackBar(content: Text(e.toString()), backgroundColor: Colors.red));
     }
     return Assignment();
+  }
+
+  Future<Comment> readComment(int assignCmdId, int submissionId) async {
+    try {
+      Comment _comment = await AssignmentApi().getAssignmentComment(
+          _userStore.user.token, assignCmdId, submissionId, 0);
+      return _comment;
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString()), backgroundColor: Colors.red));
+    }
+    return Comment();
   }
 
   Future<AttemptAssignment> ReadData2(int assignInstanceId) async {
@@ -167,13 +184,15 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
         ? FeedBack()
         : await readFeedBack(widget.assignInstanceId);
 
-    if (isTeacher == true) {
-      List<UserSubmited> temp4 =
-          await readUserSubmited(widget.assignInstanceId);
+    if (temp.cmid != null && temp2.submission?.id != null) {
+      Comment _comment = await readComment(temp.cmid!, temp2.submission!.id!);
       setState(() {
-        userSubmiteds = temp4;
+        comment = _comment;
       });
     }
+
+    getListUserSubmit();
+
     setState(() {
       assignment = temp;
       attempt = temp2;
@@ -181,6 +200,22 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
       isLoading = false;
     });
     dateDiffSubmit();
+  }
+
+  void getListUserSubmit() async {
+    if (isTeacher == true) {
+      List<UserSubmited> temp4 =
+          await readUserSubmited(widget.assignInstanceId);
+      setState(() {
+        users = temp4;
+        userSubmiteds =
+            temp4.where((element) => element.submitted == true).toList();
+        userSubmitedNeedGrade = temp4
+            .where((element) =>
+                element.submitted == true && element.requiregrading == true)
+            .toList();
+      });
+    }
   }
 
   void loadAssignmentAttempt() async {
@@ -330,23 +365,78 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                                     ),
                               const Divider(),
                               ListTile(
-                                tileColor: MoodleColors.grey_soft,
-                                onTap: () {
-                                  Navigator.of(context)
-                                      .push(MaterialPageRoute(builder: (_) {
-                                    return ListUserSubmited(
-                                      userSubmiteds: userSubmiteds,
-                                      title: widget.title,
-                                    );
-                                  }));
-                                },
+                                tileColor: MoodleColors.white,
+                                onTap: users.isEmpty
+                                    ? null
+                                    : () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(builder: (_) {
+                                          return ListUserSubmited(
+                                            userSubmiteds: users,
+                                            title: widget.title,
+                                            haveCheckBox: true,
+                                            assignmentId:
+                                                widget.assignInstanceId,
+                                            userStore: _userStore,
+                                            duedate: assignment.duedate ?? 0,
+                                            assignmentModuleId:
+                                                assignment.cmid ?? 0,
+                                          );
+                                        }));
+                                      },
+                                title: Text(AppLocalizations.of(context)!
+                                    .number_student),
+                                trailing: Text(users.length.toString()),
+                              ),
+                              ListTile(
+                                tileColor: MoodleColors.white,
+                                onTap: userSubmiteds.isEmpty
+                                    ? null
+                                    : () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(builder: (_) {
+                                          return ListUserSubmited(
+                                            userSubmiteds: userSubmiteds,
+                                            title: widget.title,
+                                            haveCheckBox: false,
+                                            assignmentId:
+                                                widget.assignInstanceId,
+                                            userStore: _userStore,
+                                            duedate: assignment.duedate ?? 0,
+                                            assignmentModuleId:
+                                                assignment.cmid ?? 0,
+                                          );
+                                        }));
+                                      },
                                 title: Text(AppLocalizations.of(context)!
                                     .number_submission),
-                                trailing: Text(userSubmiteds
-                                    .where(
-                                        (element) => element.submitted == true)
-                                    .length
-                                    .toString()),
+                                trailing: Text(userSubmiteds.length.toString()),
+                              ),
+                              ListTile(
+                                tileColor: MoodleColors.white,
+                                onTap: userSubmitedNeedGrade.isEmpty
+                                    ? null
+                                    : () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(builder: (_) {
+                                          return ListUserSubmited(
+                                            userSubmiteds:
+                                                userSubmitedNeedGrade,
+                                            title: widget.title,
+                                            haveCheckBox: false,
+                                            assignmentId:
+                                                widget.assignInstanceId,
+                                            userStore: _userStore,
+                                            duedate: assignment.duedate ?? 0,
+                                            assignmentModuleId:
+                                                assignment.cmid ?? 0,
+                                          );
+                                        }));
+                                      },
+                                title: Text(AppLocalizations.of(context)!
+                                    .number_wait_grade),
+                                trailing: Text(
+                                    userSubmitedNeedGrade.length.toString()),
                               ),
                             ],
                           ),
@@ -466,12 +556,38 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                               SubmissionStatusTile(
                                 leftText: AppLocalizations.of(context)!
                                     .submission_comments,
-                                rightText:
-                                    (feedback.plugins?.length ?? 0).toString() +
-                                        " " +
-                                        AppLocalizations.of(context)!.comments +
-                                        "...",
+                                rightText: (comment.count?.toString() ?? "0") +
+                                    " " +
+                                    AppLocalizations.of(context)!.comments +
+                                    "...",
                                 rightTextColor: MoodleColors.blue,
+                                rightTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (_) {
+                                        return CommentAssignmentDetailScreen(
+                                          comment: comment,
+                                          reLoadComment: () async {
+                                            if (assignment.cmid != null &&
+                                                attempt.submission?.id !=
+                                                    null) {
+                                              Comment _comment =
+                                                  await readComment(
+                                                      assignment.cmid!,
+                                                      attempt.submission!.id!);
+                                              setState(() {
+                                                comment = _comment;
+                                              });
+                                            }
+                                          },
+                                          userStore: _userStore,
+                                          assignCmdId: assignment.cmid!,
+                                          submissionId: attempt.submission!.id!,
+                                        );
+                                      },
+                                    ),
+                                  );
+                                },
                               ),
                               const SizedBox(
                                 height: 15,
