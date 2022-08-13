@@ -1102,8 +1102,12 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton:
-          _index == 0 && isTeacher == true ? _buildFab(context) : Container(),
+      floatingActionButton: Builder(builder: (context) {
+        if (_index == 0 && isTeacher) {
+          return _buildFab(context);
+        }
+        return Container();
+      }),
       body: FutureBuilder(
           future: queryData(),
           builder: (context, data) {
