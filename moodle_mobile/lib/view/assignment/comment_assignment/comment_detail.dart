@@ -67,6 +67,8 @@ class _CommentAssignmentDetailScreenState
       return;
     }
 
+    FocusScope.of(context).unfocus();
+
     var newText = _textEditingController.text;
 
     _textEditingController.clear();
@@ -82,8 +84,8 @@ class _CommentAssignmentDetailScreenState
     await regetComment();
 
     _scrollController.animateTo(
-      0,
-      duration: const Duration(seconds: 2),
+      _scrollController.position.maxScrollExtent,
+      duration: const Duration(seconds: 1),
       curve: Curves.fastOutSlowIn,
     );
   }
@@ -137,7 +139,6 @@ class _CommentAssignmentDetailScreenState
             flex: 10,
             child: ListView.builder(
               padding: const EdgeInsets.all(8.0),
-              reverse: true,
               controller: _scrollController,
               itemCount: _comment.comments?.length ?? 0,
               itemBuilder: (_, int index) {
@@ -168,9 +169,6 @@ class _CommentAssignmentDetailScreenState
                   final DateTime prevDate = DateTime.fromMillisecondsSinceEpoch(
                       (_comment.comments?[index - 1].timecreated ?? 0) * 1000);
                   isSameDate = isSameDay(date, prevDate);
-                  print(date.toString() +
-                      prevDate.toString() +
-                      isSameDate.toString());
                 }
 
                 if (index == 0 || isSameDate == false) {

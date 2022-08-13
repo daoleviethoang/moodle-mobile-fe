@@ -556,11 +556,10 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                               SubmissionStatusTile(
                                 leftText: AppLocalizations.of(context)!
                                     .submission_comments,
-                                rightText:
-                                    (comment.comments?.length ?? 0).toString() +
-                                        " " +
-                                        AppLocalizations.of(context)!.comments +
-                                        "...",
+                                rightText: (comment.count?.toString() ?? "0") +
+                                    " " +
+                                    AppLocalizations.of(context)!.comments +
+                                    "...",
                                 rightTextColor: MoodleColors.blue,
                                 rightTap: () {
                                   Navigator.of(context).push(

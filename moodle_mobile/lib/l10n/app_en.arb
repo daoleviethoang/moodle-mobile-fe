@@ -125,7 +125,7 @@
   "get_file_from_storage": "Get file from storage",
   "grade": "Grade",
   "grade_assignment": "Grade",
-  "grade_float": "Grade (float)",
+  "grade_float": "Grade out of 100 (float)",
   "graded_by": "Graded by ",
   "grades": "Grades",
   "grading_status": "Grading status",

@@ -250,6 +250,10 @@ class AssignmentApi {
 
       Comment comment = Comment.fromJson(res.data);
 
+      if (comment.comments != null) {
+        comment.comments = comment.comments!.reversed.toList();
+      }
+
       return comment;
     } catch (e) {
       print(e.toString());
@@ -270,7 +274,7 @@ class AssignmentApi {
         "comments[0][component]": "assignsubmission_comments",
         "comments[0][itemid]": submissionId,
         "comments[0][area]": "submission_comments",
-        "comments[0][content]": conttent,
+        "comments[0][content]": "<p>" + conttent + "</p>",
       });
 
       if (res.data is Map<String, dynamic> && res.data["exception"] != null) {

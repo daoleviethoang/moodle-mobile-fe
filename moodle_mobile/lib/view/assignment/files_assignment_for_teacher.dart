@@ -55,6 +55,8 @@ class _FilesAssignmentTeacherScreenState
   TextEditingController gradeController = TextEditingController();
   TextEditingController commentController = TextEditingController();
 
+  int curTabIndex = 0;
+
   Future loadAssignment() async {
     setState(() {
       isLoading = true;
@@ -258,7 +260,7 @@ class _FilesAssignmentTeacherScreenState
               actions: [
                 // isLoading == false && widget.usersubmitted.submitted == true
 
-                widget.usersubmitted.submitted == true
+                curTabIndex == 1 && widget.usersubmitted.submitted == true
                     ? IconButton(
                         onPressed: () async {
                           var dou = double.tryParse(gradeController.text);
@@ -399,20 +401,24 @@ class _FilesAssignmentTeacherScreenState
                           ),
                         ),
                         TabBar(
-                          tabs: [
-                            Tab(
-                              child: Text(
-                                  AppLocalizations.of(context)!.submission),
-                            ),
-                            Tab(
-                              child: Text(AppLocalizations.of(context)!
-                                  .grade_assignment),
-                            )
-                          ],
-                          labelColor: Colors.black,
-                          indicatorColor: Colors.orange,
-                          indicatorWeight: 3,
-                        ),
+                            tabs: [
+                              Tab(
+                                child: Text(
+                                    AppLocalizations.of(context)!.submission),
+                              ),
+                              Tab(
+                                child: Text(AppLocalizations.of(context)!
+                                    .grade_assignment),
+                              )
+                            ],
+                            labelColor: Colors.black,
+                            indicatorColor: Colors.orange,
+                            indicatorWeight: 3,
+                            onTap: (int index) {
+                              setState(() {
+                                curTabIndex = index;
+                              });
+                            }),
                         Expanded(
                           flex: 1,
                           child: TabBarView(children: [
@@ -544,8 +550,7 @@ class _FilesAssignmentTeacherScreenState
                                   subtitle: Text(
                                     AppLocalizations.of(context)!.comments +
                                         " (" +
-                                        (comment.comments?.length.toString() ??
-                                            "0") +
+                                        (comment.count?.toString() ?? "0") +
                                         ")",
                                     style: const TextStyle(
                                         color: MoodleColors.blue),

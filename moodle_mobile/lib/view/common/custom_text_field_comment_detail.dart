@@ -30,6 +30,7 @@ class CustomCommentFieldLeft extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(Dimens.default_padding),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           ConstrainedBox(
             constraints: BoxConstraints(

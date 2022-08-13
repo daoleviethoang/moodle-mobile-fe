@@ -94,7 +94,7 @@
   "get_file_from_storage": "Chọn file từ  máy",
   "grade": "Điểm chi tiết",
   "grade_assignment": "Điểm số",
-  "grade_float": "Điểm (số thập phân)",
+  "grade_float": "Điểm tối đa 100 (số thập phân)",
   "graded_by": "Được chấm bởi giáo viên ",
   "grades": "Điểm số",
   "grading_status": "Trạng thái điểm",
