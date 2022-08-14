@@ -91,6 +91,9 @@ class Wsfunction {
       'core_message_mark_all_notifications_as_read';
   static const String GET_UNREAD_NOTIFICATIONS_COUNT =
       "message_popup_get_unread_popup_notification_count";
+  static const String MARK_MESSAGE_AS_READ = "core_message_mark_message_read";
+  static const String MARK_NOTIFICATION_AS_READ =
+      "core_message_mark_notifcation_read";
 
   //notification preference
   static const String CORE_MESSAGE_GET_USER_NOTIFICATION_PREFERENCES =

@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+//import 'package:flutter_html/flutter_html.dart';
+//import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:moodle_mobile/constants/colors.dart';
@@ -14,6 +14,7 @@ import 'package:moodle_mobile/models/course/course_detail.dart';
 import 'package:moodle_mobile/models/notification/notification.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:moodle_mobile/view/notifications/notification_detail_screen.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({Key? key}) : super(key: key);
@@ -69,7 +70,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
       // setState(() => _loading = true);
       for (int i = 0; i < 5; i++) {
         if (i < value!.notificationDetail!.length) {
-          if (value!.notificationDetail![i] != null) {
+          if (value.notificationDetail![i] != null) {
             value.notificationDetail![i].read = true;
             alreadyRead.add(value.notificationDetail![i]);
           }
@@ -108,7 +109,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
   }
 
   getName() async {
-    print(_notificationPopup);
     List<String> temp = [];
     for (var t in _notificationPopup!.notificationDetail!) {
       await CourseDetailService()
@@ -126,7 +126,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
   @override
   Widget build(BuildContext context) {
     //final notifications = _notificationPopup?.notificationDetail ?? [];
-    print('abc');
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: () => getData(),
@@ -151,8 +150,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   ...List.generate(_notificationDetail.length, (index) {
                     final temp = _notificationDetail[index];
 
-                    print(temp);
-
                     //get subject
                     String subject = temp.subject ?? '';
                     //subject = subject.substring(0, subject.indexOf(':'));
@@ -172,13 +169,34 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: NotificationPopupContainer(
-                          name: name?[index] ?? " ",
-                          article: article,
-                          subject: subject,
-                          title: temp.contexturlname,
-                          read: temp.read,
-                          date: date),
+                      child: InkWell(
+                        onTap: () async {
+                          if (temp.notifcation == 1) {
+                            await NotificationApi.markNotifcationAsRead(
+                                _userStore.user.token, temp.id!);
+                          } else if (temp.notifcation == 0) {
+                            await NotificationApi.markMessageAsRead(
+                                _userStore.user.token, temp.id!);
+                          }
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) {
+                              return NotificationDetailScreen(
+                                article: article,
+                                content: temp.text,
+                                subject: subject,
+                              );
+                            }),
+                          ).then((_) => getData());
+                        },
+                        child: NotificationPopupContainer(
+                            article: article,
+                            subject: subject,
+                            title: temp.contexturlname,
+                            read: temp.read,
+                            date: date),
+                      ),
                     );
                   }),
                   SafeArea(
@@ -213,13 +231,12 @@ class NotificationPopupContainer extends StatelessWidget {
   final String? title;
   final String? subject;
   final String? article;
-  final String? name;
+  //final String? name;
   final bool? read;
 
   const NotificationPopupContainer({
     this.subject,
     this.title,
-    this.name = 'temp',
     this.read,
     this.article,
     this.date,

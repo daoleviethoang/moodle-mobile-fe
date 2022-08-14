@@ -47,6 +47,35 @@ class NotificationApi {
     }
   }
 
+  static Future markMessageAsRead(String token, int id) async {
+    try {
+      Dio dio = Http().client;
+      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': Wsfunction.MARK_MESSAGES_AS_READ,
+        'moodlewsrestformat': 'json',
+        'messageid': id,
+      });
+      print(res);
+    } catch (e) {
+      if (kDebugMode) print('!!!!!!!!!!$e');
+    }
+  }
+
+  static Future markNotifcationAsRead(String token, int id) async {
+    try {
+      Dio dio = Http().client;
+      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': Wsfunction.MARK_NOTIFICATION_AS_READ,
+        'moodlewsrestformat': 'json',
+        'messageid': id,
+      });
+    } catch (e) {
+      if (kDebugMode) print('!!!!!!!!!!$e');
+    }
+  }
+
   static Future<int> getUnreadCount(String token,
       {String useridto = '0'}) async {
     try {
