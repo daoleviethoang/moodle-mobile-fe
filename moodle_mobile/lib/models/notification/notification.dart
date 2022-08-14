@@ -2,20 +2,20 @@ import 'dart:convert';
 
 class NotificationPopup {
   List<NotificationDetail>? notificationDetail;
-  int? unreadcount;
-  NotificationPopup({this.notificationDetail, this.unreadcount});
+  int? warningcount;
+  NotificationPopup({this.notificationDetail, this.warningcount});
 
   NotificationPopup.fromJson(Map<String, dynamic> json) {
-    if (json['notifications'] != null) {
+    if (json['messages'] != null) {
       notificationDetail = <NotificationDetail>[];
-      for (var n in json['notifications']) {
+      for (var n in json['messages']) {
         if (n != null) {
           notificationDetail!.add(NotificationDetail.fromJson(n));
         }
       }
     }
     // notificationDetail = json['notifications'];
-    unreadcount = json['unreadcount'];
+    //warningcount = json['unreadcount'];
   }
 }
 
@@ -33,35 +33,37 @@ class NotificationDetail {
   String? contexturl;
   String? contexturlname;
   int? timecreated;
-  String? timecreatedpretty;
+
+  int? notifcation;
   int? timeread;
   bool? read;
+  String? userToFullName;
+  String? userFromFullName;
   bool? deleted;
-  String? iconurl;
-  String? component;
-  String? eventtype;
+
   CustomData? customdata;
+  //String? stringCustomData;
+  int? cmid;
   NotificationDetail(
-      {this.component,
-      this.contexturl,
+      {this.contexturl,
       this.contexturlname,
       this.customdata,
       this.deleted,
-      this.eventtype,
       this.fullmessage,
       this.fullmessageformat,
       this.fullmessagehtml,
-      this.iconurl,
       this.id,
       this.read,
       this.shortendsubject,
+      this.notifcation,
       this.smallmessage,
       this.subject,
       this.text,
       this.timecreated,
-      this.timecreatedpretty,
       this.timeread,
       this.useridfrom,
+      this.userFromFullName,
+      this.userToFullName,
       this.useridto});
 
   NotificationDetail.fromJson(Map<String, dynamic> json) {
@@ -78,14 +80,24 @@ class NotificationDetail {
     contexturl = json['contexturl'];
     contexturlname = json['contexturlname'];
     timecreated = json['timecreated'];
-    timecreatedpretty = json['timecreatedpretty'];
+    userFromFullName = json['userfromfullname'];
+    userToFullName = json['usertofullname'];
     timeread = json['timeread'];
     read = json['read'];
     deleted = json['deleted'];
-    iconurl = json['iconurl'];
-    component = json['component'];
-    eventtype = json['eventtype'];
-    customdata = CustomData.fromJson(jsonDecode(json['customdata']));
+
+    //stringCustomdata = CustomData.fromJson(jsonDecode(json['customdata']));
+    if (json['customdata'] != null) {
+      customdata = CustomData.fromJson(jsonDecode(json['customdata']));
+    }
+
+    // stringCustomData = json['customdata'];
+    //cmid = int.tryParse(customdata!.substring(,))
+    // print('id ' +
+    //     stringCustomData!.substring(
+    //         stringCustomData!.lastIndexOf(r'\"courseid\":\"'),
+    //         stringCustomData!.lastIndexOf(r'\"}')));
+    //print(jsonDecode(json['customdata']));
   }
 }
 
@@ -96,7 +108,7 @@ class CustomData {
   String? postid;
   String? notificationiconurl;
   List<String>? actionbuttons;
-  String? courseId;
+  int? courseId;
   CustomData(
       {this.actionbuttons,
       this.cmid,
@@ -106,14 +118,20 @@ class CustomData {
       this.notificationiconurl,
       this.postid});
   CustomData.fromJson(Map<String, dynamic> json) {
-    cmid = json['cmid'];
-    instance = json['instance'];
-    discussionid = json['discussionid'];
-    postid = json['postid'];
-    notificationiconurl = json['notificationurl'];
+    //cmid = checkId(json['cmid']);
+    // instance = json['instance'];
+    // discussionid = json['discussionid'];
+    // postid = json['postid'];
+    // notificationiconurl = json['notificationurl'];
     // if (json['actionbuttons'] != null) {
     //   actionbuttons = json['actionbuttons'];
     // }
-    courseId = json['courseid'];
+    //print(json['courseid']);
+    //print('error');
+    courseId = checkId(json['courseid']);
+  }
+
+  int? checkId(value) {
+    return int.tryParse(value.toString());
   }
 }

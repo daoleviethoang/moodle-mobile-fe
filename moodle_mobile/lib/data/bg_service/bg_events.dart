@@ -169,8 +169,8 @@ class FetchNotification extends BgEvent {
               if (d.read ?? false) continue;
               // Get course name
               final courseId = d.customdata?.courseId ?? '-1';
-              final course = await CourseDetailService()
-                  .getCourseById(token, int.parse(courseId));
+              final course =
+                  await CourseDetailService().getCourseById(token, 123);
               final courseName = course.displayname ?? '';
 
               // Notify latest notification
