@@ -1,17 +1,17 @@
-import 'package:file_picker/file_picker.dart';
+//import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:moodle_mobile/constants/colors.dart';
+//import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/data/firebase/firestore/polls_service.dart';
-import 'package:moodle_mobile/data/network/apis/forum/forum_api.dart';
-import 'package:moodle_mobile/models/assignment/file_assignment.dart';
+//import 'package:moodle_mobile/data/network/apis/forum/forum_api.dart';
+//import 'package:moodle_mobile/models/assignment/file_assignment.dart';
 import 'package:moodle_mobile/models/forum/forum_course.dart';
 import 'package:moodle_mobile/models/poll/poll.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
-import 'package:moodle_mobile/view/common/chipTitle.dart';
+//import 'package:moodle_mobile/view/common/chipTitle.dart';
 import 'package:moodle_mobile/view/common/custom_button.dart';
-import 'package:moodle_mobile/view/common/custom_button_short.dart';
+//import 'package:moodle_mobile/view/common/custom_button_short.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AddPollScreen extends StatefulWidget {
@@ -95,7 +95,7 @@ class _AddPollScreenState extends State<AddPollScreen> {
                       margin: const EdgeInsets.only(left: 8, right: 8),
                       child: Column(
                         children: [
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
                           Card(
@@ -112,8 +112,8 @@ class _AddPollScreenState extends State<AddPollScreen> {
                                   ),
                                   child: Text(
                                     AppLocalizations.of(context)!.subject,
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold),
                                   ),
                                 ),
                                 Container(
@@ -133,7 +133,7 @@ class _AddPollScreenState extends State<AddPollScreen> {
                                       border: OutlineInputBorder(
                                         borderRadius:
                                             BorderRadius.circular(10.0),
-                                        borderSide: BorderSide(width: 1),
+                                        borderSide: const BorderSide(width: 1),
                                       ),
                                       hintText:
                                           AppLocalizations.of(context)!.subject,
@@ -143,7 +143,7 @@ class _AddPollScreenState extends State<AddPollScreen> {
                               ],
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
                           Card(
@@ -160,8 +160,8 @@ class _AddPollScreenState extends State<AddPollScreen> {
                                   ),
                                   child: Text(
                                     AppLocalizations.of(context)!.content,
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold),
                                   ),
                                 ),
                                 Container(
@@ -179,7 +179,7 @@ class _AddPollScreenState extends State<AddPollScreen> {
                                       border: OutlineInputBorder(
                                         borderRadius:
                                             BorderRadius.circular(10.0),
-                                        borderSide: BorderSide(width: 1),
+                                        borderSide: const BorderSide(width: 1),
                                       ),
                                       hintText:
                                           AppLocalizations.of(context)!.content,
@@ -189,7 +189,7 @@ class _AddPollScreenState extends State<AddPollScreen> {
                               ],
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
                           Card(
@@ -198,7 +198,8 @@ class _AddPollScreenState extends State<AddPollScreen> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Padding(padding: EdgeInsets.only(top: 10)),
+                                const Padding(
+                                    padding: EdgeInsets.only(top: 10)),
                                 ...List.generate(numPoll, (index) {
                                   return Padding(
                                     padding: const EdgeInsets.only(
@@ -220,7 +221,8 @@ class _AddPollScreenState extends State<AddPollScreen> {
                                                       .removeAt(index);
                                                 });
                                               },
-                                              icon: Icon(CupertinoIcons.xmark)),
+                                              icon: const Icon(
+                                                  CupertinoIcons.xmark)),
                                       ],
                                     ),
                                   );
@@ -284,7 +286,7 @@ class PollOption extends StatelessWidget {
         decoration: InputDecoration(
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
-            borderSide: BorderSide(width: 1),
+            borderSide: const BorderSide(width: 1),
           ),
           hintText: AppLocalizations.of(context)!.add_option,
         ),

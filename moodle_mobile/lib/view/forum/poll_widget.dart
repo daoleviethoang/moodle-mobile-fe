@@ -89,7 +89,7 @@ class _PollContainerState extends State<PollContainer> {
                     alignment: Alignment.topRight,
                     child: IconButton(
                         padding: EdgeInsets.zero,
-                        constraints: BoxConstraints(),
+                        constraints: const BoxConstraints(),
                         onPressed: () {
                           Navigator.push(context, MaterialPageRoute(
                             builder: (context) {
@@ -102,7 +102,7 @@ class _PollContainerState extends State<PollContainer> {
                             fetch();
                           });
                         },
-                        icon: Icon(
+                        icon: const Icon(
                           Icons.edit,
                         )),
                   ),
@@ -111,8 +111,8 @@ class _PollContainerState extends State<PollContainer> {
                   children: [
                     Text(
                       poll!.subject!,
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 20),
                     ),
                     Align(
                       alignment: Alignment.centerLeft,
@@ -149,7 +149,7 @@ class _PollContainerState extends State<PollContainer> {
                                 votedOption != null ? () => onDeleted() : null,
                             child: Text(
                               AppLocalizations.of(context)!.vote_again,
-                              style: TextStyle(color: Colors.white),
+                              style: const TextStyle(color: Colors.white),
                             ),
                           ),
                         ],

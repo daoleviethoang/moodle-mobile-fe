@@ -49,7 +49,8 @@ class _ParticipantsInOneCourseState extends State<ParticipantsInOneCourse> {
                 Container(height: 16),
                 Text(
                   AppLocalizations.of(context)!.teacher,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17.5),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 17.5),
                 ),
                 ...List.generate(
                   participants.length,
@@ -77,7 +78,8 @@ class _ParticipantsInOneCourseState extends State<ParticipantsInOneCourse> {
                 Container(height: 16),
                 Text(
                   AppLocalizations.of(context)!.student,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17.5),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 17.5),
                 ),
                 ...List.generate(
                   participants.length,

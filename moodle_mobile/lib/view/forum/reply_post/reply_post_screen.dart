@@ -130,7 +130,7 @@ class _ReplyPostScreenState extends State<ReplyPostScreen> {
           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
           child: Column(
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               ReplyBox(
@@ -152,7 +152,7 @@ class _ReplyPostScreenState extends State<ReplyPostScreen> {
                       ),
                       child: Text(
                         AppLocalizations.of(context)!.text_reply,
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
                     Container(
@@ -169,13 +169,13 @@ class _ReplyPostScreenState extends State<ReplyPostScreen> {
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.0),
-                            borderSide: BorderSide(width: 1),
+                            borderSide: const BorderSide(width: 1),
                           ),
                           hintText: AppLocalizations.of(context)!.text_reply,
                         ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                   ],
@@ -198,18 +198,18 @@ class _ReplyPostScreenState extends State<ReplyPostScreen> {
                     color: Colors.orange[100],
                     child: Row(
                       children: [
-                        SizedBox(
+                        const SizedBox(
                           width: 5,
                         ),
                         Icon(showAdvance
                             ? Icons.arrow_drop_down_sharp
                             : Icons.arrow_right),
-                        SizedBox(
+                        const SizedBox(
                           width: 10,
                         ),
                         Text(
                           AppLocalizations.of(context)!.advance,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 15,
                           ),
                         ),
@@ -233,7 +233,7 @@ class _ReplyPostScreenState extends State<ReplyPostScreen> {
                     children: files
                         .map(
                           (e) => Container(
-                            margin: EdgeInsets.only(top: 1, bottom: 1),
+                            margin: const EdgeInsets.only(top: 1, bottom: 1),
                             child: ChipTile(
                                 label: e.filename,
                                 onDelete: () {
@@ -302,7 +302,7 @@ class _ReplyPostScreenState extends State<ReplyPostScreen> {
                               });
                             }
                           }),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       Text(
@@ -357,8 +357,8 @@ class ReplyBox extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 5),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 5),
                       child: CircleImageView(
                         imageUrl: '',
                         height: 60,
@@ -373,7 +373,7 @@ class ReplyBox extends StatelessWidget {
                       padding: const EdgeInsets.only(left: 8.0),
                       child: Text(
                         article!,
-                        style: TextStyle(color: MoodleColors.blue),
+                        style: const TextStyle(color: MoodleColors.blue),
                       ),
                     ),
                   ],
@@ -390,7 +390,7 @@ class ReplyBox extends StatelessWidget {
                       .format(DateTime.fromMillisecondsSinceEpoch(
                           timeCreated! * 1000))
                       .toString(),
-                  style: TextStyle(color: Colors.grey, fontSize: 10),
+                  style: const TextStyle(color: Colors.grey, fontSize: 10),
                 ),
               ),
             ],

@@ -64,7 +64,7 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                     const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
                 child: Column(
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     Padding(
@@ -72,14 +72,14 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 5),
+                          const Padding(
+                            padding: EdgeInsets.only(top: 5),
                             child: CircleImageView(
                               imageUrl: '',
                               height: 60,
                               width: 60,
                               placeholder: Padding(
-                                padding: const EdgeInsets.all(8.0),
+                                padding: EdgeInsets.all(8.0),
                                 child: Icon(
                                   Icons.person,
                                   size: 35,
@@ -87,7 +87,7 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                               ),
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 10,
                           ),
                           SizedBox(
@@ -98,7 +98,7 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                               children: [
                                 Text(
                                   _forumPost[len - 1].author!.fullname!,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: MoodleColors.blue),
                                 ),
@@ -110,7 +110,7 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                                               _forumPost[len - 1].timecreated! *
                                                   1000))
                                       .toString(),
-                                  style: TextStyle(fontSize: 10),
+                                  style: const TextStyle(fontSize: 10),
                                 ),
                               ],
                             ),
@@ -158,7 +158,7 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                         ],
                       ),
                     ),
-                    Divider(),
+                    const Divider(),
                     Center(
                       child: Container(
                         child: Padding(
@@ -181,8 +181,8 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                             },
                             child: Row(
                               children: [
-                                Icon(Icons.message),
-                                SizedBox(
+                                const Icon(Icons.message),
+                                const SizedBox(
                                   width: 5,
                                 ),
                                 Text(AppLocalizations.of(context)!.reply_post),
@@ -192,9 +192,9 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                         ),
                       ),
                     ),
-                    Divider(),
+                    const Divider(),
                     ListView.builder(
-                        padding: EdgeInsets.only(bottom: 30),
+                        padding: const EdgeInsets.only(bottom: 30),
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
                         itemCount: _forumPost.length - 1,
@@ -281,7 +281,7 @@ class ReplyCard extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       subject!,
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                           color: Colors.green),
@@ -294,7 +294,7 @@ class ReplyCard extends StatelessWidget {
                         Text(AppLocalizations.of(context)!.forum_by),
                         Text(
                           name!,
-                          style: TextStyle(color: MoodleColors.blue),
+                          style: const TextStyle(color: MoodleColors.blue),
                         ),
                       ],
                     ),
@@ -312,7 +312,8 @@ class ReplyCard extends StatelessWidget {
                               .format(DateTime.fromMillisecondsSinceEpoch(
                                   date! * 1000))
                               .toString(),
-                          style: TextStyle(color: Colors.grey, fontSize: 10),
+                          style:
+                              const TextStyle(color: Colors.grey, fontSize: 10),
                         ),
                       ),
                       Padding(
@@ -321,8 +322,8 @@ class ReplyCard extends StatelessWidget {
                           onTap: function,
                           child: Row(
                             children: [
-                              Icon(Icons.message),
-                              SizedBox(
+                              const Icon(Icons.message),
+                              const SizedBox(
                                 width: 5,
                               ),
                               Text(AppLocalizations.of(context)!.reply_post),

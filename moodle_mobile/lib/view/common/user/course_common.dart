@@ -38,7 +38,7 @@ class CourseCommonView extends StatelessWidget {
                 color: MoodleColors.iconGrey,
                 size: 24,
               ),
-              SizedBox(
+              const SizedBox(
                 width: 8,
               ),
               course == null

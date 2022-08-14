@@ -33,7 +33,7 @@ class DescriptionCommonView extends StatelessWidget {
           children: <Widget>[
             Text(
               AppLocalizations.of(context)!.description,
-              style: TextStyle(
+              style: const TextStyle(
                   fontWeight: FontWeight.w900,
                   fontSize: 15,
                   letterSpacing: 0.27,

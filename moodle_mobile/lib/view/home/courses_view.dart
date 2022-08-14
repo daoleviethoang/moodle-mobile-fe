@@ -611,8 +611,7 @@ class CategoryView extends StatelessWidget {
                   padding: EdgeInsets.only(left: 20),
                   child: Text(
                     "Star this course",
-                    style: const TextStyle(
-                        color: MoodleColors.black, fontSize: 16),
+                    style: TextStyle(color: MoodleColors.black, fontSize: 16),
                   ),
                 ),
                 style: TextButton.styleFrom(
@@ -643,8 +642,8 @@ class CategoryView extends StatelessWidget {
             size: 30,
           ),
           label: const Padding(
-            padding: const EdgeInsets.only(left: 20),
-            child: const Text(
+            padding: EdgeInsets.only(left: 20),
+            child: Text(
               "Download courses",
               style: TextStyle(color: MoodleColors.black, fontSize: 16),
             ),

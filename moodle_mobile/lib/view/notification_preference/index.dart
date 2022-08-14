@@ -151,7 +151,7 @@ class _NotificationPreferenceScreenState
                         tabs: _tabs,
                         onTap: (value) => setState(() => _index = value),
                       ),
-                Divider(),
+                const Divider(),
                 if (_tabs.isNotEmpty)
                   Column(
                     children: notificationPreference?.components

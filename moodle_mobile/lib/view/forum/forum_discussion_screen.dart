@@ -69,14 +69,14 @@ class _ForumDiscussionScreenState extends State<ForumDiscussionScreen> {
               Text(AppLocalizations.of(context)!.forum_name),
               sortDesc != true
                   ? IconButton(
-                      icon: Icon(Icons.arrow_upward),
+                      icon: const Icon(Icons.arrow_upward),
                       onPressed: Sort,
                     )
                   : IconButton(
-                      icon: Icon(Icons.arrow_downward),
+                      icon: const Icon(Icons.arrow_downward),
                       onPressed: Sort,
                     ),
-              Spacer(),
+              const Spacer(),
               IconButton(
                   onPressed: () {
                     Navigator.push(
@@ -89,7 +89,7 @@ class _ForumDiscussionScreenState extends State<ForumDiscussionScreen> {
                       fetch();
                     });
                   },
-                  icon: Icon(Icons.add)),
+                  icon: const Icon(Icons.add)),
             ],
           ),
         ),
@@ -152,7 +152,8 @@ class _PostCardState extends State<PostCard> {
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
                   widget.title,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 16),
                 ),
               ),
               Padding(
@@ -160,14 +161,14 @@ class _PostCardState extends State<PostCard> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 5),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 5),
                       child: CircleImageView(
                         imageUrl: '',
                         height: 60,
                         width: 60,
                         placeholder: Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: EdgeInsets.all(8.0),
                           child: Icon(
                             Icons.person,
                             size: 35,
@@ -175,7 +176,7 @@ class _PostCardState extends State<PostCard> {
                         ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 10,
                     ),
                     SizedBox(
@@ -188,11 +189,12 @@ class _PostCardState extends State<PostCard> {
                             children: [
                               Text(
                                 AppLocalizations.of(context)!.forum_started,
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
                               ),
                               Text(
                                 widget.article!,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: MoodleColors.blue),
                               ),
@@ -203,7 +205,7 @@ class _PostCardState extends State<PostCard> {
                             DateFormat('hh:mm dd-MM-yyyy')
                                 .format(widget.date!)
                                 .toString(),
-                            style: TextStyle(fontSize: 10),
+                            style: const TextStyle(fontSize: 10),
                           ),
                         ],
                       ),
@@ -224,7 +226,7 @@ class _PostCardState extends State<PostCard> {
                       },
                     ),
                     Text(AppLocalizations.of(context)!.forum_subscrible),
-                    Spacer(),
+                    const Spacer(),
                     Text(widget.relyNum.toString() +
                         AppLocalizations.of(context)!.forum_replies),
                   ],

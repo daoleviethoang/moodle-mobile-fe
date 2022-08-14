@@ -59,9 +59,10 @@ class _CourseCategoryListTileState extends State<CourseCategoryListTile> {
               Container(height: 8),
               Row(
                 children: [
-                  SizedBox(width: 8),
-                  Icon(Icons.folder_open_outlined, color: MoodleColors.blueDark),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
+                  const Icon(Icons.folder_open_outlined,
+                      color: MoodleColors.blueDark),
+                  const SizedBox(width: 8),
                   Expanded(
                     child: Text(widget.data.name ?? "",
                         softWrap: true,
@@ -74,10 +75,12 @@ class _CourseCategoryListTileState extends State<CourseCategoryListTile> {
                   ),
                   Row(
                     children: [
-                      Text((widget.data.sumCoursecount +
-                              (widget.data.coursecount ?? 0))
-                          .toString(),
-                      style: const TextStyle(color: MoodleColors.blueDark),),
+                      Text(
+                        (widget.data.sumCoursecount +
+                                (widget.data.coursecount ?? 0))
+                            .toString(),
+                        style: const TextStyle(color: MoodleColors.blueDark),
+                      ),
                       Icon(
                         showChild ? Icons.arrow_drop_down : Icons.arrow_right,
                         color: MoodleColors.blueDark,
@@ -88,7 +91,7 @@ class _CourseCategoryListTileState extends State<CourseCategoryListTile> {
                 ],
               ),
               Container(height: 8),
-              if (showChild) Divider(),
+              if (showChild) const Divider(),
               Column(
                 mainAxisSize: MainAxisSize.min,
                 children: listChild

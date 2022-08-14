@@ -45,7 +45,7 @@ class AlbumTile extends StatelessWidget {
           children: [
             Text(
               module.name ?? "",
-              style: TextStyle(
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 color: MoodleColors.black80,
               ),
@@ -66,13 +66,13 @@ class AlbumTile extends StatelessWidget {
                   }));
                 },
                 child: Text(AppLocalizations.of(context)!.see_all,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.blueAccent,
                     ))),
           ],
         ),
-        SizedBox(
+        const SizedBox(
           height: 5,
         ),
         SingleChildScrollView(
@@ -85,7 +85,7 @@ class AlbumTile extends StatelessWidget {
                       ))
                   .toList()),
         ),
-        SizedBox(
+        const SizedBox(
           height: 15,
         ),
       ],

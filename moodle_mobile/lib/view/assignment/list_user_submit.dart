@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:moodle_mobile/constants/colors.dart';
+//import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/models/assignment/user_submited.dart';
 import 'package:moodle_mobile/view/assignment/files_assignment_for_teacher.dart';
 import 'package:moodle_mobile/view/common/user/user_avatar_common.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
-import 'package:badges/badges.dart';
+//import 'package:badges/badges.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ListUserSubmited extends StatelessWidget {
@@ -85,7 +85,7 @@ class ListUserSubmited extends StatelessWidget {
                         //     "https://www.w3schools.com/w3css/lights.jpg"
                       ),
                       title: Padding(
-                        padding: EdgeInsets.only(top: 8),
+                        padding: const EdgeInsets.only(top: 8),
                         child: Text(
                           e.fullname ?? "",
                         ),
@@ -105,7 +105,7 @@ class ListUserSubmited extends StatelessWidget {
                                     child: Text(
                                       AppLocalizations.of(context)!
                                           .assignment_was_grading,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           color: Colors.white,
                                           fontSize: 10,
                                           fontWeight: FontWeight.bold),
@@ -125,7 +125,7 @@ class ListUserSubmited extends StatelessWidget {
                                     child: Text(
                                       AppLocalizations.of(context)!
                                           .no_submision,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           color: Colors.white,
                                           fontSize: 10,
                                           fontWeight: FontWeight.bold),
@@ -145,7 +145,7 @@ class ListUserSubmited extends StatelessWidget {
                                     child: Text(
                                       AppLocalizations.of(context)!
                                           .submit_for_grade,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           color: Colors.white,
                                           fontSize: 10,
                                           fontWeight: FontWeight.bold),
@@ -153,9 +153,9 @@ class ListUserSubmited extends StatelessWidget {
                                   )
                                 : Container()
                           ]),
-                      trailing: Padding(
-                        padding: const EdgeInsets.only(top: 15),
-                        child: const Icon(Icons.arrow_forward_ios),
+                      trailing: const Padding(
+                        padding: EdgeInsets.only(top: 15),
+                        child: Icon(Icons.arrow_forward_ios),
                       ),
                     ),
                   )

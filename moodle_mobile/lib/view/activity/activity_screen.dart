@@ -194,7 +194,8 @@ class _ActivityScreenState extends State<ActivityScreen> {
                   padding: const EdgeInsets.only(left: 20),
                   child: Text(
                     AppLocalizations.of(context)!.file_from_gallery,
-                    style: TextStyle(color: MoodleColors.black, fontSize: 16),
+                    style: const TextStyle(
+                        color: MoodleColors.black, fontSize: 16),
                   ),
                 ),
                 style: TextButton.styleFrom(
@@ -227,7 +228,8 @@ class _ActivityScreenState extends State<ActivityScreen> {
                   padding: const EdgeInsets.only(left: 20),
                   child: Text(
                     AppLocalizations.of(context)!.file_from_camera,
-                    style: TextStyle(color: MoodleColors.black, fontSize: 16),
+                    style: const TextStyle(
+                        color: MoodleColors.black, fontSize: 16),
                   ),
                 ),
                 style: TextButton.styleFrom(
@@ -249,10 +251,10 @@ class _ActivityScreenState extends State<ActivityScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-              padding: EdgeInsets.only(top: 20, bottom: 20),
+              padding: const EdgeInsets.only(top: 20, bottom: 20),
               child: Text(
                 AppLocalizations.of(context)!.class_activities,
-                style: TextStyle(
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   color: MoodleColors.black80,
                 ),
@@ -286,13 +288,13 @@ class _ActivityScreenState extends State<ActivityScreen> {
     return Column(
       children: [
         Padding(
-            padding: EdgeInsets.only(top: 20, bottom: 20),
+            padding: const EdgeInsets.only(top: 20, bottom: 20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   AppLocalizations.of(context)!.class_activities,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     color: MoodleColors.black80,
                   ),
@@ -317,7 +319,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                                 backgroundColor: Colors.red));
                           }
                         },
-                        icon: Icon(Icons.add)),
+                        icon: const Icon(Icons.add)),
               ],
             )),
         (widget.content?.modules.isEmpty ?? true)

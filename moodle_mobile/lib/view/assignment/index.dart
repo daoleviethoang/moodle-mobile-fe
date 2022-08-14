@@ -492,7 +492,7 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                               ],
                               Text(
                                 AppLocalizations.of(context)!.submission_status,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 20,
                                 ),
@@ -646,7 +646,7 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                                         );
                                       },
                                     ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 20,
                               ),
                             ],

@@ -174,7 +174,7 @@ class _CommentAssignmentDetailScreenState
                 if (index == 0 || isSameDate == false) {
                   return Column(children: [
                     Text(DateFormat("dd MMMM, yyyy").format(date)),
-                    SizedBox(
+                    const SizedBox(
                       height: 5,
                     ),
                     comment
