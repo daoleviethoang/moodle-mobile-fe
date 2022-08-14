@@ -6,6 +6,7 @@ import 'package:moodle_mobile/data/firebase/firestore/polls_service.dart';
 import 'package:moodle_mobile/models/poll/poll.dart';
 import 'package:flutter_polls/flutter_polls.dart';
 import 'package:moodle_mobile/view/forum/add_post/edit_poll_screen.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PollContainer extends StatefulWidget {
   final String? courseId;
@@ -84,27 +85,27 @@ class _PollContainerState extends State<PollContainer> {
             child: Stack(
               children: [
                 if (widget.isTeacher)
-                Align(
-                  alignment: Alignment.topRight,
-                  child: IconButton(
-                      padding: EdgeInsets.zero,
-                      constraints: BoxConstraints(),
-                      onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(
-                          builder: (context) {
-                            return EditPollScreen(
-                              courseId: widget.courseId!,
-                              poll: poll!,
-                            );
-                          },
-                        )).then((_) {
-                          fetch();
-                        });
-                      },
-                      icon: Icon(
-                        Icons.edit,
-                      )),
-                ),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: IconButton(
+                        padding: EdgeInsets.zero,
+                        constraints: BoxConstraints(),
+                        onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) {
+                              return EditPollScreen(
+                                courseId: widget.courseId!,
+                                poll: poll!,
+                              );
+                            },
+                          )).then((_) {
+                            fetch();
+                          });
+                        },
+                        icon: Icon(
+                          Icons.edit,
+                        )),
+                  ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -146,8 +147,8 @@ class _PollContainerState extends State<PollContainer> {
                           ElevatedButton(
                             onPressed:
                                 votedOption != null ? () => onDeleted() : null,
-                            child: const Text(
-                              "Vote Again",
+                            child: Text(
+                              AppLocalizations.of(context)!.vote_again,
                               style: TextStyle(color: Colors.white),
                             ),
                           ),

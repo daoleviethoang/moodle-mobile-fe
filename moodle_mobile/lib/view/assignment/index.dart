@@ -547,7 +547,8 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                                             [])
                                         .length
                                         .toString() +
-                                    " files",
+                                    " " +
+                                    AppLocalizations.of(context)!.file,
                                 rightTextColor: MoodleColors.blue,
                               ),
                               const SizedBox(

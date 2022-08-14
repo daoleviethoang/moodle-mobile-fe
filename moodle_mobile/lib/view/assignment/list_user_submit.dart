@@ -6,6 +6,7 @@ import 'package:moodle_mobile/view/assignment/files_assignment_for_teacher.dart'
 import 'package:moodle_mobile/view/common/user/user_avatar_common.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:badges/badges.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ListUserSubmited extends StatelessWidget {
   final List<UserSubmited> userSubmiteds;
@@ -101,8 +102,9 @@ class ListUserSubmited extends StatelessWidget {
                                     ),
                                     padding: const EdgeInsets.only(
                                         left: 10, right: 10, bottom: 5, top: 5),
-                                    child: const Text(
-                                      'Đã chấm điểm',
+                                    child: Text(
+                                      AppLocalizations.of(context)!
+                                          .assignment_was_grading,
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 10,
@@ -120,8 +122,9 @@ class ListUserSubmited extends StatelessWidget {
                                     ),
                                     padding: const EdgeInsets.only(
                                         left: 10, right: 10, bottom: 5, top: 5),
-                                    child: const Text(
-                                      'Không có bài nộp',
+                                    child: Text(
+                                      AppLocalizations.of(context)!
+                                          .no_submision,
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 10,
@@ -139,8 +142,9 @@ class ListUserSubmited extends StatelessWidget {
                                     ),
                                     padding: const EdgeInsets.only(
                                         left: 10, right: 10, bottom: 5, top: 5),
-                                    child: const Text(
-                                      'Đã nộp đẻ chấm điểm',
+                                    child: Text(
+                                      AppLocalizations.of(context)!
+                                          .submit_for_grade,
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 10,

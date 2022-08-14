@@ -167,6 +167,13 @@ class _UserDetailStudentScreen extends State<UserDetailStudentScreen> {
     var diff = now.difference(date);
     var time = '';
 
+    int currentTimeStamp = Timestamp.fromDate(DateTime.now()).seconds;
+
+    int calTime = currentTimeStamp - timestamp;
+    if (calTime <= 300) {
+      return AppLocalizations.of(context)!.online_just_now;
+    }
+
     if (diff.inSeconds <= 0 ||
         diff.inSeconds > 0 && diff.inMinutes == 0 ||
         diff.inMinutes > 0 && diff.inHours == 0 ||
@@ -174,18 +181,39 @@ class _UserDetailStudentScreen extends State<UserDetailStudentScreen> {
       time = format.format(date);
     } else if (diff.inDays > 0 && diff.inDays < 7) {
       if (diff.inDays == 1) {
-        time = 'Last online ' + diff.inDays.toString() + ' days ago';
+        time = AppLocalizations.of(context)!.last_access +
+            ' ' +
+            diff.inDays.toString() +
+            ' ' +
+            AppLocalizations.of(context)!.day +
+            ' ' +
+            AppLocalizations.of(context)!.ago;
       } else {
-        time = 'Last online ' + diff.inDays.toString() + ' days ago';
+        time = AppLocalizations.of(context)!.last_access +
+            ' ' +
+            diff.inDays.toString() +
+            ' ' +
+            AppLocalizations.of(context)!.days +
+            ' ' +
+            AppLocalizations.of(context)!.ago;
       }
     } else {
       if (diff.inDays == 7) {
-        time =
-            'Last online ' + (diff.inDays / 7).floor().toString() + ' week ago';
-      } else {
-        time = 'Last online ' +
+        time = AppLocalizations.of(context)!.last_access +
+            ' ' +
             (diff.inDays / 7).floor().toString() +
-            ' weeks ago';
+            ' ' +
+            AppLocalizations.of(context)!.week +
+            ' ' +
+            AppLocalizations.of(context)!.ago;
+      } else {
+        time = AppLocalizations.of(context)!.last_access +
+            ' ' +
+            (diff.inDays / 7).floor().toString() +
+            ' ' +
+            AppLocalizations.of(context)!.weeks +
+            ' ' +
+            AppLocalizations.of(context)!.ago;
       }
     }
 

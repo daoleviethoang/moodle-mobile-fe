@@ -71,7 +71,7 @@ class _EditPollScreenState extends State<EditPollScreen> {
             floating: true,
             snap: true,
             title: Text(
-              'Edit poll',
+              AppLocalizations.of(context)!.edit_poll,
               // widget.relyPostId == null
               //     ? AppLocalizations.of(context)!.add_new_discussion
               //     : AppLocalizations.of(context)!.rely_discussion,
@@ -229,8 +229,12 @@ class _EditPollScreenState extends State<EditPollScreen> {
                                     ),
                                   );
                                 }),
+                                SizedBox(
+                                  height: 10,
+                                ),
                                 CustomButtonWidget(
-                                  textButton: 'Thêm lựa chọn',
+                                  textButton:
+                                      AppLocalizations.of(context)!.add_option,
                                   onPressed: () {
                                     setState(() {
                                       pollController
@@ -241,6 +245,21 @@ class _EditPollScreenState extends State<EditPollScreen> {
                               ],
                             ),
                           ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          CustomButtonWidget(
+                            textButton:
+                                AppLocalizations.of(context)!.remove_poll,
+                            onPressed: () async {
+                              await PollService.deletePoll(
+                                widget.courseId,
+                              );
+                              Navigator.pop(context, true);
+                            },
+                            filled: false,
+                            useWarningColor: true,
+                          )
                         ],
                       ),
                     ),
@@ -291,7 +310,7 @@ class PollOptionTab extends StatelessWidget {
             borderRadius: BorderRadius.circular(10.0),
             borderSide: BorderSide(width: 1),
           ),
-          hintText: 'Thêm lựa chọn ý kiến',
+          hintText: AppLocalizations.of(context)!.add_option,
         ),
       ),
     );

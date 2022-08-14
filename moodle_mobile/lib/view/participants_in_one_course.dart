@@ -62,6 +62,7 @@ class _ParticipantsInOneCourseState extends State<ParticipantsInOneCourse> {
                             userStore: _userStore,
                             repository: _repository,
                             context: context,
+                            lastAccess: participants[index].lastAccess,
                             courseName: widget.courseName,
                             avatar: participants[index].avatar.replaceAll(
                                     "pluginfile.php",
@@ -89,6 +90,7 @@ class _ParticipantsInOneCourseState extends State<ParticipantsInOneCourse> {
                             userStore: _userStore,
                             repository: _repository,
                             context: context,
+                            lastAccess: participants[index].lastAccess,
                             courseName: widget.courseName,
                             avatar: participants[index].avatar.replaceAll(
                                     "pluginfile.php",

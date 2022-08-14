@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:moodle_mobile/data/repository.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/image_view.dart';
@@ -6,6 +8,7 @@ import 'package:moodle_mobile/view/common/user/user_avatar_common.dart';
 import 'package:moodle_mobile/view/message/message_detail_screen.dart';
 import 'package:moodle_mobile/view/user_detail/user_detail.dart';
 import 'package:moodle_mobile/view/user_detail/user_detail_student.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ParticipantListTile extends StatelessWidget {
   const ParticipantListTile(
@@ -18,6 +21,7 @@ class ParticipantListTile extends StatelessWidget {
       required this.context,
       this.courseName,
       this.conversationId,
+      this.lastAccess,
       required this.avatar})
       : super(key: key);
 
@@ -30,9 +34,75 @@ class ParticipantListTile extends StatelessWidget {
   final Repository repository;
   final BuildContext context;
   final int? conversationId;
+  final int? lastAccess;
+
+  String? readTimestamp(int? timestamp) {
+    if (timestamp == null) {
+      return null;
+    }
+    var now = DateTime.now();
+    var format = DateFormat('HH:mm a');
+    var date = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
+    var diff = now.difference(date);
+    var time = '';
+
+    int currentTimeStamp = Timestamp.fromDate(DateTime.now()).seconds;
+
+    int calTime = currentTimeStamp - timestamp;
+    if (calTime <= 300) {
+      return AppLocalizations.of(context)!.online_just_now;
+    }
+
+    if (diff.inSeconds <= 0 ||
+        diff.inSeconds > 0 && diff.inMinutes == 0 ||
+        diff.inMinutes > 0 && diff.inHours == 0 ||
+        diff.inHours > 0 && diff.inDays == 0) {
+      time = format.format(date);
+    } else if (diff.inDays > 0 && diff.inDays < 7) {
+      if (diff.inDays == 1) {
+        time = AppLocalizations.of(context)!.last_access +
+            ' ' +
+            diff.inDays.toString() +
+            ' ' +
+            AppLocalizations.of(context)!.day +
+            ' ' +
+            AppLocalizations.of(context)!.ago;
+      } else {
+        time = AppLocalizations.of(context)!.last_access +
+            ' ' +
+            diff.inDays.toString() +
+            ' ' +
+            AppLocalizations.of(context)!.days +
+            ' ' +
+            AppLocalizations.of(context)!.ago;
+      }
+    } else {
+      if (diff.inDays == 7) {
+        time = AppLocalizations.of(context)!.last_access +
+            ' ' +
+            (diff.inDays / 7).floor().toString() +
+            ' ' +
+            AppLocalizations.of(context)!.week +
+            ' ' +
+            AppLocalizations.of(context)!.ago;
+      } else {
+        time = AppLocalizations.of(context)!.last_access +
+            ' ' +
+            (diff.inDays / 7).floor().toString() +
+            ' ' +
+            AppLocalizations.of(context)!.weeks +
+            ' ' +
+            AppLocalizations.of(context)!.ago;
+      }
+    }
+
+    return time;
+  }
 
   @override
   Widget build(BuildContext context) {
+    String? status;
+    if (lastAccess != null) status = readTimestamp(lastAccess);
     return Padding(
       padding: const EdgeInsets.all(10),
       child: ListTile(
@@ -73,6 +143,7 @@ class ParticipantListTile extends StatelessWidget {
           },
         ),
         title: Text(fullname),
+        subtitle: status != null ? Text(status) : null,
         onTap: () => {
           if (role != null && role != 5)
             {

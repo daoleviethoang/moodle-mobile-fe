@@ -66,7 +66,7 @@ class _AddPollScreenState extends State<AddPollScreen> {
             floating: true,
             snap: true,
             title: Text(
-              'Add new poll',
+              AppLocalizations.of(context)!.add_new_poll,
               // widget.relyPostId == null
               //     ? AppLocalizations.of(context)!.add_new_discussion
               //     : AppLocalizations.of(context)!.rely_discussion,
@@ -226,7 +226,8 @@ class _AddPollScreenState extends State<AddPollScreen> {
                                   );
                                 }),
                                 CustomButtonWidget(
-                                  textButton: 'Thêm lựa chọn',
+                                  textButton:
+                                      AppLocalizations.of(context)!.add_option,
                                   onPressed: () {
                                     setState(() {
                                       pollController
@@ -246,7 +247,6 @@ class _AddPollScreenState extends State<AddPollScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          print('test');
           pollController.removeWhere((element) => element.text.isEmpty);
           Poll temp = Poll(
             content: contentController.text,
@@ -286,7 +286,7 @@ class PollOption extends StatelessWidget {
             borderRadius: BorderRadius.circular(10.0),
             borderSide: BorderSide(width: 1),
           ),
-          hintText: 'Thêm lựa chọn ý kiến',
+          hintText: AppLocalizations.of(context)!.add_option,
         ),
       ),
     );
