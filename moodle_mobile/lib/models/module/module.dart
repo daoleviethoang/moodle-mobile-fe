@@ -45,7 +45,8 @@ class Module {
   List<ModuleContent>? contents;
   ModuleContentsInfo? contentsInfo;
 
-  Module({this.id,
+  Module({
+    this.id,
     this.url,
     this.name,
     this.description,
@@ -69,8 +70,14 @@ class Module {
     this.contentsInfo,
   });
 
-  factory Module.fromJson(Map<String, dynamic> json) =>
-      _$ModuleFromJson(json);
+  bool? get isCompleted {
+    //print('state:' + (completion?.toString() ?? ''));
+    if (completiondata?.state == null) return null;
+    if (completiondata!.state == 0) return false;
+    return true;
+  }
+
+  factory Module.fromJson(Map<String, dynamic> json) => _$ModuleFromJson(json);
   Map<String, dynamic> toJson() => _$ModuleToJson(this);
 
   @override

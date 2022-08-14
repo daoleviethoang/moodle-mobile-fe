@@ -24,4 +24,21 @@ class ModuleService {
       rethrow;
     }
   }
+
+  Future<bool?> markModule(String token, int id, bool? state) async {
+    try {
+      if (state == null) return null;
+      Dio dio = Http().client;
+      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': Wsfunction.MARK_DONE_MODULE,
+        'moodlewsrestformat': 'json',
+        'completed': state ? 0 : 1,
+        'cmid': id,
+      });
+      return !state;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
