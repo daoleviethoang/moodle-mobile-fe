@@ -102,6 +102,6 @@ class MoodleStyles {
     return html;
   }
 
-  static const TextStyle notificationTimestampStyle = TextStyle(
-      fontSize: 13, fontWeight: FontWeight.bold, color: MoodleColors.blue);
+  static const TextStyle notificationTimestampStyle =
+      TextStyle(fontSize: 12, color: MoodleColors.grey);
 }

@@ -70,6 +70,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
       for (int i = 0; i < 5; i++) {
         if (i < value!.notificationDetail!.length) {
           if (value!.notificationDetail![i] != null) {
+            value.notificationDetail![i].read = true;
             alreadyRead.add(value.notificationDetail![i]);
           }
         } else
@@ -98,7 +99,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
         //_notificationPopup = value;
         _loading = false;
         //_notificationDetail = value.notificationDetail ?? [];
-        _notificationDetail = alreadyRead;
+        _notificationDetail = unRead + alreadyRead;
       });
     });
 
@@ -176,23 +177,26 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           article: article,
                           subject: subject,
                           title: temp.contexturlname,
+                          read: temp.read,
                           date: date),
                     );
                   }),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 10, 15, 12),
-                    child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        decoration: BoxDecoration(
-                          color: MoodleColors.blue,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        //color: MoodleColors.blue,
-                        width: double.infinity,
-                        child: TextButton(
-                            onPressed: () {},
-                            child: Text('Submit',
-                                style: TextStyle(color: Colors.white)))),
+                  SafeArea(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 10, 15, 12),
+                      child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          decoration: BoxDecoration(
+                            color: MoodleColors.blue,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          //color: MoodleColors.blue,
+                          width: double.infinity,
+                          child: TextButton(
+                              onPressed: () {},
+                              child: Text('Submit',
+                                  style: TextStyle(color: Colors.white)))),
+                    ),
                   )
                 ],
               ),
@@ -210,11 +214,13 @@ class NotificationPopupContainer extends StatelessWidget {
   final String? subject;
   final String? article;
   final String? name;
+  final bool? read;
 
   const NotificationPopupContainer({
     this.subject,
     this.title,
     this.name = 'temp',
+    this.read,
     this.article,
     this.date,
     Key? key,
@@ -226,15 +232,26 @@ class NotificationPopupContainer extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(5, 10, 5, 0),
       child: Card(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 10, 15, 12),
+          padding: const EdgeInsets.fromLTRB(20, 15, 15, 17),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  read == true
+                      ? Container()
+                      : Icon(
+                          Icons.circle,
+                          color: MoodleColors.blue,
+                          size: 13,
+                        ),
+                  SizedBox(
+                    width: 5,
+                  ),
                   Expanded(
                     child: Text(
-                      subject!,
+                      article!,
                       //overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                           fontWeight: FontWeight.bold,
@@ -270,24 +287,14 @@ class NotificationPopupContainer extends StatelessWidget {
               //   padding: const EdgeInsets.only(top: 10),
               //   child: Text(title ?? ' '),
               // ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    article!,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                  ),
-                  Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(3.0),
-                      ),
-                      //color: MoodleColors.brightGray,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Text(date!,
-                            style: MoodleStyles.notificationTimestampStyle),
-                      )),
-                ],
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 3.0),
+                child:
+                    Text(date!, style: MoodleStyles.notificationTimestampStyle),
+              ),
+              Text(
+                subject!,
+                style: TextStyle(fontSize: 14),
               ),
             ],
           ),

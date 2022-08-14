@@ -3,7 +3,8 @@ import 'dart:convert';
 class NotificationPopup {
   List<NotificationDetail>? notificationDetail;
   int? warningcount;
-  NotificationPopup({this.notificationDetail, this.warningcount});
+  int? read;
+  NotificationPopup({this.notificationDetail, this.warningcount, this.read});
 
   NotificationPopup.fromJson(Map<String, dynamic> json) {
     if (json['messages'] != null) {
@@ -14,6 +15,7 @@ class NotificationPopup {
         }
       }
     }
+
     // notificationDetail = json['notifications'];
     //warningcount = json['unreadcount'];
   }
@@ -83,8 +85,9 @@ class NotificationDetail {
     userFromFullName = json['userfromfullname'];
     userToFullName = json['usertofullname'];
     timeread = json['timeread'];
-    read = json['read'];
+    //read = json['read'];
     deleted = json['deleted'];
+    read = false;
 
     //stringCustomdata = CustomData.fromJson(jsonDecode(json['customdata']));
     if (json['customdata'] != null) {
