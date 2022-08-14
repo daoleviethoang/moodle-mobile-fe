@@ -17,6 +17,8 @@ class Wsfunction {
   // module
   static const String GET_MODULE_BY_ID = "core_course_get_course_module";
   static const String MOD_LTI_GET_TLD = "mod_lti_get_tool_launch_data";
+  static const String MARK_DONE_MODULE =
+      "core_completion_update_activity_completion_status_manually";
 
   //user
   static const String GET_COURSE_GET_CATEGORIES = "core_course_get_categories";
@@ -93,10 +95,14 @@ class Wsfunction {
   //notification
   static const String MESSAGE_POPUP_GET_POPUP_NOTIFICATION =
       'message_popup_get_popup_notifications';
+  static const String CORE_MESSAGE_GET_MESSAGES = "core_message_get_messages";
   static const String MARK_ALL_NOTIFICATION_AS_READ =
       'core_message_mark_all_notifications_as_read';
   static const String GET_UNREAD_NOTIFICATIONS_COUNT =
       "message_popup_get_unread_popup_notification_count";
+  static const String MARK_MESSAGE_AS_READ = "core_message_mark_message_read";
+  static const String MARK_NOTIFICATION_AS_READ =
+      "core_message_mark_notification_read";
 
   //notification preference
   static const String CORE_MESSAGE_GET_USER_NOTIFICATION_PREFERENCES =

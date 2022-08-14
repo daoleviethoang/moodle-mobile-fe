@@ -4,7 +4,7 @@ import 'package:moodle_mobile/constants/dimens.dart';
 import 'package:moodle_mobile/models/user_login.dart';
 import 'package:moodle_mobile/sqllite/sql.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
-import 'package:moodle_mobile/view/common/image_view.dart';
+
 import 'package:moodle_mobile/view/direct_page.dart';
 
 class UserLoginTile extends StatelessWidget {
