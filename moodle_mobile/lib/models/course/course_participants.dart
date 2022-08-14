@@ -3,11 +3,14 @@ class CourseParticipantsModel {
   String fullname;
   List<RoleOfParticitpants> roles;
   String avatar;
-  CourseParticipantsModel(
-      {required this.id,
-      required this.fullname,
-      required this.roles,
-      required this.avatar});
+  int lastAccess;
+  CourseParticipantsModel({
+    required this.id,
+    required this.fullname,
+    required this.roles,
+    required this.avatar,
+    required this.lastAccess,
+  });
 }
 
 class RoleOfParticitpants {

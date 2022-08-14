@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class FabWithIcons extends StatefulWidget {
   FabWithIcons({required this.icons, required this.onIconTapped});
+
   final List<IconData> icons;
   ValueChanged<int> onIconTapped;
+
   @override
   State createState() => FabWithIconsState();
 }
@@ -18,7 +21,16 @@ class FabWithIconsState extends State<FabWithIcons>
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 250),
-    );
+    )..addListener(_updateIcon);
+  }
+
+  void _updateIcon() => setState(() {});
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _controller.removeListener(_updateIcon);
+    super.dispose();
   }
 
   @override
@@ -67,10 +79,11 @@ class FabWithIconsState extends State<FabWithIcons>
           _controller.reverse();
         }
       },
-      tooltip: 'Increment',
-      child: Icon(
-        Icons.add,
-        color: Colors.white,
+      tooltip: AppLocalizations.of(context)!.add,
+      child: AnimatedRotation(
+        child: const Icon(Icons.close, color: Colors.white),
+        turns: _controller.isDismissed ? .125 : .25,
+        duration: const Duration(milliseconds: 300),
       ),
       elevation: 2.0,
     );

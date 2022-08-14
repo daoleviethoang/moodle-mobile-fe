@@ -20,7 +20,7 @@ class CourseParticipants {
         'moodlewsrestformat': 'json',
         'courseid': courseId,
         'options[0][name]': 'userfields',
-        'options[0][value]': 'id,roles,profileimageurl'
+        'options[0][value]': 'id,roles,profileimageurl,lastaccess'
       });
 
       List<CourseParticipantsModel> listCourseParticipants = [];
@@ -37,6 +37,7 @@ class CourseParticipants {
             id: res.data[i]['id'],
             fullname: res.data[i]['fullname'],
             roles: listRoleParticipants,
+            lastAccess: res.data[i]['lastaccess'],
             avatar: res.data[i]['profileimageurl']));
       }
       return listCourseParticipants;

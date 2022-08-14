@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class UserDetailCommonView extends StatelessWidget {
   final String email;
@@ -44,19 +45,24 @@ class UserDetailCommonView extends StatelessWidget {
               padding: const EdgeInsets.only(top: 10, bottom: 8),
               child: Row(
                 children: <Widget>[
-                  Icon(Icons.email_outlined,
+                  const Icon(Icons.email_outlined,
                       color: MoodleColors.iconGrey, size: 24),
-                  Padding(
-                    padding: EdgeInsets.only(left: 8),
-                    child: Text(
-                      email,
-                      style: TextStyle(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 14,
-                          letterSpacing: 0.27,
-                          color: MoodleColors.text_blue),
+                  InkWell(
+                    onTap: () => launchUrl(
+                      Uri.parse('mailto:$email'),
                     ),
-                  )
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 8),
+                      child: Text(
+                        email,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.normal,
+                            fontSize: 14,
+                            letterSpacing: 0.27,
+                            color: MoodleColors.text_blue),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),

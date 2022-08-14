@@ -6,6 +6,7 @@ import 'package:moodle_mobile/data/firebase/firestore/polls_service.dart';
 import 'package:moodle_mobile/models/poll/poll.dart';
 import 'package:flutter_polls/flutter_polls.dart';
 import 'package:moodle_mobile/view/forum/add_post/edit_poll_screen.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PollContainer extends StatefulWidget {
   final String? courseId;
@@ -20,7 +21,7 @@ class PollContainer extends StatefulWidget {
 }
 
 class _PollContainerState extends State<PollContainer> {
-  late Poll? poll;
+  Poll? poll;
   bool isLoading = false;
 
   List<PollOption> options = [];
@@ -33,11 +34,11 @@ class _PollContainerState extends State<PollContainer> {
   }
 
   Future<void> fetch() async {
-    await PollService.getPollByCouseId(widget.courseId!).then((value) {
+    await PollService.getPollByCouseId(widget.courseId ?? "0").then((value) {
       setState(() {
         poll = value;
         isLoading = true;
-        options = List.generate(poll!.options!.length, (index) {
+        options = List.generate(poll?.options?.length ?? 0, (index) {
           print(poll?.results?['$index']?.length ?? 0);
           return PollOption(
               id: index,
@@ -72,6 +73,7 @@ class _PollContainerState extends State<PollContainer> {
 
   @override
   Widget build(BuildContext context) {
+    if (poll == null) return Container();
     return isLoading == false
         ? Container()
         : Container(
@@ -82,28 +84,28 @@ class _PollContainerState extends State<PollContainer> {
                 border: Border.all(color: Colors.amber, width: 2)),
             child: Stack(
               children: [
-                //if (widget.isTeacher)
-                Align(
-                  alignment: Alignment.topRight,
-                  child: IconButton(
-                      padding: EdgeInsets.zero,
-                      constraints: BoxConstraints(),
-                      onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(
-                          builder: (context) {
-                            return EditPollScreen(
-                              courseId: widget.courseId!,
-                              poll: poll!,
-                            );
-                          },
-                        )).then((_) {
-                          fetch();
-                        });
-                      },
-                      icon: Icon(
-                        Icons.edit,
-                      )),
-                ),
+                if (widget.isTeacher)
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: IconButton(
+                        padding: EdgeInsets.zero,
+                        constraints: BoxConstraints(),
+                        onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) {
+                              return EditPollScreen(
+                                courseId: widget.courseId!,
+                                poll: poll!,
+                              );
+                            },
+                          )).then((_) {
+                            fetch();
+                          });
+                        },
+                        icon: Icon(
+                          Icons.edit,
+                        )),
+                  ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -145,8 +147,8 @@ class _PollContainerState extends State<PollContainer> {
                           ElevatedButton(
                             onPressed:
                                 votedOption != null ? () => onDeleted() : null,
-                            child: const Text(
-                              "Vote Again",
+                            child: Text(
+                              AppLocalizations.of(context)!.vote_again,
                               style: TextStyle(color: Colors.white),
                             ),
                           ),

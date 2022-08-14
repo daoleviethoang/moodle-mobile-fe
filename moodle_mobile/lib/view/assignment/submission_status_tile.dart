@@ -8,16 +8,18 @@ class SubmissionStatusTile extends StatefulWidget {
   final String rightText;
   final Color rightTextColor;
   final Color rightBackgroundColor;
+  final Function()? rightTap;
 
-  const SubmissionStatusTile(
-      {Key? key,
-      required this.leftText,
-      this.leftTextColor = MoodleColors.grey_text,
-      this.leftBackgroundColor = MoodleColors.submission_status_tile,
-      required this.rightText,
-      this.rightTextColor = Colors.grey,
-      this.rightBackgroundColor = Colors.white})
-      : super(key: key);
+  const SubmissionStatusTile({
+    Key? key,
+    required this.leftText,
+    this.leftTextColor = MoodleColors.grey_text,
+    this.leftBackgroundColor = MoodleColors.submission_status_tile,
+    required this.rightText,
+    this.rightTextColor = Colors.grey,
+    this.rightBackgroundColor = Colors.white,
+    this.rightTap,
+  }) : super(key: key);
 
   @override
   State<SubmissionStatusTile> createState() => _SubmissionStatusTileState();
@@ -44,16 +46,19 @@ class _SubmissionStatusTileState extends State<SubmissionStatusTile> {
             ),
           ),
           Expanded(
-            child: Container(
-              padding: const EdgeInsets.only(top: 4, bottom: 4, left: 5),
-              color: widget.rightBackgroundColor,
-              child: Text(
-                widget.rightText,
-                style: TextStyle(
-                  color: widget.rightTextColor,
-                  overflow: TextOverflow.clip,
+            child: InkWell(
+              onTap: widget.rightTap,
+              child: Container(
+                padding: const EdgeInsets.only(top: 4, bottom: 4, left: 5),
+                color: widget.rightBackgroundColor,
+                child: Text(
+                  widget.rightText,
+                  style: TextStyle(
+                    color: widget.rightTextColor,
+                    overflow: TextOverflow.clip,
+                  ),
+                  textScaleFactor: 0.95,
                 ),
-                textScaleFactor: 0.95,
               ),
             ),
           ),

@@ -62,6 +62,8 @@ class CourseDetailsScreen extends StatefulWidget {
 
 class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     with TickerProviderStateMixin {
+  Widget _fab = Container();
+
   // region Body data
 
   final _body = <Widget>[];
@@ -108,7 +110,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
 
   // region Index getters
 
-  int get _homeIndex => _body.indexOf(_homeTab);
+  int get _homeIndex => 0;
 
   int get _notesIndex => _body.indexOf(_notesTab);
 
@@ -137,6 +139,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   String get token => _userStore.user.token;
 
   bool isTeacher = false;
+
+  // region Section check getters
 
   final activitySectionName = 'activity';
   final announcementModuleName = 'announcement';
@@ -182,12 +186,21 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     });
   }
 
+  // endregion
+
   @override
   void initState() {
     super.initState();
     _courseId = widget.courseId;
     _userStore = GetIt.instance<UserStore>();
     checkIsTeacher();
+  }
+
+  @override
+  void dispose() {
+    _tabController?.removeListener(_updateIndex);
+    _tabController?.dispose();
+    super.dispose();
   }
 
   checkIsTeacher() async {
@@ -341,8 +354,10 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
       length: _tabs.length,
       initialIndex: _index,
       vsync: this,
-    );
+    )..addListener(_updateIndex);
   }
+
+  void _updateIndex() => setState(() {});
 
   // region Tabs
 
@@ -603,10 +618,11 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     _activityTab = Builder(builder: (context) {
       int? index =
           activityList.isNotEmpty ? _content.indexOf(activityList.first) : null;
+      if (index == null) return Container();
       return ActivityScreen(
-        sectionIndex: (index == null) ? 0 : index,
+        sectionIndex: index,
         isTeacher: isTeacher,
-        content: (index == null) ? null : _content[index],
+        content: index != -1 ? _content[index] : null,
         courseId: widget.courseId,
         reGetContent: reGetContentForActivityTab,
       );
@@ -728,6 +744,272 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
 
   // endregion
 
+  // region FAB
+
+  dialogAddSection() async {
+    var check = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          titlePadding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                AppLocalizations.of(context)!.add_section_title,
+                textScaleFactor: 0.8,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              CustomTextFieldWidget(
+                controller: nameController,
+                hintText: AppLocalizations.of(context)!.new_section_name,
+                haveLabel: false,
+                borderRadius: Dimens.default_border_radius,
+              ),
+            ],
+          ),
+          actions: [
+            Row(children: [
+              Expanded(
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text(AppLocalizations.of(context)!.cancel,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 16,
+                      )),
+                  style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all(MoodleColors.grey),
+                      shape: MaterialStateProperty.all(
+                          const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(8.0))))),
+                ),
+              ),
+              const SizedBox(
+                width: 15,
+              ),
+              Expanded(
+                child: TextButton(
+                  onPressed: () async {
+                    Navigator.pop(context, true);
+                  },
+                  child: Text(AppLocalizations.of(context)!.ok,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 16,
+                      )),
+                  style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all(MoodleColors.blue),
+                      shape: MaterialStateProperty.all(
+                          const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(8.0))))),
+                ),
+              ),
+            ]),
+          ],
+        );
+      },
+    );
+    if (check == true) {
+      try {
+        await CustomApi().addSectionCourse(
+            _userStore.user.token, widget.courseId, nameController.text);
+        setState(() {
+          _content.add(CourseContent(_content.length, nameController.text, 1,
+              "", 0, _content.length, 0, true, []));
+          nameController.clear();
+        });
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(e.toString()), backgroundColor: Colors.red));
+      }
+    }
+  }
+
+  dialogAddUrl() async {
+    if (_content.length - 1 < 0) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(AppLocalizations.of(context)!.course_not_have_section),
+          backgroundColor: Colors.red));
+      return;
+    }
+    int max = _content.length - 1;
+    var check = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          titlePadding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+          title: StatefulBuilder(builder: (context, sBSetState) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  AppLocalizations.of(context)!.add_url_title,
+                  textScaleFactor: 0.8,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                Text(AppLocalizations.of(context)!.number_section),
+                NumberPicker(
+                  axis: Axis.horizontal,
+                  value: _sectionChoose,
+                  minValue: 0,
+                  maxValue: max,
+                  haptics: true,
+                  zeroPad: true,
+                  onChanged: (value) =>
+                      sBSetState(() => _sectionChoose = value),
+                ),
+                Text(
+                  AppLocalizations.of(context)!.current +
+                      " section: " +
+                      _content[_sectionChoose].name,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                CustomTextFieldWidget(
+                  controller: nameController,
+                  hintText: AppLocalizations.of(context)!.name_module,
+                  haveLabel: true,
+                  borderRadius: Dimens.default_border_radius,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                CustomTextFieldWidget(
+                  controller: urlController,
+                  hintText: AppLocalizations.of(context)!.url_link,
+                  haveLabel: true,
+                  borderRadius: Dimens.default_border_radius,
+                ),
+              ],
+            );
+          }),
+          actions: [
+            Row(children: [
+              Expanded(
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text(AppLocalizations.of(context)!.cancel,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 16,
+                      )),
+                  style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all(MoodleColors.grey),
+                      shape: MaterialStateProperty.all(
+                          const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(8.0))))),
+                ),
+              ),
+              const SizedBox(
+                width: 15,
+              ),
+              Expanded(
+                child: TextButton(
+                  onPressed: () async {
+                    Navigator.pop(context, true);
+                  },
+                  child: Text(AppLocalizations.of(context)!.ok,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 16,
+                      )),
+                  style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all(MoodleColors.blue),
+                      shape: MaterialStateProperty.all(
+                          const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(8.0))))),
+                ),
+              ),
+            ]),
+          ],
+        );
+      },
+    );
+    if (check == true) {
+      try {
+        await CustomApi().addModuleUrl(_userStore.user.token, widget.courseId,
+            nameController.text, _sectionChoose, urlController.text);
+        setState(() {
+          _content[_sectionChoose].modules.add(Module(
+              id: 100,
+              name: nameController.text,
+              modname: ModuleName.url,
+              contents: [ModuleContent(fileurl: urlController.text)]));
+          nameController.clear();
+          urlController.clear();
+          _sectionChoose = 0;
+        });
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(e.toString()), backgroundColor: Colors.red));
+      }
+    }
+  }
+
+  void _buildFab(BuildContext context) {
+    final icons = [Icons.add, Icons.link, Icons.poll];
+    _fab = FabWithIcons(
+      icons: icons,
+      onIconTapped: (index) async {
+        if (index == 0) {
+          if (hasAddSectionAPI) {
+            await dialogAddSection();
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(AppLocalizations.of(context)!.api_unsupported),
+                backgroundColor: Colors.red));
+          }
+        }
+        if (index == 1) {
+          if (hasAddUrlAPI) {
+            await dialogAddUrl();
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(AppLocalizations.of(context)!.api_unsupported),
+                backgroundColor: Colors.red));
+          }
+        }
+        if (index == 2) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (builder) =>
+                      AddPollScreen(courseId: widget.courseId)));
+        }
+      },
+    );
+  }
+
+  // endregion
+
   // region Data queries
 
   Future<Lti> queryLti(int toolid) async {
@@ -835,279 +1117,21 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     }));
   }
 
-  dialogAddSection() async {
-    var check = await showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          titlePadding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                AppLocalizations.of(context)!.add_section_title,
-                textScaleFactor: 0.8,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              CustomTextFieldWidget(
-                controller: nameController,
-                hintText: AppLocalizations.of(context)!.new_section_name,
-                haveLabel: false,
-                borderRadius: Dimens.default_border_radius,
-              ),
-            ],
-          ),
-          actions: [
-            Row(children: [
-              Expanded(
-                child: TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text(AppLocalizations.of(context)!.cancel,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 16,
-                      )),
-                  style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all(MoodleColors.grey),
-                      shape: MaterialStateProperty.all(
-                          const RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8.0))))),
-                ),
-              ),
-              const SizedBox(
-                width: 15,
-              ),
-              Expanded(
-                child: TextButton(
-                  onPressed: () async {
-                    Navigator.pop(context, true);
-                  },
-                  child: Text(AppLocalizations.of(context)!.ok,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 16,
-                      )),
-                  style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all(MoodleColors.blue),
-                      shape: MaterialStateProperty.all(
-                          const RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8.0))))),
-                ),
-              ),
-            ]),
-          ],
-        );
-      },
-    );
-    if (check == true) {
-      try {
-        await CustomApi().addSectionCourse(
-            _userStore.user.token, widget.courseId, nameController.text);
-        setState(() {
-          _content.add(CourseContent(_content.length, nameController.text, 1,
-              "", 0, _content.length, 0, true, []));
-          nameController.clear();
-        });
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(e.toString()), backgroundColor: Colors.red));
-      }
-    }
-  }
-
-  dialogAddUrl() async {
-    if (_content.length - 1 < 0) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(AppLocalizations.of(context)!.course_not_have_section),
-          backgroundColor: Colors.red));
-      return;
-    }
-    int max = _content.length - 1;
-    var check = await showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          titlePadding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-          title: StatefulBuilder(builder: (context, SBsetState) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  AppLocalizations.of(context)!.add_url_title,
-                  textScaleFactor: 0.8,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Text(AppLocalizations.of(context)!.number_section),
-                NumberPicker(
-                  axis: Axis.horizontal,
-                  value: _sectionChoose,
-                  minValue: 0,
-                  maxValue: max,
-                  haptics: true,
-                  zeroPad: true,
-                  onChanged: (value) =>
-                      SBsetState(() => _sectionChoose = value),
-                ),
-                Text(
-                  AppLocalizations.of(context)!.current +
-                      " section: " +
-                      _content[_sectionChoose].name,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                CustomTextFieldWidget(
-                  controller: nameController,
-                  hintText: AppLocalizations.of(context)!.name_module,
-                  haveLabel: true,
-                  borderRadius: Dimens.default_border_radius,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                CustomTextFieldWidget(
-                  controller: urlController,
-                  hintText: AppLocalizations.of(context)!.url_link,
-                  haveLabel: true,
-                  borderRadius: Dimens.default_border_radius,
-                ),
-              ],
-            );
-          }),
-          actions: [
-            Row(children: [
-              Expanded(
-                child: TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text(AppLocalizations.of(context)!.cancel,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 16,
-                      )),
-                  style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all(MoodleColors.grey),
-                      shape: MaterialStateProperty.all(
-                          const RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8.0))))),
-                ),
-              ),
-              const SizedBox(
-                width: 15,
-              ),
-              Expanded(
-                child: TextButton(
-                  onPressed: () async {
-                    Navigator.pop(context, true);
-                  },
-                  child: Text(AppLocalizations.of(context)!.ok,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 16,
-                      )),
-                  style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all(MoodleColors.blue),
-                      shape: MaterialStateProperty.all(
-                          const RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8.0))))),
-                ),
-              ),
-            ]),
-          ],
-        );
-      },
-    );
-    if (check == true) {
-      try {
-        await CustomApi().addModuleUrl(_userStore.user.token, widget.courseId,
-            nameController.text, _sectionChoose, urlController.text);
-        setState(() {
-          _content[_sectionChoose].modules.add(Module(
-              id: 100,
-              name: nameController.text,
-              modname: ModuleName.url,
-              contents: [ModuleContent(fileurl: urlController.text)]));
-          nameController.clear();
-          urlController.clear();
-          _sectionChoose = 0;
-        });
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(e.toString()), backgroundColor: Colors.red));
-      }
-    }
-  }
-
-  Widget _buildFab(BuildContext context) {
-    final icons = [Icons.add, Icons.link, Icons.poll];
-    return FabWithIcons(
-      icons: icons,
-      onIconTapped: (index) async {
-        if (index == 0) {
-          if (hasAddSectionAPI) {
-            await dialogAddSection();
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text(AppLocalizations.of(context)!.api_unsupported),
-                backgroundColor: Colors.red));
-          }
-        }
-        if (index == 1) {
-          if (hasAddUrlAPI) {
-            await dialogAddUrl();
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text(AppLocalizations.of(context)!.api_unsupported),
-                backgroundColor: Colors.red));
-          }
-        }
-        if (index == 2) {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (builder) =>
-                      AddPollScreen(courseId: widget.courseId)));
-        }
-      },
-    );
-  }
-
   // endregion
 
   @override
   Widget build(BuildContext context) {
+    _buildFab(context);
     return Scaffold(
-      floatingActionButton: Builder(builder: (context) {
-        if (_index == 0 && isTeacher) {
-          return _buildFab(context);
-        }
-        return Container();
-      }),
+      floatingActionButton: AnimatedOpacity(
+        opacity:
+            (_index == _homeIndex && isTeacher && _errored == null) ? 1 : 0,
+        duration: const Duration(milliseconds: 300),
+        child: IgnorePointer(
+          ignoring: !(_index == _homeIndex && isTeacher && _errored == null),
+          child: _fab,
+        ),
+      ),
       body: FutureBuilder(
           future: queryData(),
           builder: (context, data) {

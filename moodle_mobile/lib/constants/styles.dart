@@ -58,7 +58,7 @@ class MoodleStyles {
   );
 
   static const TextStyle noteTimestampStyle =
-      TextStyle(fontSize: 12, color: MoodleColors.gray);
+      TextStyle(fontSize: 14, color: MoodleColors.gray);
 
   static Map<String, Style> noteTextStyle(bool isDone) {
     final html = htmlStyle;

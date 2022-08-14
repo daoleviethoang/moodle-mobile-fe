@@ -17,17 +17,7 @@ class SearchUser extends SearchDelegate<MessageContact?> {
 
   @override
   List<Widget> buildActions(BuildContext context) {
-    return [
-      IconButton(
-        icon: const Icon(
-          Icons.clear,
-          color: MoodleColors.blue,
-        ),
-        onPressed: () {
-          query = '';
-        },
-      )
-    ];
+    return [];
   }
 
   @override

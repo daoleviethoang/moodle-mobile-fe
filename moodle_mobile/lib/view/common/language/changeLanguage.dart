@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:moodle_mobile/constants/colors.dart';
 
 class SetListLangTiles extends StatefulWidget {
   String language = "default";
@@ -20,9 +21,10 @@ class _SetListLangTilesState extends State<SetListLangTiles> {
               widget.language = "default";
             });
           },
-          leading: widget.language == "default"
-              ? const Icon(Icons.check_circle)
-              : const Icon(Icons.check),
+          trailing: widget.language == "default"
+              ? const Icon(Icons.check_circle,
+                  size: 30, color: MoodleColors.blue)
+              : const Icon(Icons.circle, size: 30, color: MoodleColors.blue),
         ),
         ListTile(
           title: Text("English"),
@@ -32,9 +34,10 @@ class _SetListLangTilesState extends State<SetListLangTiles> {
             });
           },
           // ignore: unnecessary_new
-          leading: widget.language == "en"
-              ? const Icon(Icons.check_circle)
-              : const Icon(Icons.check),
+          trailing: widget.language == "en"
+              ? const Icon(Icons.check_circle,
+                  size: 30, color: MoodleColors.blue)
+              : const Icon(Icons.circle, size: 30, color: MoodleColors.blue),
         ),
         ListTile(
           title: Text("Việt Nam"),
@@ -43,9 +46,10 @@ class _SetListLangTilesState extends State<SetListLangTiles> {
               widget.language = "vi";
             });
           },
-          leading: widget.language == "vi"
-              ? const Icon(Icons.check_circle)
-              : const Icon(Icons.check),
+          trailing: widget.language == "vi"
+              ? const Icon(Icons.check_circle,
+                  size: 30, color: MoodleColors.blue)
+              : const Icon(Icons.circle, size: 30, color: MoodleColors.blue),
         ),
       ],
     );
