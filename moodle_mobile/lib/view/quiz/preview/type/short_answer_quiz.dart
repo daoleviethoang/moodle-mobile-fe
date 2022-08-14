@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:html/parser.dart' show parse;
 import 'package:html/dom.dart' as dom;
-import 'package:moodle_mobile/constants/colors.dart';
+//import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/matcher.dart';
 import 'package:moodle_mobile/view/common/content_item.dart';
 import 'package:moodle_mobile/view/common/custom_text_field.dart';
@@ -99,7 +99,7 @@ class _ShortAnswerQuizState extends State<ShortAnswerQuiz> {
                             ))
                   ],
                 )),
-            Divider(),
+            const Divider(),
           ],
         ));
   }
@@ -119,7 +119,7 @@ class ShortAnswerTile extends StatelessWidget {
         .getElementsByClassName("icon fa fa-remove text-danger fa-fw")
         .isNotEmpty;
     return ListTile(
-      visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+      visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
       title: CustomTextFieldWidget(
         hintText: AppLocalizations.of(context)!.answer,
         readonly: true,

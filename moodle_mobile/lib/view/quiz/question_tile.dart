@@ -18,11 +18,11 @@ class QuestionTile extends StatelessWidget {
     return Column(
       children: [
         ListTile(
-          visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+          visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
           title: Text(
             "Question " + index.toString() + ":",
             textScaleFactor: 1.2,
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
           trailing: MaterialButton(
             shape: const RoundedRectangleBorder(
@@ -32,7 +32,7 @@ class QuestionTile extends StatelessWidget {
             child: Text(
               (question.maxmark ?? 1).toString() + " points",
               textScaleFactor: 1.1,
-              style: TextStyle(color: MoodleColors.grade_quiz_text),
+              style: const TextStyle(color: MoodleColors.grade_quiz_text),
             ),
           ),
         ),

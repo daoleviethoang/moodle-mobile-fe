@@ -106,7 +106,7 @@ class _ListUserLoginScreenState extends State<ListUserLoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Spacer(
+                    const Spacer(
                       flex: 2,
                     ),
                     Container(
@@ -115,10 +115,10 @@ class _ListUserLoginScreenState extends State<ListUserLoginScreen> {
                       height: MediaQuery.of(context).size.height * 1 / 4,
                       child: Image.asset('assets/image/logoOnly.png'),
                     ),
-                    Spacer(),
+                    const Spacer(),
                     SingleChildScrollView(
                       child: ConstrainedBox(
-                        constraints: BoxConstraints.tightFor(
+                        constraints: const BoxConstraints.tightFor(
                           height: 260,
                         ),
                         child: ListView(
@@ -135,11 +135,11 @@ class _ListUserLoginScreenState extends State<ListUserLoginScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: 5, right: 5),
+                      padding: const EdgeInsets.only(left: 5, right: 5),
                       child: TextButton(
                         onPressed: () {
                           Navigator.of(context)
@@ -166,7 +166,7 @@ class _ListUserLoginScreenState extends State<ListUserLoginScreen> {
                         ),
                       ),
                     ),
-                    Spacer(
+                    const Spacer(
                       flex: 2,
                     ),
                   ],

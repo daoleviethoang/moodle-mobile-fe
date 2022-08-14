@@ -23,7 +23,7 @@ class SearchUser extends SearchDelegate<MessageContact?> {
   @override
   Widget buildLeading(BuildContext context) {
     return IconButton(
-      icon: Icon(
+      icon: const Icon(
         Icons.arrow_back,
         color: MoodleColors.blue,
       ),

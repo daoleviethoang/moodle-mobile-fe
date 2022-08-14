@@ -86,7 +86,7 @@ class UserLoginTile extends StatelessWidget {
                                   color: Colors.white,
                                 ),
                               )),
-                    SizedBox(width: 15),
+                    const SizedBox(width: 15),
                     Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,10 +95,10 @@ class UserLoginTile extends StatelessWidget {
                             user.username,
                             maxLines: 1,
                             overflow: TextOverflow.clip,
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                            style: const TextStyle(fontWeight: FontWeight.bold),
                             textScaleFactor: 1.5,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 5,
                           ),
                           Text(

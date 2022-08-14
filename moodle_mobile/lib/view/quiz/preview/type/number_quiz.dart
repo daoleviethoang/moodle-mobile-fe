@@ -99,7 +99,7 @@ class _NumberQuizState extends State<NumberQuiz> {
                             ))
                   ],
                 )),
-            Divider(),
+            const Divider(),
           ],
         ));
   }
@@ -119,7 +119,7 @@ class NumberTile extends StatelessWidget {
         .getElementsByClassName("icon fa fa-remove text-danger fa-fw")
         .isNotEmpty;
     return ListTile(
-      visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+      visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
       title: CustomTextFieldWidget(
           hintText: AppLocalizations.of(context)!.answer,
           readonly: true,
