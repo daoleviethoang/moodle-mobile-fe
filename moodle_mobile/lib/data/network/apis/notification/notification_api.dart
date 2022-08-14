@@ -47,12 +47,12 @@ class NotificationApi {
     }
   }
 
-  static Future markMessageAsRead(String token, int id) async {
+  static Future markMessageAsRead(String token, int id, int userid) async {
     try {
       Dio dio = Http().client;
       final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
         'wstoken': token,
-        'wsfunction': Wsfunction.MARK_MESSAGES_AS_READ,
+        'wsfunction': Wsfunction.MARK_MESSAGE_AS_READ,
         'moodlewsrestformat': 'json',
         'messageid': id,
       });
@@ -69,8 +69,9 @@ class NotificationApi {
         'wstoken': token,
         'wsfunction': Wsfunction.MARK_NOTIFICATION_AS_READ,
         'moodlewsrestformat': 'json',
-        'messageid': id,
+        'notificationid': id,
       });
+      print(res);
     } catch (e) {
       if (kDebugMode) print('!!!!!!!!!!$e');
     }

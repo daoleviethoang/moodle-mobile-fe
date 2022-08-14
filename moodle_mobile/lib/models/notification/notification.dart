@@ -36,7 +36,7 @@ class NotificationDetail {
   String? contexturlname;
   int? timecreated;
 
-  int? notifcation;
+  int? notification;
   int? timeread;
   bool? read;
   String? userToFullName;
@@ -57,7 +57,7 @@ class NotificationDetail {
       this.id,
       this.read,
       this.shortendsubject,
-      this.notifcation,
+      this.notification,
       this.smallmessage,
       this.subject,
       this.text,
@@ -87,6 +87,7 @@ class NotificationDetail {
     timeread = json['timeread'];
     //read = json['read'];
     deleted = json['deleted'];
+    notification = json['notification'];
     read = false;
 
     //stringCustomdata = CustomData.fromJson(jsonDecode(json['customdata']));

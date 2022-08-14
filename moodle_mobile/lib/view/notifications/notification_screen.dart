@@ -171,12 +171,15 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                       child: InkWell(
                         onTap: () async {
-                          if (temp.notifcation == 1) {
+                          print(temp.notification);
+                          if (temp.notification == 1) {
                             await NotificationApi.markNotifcationAsRead(
                                 _userStore.user.token, temp.id!);
-                          } else if (temp.notifcation == 0) {
+                          } else if (temp.notification == 0) {
                             await NotificationApi.markMessageAsRead(
-                                _userStore.user.token, temp.id!);
+                                _userStore.user.token,
+                                temp.id!,
+                                _userStore.user.id);
                           }
 
                           Navigator.push(
