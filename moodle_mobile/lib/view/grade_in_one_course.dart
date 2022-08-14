@@ -52,9 +52,9 @@ class _GradeInOneCourseState extends State<GradeInOneCourse> {
                 courseGrade: courseGrade,
               ),
               ListView(
-                  padding: EdgeInsets.only(top: 0),
+                  padding: const EdgeInsets.only(top: 0),
                   shrinkWrap: true, //height is fit to children
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   children: List<Widget>.generate(
                     assignments.length,
                     (int index) => ListTile(
@@ -71,9 +71,9 @@ class _GradeInOneCourseState extends State<GradeInOneCourse> {
                     ),
                   )),
               ListView(
-                  padding: EdgeInsets.only(top: 0),
+                  padding: const EdgeInsets.only(top: 0),
                   shrinkWrap: true, //height is fit to children
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   children: List<Widget>.generate(
                     quizs.length,
                     (int index) => ListTile(

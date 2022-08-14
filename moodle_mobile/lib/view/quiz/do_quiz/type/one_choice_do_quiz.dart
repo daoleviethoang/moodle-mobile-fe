@@ -135,14 +135,14 @@ class _OneChoiceDoQuizState extends State<OneChoiceDoQuiz> {
                 );
               }),
             }),
-            SizedBox(
+            const SizedBox(
               height: 15,
             ),
-            Text(
+            const Text(
               "Select one:",
               textScaleFactor: 1.1,
             ),
-            SizedBox(
+            const SizedBox(
               height: 5,
             ),
             Container(
@@ -162,7 +162,7 @@ class _OneChoiceDoQuizState extends State<OneChoiceDoQuiz> {
                         ));
                   }).toList(),
                 )),
-            Divider(),
+            const Divider(),
           ],
         ));
   }
@@ -194,10 +194,10 @@ class OneChoiceTile extends StatelessWidget {
                 borderRadius: BorderRadius.all(Radius.circular(8))),
             contentPadding: EdgeInsets.zero,
             tileColor: MoodleColors.blue_soft,
-            visualDensity: VisualDensity(horizontal: -2, vertical: -2),
+            visualDensity: const VisualDensity(horizontal: -2, vertical: -2),
             title: Text(last),
             leading: MaterialButton(
-              shape: CircleBorder(
+              shape: const CircleBorder(
                   side: BorderSide(color: MoodleColors.blueDark, width: 2)),
               onPressed: null,
               child: Text(
@@ -212,11 +212,11 @@ class OneChoiceTile extends StatelessWidget {
                 side: BorderSide.none,
                 borderRadius: BorderRadius.all(Radius.circular(8))),
             contentPadding: EdgeInsets.zero,
-            visualDensity: VisualDensity(horizontal: -2, vertical: -2),
+            visualDensity: const VisualDensity(horizontal: -2, vertical: -2),
             title: Text(last),
             leading: MaterialButton(
-              shape:
-                  CircleBorder(side: BorderSide(color: Colors.black, width: 2)),
+              shape: const CircleBorder(
+                  side: BorderSide(color: Colors.black, width: 2)),
               onPressed: () {
                 state.setCheck(index);
               },

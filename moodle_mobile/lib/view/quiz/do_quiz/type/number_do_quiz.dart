@@ -154,7 +154,7 @@ class _NumberDoQuizState extends State<NumberDoQuiz> {
                     ),
                   ],
                 )),
-            Divider(),
+            const Divider(),
           ],
         ));
   }
@@ -174,7 +174,7 @@ class NumberDoTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+      visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
       title: CustomTextFieldWidget(
           hintText: AppLocalizations.of(context)!.answer,
           haveLabel: true,

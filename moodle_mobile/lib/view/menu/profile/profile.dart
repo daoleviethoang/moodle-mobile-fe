@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
-import 'package:moodle_mobile/constants/colors.dart';
+//import 'package:get_it/get_it.dart';
+//import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/user/description_common.dart';
 import 'package:moodle_mobile/view/common/user/public_user_information_common.dart';

@@ -215,7 +215,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           width: double.infinity,
                           child: TextButton(
                               onPressed: () {},
-                              child: Text('Submit',
+                              child: const Text('Submit',
                                   style: TextStyle(color: Colors.white)))),
                     ),
                   )
@@ -261,12 +261,12 @@ class NotificationPopupContainer extends StatelessWidget {
                 children: [
                   read == true
                       ? Container()
-                      : Icon(
+                      : const Icon(
                           Icons.circle,
                           color: MoodleColors.blue,
                           size: 13,
                         ),
-                  SizedBox(
+                  const SizedBox(
                     width: 5,
                   ),
                   Expanded(
@@ -314,7 +314,7 @@ class NotificationPopupContainer extends StatelessWidget {
               ),
               Text(
                 subject!,
-                style: TextStyle(fontSize: 14),
+                style: const TextStyle(fontSize: 14),
               ),
             ],
           ),

@@ -147,14 +147,14 @@ class _MultiChoiceDoQuizState extends State<MultiChoiceDoQuiz> {
                 );
               }),
             }),
-            SizedBox(
+            const SizedBox(
               height: 15,
             ),
-            Text(
+            const Text(
               "Select one or more:",
               textScaleFactor: 1.1,
             ),
-            SizedBox(
+            const SizedBox(
               height: 5,
             ),
             Container(
@@ -174,7 +174,7 @@ class _MultiChoiceDoQuizState extends State<MultiChoiceDoQuiz> {
                         ));
                   }).toList(),
                 )),
-            Divider(),
+            const Divider(),
           ],
         ));
   }
@@ -206,10 +206,10 @@ class MultiChoiceTile extends StatelessWidget {
                 borderRadius: BorderRadius.all(Radius.circular(8))),
             contentPadding: EdgeInsets.zero,
             tileColor: MoodleColors.blue_soft,
-            visualDensity: VisualDensity(horizontal: -2, vertical: -2),
+            visualDensity: const VisualDensity(horizontal: -2, vertical: -2),
             title: Text(last),
             leading: MaterialButton(
-              shape: CircleBorder(
+              shape: const CircleBorder(
                   side: BorderSide(color: MoodleColors.blueDark, width: 2)),
               onPressed: () async {
                 await state.setCheck(index, !isCheck, true);
@@ -226,11 +226,11 @@ class MultiChoiceTile extends StatelessWidget {
                 side: BorderSide.none,
                 borderRadius: BorderRadius.all(Radius.circular(8))),
             contentPadding: EdgeInsets.zero,
-            visualDensity: VisualDensity(horizontal: -2, vertical: -2),
+            visualDensity: const VisualDensity(horizontal: -2, vertical: -2),
             title: Text(last),
             leading: MaterialButton(
-              shape:
-                  CircleBorder(side: BorderSide(color: Colors.black, width: 2)),
+              shape: const CircleBorder(
+                  side: BorderSide(color: Colors.black, width: 2)),
               onPressed: () async {
                 await state.setCheck(index, !isCheck, true);
               },

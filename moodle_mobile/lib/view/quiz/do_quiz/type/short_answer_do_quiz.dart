@@ -154,7 +154,7 @@ class _ShortAnswerDoQuizState extends State<ShortAnswerDoQuiz> {
                     ),
                   ],
                 )),
-            Divider(),
+            const Divider(),
           ],
         ));
   }
@@ -175,7 +175,7 @@ class ShortAnswerDoTile extends StatelessWidget {
   Widget build(BuildContext context) {
     dom.Element input = element.getElementsByTagName("input").first;
     return ListTile(
-      visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+      visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
       title: CustomTextFieldWidget(
           hintText: AppLocalizations.of(context)!.answer,
           haveLabel: true,

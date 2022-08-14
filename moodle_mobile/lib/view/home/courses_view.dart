@@ -609,7 +609,7 @@ class CategoryView extends StatelessWidget {
                     )),
                 label: const Padding(
                   padding: EdgeInsets.only(left: 20),
-                  child: const Text(
+                  child: Text(
                     "Star this course",
                     style: const TextStyle(
                         color: MoodleColors.black, fontSize: 16),

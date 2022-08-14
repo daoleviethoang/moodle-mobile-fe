@@ -156,7 +156,7 @@ class _QuizDoScreenState extends State<QuizDoScreen> {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Text("Cancel",
+                  child: const Text("Cancel",
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w700,
@@ -180,7 +180,7 @@ class _QuizDoScreenState extends State<QuizDoScreen> {
                     check = true;
                     Navigator.pop(context);
                   },
-                  child: Text("Submit",
+                  child: const Text("Submit",
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w700,
@@ -391,19 +391,20 @@ class _QuizDoScreenState extends State<QuizDoScreen> {
                                 onTap: () {
                                   itemScrollController.scrollTo(
                                     index: index,
-                                    duration: Duration(milliseconds: 1),
+                                    duration: const Duration(milliseconds: 1),
                                   );
                                 },
                                 child: Stack(
                                   children: [
                                     MaterialButton(
-                                      shape: CircleBorder(
+                                      shape: const CircleBorder(
                                           side: BorderSide(
                                               color: Colors.black, width: 2)),
                                       onPressed: () {
                                         itemScrollController.scrollTo(
                                           index: index,
-                                          duration: Duration(milliseconds: 1),
+                                          duration:
+                                              const Duration(milliseconds: 1),
                                         );
                                       },
                                       child: Text(
@@ -412,7 +413,7 @@ class _QuizDoScreenState extends State<QuizDoScreen> {
                                       ),
                                     ),
                                     complete[index]
-                                        ? Positioned(
+                                        ? const Positioned(
                                             bottom: 6,
                                             right: 15,
                                             child: CircleAvatar(
@@ -459,7 +460,7 @@ class _QuizDoScreenState extends State<QuizDoScreen> {
             alignment: Alignment.bottomLeft,
             child: Container(
                 height: 90,
-                padding: EdgeInsets.only(bottom: 20, left: 20),
+                padding: const EdgeInsets.only(bottom: 20, left: 20),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -473,7 +474,7 @@ class _QuizDoScreenState extends State<QuizDoScreen> {
                     widget.endTime == 0
                         ? Container()
                         : CountdownTimer(
-                            textStyle: TextStyle(fontSize: 18),
+                            textStyle: const TextStyle(fontSize: 18),
                             endTime: widget.endTime,
                             onEnd: () async {
                               await endQuiz();
@@ -486,7 +487,7 @@ class _QuizDoScreenState extends State<QuizDoScreen> {
           Align(
             alignment: Alignment.bottomRight,
             child: Padding(
-              padding: EdgeInsets.only(bottom: 20, right: 20),
+              padding: const EdgeInsets.only(bottom: 20, right: 20),
               child: CircleAvatar(
                 radius: 30,
                 backgroundColor: MoodleColors.blue,
