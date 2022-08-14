@@ -111,7 +111,7 @@ class _NotificationPreferenceChildTileState
                   MergeSemantics(
                     child: ListTileTheme.merge(
                       child: ListTile(
-                        title: Row(children: [
+                        title: Row(children: const [
                           Text("Online"),
                           SizedBox(
                             width: 5,
@@ -125,7 +125,7 @@ class _NotificationPreferenceChildTileState
                   MergeSemantics(
                     child: ListTileTheme.merge(
                       child: ListTile(
-                        title: Row(children: [
+                        title: Row(children: const [
                           Text("Offline"),
                           SizedBox(
                             width: 5,
@@ -139,7 +139,7 @@ class _NotificationPreferenceChildTileState
                 ]
               : [
                   SwitchListTile(
-                    title: Row(children: [
+                    title: Row(children: const [
                       Text("Online"),
                       SizedBox(
                         width: 5,
@@ -152,7 +152,7 @@ class _NotificationPreferenceChildTileState
                     },
                   ),
                   SwitchListTile(
-                    title: Row(children: [
+                    title: Row(children: const [
                       Text("Offline"),
                       SizedBox(
                         width: 5,
@@ -166,9 +166,7 @@ class _NotificationPreferenceChildTileState
                   )
                 ],
         ),
-        SizedBox(
-          height: 20,
-        ),
+        const SizedBox(height: 20),
       ],
     );
   }

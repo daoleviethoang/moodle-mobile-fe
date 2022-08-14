@@ -1,4 +1,3 @@
-import 'dart:isolate';
 
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -6,7 +5,6 @@ import 'package:intl/intl.dart';
 import 'package:moodle_mobile/data/network/apis/file/file_api.dart';
 import 'package:moodle_mobile/models/assignment/file_assignment.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 typedef Int2VoidFunc = void Function(int);
 typedef Int2StringVoidFunc = void Function(int, String);
@@ -52,11 +50,11 @@ class _FileAssignmentTeacherTileState extends State<FileAssignmentTeacherTile> {
             child: Row(
               children: <Widget>[
                 MaterialButton(
-                  shape: CircleBorder(),
-                  color: Color.fromARGB(255, 217, 217, 217),
-                  padding: EdgeInsets.all(20),
+                  shape: const CircleBorder(),
+                  color: const Color.fromARGB(255, 217, 217, 217),
+                  padding: const EdgeInsets.all(20),
                   onPressed: () {},
-                  child: Icon(
+                  child: const Icon(
                     Icons.file_copy,
                     size: 20,
                     color: Colors.grey,

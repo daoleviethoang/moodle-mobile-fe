@@ -79,7 +79,7 @@ class _CoursesGradeOverviewScreenState extends State<CoursesGradeOverviewScreen>
                 scrollDirection: Axis.vertical,
                 children: List.generate(grades.length, (int index) {
                   final int count = grades.length;
-                  final Animation<double> animation =
+                  // final Animation<double> animation =
                       Tween<double>(begin: 0.0, end: 1.0).animate(
                     CurvedAnimation(
                       parent: animationController!,

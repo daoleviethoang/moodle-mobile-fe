@@ -1,13 +1,9 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:moodle_mobile/data/network/apis/file/file_api.dart';
 import 'package:moodle_mobile/data/network/constants/endpoints.dart';
 import 'package:moodle_mobile/data/network/constants/wsfunction_constants.dart';
 import 'package:moodle_mobile/data/network/dio_http.dart';
-import 'package:moodle_mobile/models/assignment/file_assignment.dart';
-import 'package:moodle_mobile/models/forum/forum_course.dart';
 import 'package:moodle_mobile/models/message_preference/message_preference.dart';
 import 'package:moodle_mobile/models/notification_preference/notification_preference.dart';
 

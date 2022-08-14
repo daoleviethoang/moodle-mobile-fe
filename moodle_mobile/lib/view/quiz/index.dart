@@ -167,7 +167,7 @@ class _QuizScreenState extends State<QuizScreen> {
                               backgroundIconColor: Colors.greenAccent,
                             ),
                       const Divider(),
-                      Container(
+                      SizedBox(
                         width: MediaQuery.of(context).size.width,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -213,7 +213,7 @@ class _QuizScreenState extends State<QuizScreen> {
                       ),
                       Text(
                         AppLocalizations.of(context)!.summary_attempt,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 22),
                       ),
                       const SizedBox(
@@ -231,14 +231,14 @@ class _QuizScreenState extends State<QuizScreen> {
                             Expanded(
                                 child: Text(
                               AppLocalizations.of(context)!.state,
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                              style: const TextStyle(fontWeight: FontWeight.bold),
                               textScaleFactor: 1.1,
                             )),
                             Expanded(
                               child: Center(
                                 child: Text(
                                   AppLocalizations.of(context)!.grade + "/10",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                  style: const TextStyle(fontWeight: FontWeight.bold),
                                   textScaleFactor: 1.1,
                                 ),
                               ),
@@ -266,7 +266,7 @@ class _QuizScreenState extends State<QuizScreen> {
                                     children: [
                                       Text(
                                         AppLocalizations.of(context)!.finished,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             color: MoodleColors.blue,
                                             fontWeight: FontWeight.bold),
                                       ),
@@ -295,18 +295,18 @@ class _QuizScreenState extends State<QuizScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.stretch,
                                     children: [
-                                      Text(""),
+                                      const Text(""),
                                       Text(
                                         AppLocalizations.of(context)!
                                             .unfinished,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             color: MoodleColors.blue,
                                             fontWeight: FontWeight.bold),
                                       ),
                                       const SizedBox(
                                         height: 5,
                                       ),
-                                      Text(""),
+                                      const Text(""),
                                     ],
                                   )),
                             Expanded(

@@ -18,12 +18,12 @@ class MessagePreference {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    if (this.preferences != null) {
-      data['preferences'] = this.preferences!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (preferences != null) {
+      data['preferences'] = preferences!.toJson();
     }
-    data['blocknoncontacts'] = this.blocknoncontacts;
-    data['entertosend'] = this.entertosend;
+    data['blocknoncontacts'] = blocknoncontacts;
+    data['entertosend'] = entertosend;
     return data;
   }
 }
@@ -54,14 +54,14 @@ class Preferences {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['userid'] = this.userid;
-    data['disableall'] = this.disableall;
-    if (this.processors != null) {
-      data['processors'] = this.processors!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['userid'] = userid;
+    data['disableall'] = disableall;
+    if (processors != null) {
+      data['processors'] = processors!.map((v) => v.toJson()).toList();
     }
-    if (this.components != null) {
-      data['components'] = this.components!.map((v) => v.toJson()).toList();
+    if (components != null) {
+      data['components'] = components!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -90,12 +90,12 @@ class Processors {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['displayname'] = this.displayname;
-    data['name'] = this.name;
-    data['hassettings'] = this.hassettings;
-    data['contextid'] = this.contextid;
-    data['userconfigured'] = this.userconfigured;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['displayname'] = displayname;
+    data['name'] = name;
+    data['hassettings'] = hassettings;
+    data['contextid'] = contextid;
+    data['userconfigured'] = userconfigured;
     return data;
   }
 }
@@ -117,11 +117,11 @@ class Components {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['displayname'] = this.displayname;
-    if (this.notifications != null) {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['displayname'] = displayname;
+    if (notifications != null) {
       data['notifications'] =
-          this.notifications!.map((v) => v.toJson()).toList();
+          notifications!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -146,11 +146,11 @@ class Notifications {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['displayname'] = this.displayname;
-    data['preferencekey'] = this.preferencekey;
-    if (this.processors != null) {
-      data['processors'] = this.processors!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['displayname'] = displayname;
+    data['preferencekey'] = preferencekey;
+    if (processors != null) {
+      data['processors'] = processors!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -184,16 +184,16 @@ class Processors2 {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['displayname'] = this.displayname;
-    data['name'] = this.name;
-    data['locked'] = this.locked;
-    data['userconfigured'] = this.userconfigured;
-    if (this.loggedin != null) {
-      data['loggedin'] = this.loggedin!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['displayname'] = displayname;
+    data['name'] = name;
+    data['locked'] = locked;
+    data['userconfigured'] = userconfigured;
+    if (loggedin != null) {
+      data['loggedin'] = loggedin!.toJson();
     }
-    if (this.loggedoff != null) {
-      data['loggedoff'] = this.loggedoff!.toJson();
+    if (loggedoff != null) {
+      data['loggedoff'] = loggedoff!.toJson();
     }
     return data;
   }
@@ -213,10 +213,10 @@ class Loggedin {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['name'] = this.name;
-    data['displayname'] = this.displayname;
-    data['checked'] = this.checked;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['name'] = name;
+    data['displayname'] = displayname;
+    data['checked'] = checked;
     return data;
   }
 }

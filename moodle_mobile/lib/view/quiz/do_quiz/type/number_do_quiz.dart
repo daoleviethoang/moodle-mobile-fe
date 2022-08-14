@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:html/parser.dart' show parse;
@@ -55,7 +56,9 @@ class _NumberDoQuizState extends State<NumberDoQuiz> {
       setState(() {
         input = answer?.getElementsByTagName("input").first;
       });
-    } catch (e) {}
+    } catch (e) {
+      if (kDebugMode) print(e);
+    }
     if (input != null && input!.attributes['value'] != "") {
       widget.setComplete(widget.index, true);
       setState(() {
@@ -138,7 +141,7 @@ class _NumberDoQuizState extends State<NumberDoQuiz> {
                 );
               }),
             }),
-            Container(
+            SizedBox(
                 width: MediaQuery.of(context).size.width,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -154,7 +157,7 @@ class _NumberDoQuizState extends State<NumberDoQuiz> {
                     ),
                   ],
                 )),
-            Divider(),
+            const Divider(),
           ],
         ));
   }
@@ -174,7 +177,7 @@ class NumberDoTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+      visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
       title: CustomTextFieldWidget(
           hintText: AppLocalizations.of(context)!.answer,
           haveLabel: true,

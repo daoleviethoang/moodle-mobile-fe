@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:html/parser.dart' show parse;
 import 'package:html/dom.dart' as dom;
-import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/matcher.dart';
 import 'package:moodle_mobile/view/common/content_item.dart';
 import 'package:moodle_mobile/view/common/custom_text_field.dart';
@@ -85,7 +84,7 @@ class _EssayQuizState extends State<EssayQuiz> {
                 );
               }),
             }),
-            Container(
+            SizedBox(
                 width: MediaQuery.of(context).size.width,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -99,7 +98,7 @@ class _EssayQuizState extends State<EssayQuiz> {
                     ),
                   ],
                 )),
-            Divider(),
+            const Divider(),
           ],
         ));
   }

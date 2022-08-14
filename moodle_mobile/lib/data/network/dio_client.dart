@@ -78,7 +78,7 @@ class DioClient {
       );
       return response.data;
     } catch (e) {
-      throw e;
+      rethrow;
     }
   }
 
@@ -102,7 +102,7 @@ class DioClient {
       );
       return response.data;
     } catch (e) {
-      throw e;
+      rethrow;
     }
   }
 }

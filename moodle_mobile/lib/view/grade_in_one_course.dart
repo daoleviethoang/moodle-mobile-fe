@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:moodle_mobile/constants/colors.dart';
-import 'package:moodle_mobile/constants/dimens.dart';
 import 'package:moodle_mobile/data/network/apis/assignment/assignment_api.dart';
 import 'package:moodle_mobile/data/network/apis/course/course_service.dart';
 import 'package:moodle_mobile/data/network/apis/quiz/quiz_api.dart';
@@ -52,9 +50,9 @@ class _GradeInOneCourseState extends State<GradeInOneCourse> {
                 courseGrade: courseGrade,
               ),
               ListView(
-                  padding: EdgeInsets.only(top: 0),
+                  padding: const EdgeInsets.only(top: 0),
                   shrinkWrap: true, //height is fit to children
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   children: List<Widget>.generate(
                     assignments.length,
                     (int index) => ListTile(
@@ -71,9 +69,9 @@ class _GradeInOneCourseState extends State<GradeInOneCourse> {
                     ),
                   )),
               ListView(
-                  padding: EdgeInsets.only(top: 0),
+                  padding: const EdgeInsets.only(top: 0),
                   shrinkWrap: true, //height is fit to children
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   children: List<Widget>.generate(
                     quizs.length,
                     (int index) => ListTile(

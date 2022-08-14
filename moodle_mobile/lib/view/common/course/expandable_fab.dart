@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class FabWithIcons extends StatefulWidget {
-  FabWithIcons({required this.icons, required this.onIconTapped});
+  FabWithIcons({Key? key, required this.icons, required this.onIconTapped}) : super(key: key);
 
   final List<IconData> icons;
   ValueChanged<int> onIconTapped;

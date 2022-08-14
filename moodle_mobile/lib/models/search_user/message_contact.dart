@@ -41,7 +41,7 @@ class MessageContact {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['fullname'] = fullname;
     data['profileurl'] = profileurl;
@@ -72,7 +72,7 @@ class Conversations {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['type'] = type;
     data['timecreated'] = timecreated;

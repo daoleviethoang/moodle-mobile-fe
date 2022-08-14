@@ -175,7 +175,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                       margin: const EdgeInsets.only(left: 8, right: 8),
                       child: Column(
                         children: [
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
                           Card(
@@ -193,7 +193,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                   child: Text(
                                     AppLocalizations.of(context)!.subject,
                                     style:
-                                        TextStyle(fontWeight: FontWeight.bold),
+                                        const TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                 ),
                                 Container(
@@ -213,7 +213,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                       border: OutlineInputBorder(
                                         borderRadius:
                                             BorderRadius.circular(10.0),
-                                        borderSide: BorderSide(width: 1),
+                                        borderSide: const BorderSide(width: 1),
                                       ),
                                       hintText:
                                           AppLocalizations.of(context)!.subject,
@@ -223,7 +223,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                               ],
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
                           Card(
@@ -241,7 +241,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                   child: Text(
                                     AppLocalizations.of(context)!.content,
                                     style:
-                                        TextStyle(fontWeight: FontWeight.bold),
+                                        const TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                 ),
                                 Container(
@@ -259,7 +259,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                       border: OutlineInputBorder(
                                         borderRadius:
                                             BorderRadius.circular(10.0),
-                                        borderSide: BorderSide(width: 1),
+                                        borderSide: const BorderSide(width: 1),
                                       ),
                                       hintText:
                                           AppLocalizations.of(context)!.content,
@@ -288,18 +288,18 @@ class _AddPostScreenState extends State<AddPostScreen> {
                           color: Colors.orange[100],
                           child: Row(
                             children: [
-                              SizedBox(
+                              const SizedBox(
                                 width: 5,
                               ),
                               Icon(showAdvance
                                   ? Icons.arrow_drop_down_sharp
                                   : Icons.arrow_right),
-                              SizedBox(
+                              const SizedBox(
                                 width: 10,
                               ),
                               Text(
                                 AppLocalizations.of(context)!.advance,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 15,
                                 ),
                               ),
@@ -323,7 +323,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                           children: files
                               .map(
                                 (e) => Container(
-                                  margin: EdgeInsets.only(top: 1, bottom: 1),
+                                  margin: const EdgeInsets.only(top: 1, bottom: 1),
                                   child: ChipTile(
                                       label: e.filename,
                                       onDelete: () {
@@ -394,7 +394,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                     });
                                   }
                                 }),
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
                             Text(

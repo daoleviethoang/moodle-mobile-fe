@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:moodle_mobile/constants/colors.dart';
-import 'package:moodle_mobile/constants/dimens.dart';
 
 class UserAvatarCommon extends StatelessWidget {
   const UserAvatarCommon({Key? key, required this.imageURL}) : super(key: key);

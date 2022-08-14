@@ -83,7 +83,7 @@ class _OneChoiceQuizState extends State<OneChoiceQuiz> {
                 );
               }),
             }),
-            Container(
+            SizedBox(
                 width: MediaQuery.of(context).size.width,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -96,7 +96,7 @@ class _OneChoiceQuizState extends State<OneChoiceQuiz> {
                           )))
                       .toList(),
                 )),
-            Divider(),
+            const Divider(),
           ],
         ));
   }
@@ -124,10 +124,10 @@ class OneChoiceTile extends StatelessWidget {
     return isCheck
         ? ListTile(
             tileColor: MoodleColors.blue_soft,
-            visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+            visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
             title: Text(last),
             leading: MaterialButton(
-              shape: CircleBorder(
+              shape: const CircleBorder(
                   side: BorderSide(color: MoodleColors.blueDark, width: 1)),
               onPressed: null,
               child: Text(
@@ -149,11 +149,11 @@ class OneChoiceTile extends StatelessWidget {
                       ),
           )
         : ListTile(
-            visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+            visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
             title: Text(last),
             leading: MaterialButton(
               shape:
-                  CircleBorder(side: BorderSide(color: Colors.black, width: 1)),
+                  const CircleBorder(side: BorderSide(color: Colors.black, width: 1)),
               onPressed: null,
               child: Text(
                 first,

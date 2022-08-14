@@ -42,7 +42,7 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
   List<CourseOverview> coursesOverviewOld = [];
 
   late UserStore _userStore;
-  final int _caseMore = 0;
+  // final int _caseMore = 0;
   bool isLoadFilter = false;
   bool isLoad = false;
 
@@ -257,10 +257,11 @@ class _PopularCourseListViewState extends State<PopularCourseListView>
       coursesOverviewFilter.sort((a, b) => a.title.compareTo(b.title));
     } else if (widget.arrangeTypeSelected.key == CourseArrange.last_accessed) {
       coursesOverviewFilter.sort((a, b) {
-        if (a.lastaccess > b.lastaccess)
+        if (a.lastaccess > b.lastaccess) {
           return 1;
-        else
+        } else {
           return 0;
+        }
       });
     }
     return coursesOverviewFilter;
@@ -331,7 +332,7 @@ class CategoryView extends StatelessWidget {
                               children: <Widget>[
                                 Flexible(
                                   child: Text(
-                                    '${course!.title}',
+                                    course!.title,
                                     style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 16,
@@ -371,7 +372,7 @@ class CategoryView extends StatelessWidget {
                                       (int index) {
                                         final int count =
                                             course!.teacher.length;
-                                        final Animation<double> animation =
+                                        // final Animation<double> animation =
                                             Tween<double>(begin: 0.0, end: 1.0)
                                                 .animate(
                                           CurvedAnimation(
@@ -609,9 +610,9 @@ class CategoryView extends StatelessWidget {
                     )),
                 label: const Padding(
                   padding: EdgeInsets.only(left: 20),
-                  child: const Text(
+                  child: Text(
                     "Star this course",
-                    style: const TextStyle(
+                    style: TextStyle(
                         color: MoodleColors.black, fontSize: 16),
                   ),
                 ),
@@ -643,8 +644,8 @@ class CategoryView extends StatelessWidget {
             size: 30,
           ),
           label: const Padding(
-            padding: const EdgeInsets.only(left: 20),
-            child: const Text(
+            padding: EdgeInsets.only(left: 20),
+            child: Text(
               "Download courses",
               style: TextStyle(color: MoodleColors.black, fontSize: 16),
             ),

@@ -21,15 +21,15 @@ class CourseDetailsTab extends StatefulWidget {
 }
 
 class _CourseDetailsTabState extends State<CourseDetailsTab> {
-  late int _currentIndex;
-  late int _index;
+  // late int _currentIndex;
+  // late int _index;
   late Widget? _icon;
   late Widget? _activeIcon;
   late Widget? _text;
 
   _updateValues() {
-    _currentIndex = widget.currentIndex;
-    _index = widget.index;
+    // _currentIndex = widget.currentIndex;
+    // _index = widget.index;
     _icon = widget.icon;
     _activeIcon = widget.activeIcon;
     _text = widget.text;
@@ -48,7 +48,7 @@ class _CourseDetailsTabState extends State<CourseDetailsTab> {
   @override
   Widget build(BuildContext context) {
     _updateValues();
-    final isActive = _currentIndex == _index;
+    // final isActive = _currentIndex == _index;
     String tooltip = '';
     if (_text is Text) {
       tooltip = (_text as Text).data ?? '';

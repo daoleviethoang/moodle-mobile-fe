@@ -1,6 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:moodle_mobile/models/contact/contact.dart';
-import 'package:moodle_mobile/models/user/user_overview.dart';
 
 part 'course_category_course.g.dart';
 

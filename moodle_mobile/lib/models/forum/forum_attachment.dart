@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class ForumAttachment {
   String? filename;
   String? filepath;
@@ -29,14 +27,14 @@ class ForumAttachment {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['filename'] = this.filename;
-    data['filepath'] = this.filepath;
-    data['filesize'] = this.filesize;
-    data['fileurl'] = this.fileurl;
-    data['timemodified'] = this.timemodified;
-    data['mimetype'] = this.mimetype;
-    data['isexternalfile'] = this.isexternalfile;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['filename'] = filename;
+    data['filepath'] = filepath;
+    data['filesize'] = filesize;
+    data['fileurl'] = fileurl;
+    data['timemodified'] = timemodified;
+    data['mimetype'] = mimetype;
+    data['isexternalfile'] = isexternalfile;
     return data;
   }
 }

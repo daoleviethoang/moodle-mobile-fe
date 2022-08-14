@@ -11,6 +11,7 @@ class SetListLangTiles extends StatefulWidget {
 }
 
 class _SetListLangTilesState extends State<SetListLangTiles> {
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
@@ -27,7 +28,7 @@ class _SetListLangTilesState extends State<SetListLangTiles> {
               : const Icon(Icons.circle, size: 30, color: MoodleColors.blue),
         ),
         ListTile(
-          title: Text("English"),
+          title: const Text("English"),
           onTap: () {
             setState(() {
               widget.language = "en";
@@ -40,7 +41,7 @@ class _SetListLangTilesState extends State<SetListLangTiles> {
               : const Icon(Icons.circle, size: 30, color: MoodleColors.blue),
         ),
         ListTile(
-          title: Text("Việt Nam"),
+          title: const Text("Việt Nam"),
           onTap: () {
             setState(() {
               widget.language = "vi";

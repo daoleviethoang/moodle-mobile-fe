@@ -7,7 +7,6 @@ import 'package:moodle_mobile/provider/LocaleManager.dart';
 import 'package:moodle_mobile/provider/StorageManager.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/content_item.dart';
-import 'package:moodle_mobile/view/common/course/grade_overview.dart';
 import 'package:moodle_mobile/view/common/image_view.dart';
 import 'package:moodle_mobile/view/common/language/changeLanguage.dart';
 import 'package:moodle_mobile/view/common/menu_item.dart' as m;

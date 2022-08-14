@@ -21,8 +21,8 @@ class NotificationPreferenceTile extends StatelessWidget {
         border: Border.all(width: 2, color: MoodleColors.grey_soft),
         borderRadius: BorderRadius.circular(20),
       ),
-      margin: EdgeInsets.only(bottom: 10),
-      padding: EdgeInsets.only(left: 10, top: 20),
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.only(left: 10, top: 20),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -32,9 +32,7 @@ class NotificationPreferenceTile extends StatelessWidget {
             textScaleFactor: 1.4,
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
-          SizedBox(
-            height: 10,
-          ),
+          const SizedBox(height: 10),
           Column(
             children: components.notifications
                     ?.map(

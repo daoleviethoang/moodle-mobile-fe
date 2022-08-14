@@ -7,7 +7,7 @@ class FeedBack {
   FeedBack({this.grade, this.gradefordisplay, this.gradeddate, this.plugins});
 
   FeedBack.fromJson(Map<String, dynamic> json) {
-    grade = json['grade'] != null ? new Grade.fromJson(json['grade']) : null;
+    grade = json['grade'] != null ? Grade.fromJson(json['grade']) : null;
     gradefordisplay = json['gradefordisplay'];
     gradeddate = json['gradeddate'];
     if (json['plugins'] != null) {
@@ -19,14 +19,14 @@ class FeedBack {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.grade != null) {
-      data['grade'] = this.grade!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (grade != null) {
+      data['grade'] = grade!.toJson();
     }
-    data['gradefordisplay'] = this.gradefordisplay;
-    data['gradeddate'] = this.gradeddate;
-    if (this.plugins != null) {
-      data['plugins'] = this.plugins!.map((v) => v.toJson()).toList();
+    data['gradefordisplay'] = gradefordisplay;
+    data['gradeddate'] = gradeddate;
+    if (plugins != null) {
+      data['plugins'] = plugins!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -74,18 +74,18 @@ class Grade {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['assignment'] = this.assignment;
-    data['userid'] = this.userid;
-    data['attemptnumber'] = this.attemptnumber;
-    data['timecreated'] = this.timecreated;
-    data['timemodified'] = this.timemodified;
-    data['grader'] = this.grader;
-    data['grade'] = this.grade;
-    data['courseid'] = this.courseid;
-    data['rawgrade'] = this.rawgrade;
-    data['courseName'] = this.courseName;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['assignment'] = assignment;
+    data['userid'] = userid;
+    data['attemptnumber'] = attemptnumber;
+    data['timecreated'] = timecreated;
+    data['timemodified'] = timemodified;
+    data['grader'] = grader;
+    data['grade'] = grade;
+    data['courseid'] = courseid;
+    data['rawgrade'] = rawgrade;
+    data['courseName'] = courseName;
     return data;
   }
 }
@@ -104,26 +104,26 @@ class Plugins {
     if (json['fileareas'] != null) {
       fileareas = [];
       json['fileareas'].forEach((v) {
-        fileareas!.add(new Fileareas.fromJson(v));
+        fileareas!.add(Fileareas.fromJson(v));
       });
     }
     if (json['editorfields'] != null) {
       editorfields = [];
       json['editorfields'].forEach((v) {
-        editorfields!.add(new Editorfields.fromJson(v));
+        editorfields!.add(Editorfields.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['type'] = this.type;
-    data['name'] = this.name;
-    if (this.fileareas != null) {
-      data['fileareas'] = this.fileareas!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['type'] = type;
+    data['name'] = name;
+    if (fileareas != null) {
+      data['fileareas'] = fileareas!.map((v) => v.toJson()).toList();
     }
-    if (this.editorfields != null) {
-      data['editorfields'] = this.editorfields!.map((v) => v.toJson()).toList();
+    if (editorfields != null) {
+      data['editorfields'] = editorfields!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -139,8 +139,8 @@ class Fileareas {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['area'] = this.area;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['area'] = area;
     return data;
   }
 }
@@ -161,11 +161,11 @@ class Editorfields {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['name'] = this.name;
-    data['description'] = this.description;
-    data['text'] = this.text;
-    data['format'] = this.format;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['name'] = name;
+    data['description'] = description;
+    data['text'] = text;
+    data['format'] = format;
     return data;
   }
 }

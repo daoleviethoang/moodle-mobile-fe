@@ -69,28 +69,28 @@ class Quiz {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['course'] = this.course;
-    data['coursemodule'] = this.coursemodule;
-    data['name'] = this.name;
-    data['intro'] = this.intro;
-    data['introformat'] = this.introformat;
-    data['timeopen'] = this.timeopen;
-    data['timeclose'] = this.timeclose;
-    data['timelimit'] = this.timelimit;
-    data['preferredbehaviour'] = this.preferredbehaviour;
-    data['attempts'] = this.attempts;
-    data['grademethod'] = this.grademethod;
-    data['decimalpoints'] = this.decimalpoints;
-    data['questiondecimalpoints'] = this.questiondecimalpoints;
-    data['sumgrades'] = this.sumgrades;
-    data['grade'] = this.grade;
-    data['hasfeedback'] = this.hasfeedback;
-    data['section'] = this.section;
-    data['visible'] = this.visible;
-    data['groupmode'] = this.groupmode;
-    data['groupingid'] = this.groupingid;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['course'] = course;
+    data['coursemodule'] = coursemodule;
+    data['name'] = name;
+    data['intro'] = intro;
+    data['introformat'] = introformat;
+    data['timeopen'] = timeopen;
+    data['timeclose'] = timeclose;
+    data['timelimit'] = timelimit;
+    data['preferredbehaviour'] = preferredbehaviour;
+    data['attempts'] = attempts;
+    data['grademethod'] = grademethod;
+    data['decimalpoints'] = decimalpoints;
+    data['questiondecimalpoints'] = questiondecimalpoints;
+    data['sumgrades'] = sumgrades;
+    data['grade'] = grade;
+    data['hasfeedback'] = hasfeedback;
+    data['section'] = section;
+    data['visible'] = visible;
+    data['groupmode'] = groupmode;
+    data['groupingid'] = groupingid;
     return data;
   }
 }

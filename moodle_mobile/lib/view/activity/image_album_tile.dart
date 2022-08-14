@@ -37,10 +37,10 @@ class ImageAlbumTile extends StatelessWidget {
                 fit: BoxFit.fill,
               ),
             ),
-            SizedBox(height: 5),
+            const SizedBox(height: 5),
             Container(
               width: 110,
-              padding: EdgeInsets.only(left: 5),
+              padding: const EdgeInsets.only(left: 5),
               child: Text(name,
                   style: const TextStyle(
                     fontWeight: FontWeight.w900,

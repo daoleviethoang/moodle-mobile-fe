@@ -8,7 +8,6 @@ import 'package:moodle_mobile/data/firebase/firestore/imgur_service.dart';
 import 'package:moodle_mobile/view/common/custom_text_field.dart';
 import 'package:moodle_mobile/view/common/custom_text_field_message_detail.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
-import 'package:moodle_mobile/store/conversation/conversation_store.dart';
 import 'package:moodle_mobile/store/conversation_detail/conversation_detail_store.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/data/repository.dart';
@@ -32,7 +31,7 @@ class MessageDetailScreen extends StatefulWidget {
 class _MessageDetailScreenState extends State<MessageDetailScreen> {
   late UserStore _userStore;
   late ConversationDetailStore _conversationDetailStore;
-  late ConversationStore _conversationStore;
+  // late ConversationStore _conversationStore;
   late Timer _refreshTimer;
 
   final ScrollController _scrollController = ScrollController();
@@ -43,7 +42,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
     super.initState();
 
     _userStore = GetIt.instance<UserStore>();
-    _conversationStore = GetIt.instance<ConversationStore>();
+    // _conversationStore = GetIt.instance<ConversationStore>();
     _conversationDetailStore = ConversationDetailStore(
         GetIt.instance<Repository>(), widget.conversationId);
     getListMessage();

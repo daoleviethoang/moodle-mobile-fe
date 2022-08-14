@@ -7,7 +7,6 @@ import 'package:intl/intl.dart';
 import 'package:moodle_mobile/data/network/apis/forum/forum_api.dart';
 import 'package:moodle_mobile/models/forum/forum_post.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
-import 'package:moodle_mobile/view/common/content_item.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:moodle_mobile/view/common/image_view.dart';
 import 'package:moodle_mobile/view/forum/reply_post/reply_post_screen.dart';
@@ -64,7 +63,7 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                     const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
                 child: Column(
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     Padding(
@@ -72,14 +71,14 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 5),
+                          const Padding(
+                            padding: EdgeInsets.only(top: 5),
                             child: CircleImageView(
                               imageUrl: '',
                               height: 60,
                               width: 60,
                               placeholder: Padding(
-                                padding: const EdgeInsets.all(8.0),
+                                padding: EdgeInsets.all(8.0),
                                 child: Icon(
                                   Icons.person,
                                   size: 35,
@@ -87,7 +86,7 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                               ),
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 10,
                           ),
                           SizedBox(
@@ -98,7 +97,7 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                               children: [
                                 Text(
                                   _forumPost[len - 1].author!.fullname!,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: MoodleColors.blue),
                                 ),
@@ -110,7 +109,7 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                                               _forumPost[len - 1].timecreated! *
                                                   1000))
                                       .toString(),
-                                  style: TextStyle(fontSize: 10),
+                                  style: const TextStyle(fontSize: 10),
                                 ),
                               ],
                             ),
@@ -149,62 +148,60 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 15),
                               child: AttachmentItem(
-                                title: temp != null ? temp.filename! : ' ',
-                                attachmentUrl:
-                                    temp.fileurl != null ? temp.fileurl : null,
+                                title: temp.filename!,
+                                attachmentUrl: temp.fileurl,
                               ),
                             );
                           }),
                         ],
                       ),
                     ),
-                    Divider(),
+                    const Divider(),
                     Center(
-                      child: Container(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (builder) {
-                                return ReplyPostScreen(
-                                  relyPostId: _forumPost[len - 1].id,
-                                  subject: "Re:" + _forumPost[len - 1].subject!,
-                                  article: _forumPost[len - 1].author!.fullname,
-                                  timeCreated: _forumPost[len - 1].timecreated,
-                                  content: _forumPost[len - 1].message,
-                                );
-                              })).then((_) {
-                                isLoading = !isLoading;
-                                fetch();
-                              });
-                            },
-                            child: Row(
-                              children: [
-                                Icon(Icons.message),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Text(AppLocalizations.of(context)!.reply_post),
-                              ],
-                            ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (builder) {
+                              return ReplyPostScreen(
+                                relyPostId: _forumPost[len - 1].id,
+                                subject: "Re:" + _forumPost[len - 1].subject!,
+                                article: _forumPost[len - 1].author!.fullname,
+                                timeCreated: _forumPost[len - 1].timecreated,
+                                content: _forumPost[len - 1].message,
+                              );
+                            })).then((_) {
+                              isLoading = !isLoading;
+                              fetch();
+                            });
+                          },
+                          child: Row(
+                            children: [
+                              const Icon(Icons.message),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              Text(AppLocalizations.of(context)!.reply_post),
+                            ],
                           ),
                         ),
                       ),
                     ),
-                    Divider(),
+                    const Divider(),
                     ListView.builder(
-                        padding: EdgeInsets.only(bottom: 30),
+                        padding: const EdgeInsets.only(bottom: 30),
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
                         itemCount: _forumPost.length - 1,
-                        itemBuilder: (BuildContext, index) {
+                        itemBuilder: (context, index) {
                           bool checkReply;
                           if (_forumPost[len - 2 - index].parentid ==
-                              _forumPost[len - 1].id)
+                              _forumPost[len - 1].id) {
                             checkReply = false;
-                          else
+                          } else {
                             checkReply = true;
+                          }
                           return ReplyCard(
                             isReply: checkReply,
                             postId: _forumPost[len - 2 - index].id,
@@ -281,7 +278,7 @@ class ReplyCard extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       subject!,
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                           color: Colors.green),
@@ -294,7 +291,7 @@ class ReplyCard extends StatelessWidget {
                         Text(AppLocalizations.of(context)!.forum_by),
                         Text(
                           name!,
-                          style: TextStyle(color: MoodleColors.blue),
+                          style: const TextStyle(color: MoodleColors.blue),
                         ),
                       ],
                     ),
@@ -312,7 +309,7 @@ class ReplyCard extends StatelessWidget {
                               .format(DateTime.fromMillisecondsSinceEpoch(
                                   date! * 1000))
                               .toString(),
-                          style: TextStyle(color: Colors.grey, fontSize: 10),
+                          style: const TextStyle(color: Colors.grey, fontSize: 10),
                         ),
                       ),
                       Padding(
@@ -321,8 +318,8 @@ class ReplyCard extends StatelessWidget {
                           onTap: function,
                           child: Row(
                             children: [
-                              Icon(Icons.message),
-                              SizedBox(
+                              const Icon(Icons.message),
+                              const SizedBox(
                                 width: 5,
                               ),
                               Text(AppLocalizations.of(context)!.reply_post),

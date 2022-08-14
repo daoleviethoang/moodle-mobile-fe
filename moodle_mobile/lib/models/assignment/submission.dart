@@ -37,13 +37,13 @@ class Submission {
     if (json['plugins'] != null) {
       plugins = [];
       json['plugins'].forEach((v) {
-        plugins!.add(new Plugins.fromJson(v));
+        plugins!.add(Plugins.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['userid'] = userid;
     data['attemptnumber'] = attemptnumber;

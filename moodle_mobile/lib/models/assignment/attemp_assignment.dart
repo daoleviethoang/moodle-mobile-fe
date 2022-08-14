@@ -25,7 +25,7 @@ class AttemptAssignment {
 
   AttemptAssignment.fromJson(Map<String, dynamic> json) {
     submission = json['submission'] != null
-        ? new Submission.fromJson(json['submission'])
+        ? Submission.fromJson(json['submission'])
         : null;
     submissionsenabled = json['submissionsenabled'];
     locked = json['locked'];
@@ -38,18 +38,18 @@ class AttemptAssignment {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.submission != null) {
-      data['submission'] = this.submission?.toJson() ?? null;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (submission != null) {
+      data['submission'] = submission?.toJson();
     }
-    data['submissionsenabled'] = this.submissionsenabled;
-    data['locked'] = this.locked;
-    data['graded'] = this.graded;
-    data['canedit'] = this.canedit;
-    data['caneditowner'] = this.caneditowner;
-    data['cansubmit'] = this.cansubmit;
-    data['blindmarking'] = this.blindmarking;
-    data['gradingstatus'] = this.gradingstatus;
+    data['submissionsenabled'] = submissionsenabled;
+    data['locked'] = locked;
+    data['graded'] = graded;
+    data['canedit'] = canedit;
+    data['caneditowner'] = caneditowner;
+    data['cansubmit'] = cansubmit;
+    data['blindmarking'] = blindmarking;
+    data['gradingstatus'] = gradingstatus;
     return data;
   }
 }

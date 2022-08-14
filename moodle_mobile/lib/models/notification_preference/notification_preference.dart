@@ -25,7 +25,7 @@ class NotificationPreference {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['userid'] = userid;
     data['disableall'] = disableall;
     if (processors != null) {
@@ -61,11 +61,11 @@ class Processors {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['displayname'] = displayname;
     data['name'] = name;
-    data['hassettings'] = this.hassettings;
-    data['contextid'] = this.contextid;
+    data['hassettings'] = hassettings;
+    data['contextid'] = contextid;
     data['userconfigured'] = userconfigured;
     return data;
   }
@@ -88,7 +88,7 @@ class Components {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['displayname'] = displayname;
     if (notifications != null) {
       data['notifications'] = notifications!.map((v) => v.toJson()).toList();
@@ -116,7 +116,7 @@ class Notifications {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['displayname'] = displayname;
     data['preferencekey'] = preferencekey;
     if (processors != null) {
@@ -157,7 +157,7 @@ class Processors2 {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['displayname'] = displayname;
     data['name'] = name;
     data['locked'] = locked;
@@ -187,7 +187,7 @@ class Loggedin {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['name'] = name;
     data['displayname'] = displayname;
     data['checked'] = checked;

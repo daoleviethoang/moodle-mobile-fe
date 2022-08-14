@@ -78,7 +78,7 @@ class CourseOverView {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['shortname'] = shortname;
     data['fullname'] = fullname;

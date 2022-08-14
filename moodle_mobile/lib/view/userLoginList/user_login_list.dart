@@ -1,16 +1,13 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
 import 'package:moodle_mobile/models/user_login.dart';
 import 'package:moodle_mobile/sqllite/sql.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
-import 'package:moodle_mobile/view/common/custom_button.dart';
 import 'package:moodle_mobile/view/login/login.dart';
 import 'package:moodle_mobile/view/userLoginList/user_login_tile.dart';
 
@@ -106,19 +103,17 @@ class _ListUserLoginScreenState extends State<ListUserLoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Spacer(
-                      flex: 2,
-                    ),
-                    Container(
+                    const Spacer(flex: 2),
+                    SizedBox(
                       width: double.infinity,
                       // MediaQuery: get 1/4 of screen height
                       height: MediaQuery.of(context).size.height * 1 / 4,
                       child: Image.asset('assets/image/logoOnly.png'),
                     ),
-                    Spacer(),
+                    const Spacer(),
                     SingleChildScrollView(
                       child: ConstrainedBox(
-                        constraints: BoxConstraints.tightFor(
+                        constraints: const BoxConstraints.tightFor(
                           height: 260,
                         ),
                         child: ListView(
@@ -135,11 +130,11 @@ class _ListUserLoginScreenState extends State<ListUserLoginScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: 5, right: 5),
+                      padding: const EdgeInsets.only(left: 5, right: 5),
                       child: TextButton(
                         onPressed: () {
                           Navigator.of(context)
@@ -166,7 +161,7 @@ class _ListUserLoginScreenState extends State<ListUserLoginScreen> {
                         ),
                       ),
                     ),
-                    Spacer(
+                    const Spacer(
                       flex: 2,
                     ),
                   ],

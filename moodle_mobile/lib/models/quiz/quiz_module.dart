@@ -56,7 +56,7 @@ class QuizModule {
     noviewlink = json['noviewlink'];
     completion = json['completion'];
     completiondata = json['completiondata'] != null
-        ? new Completiondata.fromJson(json['completiondata'])
+        ? Completiondata.fromJson(json['completiondata'])
         : null;
     if (json['dates'] != null) {
       dates = [];
@@ -67,7 +67,7 @@ class QuizModule {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['url'] = url;
     data['name'] = name;
@@ -124,7 +124,7 @@ class Completiondata {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['state'] = state;
     data['timecompleted'] = timecompleted;
     data['valueused'] = valueused;
@@ -148,7 +148,7 @@ class Dates {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['label'] = label;
     data['timestamp'] = timestamp;
     return data;

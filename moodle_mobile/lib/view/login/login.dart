@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -135,13 +133,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 Text(
                   AppLocalizations.of(context)!.domain,
                   textScaleFactor: 0.8,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
-                SizedBox(
-                  height: 10,
-                ),
+                const SizedBox(height: 10),
                 CustomTextFieldWidget(
                   controller: otherUrlController,
                   hintText: AppLocalizations.of(context)!.enter_title,
@@ -158,7 +152,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       Navigator.pop(dialogContext);
                     },
                     child: Text(AppLocalizations.of(context)!.cancel,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w700,
                           fontSize: 16,
@@ -182,7 +176,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       Navigator.pop(dialogContext, true);
                     },
                     child: Text(AppLocalizations.of(context)!.ok,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w700,
                           fontSize: 16,
@@ -265,12 +259,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                     decoration: InputDecoration(
                       contentPadding:
-                          EdgeInsets.all(Dimens.default_padding_double),
+                          const EdgeInsets.all(Dimens.default_padding_double),
                       prefixIcon: const Icon(Icons.language),
                       hintText: AppLocalizations.of(context)!.baseUrl,
                       labelText: AppLocalizations.of(context)!.baseUrl,
                       isDense: true,
-                      border: OutlineInputBorder(
+                      border: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(
                               Radius.circular(Dimens.default_border_radius))),
                     ),
@@ -331,7 +325,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 Dimens.default_checkbox_border_radius)),
                       ),
                       Text(AppLocalizations.of(context)!.remember_account,
-                          style: TextStyle(fontSize: 16))
+                          style: const TextStyle(fontSize: 16))
                     ],
                   ),
                 ),
@@ -384,7 +378,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         onPressed: forgotPass,
                         child: Text(
                           AppLocalizations.of(context)!.forgot_password,
-                          style: TextStyle(fontSize: 16),
+                          style: const TextStyle(fontSize: 16),
                         ),
                         style: ButtonStyle(
                             foregroundColor:

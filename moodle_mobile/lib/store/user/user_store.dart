@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:mobx/mobx.dart';
-import 'package:moodle_mobile/data/network/constants/endpoints.dart';
 import 'package:moodle_mobile/data/repository.dart';
 import 'package:moodle_mobile/models/notification/last_updated_data.dart';
 import 'package:moodle_mobile/models/user.dart';

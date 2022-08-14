@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:moodle_mobile/constants/colors.dart';
 
 class DateAssignmentTile extends StatefulWidget {
   final int date;
@@ -23,7 +22,7 @@ class _DateAssignmentTileState extends State<DateAssignmentTile> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
       child: Row(
         children: <Widget>[
           Container(

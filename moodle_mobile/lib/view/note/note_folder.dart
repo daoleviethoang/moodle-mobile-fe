@@ -44,7 +44,7 @@ class _NoteFolderState extends State<NoteFolder> {
 
   Widget _body = Container();
 
-  late FocusNode _searchFocusNode;
+  // late FocusNode _searchFocusNode;
 
   List<Note> get _searchNotes {
     final lists = _notes.values.toList();
@@ -76,7 +76,7 @@ class _NoteFolderState extends State<NoteFolder> {
         _notes = {null: widget.notes.recent};
         break;
     }
-    _searchFocusNode = FocusNode();
+    // _searchFocusNode = FocusNode();
   }
 
   void _initBody() {

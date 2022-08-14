@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
-import 'package:moodle_mobile/view/grade_in_one_course.dart';
 
 class GradeOverview extends StatelessWidget {
   final int courseId;

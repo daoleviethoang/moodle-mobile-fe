@@ -204,7 +204,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                   padding: const EdgeInsets.only(left: 20),
                   child: Text(
                     AppLocalizations.of(context)!.file_from_gallery,
-                    style: TextStyle(color: MoodleColors.black, fontSize: 16),
+                    style: const TextStyle(color: MoodleColors.black, fontSize: 16),
                   ),
                 ),
                 style: TextButton.styleFrom(
@@ -237,7 +237,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                   padding: const EdgeInsets.only(left: 20),
                   child: Text(
                     AppLocalizations.of(context)!.file_from_camera,
-                    style: TextStyle(color: MoodleColors.black, fontSize: 16),
+                    style: const TextStyle(color: MoodleColors.black, fontSize: 16),
                   ),
                 ),
                 style: TextButton.styleFrom(
@@ -293,11 +293,11 @@ class _AlbumScreenState extends State<AlbumScreen> {
                                       AppLocalizations.of(context)!
                                           .deleete_album,
                                       textScaleFactor: 0.8,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 10,
                                     ),
                                     Text(
@@ -317,7 +317,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                                         child: Text(
                                             AppLocalizations.of(context)!
                                                 .cancel,
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               color: Colors.white,
                                               fontWeight: FontWeight.w700,
                                               fontSize: 16,
@@ -345,7 +345,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                                         child: Text(
                                             AppLocalizations.of(context)!
                                                 .remove,
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               color: Colors.white,
                                               fontWeight: FontWeight.w700,
                                               fontSize: 16,
@@ -384,7 +384,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                                   SnackBar(
                                       content: Text(e.toString()),
                                       backgroundColor:
-                                          Color.fromARGB(255, 58, 44, 43)));
+                                          const Color.fromARGB(255, 58, 44, 43)));
                             }
                             Navigator.pop(context);
                           }
@@ -408,11 +408,11 @@ class _AlbumScreenState extends State<AlbumScreen> {
                                 Text(
                                   AppLocalizations.of(context)!.new_name_album,
                                   textScaleFactor: 0.8,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 10,
                                 ),
                                 Text(
@@ -420,7 +420,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                                       .new_name_album_description,
                                   textScaleFactor: 0.8,
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 10,
                                 ),
                                 CustomTextFieldWidget(
@@ -441,7 +441,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                                     },
                                     child: Text(
                                         AppLocalizations.of(context)!.cancel,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.w700,
                                           fontSize: 16,
@@ -481,7 +481,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                                     },
                                     child:
                                         Text(AppLocalizations.of(context)!.save,
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               color: Colors.white,
                                               fontWeight: FontWeight.w700,
                                               fontSize: 16,

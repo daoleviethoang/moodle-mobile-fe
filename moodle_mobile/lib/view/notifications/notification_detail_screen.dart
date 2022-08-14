@@ -43,9 +43,7 @@ class NotificationDetailScreen extends StatelessWidget {
                 margin: const EdgeInsets.only(left: 8, right: 8),
                 child: Column(
                   children: [
-                    SizedBox(
-                      height: 20,
-                    ),
+                    const SizedBox(height: 20),
                     Card(
                       elevation: 10,
                       child: Column(
@@ -60,7 +58,7 @@ class NotificationDetailScreen extends StatelessWidget {
                             ),
                             child: Text(
                               AppLocalizations.of(context)!.subject,
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                              style: const TextStyle(fontWeight: FontWeight.bold),
                             ),
                           ),
                           Container(
@@ -80,7 +78,7 @@ class NotificationDetailScreen extends StatelessWidget {
                                     vertical: 1.0, horizontal: 10.0),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.0),
-                                  borderSide: BorderSide(width: 1),
+                                  borderSide: const BorderSide(width: 1),
                                 ),
                               ),
                             ),
@@ -88,7 +86,7 @@ class NotificationDetailScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     Card(
@@ -105,7 +103,7 @@ class NotificationDetailScreen extends StatelessWidget {
                             ),
                             child: Text(
                               AppLocalizations.of(context)!.content,
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                              style: const TextStyle(fontWeight: FontWeight.bold),
                             ),
                           ),
                           Container(

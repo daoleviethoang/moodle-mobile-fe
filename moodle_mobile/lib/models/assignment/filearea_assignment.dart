@@ -17,9 +17,9 @@ class Fileareas {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['area'] = area;
-    if (this.files != null) {
+    if (files != null) {
       data['files'] = files!.map((v) => v.toJson()).toList();
     }
     return data;

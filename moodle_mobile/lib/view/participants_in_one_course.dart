@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/constants/styles.dart';
-import 'package:moodle_mobile/data/network/apis/conversation/conversation_api.dart';
 import 'package:moodle_mobile/data/repository.dart';
 import 'package:moodle_mobile/models/course/course_participants.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
@@ -22,7 +21,7 @@ class ParticipantsInOneCourse extends StatefulWidget {
 class _ParticipantsInOneCourseState extends State<ParticipantsInOneCourse> {
   late Repository _repository;
   late UserStore _userStore;
-  late ConversationApi _conversationApi;
+  // late ConversationApi _conversationApi;
   bool isLoad = true;
   List<CourseParticipantsModel> participants = [];
 
@@ -49,7 +48,7 @@ class _ParticipantsInOneCourseState extends State<ParticipantsInOneCourse> {
                 Container(height: 16),
                 Text(
                   AppLocalizations.of(context)!.teacher,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17.5),
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17.5),
                 ),
                 ...List.generate(
                   participants.length,
@@ -77,7 +76,7 @@ class _ParticipantsInOneCourseState extends State<ParticipantsInOneCourse> {
                 Container(height: 16),
                 Text(
                   AppLocalizations.of(context)!.student,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17.5),
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17.5),
                 ),
                 ...List.generate(
                   participants.length,

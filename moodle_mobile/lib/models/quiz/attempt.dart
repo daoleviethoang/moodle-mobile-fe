@@ -50,21 +50,21 @@ class Attempt {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['quiz'] = this.quiz;
-    data['userid'] = this.userid;
-    data['attempt'] = this.attempt;
-    data['uniqueid'] = this.uniqueid;
-    data['layout'] = this.layout;
-    data['currentpage'] = this.currentpage;
-    data['preview'] = this.preview;
-    data['state'] = this.state;
-    data['timestart'] = this.timestart;
-    data['timefinish'] = this.timefinish;
-    data['timemodified'] = this.timemodified;
-    data['timemodifiedoffline'] = this.timemodifiedoffline;
-    data['sumgrades'] = this.sumgrades;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['quiz'] = quiz;
+    data['userid'] = userid;
+    data['attempt'] = attempt;
+    data['uniqueid'] = uniqueid;
+    data['layout'] = layout;
+    data['currentpage'] = currentpage;
+    data['preview'] = preview;
+    data['state'] = state;
+    data['timestart'] = timestart;
+    data['timefinish'] = timefinish;
+    data['timemodified'] = timemodified;
+    data['timemodifiedoffline'] = timemodifiedoffline;
+    data['sumgrades'] = sumgrades;
     return data;
   }
 }

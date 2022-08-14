@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:moodle_mobile/models/forum/forum_attachment.dart';
 
 class ForumPost {
@@ -58,7 +57,7 @@ class ForumPost {
     message = json['message'];
     messageformat = json['messageformat'];
     author =
-        json['author'] != null ? new Author.fromJson(json['author']) : null;
+        json['author'] != null ? Author.fromJson(json['author']) : null;
     discussionid = json['discussionid'];
     hasparent = json['hasparent'];
     parentid = json['parentid'];
@@ -77,7 +76,7 @@ class ForumPost {
     if (json['attachments'] != null) {
       attachments = <ForumAttachment>[];
       json['attachments'].forEach((v) {
-        attachments!.add(new ForumAttachment.fromJson(v));
+        attachments!.add(ForumAttachment.fromJson(v));
       });
       // }
       // if (json['tags'] != null) {
@@ -91,26 +90,26 @@ class ForumPost {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['subject'] = this.subject;
-    data['replysubject'] = this.replysubject;
-    data['message'] = this.message;
-    data['messageformat'] = this.messageformat;
-    if (this.author != null) {
-      data['author'] = this.author!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['subject'] = subject;
+    data['replysubject'] = replysubject;
+    data['message'] = message;
+    data['messageformat'] = messageformat;
+    if (author != null) {
+      data['author'] = author!.toJson();
     }
-    data['discussionid'] = this.discussionid;
-    data['hasparent'] = this.hasparent;
-    data['parentid'] = this.parentid;
-    data['timecreated'] = this.timecreated;
-    data['timemodified'] = this.timemodified;
-    data['unread'] = this.unread;
-    data['isdeleted'] = this.isdeleted;
-    data['isprivatereply'] = this.isprivatereply;
-    data['haswordcount'] = this.haswordcount;
-    data['wordcount'] = this.wordcount;
-    data['charcount'] = this.charcount;
+    data['discussionid'] = discussionid;
+    data['hasparent'] = hasparent;
+    data['parentid'] = parentid;
+    data['timecreated'] = timecreated;
+    data['timemodified'] = timemodified;
+    data['unread'] = unread;
+    data['isdeleted'] = isdeleted;
+    data['isprivatereply'] = isprivatereply;
+    data['haswordcount'] = haswordcount;
+    data['wordcount'] = wordcount;
+    data['charcount'] = charcount;
     // if (this.capabilities != null) {
     //   data['capabilities'] = this.capabilities!.toJson();
     // }
@@ -158,10 +157,10 @@ class Author {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['fullname'] = this.fullname;
-    data['isdeleted'] = this.isdeleted;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['fullname'] = fullname;
+    data['isdeleted'] = isdeleted;
     // if (this.groups != null) {
     //   data['groups'] = this.groups!.map((v) => v.toJson()).toList();
     // }

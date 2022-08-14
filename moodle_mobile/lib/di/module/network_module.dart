@@ -26,7 +26,7 @@ abstract class NetworkModule {
           onRequest: (RequestOptions options,
               RequestInterceptorHandler handler) async {
             // getting token
-            var token = await sharedPrefHelper.authToken;
+            var token = sharedPrefHelper.authToken;
 
             if (token != null) {
               options.headers.putIfAbsent('Authorization', () => token);

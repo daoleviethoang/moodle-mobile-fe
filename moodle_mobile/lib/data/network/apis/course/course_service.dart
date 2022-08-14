@@ -97,7 +97,7 @@ class CourseService {
   Future setHiddenCourse(String token, int id) async {
     try {
       Dio dio = Http().client;
-      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+      await dio.get(Endpoints.webserviceServer, queryParameters: {
         'wstoken': token,
         'wsfunction': Wsfunction.CORE_USER_UPDATE_USER_PREFERENCES,
         'moodlewsrestformat': 'json',
@@ -116,7 +116,7 @@ class CourseService {
   Future setUnHiddenCourse(String token, int id) async {
     try {
       Dio dio = Http().client;
-      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+      await dio.get(Endpoints.webserviceServer, queryParameters: {
         'wstoken': token,
         'wsfunction': Wsfunction.CORE_USER_UPDATE_USER_PREFERENCES,
         'moodlewsrestformat': 'json',

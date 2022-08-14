@@ -1,5 +1,3 @@
-import 'package:moodle_mobile/models/contant/contant_model.dart';
-
 enum CourseStatus { in_progress, future, past, removed_from_view, all }
 
 extension CourseStatusExtension on CourseStatus {

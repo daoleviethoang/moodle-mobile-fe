@@ -1,5 +1,3 @@
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/data/firebase/firestore/polls_service.dart';
@@ -63,6 +61,7 @@ class _PollContainerState extends State<PollContainer> {
     for (List<String> result in resultValues) {
       if (result.contains(widget.userId)) return resultValues.indexOf(result);
     }
+    return null;
   }
 
   void onDeleted() async {
@@ -89,7 +88,7 @@ class _PollContainerState extends State<PollContainer> {
                     alignment: Alignment.topRight,
                     child: IconButton(
                         padding: EdgeInsets.zero,
-                        constraints: BoxConstraints(),
+                        constraints: const BoxConstraints(),
                         onPressed: () {
                           Navigator.push(context, MaterialPageRoute(
                             builder: (context) {
@@ -102,7 +101,7 @@ class _PollContainerState extends State<PollContainer> {
                             fetch();
                           });
                         },
-                        icon: Icon(
+                        icon: const Icon(
                           Icons.edit,
                         )),
                   ),
@@ -112,7 +111,7 @@ class _PollContainerState extends State<PollContainer> {
                     Text(
                       poll!.subject!,
                       style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                          const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                     ),
                     Align(
                       alignment: Alignment.centerLeft,
@@ -149,7 +148,7 @@ class _PollContainerState extends State<PollContainer> {
                                 votedOption != null ? () => onDeleted() : null,
                             child: Text(
                               AppLocalizations.of(context)!.vote_again,
-                              style: TextStyle(color: Colors.white),
+                              style: const TextStyle(color: Colors.white),
                             ),
                           ),
                         ],

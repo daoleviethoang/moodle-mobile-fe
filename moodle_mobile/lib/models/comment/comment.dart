@@ -19,7 +19,7 @@ class Comment {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     if (comments != null) {
       data['comments'] = comments!.map((v) => v.toJson()).toList();
     }
@@ -71,7 +71,7 @@ class Comments {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['content'] = content;
     data['format'] = format;

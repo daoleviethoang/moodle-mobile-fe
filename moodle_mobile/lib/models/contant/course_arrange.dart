@@ -1,5 +1,3 @@
-import 'package:moodle_mobile/models/contant/contant_model.dart';
-
 enum CourseArrange { name, last_accessed, default_ }
 
 extension CourseStatusExtension on CourseArrange {

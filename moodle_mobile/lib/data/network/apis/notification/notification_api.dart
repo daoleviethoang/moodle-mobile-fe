@@ -36,7 +36,7 @@ class NotificationApi {
   static Future markAllAsRead(String token, {String useridto = '0'}) async {
     try {
       Dio dio = Http().client;
-      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+      await dio.get(Endpoints.webserviceServer, queryParameters: {
         'wstoken': token,
         'wsfunction': Wsfunction.MARK_ALL_NOTIFICATION_AS_READ,
         'moodlewsrestformat': 'json',

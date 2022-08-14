@@ -44,7 +44,7 @@ class _CourseCategoryScreenState extends State<CourseCategoryScreen> {
 
       // group folder
       for (var i = maxDepth - 1; i >= 0; i--) {
-        categories.forEach((element) {
+        for (var element in categories) {
           if (element.depth! >= i && element.depth! <= i + 1) {
             if (categoryMap.containsKey(element.parent)) {
               categoryMap[element.parent]!.addChild(element);
@@ -58,7 +58,7 @@ class _CourseCategoryScreenState extends State<CourseCategoryScreen> {
               categoryMap.addEntries(iter.entries);
             }
           }
-        });
+        }
       }
 
       return categoryMap.values.toList();

@@ -28,7 +28,7 @@ abstract class _ConversationDetailStore with Store {
 
       if (kDebugMode) {
         print(
-            "Get list message success: ${listMessages.length} with user ${userId}");
+            "Get list message success: ${listMessages.length} with user $userId");
       }
     } catch (e) {
       if (kDebugMode) print("Get message error: $e");
@@ -47,8 +47,7 @@ abstract class _ConversationDetailStore with Store {
   @action
   Future sentMessage(String token, int conversationId, String text) async {
     try {
-      ConversationMessageModel message =
-          await _repository.sentMessage(token, conversationId, text);
+      await _repository.sentMessage(token, conversationId, text);
     } catch (e) {
       if (kDebugMode) {
         print("Sent message error: $e");

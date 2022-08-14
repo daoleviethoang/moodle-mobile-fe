@@ -8,7 +8,6 @@ import 'package:moodle_mobile/view/common/custom_text_field.dart';
 import 'package:moodle_mobile/view/common/custom_text_field_comment_detail.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:html/parser.dart' show parse;
-import 'package:html/dom.dart' as dom;
 
 class CommentAssignmentDetailScreen extends StatefulWidget {
   final Comment comment;
@@ -174,7 +173,7 @@ class _CommentAssignmentDetailScreenState
                 if (index == 0 || isSameDate == false) {
                   return Column(children: [
                     Text(DateFormat("dd MMMM, yyyy").format(date)),
-                    SizedBox(
+                    const SizedBox(
                       height: 5,
                     ),
                     comment

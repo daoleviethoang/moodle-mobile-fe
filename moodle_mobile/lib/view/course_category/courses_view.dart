@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/models/course/courses.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
-import 'package:moodle_mobile/view/course_details.dart';
 import 'package:moodle_mobile/view/home/courses_view.dart';
 
 class CategoryCourseListView extends StatefulWidget {

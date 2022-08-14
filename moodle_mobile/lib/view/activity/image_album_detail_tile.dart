@@ -73,9 +73,9 @@ class ImageAlbumDetailTile extends StatelessWidget {
                                   return Text(filePath!);
                                 },
                               )),
-                    SizedBox(height: 5),
+                    const SizedBox(height: 5),
                     Container(
-                      padding: EdgeInsets.only(left: 5),
+                      padding: const EdgeInsets.only(left: 5),
                       child: Text(name,
                           style: const TextStyle(
                             fontWeight: FontWeight.w900,
@@ -90,11 +90,11 @@ class ImageAlbumDetailTile extends StatelessWidget {
                     child: Container(
                       padding: const EdgeInsets.all(2),
                       // onPressed: () {},
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Colors.blueAccent,
                         shape: BoxShape.circle,
                       ),
-                      child: Icon(
+                      child: const Icon(
                         Icons.check,
                         size: 12,
                         color: Colors.white,

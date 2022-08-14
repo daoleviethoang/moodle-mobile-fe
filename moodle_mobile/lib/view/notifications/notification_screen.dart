@@ -1,8 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-//import 'package:flutter_html/flutter_html.dart';
-//import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:moodle_mobile/constants/colors.dart';
@@ -10,7 +8,6 @@ import 'package:moodle_mobile/constants/styles.dart';
 import 'package:moodle_mobile/constants/vars.dart';
 import 'package:moodle_mobile/data/network/apis/course/course_detail_service.dart';
 import 'package:moodle_mobile/data/network/apis/notification/notification_api.dart';
-import 'package:moodle_mobile/models/course/course_detail.dart';
 import 'package:moodle_mobile/models/notification/notification.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -27,7 +24,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
   NotificationPopup? _notificationPopup;
   late UserStore _userStore;
   late Timer _refreshTimer;
-  late CourseDetail _courseDetail;
+  // late CourseDetail _courseDetail;
   List<String>? name;
   List<NotificationDetail> _notificationDetail = [];
 
@@ -70,12 +67,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
       // setState(() => _loading = true);
       for (int i = 0; i < 5; i++) {
         if (i < value!.notificationDetail!.length) {
-          if (value.notificationDetail![i] != null) {
-            value.notificationDetail![i].read = true;
-            alreadyRead.add(value.notificationDetail![i]);
-          }
-        } else
+          value.notificationDetail![i].read = true;
+          alreadyRead.add(value.notificationDetail![i]);
+        } else {
           break;
+        }
       }
       // int check = 0;
       // for (var t in value!.notificationDetail!) {
@@ -215,7 +211,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           width: double.infinity,
                           child: TextButton(
                               onPressed: () {},
-                              child: Text('Submit',
+                              child: const Text('Submit',
                                   style: TextStyle(color: Colors.white)))),
                     ),
                   )
@@ -261,12 +257,12 @@ class NotificationPopupContainer extends StatelessWidget {
                 children: [
                   read == true
                       ? Container()
-                      : Icon(
+                      : const Icon(
                           Icons.circle,
                           color: MoodleColors.blue,
                           size: 13,
                         ),
-                  SizedBox(
+                  const SizedBox(
                     width: 5,
                   ),
                   Expanded(
@@ -314,7 +310,7 @@ class NotificationPopupContainer extends StatelessWidget {
               ),
               Text(
                 subject!,
-                style: TextStyle(fontSize: 14),
+                style: const TextStyle(fontSize: 14),
               ),
             ],
           ),

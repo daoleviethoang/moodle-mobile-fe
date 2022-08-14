@@ -174,7 +174,7 @@ class ConversationApi {
       String token, int userId, int conversationId) async {
     try {
       Dio dio = Http().client;
-      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+      await dio.get(Endpoints.webserviceServer, queryParameters: {
         'wstoken': token,
         'wsfunction': Wsfunction.MARK_MESSAGES_AS_READ,
         'moodlewsrestformat': 'json',

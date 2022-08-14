@@ -1,4 +1,3 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -38,9 +37,7 @@ class CourseCommonView extends StatelessWidget {
                 color: MoodleColors.iconGrey,
                 size: 24,
               ),
-              SizedBox(
-                width: 8,
-              ),
+              const SizedBox(width: 8),
               course == null
                   ? Text(
                       role,

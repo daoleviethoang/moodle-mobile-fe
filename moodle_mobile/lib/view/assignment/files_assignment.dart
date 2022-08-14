@@ -347,7 +347,7 @@ class _FilesAssignmentScreenState extends State<FilesAssignmentScreen> {
             snap: true,
             title: Text(
               AppLocalizations.of(context)!.submission,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 20,
               ),
@@ -381,7 +381,7 @@ class _FilesAssignmentScreenState extends State<FilesAssignmentScreen> {
                                 children: <Widget>[
                                   Text(
                                     AppLocalizations.of(context)!.max_file_size,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -413,7 +413,7 @@ class _FilesAssignmentScreenState extends State<FilesAssignmentScreen> {
                                   Text(
                                     AppLocalizations.of(context)!
                                         .default_num_file,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                     ),

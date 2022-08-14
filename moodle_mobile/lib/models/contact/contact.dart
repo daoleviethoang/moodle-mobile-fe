@@ -1,6 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:moodle_mobile/models/enrolled_course/enrolled_course.dart';
-import 'package:moodle_mobile/models/role/role.dart';
 
 part 'contact.g.dart';
 

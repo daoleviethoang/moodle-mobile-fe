@@ -9,7 +9,6 @@ import 'package:moodle_mobile/models/user_login.dart';
 import 'package:moodle_mobile/sqllite/sql.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/image_view.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PublicInformationCommonView extends StatefulWidget {
   final String imageUrl;

@@ -22,7 +22,7 @@ class StatusCommonView extends StatelessWidget {
             size: 12,
           ),
           Padding(
-            padding: EdgeInsets.only(left: 8),
+            padding: const EdgeInsets.only(left: 8),
             child: Text(
               status,
               style: const TextStyle(

@@ -159,7 +159,7 @@ class FetchNotification extends BgEvent {
               throw (Exception('Data is null'));
             }
             final token = '${event['token']}';
-            final uid = '${event['userid']}';
+            // final uid = '${event['userid']}';
             LastUpdateData lastUpdated = event['lastUpdated'];
 
             // Get list of upcoming events in enrolled courses (last 2 months)
@@ -168,7 +168,7 @@ class FetchNotification extends BgEvent {
             for (NotificationDetail d in details) {
               if (d.read ?? false) continue;
               // Get course name
-              final courseId = d.customdata?.courseId ?? '-1';
+              // final courseId = d.customdata?.courseId ?? '-1';
               final course =
                   await CourseDetailService().getCourseById(token, 123);
               final courseName = course.displayname ?? '';

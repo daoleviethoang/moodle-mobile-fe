@@ -6,7 +6,6 @@ import 'package:moodle_mobile/constants/dimens.dart';
 import 'package:moodle_mobile/data/network/apis/contact/contact_message.dart';
 import 'package:moodle_mobile/data/repository.dart';
 import 'package:moodle_mobile/models/conversation/conversation_member.dart';
-import 'package:moodle_mobile/store/conversation/conversation_store.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/participant.dart';
 
@@ -18,7 +17,7 @@ class ContactList extends StatefulWidget {
 }
 
 class _ContactListState extends State<ContactList> {
-  late ConversationStore _conversationStore;
+  // late ConversationStore _conversationStore;
   late UserStore _userStore;
   late ContactOfMessage _contactOfMessage;
   late Repository _repository;
@@ -27,7 +26,7 @@ class _ContactListState extends State<ContactList> {
   void initState() {
     super.initState();
 
-    _conversationStore = GetIt.instance<ConversationStore>();
+    // _conversationStore = GetIt.instance<ConversationStore>();
     _contactOfMessage = GetIt.instance<ContactOfMessage>();
     _userStore = GetIt.instance<UserStore>();
     _repository = GetIt.instance<Repository>();

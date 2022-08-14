@@ -35,7 +35,7 @@ class UserDetailCommonView extends StatelessWidget {
           children: <Widget>[
             Text(
               AppLocalizations.of(context)!.user_details,
-              style: TextStyle(
+              style: const TextStyle(
                   fontWeight: FontWeight.w900,
                   fontSize: 15,
                   letterSpacing: 0.27,
@@ -52,7 +52,7 @@ class UserDetailCommonView extends StatelessWidget {
                       Uri.parse('mailto:$email'),
                     ),
                     child: Padding(
-                      padding: EdgeInsets.only(left: 8),
+                      padding: const EdgeInsets.only(left: 8),
                       child: Text(
                         email,
                         style: const TextStyle(
@@ -74,7 +74,7 @@ class UserDetailCommonView extends StatelessWidget {
                   size: 24,
                 ),
                 Padding(
-                  padding: EdgeInsets.only(left: 8),
+                  padding: const EdgeInsets.only(left: 8),
                   child: Text(
                     location,
                     style: const TextStyle(

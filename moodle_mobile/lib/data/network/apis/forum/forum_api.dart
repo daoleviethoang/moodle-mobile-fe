@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:moodle_mobile/data/network/apis/file/file_api.dart';
@@ -179,7 +178,7 @@ class ForumApi {
   //Subscrible a discussion post
   subscriblePost(String token, int forumId, int state, int discussionId) {
     try {
-      Dio dio = Http().client;
+      // Dio dio = Http().client;
       var query = {
         'wstoken': token,
         'wsfunction': Wsfunction.MOD_FORUM_SET_SUBSCRIPTION,

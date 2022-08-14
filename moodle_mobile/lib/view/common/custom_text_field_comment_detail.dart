@@ -58,7 +58,7 @@ class CustomCommentFieldLeft extends StatelessWidget {
                       Text(
                         hourMinute,
                         textScaleFactor: 0.9,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: MoodleColors.grey,
                         ),
                       ),
@@ -141,7 +141,7 @@ class CustomCommentFieldRight extends StatelessWidget {
                     Text(
                       hourMinute,
                       textScaleFactor: 0.9,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: MoodleColors.grey,
                       ),
                     ),

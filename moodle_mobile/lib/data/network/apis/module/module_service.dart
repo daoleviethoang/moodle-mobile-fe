@@ -29,7 +29,7 @@ class ModuleService {
     try {
       if (state == null) return null;
       Dio dio = Http().client;
-      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+      await dio.get(Endpoints.webserviceServer, queryParameters: {
         'wstoken': token,
         'wsfunction': Wsfunction.MARK_DONE_MODULE,
         'moodlewsrestformat': 'json',

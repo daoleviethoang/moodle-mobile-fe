@@ -6,9 +6,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
 import 'package:moodle_mobile/constants/vars.dart';
-import 'package:moodle_mobile/data/repository.dart';
 import 'package:moodle_mobile/store/conversation/conversation_store.dart';
-import 'package:moodle_mobile/store/conversation_detail/conversation_detail_store.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/slidable_tile.dart';
 import 'package:moodle_mobile/view/message/message_detail_screen.dart';
@@ -23,7 +21,7 @@ class MessageList extends StatefulWidget {
 class _MessageListState extends State<MessageList> {
   late ConversationStore _conversationStore;
   late UserStore _userStore;
-  late Timer _refreshTimer;
+  // late Timer _refreshTimer;
 
   @override
   void initState() {
@@ -35,8 +33,8 @@ class _MessageListState extends State<MessageList> {
     getConversations();
 
     // Update message list
-    _refreshTimer =
-        Timer.periodic(Vars.refreshInterval, (t) => getConversations());
+    // _refreshTimer =
+    Timer.periodic(Vars.refreshInterval, (t) => getConversations());
   }
 
   Future getConversations() async => _conversationStore.getListConversation(

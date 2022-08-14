@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/direct_page.dart';
-import 'package:moodle_mobile/view/home/home.dart';
-import 'package:moodle_mobile/view/login/login.dart';
 import 'package:moodle_mobile/view/userLoginList/user_login_list.dart';
 
 class SplashScreen extends StatefulWidget {

@@ -5,7 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class DescriptionCommonView extends StatelessWidget {
   final String description;
 
-  DescriptionCommonView({Key? key, required this.description})
+  const DescriptionCommonView({Key? key, required this.description})
       : super(key: key);
 
   @override
@@ -33,7 +33,7 @@ class DescriptionCommonView extends StatelessWidget {
           children: <Widget>[
             Text(
               AppLocalizations.of(context)!.description,
-              style: TextStyle(
+              style: const TextStyle(
                   fontWeight: FontWeight.w900,
                   fontSize: 15,
                   letterSpacing: 0.27,

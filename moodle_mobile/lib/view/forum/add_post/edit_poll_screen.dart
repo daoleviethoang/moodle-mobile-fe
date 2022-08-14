@@ -1,10 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/data/firebase/firestore/polls_service.dart';
 import 'package:moodle_mobile/models/forum/forum_course.dart';
 import 'package:moodle_mobile/models/poll/poll.dart';
-import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/custom_button.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -21,7 +19,7 @@ class EditPollScreen extends StatefulWidget {
 class _EditPollScreenState extends State<EditPollScreen> {
   late TextEditingController subjectController = TextEditingController();
   late TextEditingController contentController = TextEditingController();
-  late UserStore _userStore;
+  // late UserStore _userStore;
   List<TextEditingController> pollController = [];
   bool isLoading = false;
   int get numPoll => widget.poll.options!.length;
@@ -30,7 +28,7 @@ class _EditPollScreenState extends State<EditPollScreen> {
   @override
   void initState() {
     super.initState();
-    _userStore = GetIt.instance<UserStore>();
+    // _userStore = GetIt.instance<UserStore>();
     fetch();
     //load();
   }
@@ -100,7 +98,7 @@ class _EditPollScreenState extends State<EditPollScreen> {
                       margin: const EdgeInsets.only(left: 8, right: 8),
                       child: Column(
                         children: [
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
                           Card(
@@ -118,7 +116,7 @@ class _EditPollScreenState extends State<EditPollScreen> {
                                   child: Text(
                                     AppLocalizations.of(context)!.subject,
                                     style:
-                                        TextStyle(fontWeight: FontWeight.bold),
+                                        const TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                 ),
                                 Container(
@@ -139,7 +137,7 @@ class _EditPollScreenState extends State<EditPollScreen> {
                                         border: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(10.0),
-                                          borderSide: BorderSide(width: 1),
+                                          borderSide: const BorderSide(width: 1),
                                         ),
                                         hintText: widget.poll.subject),
                                   ),
@@ -147,7 +145,7 @@ class _EditPollScreenState extends State<EditPollScreen> {
                               ],
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
                           Card(
@@ -165,7 +163,7 @@ class _EditPollScreenState extends State<EditPollScreen> {
                                   child: Text(
                                     AppLocalizations.of(context)!.content,
                                     style:
-                                        TextStyle(fontWeight: FontWeight.bold),
+                                        const TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                 ),
                                 Container(
@@ -183,7 +181,7 @@ class _EditPollScreenState extends State<EditPollScreen> {
                                       border: OutlineInputBorder(
                                         borderRadius:
                                             BorderRadius.circular(10.0),
-                                        borderSide: BorderSide(width: 1),
+                                        borderSide: const BorderSide(width: 1),
                                       ),
                                       hintText: widget.poll.content,
                                     ),
@@ -192,7 +190,7 @@ class _EditPollScreenState extends State<EditPollScreen> {
                               ],
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
                           Card(
@@ -201,7 +199,7 @@ class _EditPollScreenState extends State<EditPollScreen> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Padding(padding: EdgeInsets.only(top: 10)),
+                                const Padding(padding: EdgeInsets.only(top: 10)),
                                 ...List.generate(pollController.length,
                                     (index) {
                                   return Padding(
@@ -224,12 +222,12 @@ class _EditPollScreenState extends State<EditPollScreen> {
                                                       .removeAt(index);
                                                 });
                                               },
-                                              icon: Icon(CupertinoIcons.xmark)),
+                                              icon: const Icon(CupertinoIcons.xmark)),
                                       ],
                                     ),
                                   );
                                 }),
-                                SizedBox(
+                                const SizedBox(
                                   height: 10,
                                 ),
                                 CustomButtonWidget(
@@ -245,7 +243,7 @@ class _EditPollScreenState extends State<EditPollScreen> {
                               ],
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
                           CustomButtonWidget(
@@ -299,19 +297,16 @@ class PollOptionTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      // padding: EdgeInsets.only(bottom: 10, left: 5, right: 5),
-      child: TextField(
-        minLines: 1,
-        controller: controller,
-        maxLines: 2,
-        decoration: InputDecoration(
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.0),
-            borderSide: BorderSide(width: 1),
-          ),
-          hintText: AppLocalizations.of(context)!.add_option,
+    return TextField(
+      minLines: 1,
+      controller: controller,
+      maxLines: 2,
+      decoration: InputDecoration(
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: const BorderSide(width: 1),
         ),
+        hintText: AppLocalizations.of(context)!.add_option,
       ),
     );
   }
