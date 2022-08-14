@@ -83,7 +83,7 @@ class _PollContainerState extends State<PollContainer> {
                 border: Border.all(color: Colors.amber, width: 2)),
             child: Stack(
               children: [
-                //if (widget.isTeacher)
+                if (widget.isTeacher)
                 Align(
                   alignment: Alignment.topRight,
                   child: IconButton(
