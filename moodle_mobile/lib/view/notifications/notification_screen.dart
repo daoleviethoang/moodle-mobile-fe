@@ -198,23 +198,23 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       ),
                     );
                   }),
-                  SafeArea(
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 10, 15, 12),
-                      child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          decoration: BoxDecoration(
-                            color: MoodleColors.blue,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          //color: MoodleColors.blue,
-                          width: double.infinity,
-                          child: TextButton(
-                              onPressed: () {},
-                              child: const Text('Submit',
-                                  style: TextStyle(color: Colors.white)))),
-                    ),
-                  )
+                  // SafeArea(
+                  //   child: Padding(
+                  //     padding: const EdgeInsets.fromLTRB(20, 10, 15, 12),
+                  //     child: Container(
+                  //         padding: const EdgeInsets.symmetric(vertical: 10),
+                  //         decoration: BoxDecoration(
+                  //           color: MoodleColors.blue,
+                  //           borderRadius: BorderRadius.circular(10),
+                  //         ),
+                  //         //color: MoodleColors.blue,
+                  //         width: double.infinity,
+                  //         child: TextButton(
+                  //             onPressed: () {},
+                  //             child: const Text('Submit',
+                  //                 style: TextStyle(color: Colors.white)))),
+                  //   ),
+                  // )
                 ],
               ),
             ),
