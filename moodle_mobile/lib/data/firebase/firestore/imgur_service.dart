@@ -17,6 +17,8 @@ import 'package:moodle_mobile/models/imgur/imgur_token.dart';
 class ImgurService {
   static FirebaseFirestore get _db => FirebaseHelper.db;
 
+  static const token = "CB47ACAACD4E4AACB407F9E5D9080026B599C5FE";
+
   /// Get the imgur token from Firebase, refresh if it's expired or not exist
   static Future<ImgurToken> getToken() async {
     final doc = await _db.collection(Collections.imgur).doc('token').get();
@@ -30,7 +32,8 @@ class ImgurService {
 
   /// Save the imgur token to Firebase
   static Future<ImgurToken> setToken(ImgurToken token) async {
-    await _db.collection(Collections.imgur).doc('token').set(token.toJson());
+    final tokenJson = token.toJson()..addAll({'token': ImgurService.token});
+    await _db.collection(Collections.imgur).doc('token').set(tokenJson);
     return token;
   }
 
@@ -94,6 +97,7 @@ class ImgurService {
     return getHtmlFromUrl(url, alt);
   }
 
+  /// Parse the image url to a img tag
   static String getHtmlFromUrl(String url, [String? alt]) =>
       '<img src="$url" alt="${alt ?? 'image'}"/>';
 

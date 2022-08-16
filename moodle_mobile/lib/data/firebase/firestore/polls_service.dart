@@ -8,6 +8,8 @@ import 'package:moodle_mobile/models/poll/poll.dart';
 class PollService {
   static FirebaseFirestore get _db => FirebaseHelper.db;
 
+  static const token = "2BCB05503397C356CF6518A17459346EA922D99F";
+
   static Future<Poll?> getPollByCouseId(String courseId) async {
     try {
       final doc = await _db.collection(Collections.polls).doc(courseId).get();
@@ -27,7 +29,8 @@ class PollService {
   }
 
   static Future setPoll(String courseId, Poll poll) async {
-    await _db.collection(Collections.polls).doc(courseId).set(poll.toJson());
+    final pollJson = poll.toJson()..addAll({'token': token});
+    await _db.collection(Collections.polls).doc(courseId).set(pollJson);
   }
 
   static Future votePoll(String courseId, String userID, int optionId) async {
@@ -41,10 +44,10 @@ class PollService {
     //add new id
     results['$optionId']!.add(userID);
     //update new
-    await _db
-        .collection(Collections.polls)
-        .doc(courseId)
-        .update({'results': results});
+    await _db.collection(Collections.polls).doc(courseId).update({
+      'token': token,
+      'results': results,
+    });
   }
 
   static Future deletePoll(String courseId) async {
@@ -53,10 +56,11 @@ class PollService {
 
   static Future updatePoll(
       String courseId, String subject, String content) async {
-    await _db
-        .collection(Collections.polls)
-        .doc(courseId)
-        .update({'subject': subject, 'content': content});
+    await _db.collection(Collections.polls).doc(courseId).update({
+      'token': token,
+      'subject': subject,
+      'content': content,
+    });
   }
 
   static Future deleteVote(String courseId, String userID) async {
@@ -68,9 +72,9 @@ class PollService {
       results['$i']!.removeWhere((element) => element == userID);
     }
     //update new
-    await _db
-        .collection(Collections.polls)
-        .doc(courseId)
-        .update({'results': results});
+    await _db.collection(Collections.polls).doc(courseId).update({
+      'token': token,
+      'results': results,
+    });
   }
 }
