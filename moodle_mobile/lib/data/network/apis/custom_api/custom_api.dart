@@ -153,4 +153,93 @@ class CustomApi {
       throw "Can't remove module";
     }
   }
+
+  Future<void> addLabel(String token, int courseId, String name, int sectionId,
+      String description) async {
+    try {
+      Dio dio = Http().client;
+      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': Wsfunction.LOCAL_ADD_MODULES,
+        'moodlewsrestformat': 'json',
+        'courseid': courseId,
+        'modules[0][modulename]': 'label',
+        'modules[0][section]': sectionId,
+        'modules[0][name]': name,
+        'modules[0][visible]': 1,
+        'modules[0][description]': description,
+        'modules[0][descriptionformat]': 0,
+        'modules[0][options][0][name]': 'introformat',
+        'modules[0][options][0][value]': 1,
+      });
+      if (res.data is Map<String, dynamic> && res.data["exception"] != null) {
+        throw res.data["exception"];
+      }
+    } catch (e) {
+      if (e.toString() == "dml_missing_record_exception") {
+        throw e.toString();
+      }
+      throw "Can't add new label to course";
+    }
+  }
+
+  Future<void> addAssignment(
+    String token,
+    int courseId,
+    String name,
+    int sectionId,
+    String description,
+    int timeStampOpen,
+    int timeStampEnd,
+  ) async {
+    try {
+      Dio dio = Http().client;
+      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': Wsfunction.LOCAL_ADD_MODULES,
+        'moodlewsrestformat': 'json',
+        'courseid': courseId,
+        'modules[0][modulename]': 'assign',
+        'modules[0][section]': sectionId,
+        'modules[0][name]': name,
+        'modules[0][visible]': 1,
+        'modules[0][description]': description,
+        'modules[0][descriptionformat]': 0,
+        'modules[0][options][0][name]': 'allowsubmissionsfromdate',
+        'modules[0][options][0][value]': timeStampOpen,
+        'modules[0][options][1][name]': 'duedate',
+        'modules[0][options][1][value]': timeStampEnd,
+        'modules[0][options][2][name]': 'cutoffdate',
+        'modules[0][options][2][value]': timeStampEnd,
+        'modules[0][options][3][name]': 'submissiondrafts',
+        'modules[0][options][3][value]': 0,
+        'modules[0][options][4][name]': 'requiresubmissionstatement',
+        'modules[0][options][4][value]': 0,
+        'modules[0][options][5][name]': 'sendnotifications',
+        'modules[0][options][5][value]': 1,
+        'modules[0][options][6][name]': 'sendlatenotifications',
+        'modules[0][options][6][value]': 0,
+        'modules[0][options][7][name]': 'gradingduedate',
+        'modules[0][options][7][value]': timeStampEnd,
+        'modules[0][options][8][name]': 'grade',
+        'modules[0][options][8][value]': 100,
+        'modules[0][options][9][name]': 'teamsubmission',
+        'modules[0][options][9][value]': 0,
+        'modules[0][options][10][name]': 'requireallteammemberssubmit',
+        'modules[0][options][10][value]': 0,
+        'modules[0][options][11][name]': 'blindmarking',
+        'modules[0][options][11][value]': 0,
+        'modules[0][options][12][name]': 'markingworkflow',
+        'modules[0][options][12][value]': 0,
+      });
+      if (res.data is Map<String, dynamic> && res.data["exception"] != null) {
+        throw res.data["exception"];
+      }
+    } catch (e) {
+      if (e.toString() == "dml_missing_record_exception") {
+        throw e.toString();
+      }
+      throw "Can't add new assign to course";
+    }
+  }
 }
