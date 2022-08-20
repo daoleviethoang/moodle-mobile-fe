@@ -246,21 +246,35 @@ class CustomApi {
   Future<void> editAssignment(
     String token,
     int instanceId,
-    String name,
-    int timeStampOpen,
-    int timeStampEnd,
+    String? name,
+    int? timeStampOpen,
+    int? timeStampEnd,
   ) async {
     try {
       Dio dio = Http().client;
-      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+      var map = {
         'wstoken': token,
         'wsfunction': Wsfunction.LOCAL_EDIT_ASSIGN,
         'moodlewsrestformat': 'json',
         'id': instanceId,
-        'name': name,
-        'dayStart': timeStampOpen,
-        'dayEnd': timeStampEnd,
-      });
+      };
+      if (name != null) {
+        map.addAll({
+          'name': name,
+        });
+      }
+      if (timeStampOpen != null) {
+        map.addAll({
+          'dayStart': timeStampOpen,
+        });
+      }
+      if (timeStampEnd != null) {
+        map.addAll({
+          'dayEnd': timeStampEnd,
+        });
+      }
+      final res =
+          await dio.get(Endpoints.webserviceServer, queryParameters: map);
       if (res.data is Map<String, dynamic> && res.data["exception"] != null) {
         throw res.data["exception"];
       }
