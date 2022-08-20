@@ -1,3 +1,4 @@
+import 'package:charset/charset.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -37,6 +38,8 @@ class _LoginScreenState extends State<LoginScreen> {
   // Check _initSuggestions()
   final List<String> suggestionsData = [];
   final List<String> suggestions = [];
+
+  IconData programDropdownIcon = Icons.arrow_right;
 
   bool otherUrl = false;
 
@@ -201,12 +204,14 @@ class _LoginScreenState extends State<LoginScreen> {
       if (check == true) {
         setState(() {
           baseUrlController.text = otherUrlController.text;
+          programDropdownIcon = Icons.arrow_right;
         });
       }
     } else {
       setState(() {
         otherUrl = false;
         baseUrlController.text = value;
+        programDropdownIcon = Icons.arrow_right;
       });
     }
   }
@@ -242,6 +247,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: Image.asset('assets/image/logo.png'),
                       ),
 
+                //Site
                 Padding(
                   padding: const EdgeInsets.only(
                       left: Dimens.login_padding_left,
@@ -255,12 +261,16 @@ class _LoginScreenState extends State<LoginScreen> {
                     maxLines: 1,
                     //readOnly: !canChangeUrl,
                     onTap: () async {
+                      setState(() {
+                        programDropdownIcon = Icons.arrow_drop_down;
+                      });
                       await _onAppLanguagePressed(context);
                     },
                     decoration: InputDecoration(
                       contentPadding:
                           const EdgeInsets.all(Dimens.default_padding_double),
                       prefixIcon: const Icon(Icons.language),
+                      suffixIcon: Icon(programDropdownIcon),
                       hintText: AppLocalizations.of(context)!.baseUrl,
                       labelText: AppLocalizations.of(context)!.baseUrl,
                       isDense: true,
@@ -393,6 +403,9 @@ class _LoginScreenState extends State<LoginScreen> {
   void onLoginPressed() async {
     FocusScope.of(context).unfocus();
 
+    if (baseUrlController.text.isEmpty) {
+      baseUrlController.text = suggestionsData[4];
+    }
     _userStore.setBaseUrl(baseUrlController.text);
 
     await _userStore.login(
