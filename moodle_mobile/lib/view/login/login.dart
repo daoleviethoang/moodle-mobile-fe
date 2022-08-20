@@ -67,10 +67,9 @@ class _LoginScreenState extends State<LoginScreen> {
     ]);
 
     // Testing domain
-    if (kDebugMode) {
-      suggestionsData.add('https://courses.hcmus.edu.vn/lms');
-      suggestions.add('Server thử nghiệm');
-    }
+    suggestionsData.add('https://courses.hcmus.edu.vn/lms');
+    suggestions.add('Server thử nghiệm');
+    baseUrlController.text = suggestionsData[4];
   }
 
   @override
