@@ -315,9 +315,9 @@ class local_modulews_external extends external_api {
         return new external_function_parameters(
             array(
                 'id' => new external_value(PARAM_INT, 'Id of instance'),
-		'name' => new external_value(PARAM_TEXT, 'New name of assignmnet', VALUE_OPTIONAL),
-                'dayStart' => new external_value(PARAM_INT, 'Time stamp day start', VALUE_OPTIONAL),
-                'dayEnd' => new external_value(PARAM_INT, 'Time stamp day end', VALUE_OPTIONAL),
+		'name' => new external_value(PARAM_TEXT, 'New name of assignmnet',  VALUE_DEFAULT, null),
+                'dayStart' => new external_value(PARAM_INT, 'Time stamp day start', VALUE_DEFAULT, null),
+                'dayEnd' => new external_value(PARAM_INT, 'Time stamp day end', VALUE_DEFAULT, null),
             )
         );
     }
