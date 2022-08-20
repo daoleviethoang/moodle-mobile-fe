@@ -242,4 +242,33 @@ class CustomApi {
       throw "Can't add new assign to course";
     }
   }
+
+  Future<void> editAssignment(
+    String token,
+    int instanceId,
+    String name,
+    int timeStampOpen,
+    int timeStampEnd,
+  ) async {
+    try {
+      Dio dio = Http().client;
+      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': Wsfunction.LOCAL_EDIT_ASSIGN,
+        'moodlewsrestformat': 'json',
+        'id': instanceId,
+        'name': name,
+        'dayStart': timeStampOpen,
+        'dayEnd': timeStampEnd,
+      });
+      if (res.data is Map<String, dynamic> && res.data["exception"] != null) {
+        throw res.data["exception"];
+      }
+    } catch (e) {
+      if (e.toString() == "dml_missing_record_exception") {
+        throw e.toString();
+      }
+      throw "Can't edit assign to course";
+    }
+  }
 }
