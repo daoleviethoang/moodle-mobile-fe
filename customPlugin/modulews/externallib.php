@@ -310,4 +310,55 @@ class local_modulews_external extends external_api {
     public static function update_notes_returns() {
         return null;
     }
+
+    public static function edit_assign_parameters() {
+        return new external_function_parameters(
+            array(
+                'id' => new external_value(PARAM_INT, 'Id of instance'),
+		'name' => new external_value(PARAM_TEXT, 'New name of assignmnet', VALUE_OPTIONAL),
+                'dayStart' => new external_value(PARAM_INT, 'Time stamp day start', VALUE_OPTIONAL),
+                'dayEnd' => new external_value(PARAM_INT, 'Time stamp day end', VALUE_OPTIONAL),
+            )
+        );
+    }
+
+    public static function edit_assign($id, $name, $dayStart, $dayEnd) {
+        global $CFG, $DB;
+	require_once($CFG->dirroot . "/mod/assign/lib.php");
+        require_once($CFG->dirroot . "/mod/assign/locallib.php");
+	require_once($CFG->dirroot . "/course/lib.php");
+        
+        $cm = get_coursemodule_from_instance('assign', $id, 0, false, MUST_EXIST);
+        $context = context_module::instance($cm->id, MUST_EXIST);
+        $assign = $DB->get_record('assign', array('id'=>$cm->instance), '*', MUST_EXIST);
+        $course = $DB->get_record('course', array('id'=>$cm->course), '*', MUST_EXIST);
+        $courseContext = context_course::instance($course->id);
+        require_capability('moodle/course:manageactivities', $courseContext);
+
+        if ($name)
+        {
+            $assign->name = $name;
+	    $cm->name = $name;
+        }
+        if ($dayStart)
+        {
+            $assign->allowsubmissionsfromdate = $dayStart;
+        }
+        if ($dayEnd)
+        {
+            $assign->duedate = $dayEnd;
+            $assign->cutoffdate = $dayEnd;
+            $assign->gradingduedate = $dayEnd;
+        }
+	$DB->update_record('course_modules', $cm);
+	$assign->instance = $id;
+	$context = context_module::instance($cm->id);
+    	$assignment = new assign($context, null, null);
+        $assignment->update_instance($assign);
+	rebuild_course_cache($cm->course, true);
+    }
+
+    public static function edit_assign_returns() {
+        return null;
+    }
 }

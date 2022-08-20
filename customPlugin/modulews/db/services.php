@@ -70,6 +70,14 @@ $functions = array(
                 'description' => 'Update note exist in course',
                 'type'        => 'write',
 		'services' => array('moodle_mobile_app'),
+        ),
+	'local_modulews_edit_assign' => array(
+                'classname'   => 'local_modulews_external',
+                'methodname'  => 'edit_assign',
+                'classpath'   => 'local/modulews/externallib.php',
+                'description' => 'Update assignment in course',
+                'type'        => 'write',
+		'services' => array('moodle_mobile_app'),
         )
 
 );
