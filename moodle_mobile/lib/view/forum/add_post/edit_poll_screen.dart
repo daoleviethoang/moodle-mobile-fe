@@ -114,9 +114,9 @@ class _EditPollScreenState extends State<EditPollScreen> {
                                     right: 15,
                                   ),
                                   child: Text(
-                                    AppLocalizations.of(context)!.subject,
-                                    style:
-                                        const TextStyle(fontWeight: FontWeight.bold),
+                                    AppLocalizations.of(context)!.title,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold),
                                   ),
                                 ),
                                 Container(
@@ -137,7 +137,8 @@ class _EditPollScreenState extends State<EditPollScreen> {
                                         border: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(10.0),
-                                          borderSide: const BorderSide(width: 1),
+                                          borderSide:
+                                              const BorderSide(width: 1),
                                         ),
                                         hintText: widget.poll.subject),
                                   ),
@@ -162,8 +163,8 @@ class _EditPollScreenState extends State<EditPollScreen> {
                                   ),
                                   child: Text(
                                     AppLocalizations.of(context)!.content,
-                                    style:
-                                        const TextStyle(fontWeight: FontWeight.bold),
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold),
                                   ),
                                 ),
                                 Container(
@@ -199,7 +200,8 @@ class _EditPollScreenState extends State<EditPollScreen> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Padding(padding: EdgeInsets.only(top: 10)),
+                                const Padding(
+                                    padding: EdgeInsets.only(top: 10)),
                                 ...List.generate(pollController.length,
                                     (index) {
                                   return Padding(
@@ -222,7 +224,8 @@ class _EditPollScreenState extends State<EditPollScreen> {
                                                       .removeAt(index);
                                                 });
                                               },
-                                              icon: const Icon(CupertinoIcons.xmark)),
+                                              icon: const Icon(
+                                                  CupertinoIcons.xmark)),
                                       ],
                                     ),
                                   );

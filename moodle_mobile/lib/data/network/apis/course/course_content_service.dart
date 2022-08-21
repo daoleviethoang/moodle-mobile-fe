@@ -24,7 +24,6 @@ class CourseContentService {
       }
 
       var list = res.data as List;
-
       return list.map((e) => CourseContent.fromJson(e)).toList();
     } catch (e) {
       if (kDebugMode) {

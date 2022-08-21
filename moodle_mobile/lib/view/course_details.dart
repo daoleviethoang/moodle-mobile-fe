@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:badges/badges.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -50,6 +52,8 @@ import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:numberpicker/numberpicker.dart';
 
+import '../models/assignment/file_assignment.dart';
+
 class CourseDetailsScreen extends StatefulWidget {
   final int courseId;
 
@@ -75,6 +79,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   Widget _eventsTab = Container();
   Widget _gradesTab = Container();
   Widget _peopleTab = Container();
+  List<FileUpload> files = [];
+  bool sortASC = true;
 
   /// Wrap each child in body in a scroll view and padding
   List<Widget> get _bodyWrapper {
@@ -759,6 +765,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                 AppLocalizations.of(context)!.add_section_title,
                 textScaleFactor: 0.8,
                 style: const TextStyle(
+                  fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -851,57 +858,256 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          titlePadding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-          title: StatefulBuilder(builder: (context, sBSetState) {
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(12.0))),
+          contentPadding: EdgeInsets.only(top: 0.0),
+          content: StatefulBuilder(builder: (context, sBSetState) {
             return Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  AppLocalizations.of(context)!.add_url_title,
-                  textScaleFactor: 0.8,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(12.0),
+                          topRight: Radius.circular(12.0)),
+                      color: MoodleColors.blue,
+                    ),
+                    child: Text(
+                      AppLocalizations.of(context)!.add_url_title,
+                      //textScaleFactor: 0.8,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
+                    child: Text(
+                      AppLocalizations.of(context)!.number_section + ":",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                    child: NumberPicker(
+                      axis: Axis.horizontal,
+                      value: _sectionChoose,
+                      minValue: 0,
+                      maxValue: max,
+                      haptics: true,
+                      zeroPad: true,
+                      selectedTextStyle: TextStyle(
+                        color: MoodleColors.blue,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24,
+                      ),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border:
+                            Border.all(width: 1.5, color: MoodleColors.blue),
+                      ),
+                      onChanged: (value) =>
+                          sBSetState(() => _sectionChoose = value),
+                    ),
+                  ),
+                  Text(
+                    _content[_sectionChoose].name,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(8, 10, 8, 8),
+                    child: CustomTextFieldWidget(
+                      controller: nameController,
+                      hintText: AppLocalizations.of(context)!.name_module,
+                      haveLabel: true,
+                      borderRadius: Dimens.default_border_radius,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
+                    child: CustomTextFieldWidget(
+                      controller: urlController,
+                      hintText: AppLocalizations.of(context)!.url_link,
+                      haveLabel: true,
+                      borderRadius: Dimens.default_border_radius,
+                    ),
+                  )
+                ]);
+          }),
+          actions: [
+            Row(children: [
+              Expanded(
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text(AppLocalizations.of(context)!.cancel,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 16,
+                      )),
+                  style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all(MoodleColors.grey),
+                      shape: MaterialStateProperty.all(
+                          const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(8.0))))),
                 ),
-                const SizedBox(
-                  height: 5,
+              ),
+              const SizedBox(
+                width: 15,
+              ),
+              Expanded(
+                child: TextButton(
+                  onPressed: () async {
+                    Navigator.pop(context, true);
+                  },
+                  child: Text(AppLocalizations.of(context)!.ok,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 16,
+                      )),
+                  style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all(MoodleColors.blue),
+                      shape: MaterialStateProperty.all(
+                          const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(8.0))))),
                 ),
-                Text(AppLocalizations.of(context)!.number_section),
-                NumberPicker(
-                  axis: Axis.horizontal,
-                  value: _sectionChoose,
-                  minValue: 0,
-                  maxValue: max,
-                  haptics: true,
-                  zeroPad: true,
-                  onChanged: (value) =>
-                      sBSetState(() => _sectionChoose = value),
-                ),
-                Text(
-                  AppLocalizations.of(context)!.current +
-                      " section: " +
-                      _content[_sectionChoose].name,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                CustomTextFieldWidget(
-                  controller: nameController,
-                  hintText: AppLocalizations.of(context)!.name_module,
-                  haveLabel: true,
-                  borderRadius: Dimens.default_border_radius,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                CustomTextFieldWidget(
-                  controller: urlController,
-                  hintText: AppLocalizations.of(context)!.url_link,
-                  haveLabel: true,
-                  borderRadius: Dimens.default_border_radius,
-                ),
-              ],
-            );
+              ),
+            ]),
+          ],
+        );
+      },
+    );
+    if (check == true) {
+      try {
+        await CustomApi().addModuleUrl(_userStore.user.token, widget.courseId,
+            nameController.text, _sectionChoose, urlController.text);
+        setState(() {
+          _content[_sectionChoose].modules.add(Module(
+              id: 100,
+              name: nameController.text,
+              modname: ModuleName.url,
+              contents: [ModuleContent(fileurl: urlController.text)]));
+          nameController.clear();
+          urlController.clear();
+          _sectionChoose = 0;
+        });
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(e.toString()), backgroundColor: Colors.red));
+      }
+    }
+  }
+
+  dialogAddFile() async {
+    if (_content.length - 1 < 0) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(AppLocalizations.of(context)!.course_not_have_section),
+          backgroundColor: Colors.red));
+      return;
+    }
+    int max = _content.length - 1;
+    var check = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(12.0))),
+          contentPadding: EdgeInsets.only(top: 0.0),
+          content: StatefulBuilder(builder: (context, sBSetState) {
+            return Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(12.0),
+                          topRight: Radius.circular(12.0)),
+                      color: MoodleColors.blue,
+                    ),
+                    child: Text(
+                      AppLocalizations.of(context)!.add_url_title,
+                      //textScaleFactor: 0.8,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
+                    child: Text(
+                      AppLocalizations.of(context)!.number_section + ":",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                    child: NumberPicker(
+                      axis: Axis.horizontal,
+                      value: _sectionChoose,
+                      minValue: 0,
+                      maxValue: max,
+                      haptics: true,
+                      zeroPad: true,
+                      selectedTextStyle: TextStyle(
+                        color: MoodleColors.blue,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24,
+                      ),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border:
+                            Border.all(width: 1.5, color: MoodleColors.blue),
+                      ),
+                      onChanged: (value) =>
+                          sBSetState(() => _sectionChoose = value),
+                    ),
+                  ),
+                  Text(
+                    _content[_sectionChoose].name,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(8, 10, 8, 8),
+                    child: CustomTextFieldWidget(
+                      controller: nameController,
+                      hintText: AppLocalizations.of(context)!.name_module,
+                      haveLabel: true,
+                      borderRadius: Dimens.default_border_radius,
+                    ),
+                  ),
+                  //buildSelectFile(),
+                ]);
           }),
           actions: [
             Row(children: [
@@ -975,7 +1181,12 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
   }
 
   void _buildFab(BuildContext context) {
-    final icons = [Icons.add, Icons.link, Icons.poll];
+    final icons = [
+      Icons.add,
+      Icons.link,
+      Icons.poll,
+      Icons.file_upload_outlined
+    ];
     _fab = FabWithIcons(
       icons: icons,
       onIconTapped: (index) async {
@@ -1003,6 +1214,15 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
               MaterialPageRoute(
                   builder: (builder) =>
                       AddPollScreen(courseId: widget.courseId)));
+        }
+        if (index == 3) {
+          if (hasAddUrlAPI) {
+            await dialogAddUrl();
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(AppLocalizations.of(context)!.api_unsupported),
+                backgroundColor: Colors.red));
+          }
         }
       },
     );
@@ -1259,4 +1479,133 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
           }),
     );
   }
+
+  // Widget buildSelectFile() {
+  //   return Container(
+  //     width: double.infinity,
+  //     margin: const EdgeInsets.only(bottom: 8),
+  //     decoration: const BoxDecoration(
+  //       color: MoodleColors.white,
+  //       borderRadius: BorderRadius.all(Radius.circular(10)),
+  //     ),
+  //     child: Padding(
+  //       padding: const EdgeInsets.only(left: 30, bottom: 5, top: 5, right: 30),
+  //       child: TextButton.icon(
+  //         onPressed: () async {
+  //           await getFileFromStorage();
+  //           Navigator.pop(context);
+  //         },
+  //         icon: const Icon(
+  //           Icons.library_add,
+  //           color: MoodleColors.black,
+  //           size: 30,
+  //         ),
+  //         label: Padding(
+  //           padding: const EdgeInsets.only(left: 20),
+  //           child: Text(
+  //             AppLocalizations.of(context)!.get_file_from_storage,
+  //             style: const TextStyle(color: MoodleColors.black, fontSize: 16),
+  //           ),
+  //         ),
+  //         style: TextButton.styleFrom(
+  //           alignment: Alignment.centerLeft,
+  //           primary: MoodleColors.white,
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
+
+  // getFileFromStorage() async {
+  //   try {
+  //     FilePickerResult? result = await FilePicker.platform.pickFiles();
+  //     if (result != null) {
+  //       PlatformFile file = result.files.first;
+  //       // check size more than condition
+  //       if (file.size + caculateByteSize() > 5242880) {
+  //         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //             content: Text(AppLocalizations.of(context)!.file_size_bigger),
+  //             backgroundColor: Colors.red));
+  //         return;
+  //       }
+  //       // check number file more than condition
+  //       if (files.length == 5) {
+  //         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //             content: Text(AppLocalizations.of(context)!.number_file_full),
+  //             backgroundColor: Colors.red));
+  //         return;
+  //       }
+  //       // check file same name
+  //       bool check = checkOverwrite(file);
+  //       if (check == true) return;
+  //       // add file
+  //       files.add(FileUpload(
+  //           filename: file.name,
+  //           filepath: file.path ?? "",
+  //           timeModified: DateTime.now(),
+  //           filesize: file.size));
+  //       setState(() {
+  //         files.sort(((a, b) => a.filename.compareTo(b.filename)));
+  //         if (sortASC == false) {
+  //           files.reversed;
+  //         }
+  //       });
+  //     }
+  //   } catch (error) {
+  //     print(error.toString());
+  //   }
+  // }
+
+  // int caculateByteSize() {
+  //   int sum = 0;
+  //   for (var item in files) {
+  //     sum += item.filesize;
+  //   }
+  //   return sum;
+  // }
+
+  // bool checkOverwrite(PlatformFile file) {
+  //   int index = -1;
+  //   for (var i = 0; i < files.length; i++) {
+  //     if (files[i].filename == file.name) {
+  //       index = i;
+  //       break;
+  //     }
+  //   }
+  //   if (index != -1) {
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: Text(AppLocalizations.of(context)!.override_file),
+  //           actions: [
+  //             TextButton(
+  //               onPressed: () {
+  //                 Navigator.pop(context);
+  //               },
+  //               child: Text(AppLocalizations.of(context)!.cancel),
+  //             ),
+  //             TextButton(
+  //               onPressed: () {
+  //                 setState(() {
+  //                   files[index] = FileUpload(
+  //                       filename: file.name,
+  //                       filepath: file.path ?? "",
+  //                       timeModified: DateTime.now(),
+  //                       filesize: file.size);
+  //                 });
+
+  //                 // break dialog
+  //                 Navigator.pop(context);
+  //               },
+  //               child: Text(AppLocalizations.of(context)!.ok),
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //     return true;
+  //   }
+  //   return false;
+  // }
 }

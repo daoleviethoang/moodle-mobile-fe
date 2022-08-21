@@ -103,9 +103,9 @@ class _AddPollScreenState extends State<AddPollScreen> {
                                     right: 15,
                                   ),
                                   child: Text(
-                                    AppLocalizations.of(context)!.subject,
-                                    style:
-                                        const TextStyle(fontWeight: FontWeight.bold),
+                                    AppLocalizations.of(context)!.title,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold),
                                   ),
                                 ),
                                 Container(
@@ -128,7 +128,7 @@ class _AddPollScreenState extends State<AddPollScreen> {
                                         borderSide: const BorderSide(width: 1),
                                       ),
                                       hintText:
-                                          AppLocalizations.of(context)!.subject,
+                                          AppLocalizations.of(context)!.title,
                                     ),
                                   ),
                                 ),
@@ -152,8 +152,8 @@ class _AddPollScreenState extends State<AddPollScreen> {
                                   ),
                                   child: Text(
                                     AppLocalizations.of(context)!.content,
-                                    style:
-                                        const TextStyle(fontWeight: FontWeight.bold),
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold),
                                   ),
                                 ),
                                 Container(
@@ -190,7 +190,8 @@ class _AddPollScreenState extends State<AddPollScreen> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Padding(padding: EdgeInsets.only(top: 10)),
+                                const Padding(
+                                    padding: EdgeInsets.only(top: 10)),
                                 ...List.generate(numPoll, (index) {
                                   return Padding(
                                     padding: const EdgeInsets.only(
@@ -212,7 +213,8 @@ class _AddPollScreenState extends State<AddPollScreen> {
                                                       .removeAt(index);
                                                 });
                                               },
-                                              icon: const Icon(CupertinoIcons.xmark)),
+                                              icon: const Icon(
+                                                  CupertinoIcons.xmark)),
                                       ],
                                     ),
                                   );
