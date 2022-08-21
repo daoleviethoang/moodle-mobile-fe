@@ -78,6 +78,14 @@ $functions = array(
                 'description' => 'Update assignment in course',
                 'type'        => 'write',
 		'services' => array('moodle_mobile_app'),
+        ),
+	'local_modulews_review_quiz' => array(
+                'classname'   => 'local_modulews_external',
+                'methodname'  => 'review_quiz',
+                'classpath'   => 'local/modulews/externallib.php',
+                'description' => 'Review latest attempt of a quiz',
+                'type'        => 'write',
+		'services' => array('moodle_mobile_app'),
         )
 
 );
