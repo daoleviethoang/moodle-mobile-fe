@@ -430,8 +430,9 @@ class local_modulews_external extends external_api
         $attempt = array();
         $attempt['quiz'] = $DB->get_record('quiz', array('id' => $quizid), 'name', MUST_EXIST)->name;
         $quiz_data_sql = "
-            SELECT `slot`,
-                   `id`,
+            SELECT (@cnt := @cnt + 1) AS `id`,
+                   `slot`,
+                   `id`               AS `qid`,
                    `maxmark`,
                    `name`,
                    `qtype`,
@@ -439,17 +440,20 @@ class local_modulews_external extends external_api
                    `fraction`,
                    `feedback`
             FROM `mdl_quiz_slots` AS `slot`
-                     JOIN (SELECT `id` AS `qid`, `questiontext` AS `name`, `qtype` FROM `mdl_question`) AS `question`
-                          ON `question`.`qid` = `slot`.`id`
-                     JOIN (SELECT `question` as `qid`, `answer`, `fraction`, `feedback` FROM `mdl_question_answers`) AS `answers`
-                          ON `answers`.`qid` = `slot`.`id`
+                     CROSS JOIN (SELECT @cnt := 0) AS dummy
+                     JOIN (SELECT `id` AS `questionid`, `questiontext` AS `name`, `qtype` FROM `mdl_question`) AS `question`
+                          ON `question`.`questionid` = `slot`.`id`
+                     LEFT JOIN (SELECT `question` AS `questionid`, `answer`, `fraction`, `feedback`
+                                FROM `mdl_question_answers`) AS `answers`
+                               ON `answers`.`questionid` = `slot`.`id`
             WHERE `quizid` = ?
             ORDER BY `slot`, `id` ASC;
         ";
         $attempt['questions'] = $DB->get_records_sql($quiz_data_sql, array($quizid));
         $attempt_data_sql = "
-            SELECT `userid`, `id` as `attemptstepid`, `value` AS `answer`
+            SELECT (@cnt := @cnt + 1) AS `id`, `userid`, `id` as `attemptstepid`, `value` AS `answer`
             FROM `mdl_question_attempt_steps` as `step`
+                     CROSS JOIN (SELECT @cnt := 0) AS dummy
                      JOIN (SELECT `attemptstepid`, `value` FROM `mdl_question_attempt_step_data` WHERE `name` = 'answer') AS `data`
                           ON `data`.`attemptstepid` = `step`.`id`
             WHERE `userid` = ?
@@ -468,8 +472,9 @@ class local_modulews_external extends external_api
                 'questions' => new external_multiple_structure(
                     new external_single_structure(
                         array(
+                            'id' => new external_value(PARAM_INT, 'Id'),
                             'slot' => new external_value(PARAM_INT, 'Question order in quiz'),
-                            'id' => new external_value(PARAM_INT, 'Question id'),
+                            'qid' => new external_value(PARAM_INT, 'Question id'),
                             'maxmark' => new external_value(PARAM_FLOAT, 'Question max mark'),
                             'name' => new external_value(PARAM_RAW, 'Question title'),
                             'qtype' => new external_value(PARAM_TEXT, 'Question type'),
@@ -482,9 +487,10 @@ class local_modulews_external extends external_api
                 'answers' => new external_multiple_structure(
                     new external_single_structure(
                         array(
+                            'id' => new external_value(PARAM_INT, 'Id'),
                             'userid' => new external_value(PARAM_INT, 'User id'),
                             'attemptstepid' => new external_value(PARAM_INT, 'Attempt step id'),
-                            'answer' => new external_value(PARAM_TEXT, 'Answer'),
+                            'answer' => new external_value(PARAM_RAW, 'Answer'),
                         )
                     )
                 ),
