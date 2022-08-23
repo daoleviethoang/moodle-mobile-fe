@@ -136,6 +136,7 @@ dependencies:
   charset: ^1.0.1
   flutter_image_compress: ^1.1.0
   badges: ^2.0.3
+  dropdown_button2: ^1.7.2
 
 dev_dependencies:
   flutter_test:

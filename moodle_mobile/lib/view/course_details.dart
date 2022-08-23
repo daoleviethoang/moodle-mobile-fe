@@ -40,6 +40,7 @@ import 'package:moodle_mobile/view/common/custom_text_field.dart';
 import 'package:moodle_mobile/view/common/data_card.dart';
 import 'package:moodle_mobile/view/common/tab_item.dart';
 import 'package:moodle_mobile/view/enrol/enrol.dart';
+import 'package:moodle_mobile/view/forum/add_post/add_label_screen.dart';
 import 'package:moodle_mobile/view/forum/add_post/add_poll_screen.dart';
 import 'package:moodle_mobile/view/forum/forum_announcement_scren.dart';
 import 'package:moodle_mobile/view/forum/forum_discussion_screen.dart';
@@ -846,6 +847,12 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     }
   }
 
+  // dialogAddLabel() async {
+  //   var check = await showDialog<bool>(context: context,builder: (BuildContext (context) {
+  //     return AlertDialog()
+  //   }));
+  // }
+
   dialogAddUrl() async {
     if (_content.length - 1 < 0) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -1185,7 +1192,9 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
       Icons.add,
       Icons.link,
       Icons.poll,
-      Icons.file_upload_outlined
+      Icons.file_upload_outlined,
+      Icons.text_format_outlined,
+      Icons.task,
     ];
     _fab = FabWithIcons(
       icons: icons,
@@ -1224,6 +1233,18 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                 backgroundColor: Colors.red));
           }
         }
+        if (index == 4) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (builder) => AddLabelScreen(
+                        courseId: widget.courseId,
+                        sectionList: _content,
+                      ))).then((_) {
+            setState(() {});
+          });
+        }
+        if (index == 5) {}
       },
     );
   }
