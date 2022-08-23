@@ -247,5 +247,7 @@
   "weeks": "tuần",
   "yes": "Có",
   "section": "Section",
-  "add_new_label": "Thêm nhãn mới"
+  "add_new_label": "Thêm nhãn mới",
+  "add_new_assignment": "Thêm bài tập",
+  "time": "Thời gian"
 }

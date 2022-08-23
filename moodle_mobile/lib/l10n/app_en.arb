@@ -278,5 +278,7 @@
   "weeks": "weeks",
   "yes": "Yes",
   "section": "Section",
-  "add_new_label": "Add new label"
+  "add_new_label": "Add new label",
+  "add_new_assignment": "Add new assignment",
+  "time": "Time"
 }

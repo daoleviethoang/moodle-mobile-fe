@@ -52,7 +52,7 @@ class _AddAssignmentScreenState extends State<AddAssignmentScreen> {
             floating: true,
             snap: true,
             title: Text(
-              AppLocalizations.of(context)!.add_new_label,
+              AppLocalizations.of(context)!.add_new_assignment,
               // widget.relyPostId == null
               //     ? AppLocalizations.of(context)!.add_new_discussion
               //     : AppLocalizations.of(context)!.rely_discussion,
@@ -252,7 +252,7 @@ class _AddAssignmentScreenState extends State<AddAssignmentScreen> {
                                     right: 15,
                                   ),
                                   child: Text(
-                                    AppLocalizations.of(context)!.content,
+                                    AppLocalizations.of(context)!.time,
                                     style: const TextStyle(
                                         fontWeight: FontWeight.bold),
                                   ),
@@ -385,13 +385,10 @@ class _AddAssignmentScreenState extends State<AddAssignmentScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           //print(timeOpen!.millisecondsSinceEpoch * 1000);
-          int timeStampOpen = timeOpen!.millisecondsSinceEpoch;
-          int timeStampEnd = timeClose!.millisecondsSinceEpoch;
+          int timeStampOpen = (timeOpen!.millisecondsSinceEpoch / 1000) as int;
+          int timeStampEnd = (timeClose!.millisecondsSinceEpoch / 1000) as int;
           int sectionId = widget.sectionList
               .indexWhere((element) => element.name == sectionName);
-          // await CustomApi().addLabel(_userStore.user.token, widget.courseId,
-          //     nameController.text, sectionId, contentController.text);
-          // Navigator.pop(context, true);
           await CustomApi().addAssignment(
               _userStore.user.token,
               widget.courseId,
