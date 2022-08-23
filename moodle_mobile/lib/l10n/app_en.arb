@@ -276,5 +276,7 @@
   "vote_again": "Vote again",
   "week": "week",
   "weeks": "weeks",
-  "yes": "Yes"
+  "yes": "Yes",
+  "section": "Section",
+  "add_new_label": "Add new label"
 }

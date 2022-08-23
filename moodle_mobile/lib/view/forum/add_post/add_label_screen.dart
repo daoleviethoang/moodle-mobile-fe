@@ -47,7 +47,7 @@ class _AddLabelScreenState extends State<AddLabelScreen> {
             floating: true,
             snap: true,
             title: Text(
-              AppLocalizations.of(context)!.add_new_poll,
+              AppLocalizations.of(context)!.add_new_label,
               // widget.relyPostId == null
               //     ? AppLocalizations.of(context)!.add_new_discussion
               //     : AppLocalizations.of(context)!.rely_discussion,
@@ -140,7 +140,7 @@ class _AddLabelScreenState extends State<AddLabelScreen> {
                                     right: 15,
                                   ),
                                   child: Text(
-                                    AppLocalizations.of(context)!.content,
+                                    AppLocalizations.of(context)!.section,
                                     style: const TextStyle(
                                         fontWeight: FontWeight.bold),
                                   ),

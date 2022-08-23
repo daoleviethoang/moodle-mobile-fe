@@ -245,5 +245,7 @@
   "vote_again": "Chọn lại",
   "week": "tuần",
   "weeks": "tuần",
-  "yes": "Có"
+  "yes": "Có",
+  "section": "Section",
+  "add_new_label": "Thêm nhãn mới"
 }
