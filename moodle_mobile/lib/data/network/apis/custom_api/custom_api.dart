@@ -285,4 +285,33 @@ class CustomApi {
       throw "Can't edit assign to course";
     }
   }
+
+  Future<void> addFile(String token, int courseId, String name, int sectionId,
+      int itemId) async {
+    try {
+      Dio dio = Http().client;
+      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': Wsfunction.LOCAL_ADD_MODULES,
+        'moodlewsrestformat': 'json',
+        'courseid': courseId,
+        'modules[0][modulename]': 'resource',
+        'modules[0][section]': sectionId,
+        'modules[0][name]': name,
+        'modules[0][visible]': 1,
+        'modules[0][description]': '',
+        'modules[0][descriptionformat]': 0,
+        'modules[0][options][0][name]': 'files',
+        'modules[0][options][0][value]': itemId,
+      });
+      if (res.data is Map<String, dynamic> && res.data["exception"] != null) {
+        throw res.data["exception"];
+      }
+    } catch (e) {
+      if (e.toString() == "dml_missing_record_exception") {
+        throw e.toString();
+      }
+      throw "Can't add new url to course";
+    }
+  }
 }
