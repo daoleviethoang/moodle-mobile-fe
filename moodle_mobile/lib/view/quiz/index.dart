@@ -231,14 +231,16 @@ class _QuizScreenState extends State<QuizScreen> {
                             Expanded(
                                 child: Text(
                               AppLocalizations.of(context)!.state,
-                              style: const TextStyle(fontWeight: FontWeight.bold),
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
                               textScaleFactor: 1.1,
                             )),
                             Expanded(
                               child: Center(
                                 child: Text(
                                   AppLocalizations.of(context)!.grade + "/10",
-                                  style: const TextStyle(fontWeight: FontWeight.bold),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold),
                                   textScaleFactor: 1.1,
                                 ),
                               ),
@@ -348,8 +350,8 @@ class _QuizScreenState extends State<QuizScreen> {
                         height: 15,
                       ),
                       if (lastAttempt.state == "finished" &&
-                              ((quiz.attempts ?? 0) > numAttempt) ||
-                          quiz.attempts == 0)
+                          ((quiz.attempts ?? 0) > numAttempt ||
+                              quiz.attempts == 0))
                         Center(
                           child: CustomButtonShort(
                             text: AppLocalizations.of(context)!.start_attempt,

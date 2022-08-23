@@ -87,6 +87,7 @@
   "err_note_invalid": "Nội dung note không được để trống",
   "err_set_noti_settings": "Cập nhật cài đặt thông báo thất bại, vui lòng thử lại sau",
   "err_unknown_module": "Module chưa được hỗ trợ: {modname}",
+  "error": "Xảy ra lỗi",
   "error_connect": "Không thể kết nối mạng",
   "event_deleted": "Sự kiện đã được xóa",
   "events": "Sự kiện",
