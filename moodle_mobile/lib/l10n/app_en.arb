@@ -164,6 +164,7 @@
   "mark_done_delete_confirm": "Are you sure to mark done and delete this event?",
   "max_file_size": "Maximum files size :",
   "menu": "Menu",
+  "message_missing_file_add": "Please select file.",
   "message_settings": "Messenger settings",
   "messages": "Messages",
   "messenger": "Messenger",

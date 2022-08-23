@@ -133,6 +133,7 @@
   "mark_done_delete_confirm": "Bạn có chắc chắn muốn đánh dấu hoàn thành và xóa sự kiện này?",
   "max_file_size": "Kích cỡ tối đa:",
   "menu": "Menu",
+  "message_missing_file_add": "Vui lòng chọn tệp.",
   "message_settings": "Cài đặt tin nhắn",
   "messages": "Tin nhắn",
   "messenger": "Tin nhắn",

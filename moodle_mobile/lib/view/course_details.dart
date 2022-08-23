@@ -17,6 +17,7 @@ import 'package:moodle_mobile/data/network/apis/course/course_content_service.da
 import 'package:moodle_mobile/data/network/apis/course/course_detail_service.dart';
 import 'package:moodle_mobile/data/network/apis/course/course_service.dart';
 import 'package:moodle_mobile/data/network/apis/custom_api/custom_api.dart';
+import 'package:moodle_mobile/data/network/apis/file/file_api.dart';
 import 'package:moodle_mobile/data/network/apis/lti/lti_service.dart';
 import 'package:moodle_mobile/data/network/apis/module/module_service.dart';
 import 'package:moodle_mobile/data/network/apis/notes/notes_service.dart';
@@ -1163,7 +1164,14 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
               Expanded(
                 child: TextButton(
                   onPressed: () async {
-                    Navigator.pop(context, true);
+                    if (files.isNotEmpty) {
+                      Navigator.pop(context, true);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(AppLocalizations.of(context)!
+                              .message_missing_file_add),
+                          backgroundColor: Colors.red));
+                    }
                   },
                   child: Text(AppLocalizations.of(context)!.ok,
                       style: const TextStyle(
@@ -1172,12 +1180,14 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                         fontSize: 16,
                       )),
                   style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all(MoodleColors.blue),
-                      shape: MaterialStateProperty.all(
-                          const RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8.0))))),
+                    backgroundColor:
+                        MaterialStateProperty.all(MoodleColors.blue),
+                    shape: MaterialStateProperty.all(
+                      const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ]),
@@ -1187,8 +1197,11 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     );
     if (check == true) {
       try {
-        await CustomApi().addModuleUrl(_userStore.user.token, widget.courseId,
-            nameController.text, _sectionChoose, urlController.text);
+        int fileId = await FileApi().uploadFile(
+            token, files.first.filepath, files.first.filename, null);
+
+        await CustomApi().addFile(_userStore.user.token, widget.courseId,
+            nameController.text, _sectionChoose, fileId);
         setState(() {
           _content[_sectionChoose].modules.add(Module(
               id: 100,
@@ -1203,6 +1216,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(e.toString()), backgroundColor: Colors.red));
       }
+      files.removeAt(0);
     }
   }
 
