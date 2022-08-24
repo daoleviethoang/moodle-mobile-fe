@@ -4,12 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
-import 'package:moodle_mobile/data/firebase/firestore/polls_service.dart';
 import 'package:moodle_mobile/data/network/apis/custom_api/custom_api.dart';
 import 'package:moodle_mobile/models/course/course_content.dart';
 import 'package:moodle_mobile/models/forum/forum_course.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
-import 'package:moodle_mobile/view/common/custom_button.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AddAssignmentScreen extends StatefulWidget {
@@ -296,7 +294,7 @@ class _AddAssignmentScreenState extends State<AddAssignmentScreen> {
                                                             'HH:mm dd/MM/yyyy')
                                                         .format(timeOpen!)
                                                         .toString())
-                                                    : Text('')),
+                                                    : const Text('')),
                                             TextButton(
                                                 onPressed: () {
                                                   DatePicker.showDateTimePicker(
@@ -313,13 +311,14 @@ class _AddAssignmentScreenState extends State<AddAssignmentScreen> {
                                                           DateTime.now());
                                                 },
                                                 child: Text(
-                                                  'Choose open time',
-                                                  style: TextStyle(
+                                                  AppLocalizations.of(context)!
+                                                      .choose_open_time,
+                                                  style: const TextStyle(
                                                       color: Colors.blue),
                                                 ))
                                           ],
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           height: 10,
                                         ),
                                         Row(
@@ -344,7 +343,7 @@ class _AddAssignmentScreenState extends State<AddAssignmentScreen> {
                                                             'HH:mm dd/MM/yyyy')
                                                         .format(timeClose!)
                                                         .toString())
-                                                    : Text('')),
+                                                    : const Text('')),
                                             TextButton(
                                                 onPressed: () {
                                                   DatePicker.showDateTimePicker(
@@ -361,8 +360,9 @@ class _AddAssignmentScreenState extends State<AddAssignmentScreen> {
                                                           DateTime.now());
                                                 },
                                                 child: Text(
-                                                  'Choose close time',
-                                                  style: TextStyle(
+                                                  AppLocalizations.of(context)!
+                                                      .choose_close_time,
+                                                  style: const TextStyle(
                                                       color: Colors.blue),
                                                 ))
                                           ],
@@ -404,30 +404,6 @@ class _AddAssignmentScreenState extends State<AddAssignmentScreen> {
           Icons.check,
           color: Colors.white,
         ),
-      ),
-    );
-  }
-}
-
-class PollOption extends StatelessWidget {
-  final TextEditingController? controller;
-  const PollOption({
-    Key? key,
-    this.controller,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-      minLines: 1,
-      controller: controller,
-      maxLines: 2,
-      decoration: InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.0),
-          borderSide: const BorderSide(width: 1),
-        ),
-        hintText: AppLocalizations.of(context)!.add_option,
       ),
     );
   }

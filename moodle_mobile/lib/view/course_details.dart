@@ -161,7 +161,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
         false;
   }
 
-  bool get hasAddUrlAPI {
+  bool get hasAddModuleAPI {
     return _siteInfo?.functions?.any(
           (element) => element.name == Wsfunction.LOCAL_ADD_MODULES,
         ) ??
@@ -1210,7 +1210,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
           }
         }
         if (index == 1) {
-          if (hasAddUrlAPI) {
+          if (hasAddModuleAPI) {
             await dialogAddUrl();
           } else {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -1226,7 +1226,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                       AddPollScreen(courseId: widget.courseId)));
         }
         if (index == 3) {
-          if (hasAddUrlAPI) {
+          if (hasAddModuleAPI) {
             await dialogAddUrl();
           } else {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -1235,26 +1235,42 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
           }
         }
         if (index == 4) {
-          Navigator.push(
+          if (hasAddModuleAPI) {
+            Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (builder) => AddLabelScreen(
-                        courseId: widget.courseId,
-                        sectionList: _content,
-                      ))).then((_) {
-            setState(() {});
-          });
+                builder: (builder) => AddLabelScreen(
+                  courseId: widget.courseId,
+                  sectionList: _content,
+                ),
+              ),
+            ).then((_) async {
+              await reGetCourseContent();
+            });
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(AppLocalizations.of(context)!.api_unsupported),
+                backgroundColor: Colors.red));
+          }
         }
         if (index == 5) {
-          Navigator.push(
+          if (hasAddModuleAPI) {
+            Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (builder) => AddAssignmentScreen(
-                        courseId: widget.courseId,
-                        sectionList: _content,
-                      ))).then((_) {
-            setState(() {});
-          });
+                builder: (builder) => AddAssignmentScreen(
+                  courseId: widget.courseId,
+                  sectionList: _content,
+                ),
+              ),
+            ).then((_) async {
+              await reGetCourseContent();
+            });
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(AppLocalizations.of(context)!.api_unsupported),
+                backgroundColor: Colors.red));
+          }
         }
       },
     );
@@ -1323,6 +1339,18 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
         rethrow;
       }
     }
+  }
+
+  Future reGetCourseContent() async {
+    try {
+      var contentResponse = await CourseContentService().getCourseContent(
+        token,
+        _courseId,
+      );
+      setState(() {
+        _content = contentResponse;
+      });
+    } catch (e) {}
   }
 
   Future reGetContentForActivityTab(bool isSetState) async {
