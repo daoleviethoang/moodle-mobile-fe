@@ -18,6 +18,7 @@ import 'package:moodle_mobile/view/common/custom_button_short.dart';
 import 'package:moodle_mobile/view/quiz/do_quiz/do_quiz.dart';
 import 'package:moodle_mobile/view/quiz/preview/preview_quiz.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:moodle_mobile/view/quiz/teacher_quiz/participant_quiz.dart';
 
 class QuizScreen extends StatefulWidget {
   final int quizInstanceId;
@@ -46,6 +47,7 @@ class _QuizScreenState extends State<QuizScreen> {
   var formatDate = DateFormat("dd MMM yyyy, hh:mmaa");
   double? grade;
   bool isTeacher = false;
+  List<Attempt> attemps = [];
   @override
   void initState() {
     _userStore = GetIt.instance<UserStore>();
@@ -84,7 +86,7 @@ class _QuizScreenState extends State<QuizScreen> {
         }
       }
 
-      List<Attempt> attemps = await QuizApi()
+      attemps = await QuizApi()
           .getAttempts(_userStore.user.token, widget.quizInstanceId);
       setState(() {
         numAttempt = attemps.length;
@@ -225,7 +227,12 @@ class _QuizScreenState extends State<QuizScreen> {
                                         : () {
                                             Navigator.of(context).push(
                                                 MaterialPageRoute(builder: (_) {
-                                              return Text("List join quizz");
+                                              return ParticipantQuiz(
+                                                quizInstanceId:
+                                                    widget.quizInstanceId,
+                                                quizName: widget.title,
+                                                attemps: attemps,
+                                              );
                                             }));
                                           },
                                     title: Text(AppLocalizations.of(context)!
