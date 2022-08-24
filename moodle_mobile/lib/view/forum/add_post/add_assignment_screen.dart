@@ -4,11 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
+import 'package:moodle_mobile/constants/colors.dart';
+import 'package:moodle_mobile/data/firebase/firestore/polls_service.dart';
 import 'package:moodle_mobile/data/network/apis/custom_api/custom_api.dart';
 import 'package:moodle_mobile/models/course/course_content.dart';
 import 'package:moodle_mobile/models/forum/forum_course.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
+import 'package:moodle_mobile/view/common/custom_button.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 
 class AddAssignmentScreen extends StatefulWidget {
   final int courseId;
@@ -237,143 +241,92 @@ class _AddAssignmentScreenState extends State<AddAssignmentScreen> {
                           const SizedBox(
                             height: 20,
                           ),
-                          Card(
-                            elevation: 10,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.only(
-                                    left: 15,
-                                    top: 20,
-                                    right: 15,
-                                  ),
-                                  child: Text(
-                                    AppLocalizations.of(context)!.time,
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold),
-                                  ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              ElevatedButton(
+                                onPressed: () async {
+                                  DateTime? dateTime =
+                                      await showOmniDateTimePicker(
+                                    context: context,
+                                    type: OmniDateTimePickerType.dateAndTime,
+                                    primaryColor: MoodleColors.blue,
+                                    backgroundColor: MoodleColors.white,
+                                    calendarTextColor: MoodleColors.black,
+                                    tabTextColor: MoodleColors.blue,
+                                    unselectedTabBackgroundColor:
+                                        Colors.grey[700],
+                                    buttonTextColor: Colors.blue,
+                                    timeSpinnerTextStyle: const TextStyle(
+                                        color: MoodleColors.grey, fontSize: 18),
+                                    timeSpinnerHighlightedTextStyle:
+                                        const TextStyle(
+                                            color: MoodleColors.black,
+                                            fontSize: 24),
+                                    is24HourMode: false,
+                                    isShowSeconds: false,
+                                    startInitialDate: timeOpen == null
+                                        ? DateTime.now()
+                                        : timeOpen,
+                                    startFirstDate: DateTime(1600)
+                                        .subtract(const Duration(days: 3652)),
+                                    startLastDate: DateTime.now().add(
+                                      const Duration(days: 3652),
+                                    ),
+                                    borderRadius: const Radius.circular(10.0),
+                                  );
+                                  setState(() {
+                                    timeOpen = dateTime;
+                                  });
+                                },
+                                child: const Text(
+                                  "Open Time",
+                                  style: TextStyle(
+                                      color: MoodleColors.white, fontSize: 14),
                                 ),
-                                Container(
-                                    padding: const EdgeInsets.all(15),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      border: Border.all(
-                                        color: Colors.black26,
-                                      ),
+                              ),
+                              ElevatedButton(
+                                onPressed: () async {
+                                  DateTime? dateTime =
+                                      await showOmniDateTimePicker(
+                                    context: context,
+                                    type: OmniDateTimePickerType.dateAndTime,
+                                    primaryColor: MoodleColors.blue,
+                                    backgroundColor: MoodleColors.white,
+                                    calendarTextColor: MoodleColors.black,
+                                    tabTextColor: MoodleColors.blue,
+                                    unselectedTabBackgroundColor:
+                                        Colors.grey[700],
+                                    buttonTextColor: Colors.blue,
+                                    timeSpinnerTextStyle: const TextStyle(
+                                        color: MoodleColors.grey, fontSize: 18),
+                                    timeSpinnerHighlightedTextStyle:
+                                        const TextStyle(
+                                            color: MoodleColors.black,
+                                            fontSize: 24),
+                                    is24HourMode: false,
+                                    isShowSeconds: false,
+                                    startInitialDate: timeOpen == null
+                                        ? DateTime.now()
+                                        : timeOpen,
+                                    startFirstDate: DateTime(1600)
+                                        .subtract(const Duration(days: 3652)),
+                                    startLastDate: DateTime.now().add(
+                                      const Duration(days: 3652),
                                     ),
-                                    width: 500,
-                                    margin: const EdgeInsets.only(
-                                      left: 15,
-                                      top: 10,
-                                      right: 15,
-                                      bottom: 10,
-                                    ),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          children: [
-                                            Container(
-                                                width: 200,
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 5,
-                                                        horizontal: 10),
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                  border: Border.all(
-                                                    color: Colors.black26,
-                                                  ),
-                                                ),
-                                                child: timeOpen != null
-                                                    ? Text(DateFormat(
-                                                            'HH:mm dd/MM/yyyy')
-                                                        .format(timeOpen!)
-                                                        .toString())
-                                                    : const Text('')),
-                                            TextButton(
-                                                onPressed: () {
-                                                  DatePicker.showDateTimePicker(
-                                                      context,
-                                                      showTitleActions: true,
-                                                      minTime: DateTime.now(),
-                                                      onChanged: (date) {},
-                                                      onConfirm: (date) {
-                                                    setState(() {
-                                                      timeOpen = date;
-                                                    });
-                                                  },
-                                                      currentTime:
-                                                          DateTime.now());
-                                                },
-                                                child: Text(
-                                                  AppLocalizations.of(context)!
-                                                      .choose_open_time,
-                                                  style: const TextStyle(
-                                                      color: Colors.blue),
-                                                ))
-                                          ],
-                                        ),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          children: [
-                                            Container(
-                                                width: 200,
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 5,
-                                                        horizontal: 10),
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                  border: Border.all(
-                                                    color: Colors.black26,
-                                                  ),
-                                                ),
-                                                child: timeClose != null
-                                                    ? Text(DateFormat(
-                                                            'HH:mm dd/MM/yyyy')
-                                                        .format(timeClose!)
-                                                        .toString())
-                                                    : const Text('')),
-                                            TextButton(
-                                                onPressed: () {
-                                                  DatePicker.showDateTimePicker(
-                                                      context,
-                                                      showTitleActions: true,
-                                                      minTime: DateTime.now(),
-                                                      onChanged: (date) {},
-                                                      onConfirm: (date) {
-                                                    setState(() {
-                                                      timeClose = date;
-                                                    });
-                                                  },
-                                                      currentTime:
-                                                          DateTime.now());
-                                                },
-                                                child: Text(
-                                                  AppLocalizations.of(context)!
-                                                      .choose_close_time,
-                                                  style: const TextStyle(
-                                                      color: Colors.blue),
-                                                ))
-                                          ],
-                                        )
-                                      ],
-                                    )),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 20,
+                                    borderRadius: const Radius.circular(10.0),
+                                  );
+                                  setState(() {
+                                    timeClose = dateTime;
+                                  });
+                                },
+                                child: const Text(
+                                  "Close Time",
+                                  style: TextStyle(
+                                      color: MoodleColors.white, fontSize: 14),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -382,28 +335,58 @@ class _AddAssignmentScreenState extends State<AddAssignmentScreen> {
                 ),
               ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          //print(timeOpen!.millisecondsSinceEpoch * 1000);
-          int timeStampOpen = (timeOpen!.millisecondsSinceEpoch / 1000) as int;
-          int timeStampEnd = (timeClose!.millisecondsSinceEpoch / 1000) as int;
-          int sectionId = widget.sectionList
-              .indexWhere((element) => element.name == sectionName);
-          await CustomApi().addAssignment(
-              _userStore.user.token,
-              widget.courseId,
-              nameController.text,
-              sectionId,
-              contentController.text,
-              timeStampOpen,
-              timeStampEnd);
-          Navigator.pop(context, true);
-        },
-        backgroundColor: Theme.of(context).primaryColor,
-        child: const Icon(
-          Icons.check,
-          color: Colors.white,
+      floatingActionButton: timeOpen == null
+          ? null
+          : FloatingActionButton(
+              onPressed: () async {
+                //print(timeOpen!.millisecondsSinceEpoch * 1000);
+                // timeOpen = dateTimeList![0];
+                // timeClose = dateTimeList![1];
+                int timeStampOpen =
+                    (timeOpen!.millisecondsSinceEpoch / 1000) as int;
+                int timeStampEnd =
+                    (timeClose!.millisecondsSinceEpoch / 1000) as int;
+                int sectionId = widget.sectionList
+                    .indexWhere((element) => element.name == sectionName);
+                await CustomApi().addAssignment(
+                    _userStore.user.token,
+                    widget.courseId,
+                    nameController.text,
+                    sectionId,
+                    contentController.text,
+                    timeStampOpen,
+                    timeStampEnd);
+                Navigator.pop(context, true);
+              },
+              backgroundColor: Theme.of(context).primaryColor,
+              child: const Icon(
+                Icons.check,
+                color: Colors.white,
+              ),
+            ),
+    );
+  }
+}
+
+class PollOption extends StatelessWidget {
+  final TextEditingController? controller;
+  const PollOption({
+    Key? key,
+    this.controller,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      minLines: 1,
+      controller: controller,
+      maxLines: 2,
+      decoration: InputDecoration(
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: const BorderSide(width: 1),
         ),
+        hintText: AppLocalizations.of(context)!.add_option,
       ),
     );
   }
