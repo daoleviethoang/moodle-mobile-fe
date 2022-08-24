@@ -44,6 +44,9 @@ class QuizApi {
         throw res.data["exception"];
       }
       var list = res.data["attempts"] as List;
+      print(token);
+      print(quizId);
+      print(list.toString());
       return list.map((e) => Attempt.fromJson(e)).toList();
     } catch (e) {
       throw "Can't get attempt of quiz $quizId";

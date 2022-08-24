@@ -20,6 +20,7 @@ import 'package:moodle_mobile/view/assignment/date_assignment_tile.dart';
 import 'package:moodle_mobile/view/assignment/files_assignment.dart';
 import 'package:moodle_mobile/view/assignment/list_user_submit.dart';
 import 'package:moodle_mobile/view/assignment/submission_status_tile.dart';
+import 'package:moodle_mobile/view/common/content_item.dart';
 import 'package:moodle_mobile/view/common/custom_button.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -363,31 +364,46 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                                       iconColor: Colors.green,
                                       backgroundIconColor: Colors.greenAccent,
                                     ),
-                              const Divider(),
-                              ListTile(
-                                tileColor: MoodleColors.white,
-                                onTap: users.isEmpty
-                                    ? null
-                                    : () {
-                                        Navigator.of(context).push(
-                                            MaterialPageRoute(builder: (_) {
-                                          return ListUserSubmited(
-                                            userSubmiteds: users,
-                                            title: widget.title,
-                                            haveCheckBox: true,
-                                            assignmentId:
-                                                widget.assignInstanceId,
-                                            userStore: _userStore,
-                                            duedate: assignment.duedate ?? 0,
-                                            assignmentModuleId:
-                                                assignment.cmid ?? 0,
-                                          );
-                                        }));
-                                      },
-                                title: Text(AppLocalizations.of(context)!
-                                    .number_student),
-                                trailing: Text(users.length.toString()),
+                              const LineItem(
+                                width: 0.8,
                               ),
+                              ListTile(
+                                  tileColor: MoodleColors.white,
+                                  onTap: users.isEmpty
+                                      ? null
+                                      : () {
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(builder: (_) {
+                                            return ListUserSubmited(
+                                              userSubmiteds: users,
+                                              title: widget.title,
+                                              haveCheckBox: true,
+                                              assignmentId:
+                                                  widget.assignInstanceId,
+                                              userStore: _userStore,
+                                              duedate: assignment.duedate ?? 0,
+                                              assignmentModuleId:
+                                                  assignment.cmid ?? 0,
+                                            );
+                                          }));
+                                        },
+                                  title: Text(AppLocalizations.of(context)!
+                                      .number_student),
+                                  trailing: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            0, 0, 10, 0),
+                                        child: Text(users.length.toString()),
+                                      ),
+                                      Icon(
+                                        Icons.keyboard_arrow_right_rounded,
+                                        size: 25.0,
+                                        color: Colors.brown[900],
+                                      ),
+                                    ],
+                                  )),
                               ListTile(
                                 tileColor: MoodleColors.white,
                                 onTap: userSubmiteds.isEmpty
@@ -410,7 +426,22 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                                       },
                                 title: Text(AppLocalizations.of(context)!
                                     .number_submission),
-                                trailing: Text(userSubmiteds.length.toString()),
+                                trailing: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          0, 0, 10, 0),
+                                      child:
+                                          Text(userSubmiteds.length.toString()),
+                                    ),
+                                    Icon(
+                                      Icons.keyboard_arrow_right_rounded,
+                                      size: 25.0,
+                                      color: Colors.brown[900],
+                                    ),
+                                  ],
+                                ),
                               ),
                               ListTile(
                                 tileColor: MoodleColors.white,
@@ -435,8 +466,21 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                                       },
                                 title: Text(AppLocalizations.of(context)!
                                     .number_wait_grade),
-                                trailing: Text(
-                                    userSubmitedNeedGrade.length.toString()),
+                                trailing: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            0, 0, 10, 0),
+                                        child: Text(userSubmitedNeedGrade.length
+                                            .toString())),
+                                    Icon(
+                                      Icons.keyboard_arrow_right_rounded,
+                                      size: 25.0,
+                                      color: Colors.brown[900],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
@@ -471,7 +515,9 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                                       iconColor: Colors.green,
                                       backgroundIconColor: Colors.greenAccent,
                                     ),
-                              const Divider(),
+                              const LineItem(
+                                width: 0.8,
+                              ),
                               const SizedBox(
                                 height: 5,
                               ),
