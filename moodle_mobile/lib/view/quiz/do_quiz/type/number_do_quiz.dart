@@ -59,7 +59,9 @@ class _NumberDoQuizState extends State<NumberDoQuiz> {
     } catch (e) {
       if (kDebugMode) print(e);
     }
-    if (input != null && input!.attributes['value'] != "") {
+    if (input != null &&
+        input!.attributes['value'] != null &&
+        input!.attributes['value'] != "") {
       widget.setComplete(widget.index, true);
       setState(() {
         controller = TextEditingController(text: input!.attributes['value']);
