@@ -49,28 +49,30 @@ class UserQuizz {
     country = json['country'];
     profileimageurlsmall = json['profileimageurlsmall'];
     profileimageurl = json['profileimageurl'];
-    grade = json['grade'];
+    grade = json['grade'] is int
+        ? (json['grade'] as int).toDouble()
+        : json['grade'];
     attempId = json['attempId'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['firstname'] = this.firstname;
-    data['lastname'] = this.lastname;
-    data['fullname'] = this.fullname;
-    data['email'] = this.email;
-    data['firstaccess'] = this.firstaccess;
-    data['lastaccess'] = this.lastaccess;
-    data['suspended'] = this.suspended;
-    data['description'] = this.description;
-    data['descriptionformat'] = this.descriptionformat;
-    data['city'] = this.city;
-    data['country'] = this.country;
-    data['profileimageurlsmall'] = this.profileimageurlsmall;
-    data['profileimageurl'] = this.profileimageurl;
-    data['grade'] = this.grade;
-    data['attempId'] = this.attempId;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['firstname'] = firstname;
+    data['lastname'] = lastname;
+    data['fullname'] = fullname;
+    data['email'] = email;
+    data['firstaccess'] = firstaccess;
+    data['lastaccess'] = lastaccess;
+    data['suspended'] = suspended;
+    data['description'] = description;
+    data['descriptionformat'] = descriptionformat;
+    data['city'] = city;
+    data['country'] = country;
+    data['profileimageurlsmall'] = profileimageurlsmall;
+    data['profileimageurl'] = profileimageurl;
+    data['grade'] = grade;
+    data['attempId'] = attempId;
     return data;
   }
 }

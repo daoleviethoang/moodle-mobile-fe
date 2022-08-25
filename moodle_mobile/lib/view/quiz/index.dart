@@ -86,9 +86,10 @@ class _QuizScreenState extends State<QuizScreen> {
         }
       }
 
-      List<Attempt> attemps = await QuizApi()
+      attemps = await QuizApi()
           .getAttempts(_userStore.user.token, widget.quizInstanceId, null);
       setState(() {
+        attemps = attemps;
         numAttempt = attemps.length;
       });
 

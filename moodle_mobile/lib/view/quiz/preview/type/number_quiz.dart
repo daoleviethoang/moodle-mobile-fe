@@ -50,7 +50,7 @@ class _NumberQuizState extends State<NumberQuiz> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: const EdgeInsets.only(left: 10, right: 10, top: 20),
+        margin: const EdgeInsets.only(left: 10, right: 10, top: 0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,

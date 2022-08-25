@@ -51,7 +51,7 @@ class _EssayQuizState extends State<EssayQuiz> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: const EdgeInsets.only(left: 10, right: 10, top: 20),
+        margin: const EdgeInsets.only(left: 10, right: 10, top: 0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -91,7 +91,8 @@ class _EssayQuizState extends State<EssayQuiz> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      margin: const EdgeInsets.only(bottom: 5),
+                      margin: const EdgeInsets.only(
+                          bottom: 10, left: 15, right: 15),
                       child: EssayTile(
                         element: answers[1],
                       ),

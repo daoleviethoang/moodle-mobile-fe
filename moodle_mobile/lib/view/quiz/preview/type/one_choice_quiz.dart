@@ -50,7 +50,7 @@ class _OneChoiceQuizState extends State<OneChoiceQuiz> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: const EdgeInsets.only(left: 10, right: 10, top: 20),
+        margin: const EdgeInsets.only(left: 10, right: 10, top: 0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -152,8 +152,8 @@ class OneChoiceTile extends StatelessWidget {
             visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
             title: Text(last),
             leading: MaterialButton(
-              shape:
-                  const CircleBorder(side: BorderSide(color: Colors.black, width: 1)),
+              shape: const CircleBorder(
+                  side: BorderSide(color: Colors.black, width: 1)),
               onPressed: null,
               child: Text(
                 first,

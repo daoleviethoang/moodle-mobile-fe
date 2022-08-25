@@ -119,7 +119,7 @@ class UserApi {
     }
   }
 
-  // Write a future return user info by id
+  // Write a future return user info by ids
   Future<List<UserOverview>> getUserByIds(String token, List<int?> ids) async {
     try {
       Map<String, dynamic> queryParameters = {
@@ -132,14 +132,14 @@ class UserApi {
         String values = 'values[' + i.toString() + ']';
         queryParameters[values] = ids[i];
       }
+      if (ids.isEmpty) {
+        queryParameters['values[0]'] = 0;
+      }
       Dio dio = Http().client;
       var res = await dio.get(Endpoints.webserviceServer,
           queryParameters: queryParameters);
 
       var list = res.data as List;
-      if (list.isEmpty) {
-        throw Exception('Cannot find this user !');
-      }
       return list.map((e) => UserOverview.fromJson(e)).toList();
     } catch (e) {
       if (kDebugMode) {

@@ -20,8 +20,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/styles.dart';
-import 'package:moodle_mobile/data/network/apis/quiz/quiz_api.dart';
 import 'package:moodle_mobile/data/network/apis/user/user_api.dart';
 import 'package:moodle_mobile/data/network/dio_client.dart';
 import 'package:moodle_mobile/di/service_locator.dart';
@@ -30,6 +30,7 @@ import 'package:moodle_mobile/models/quiz/user_quiz.dart';
 import 'package:moodle_mobile/models/user/user_overview.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/common/user/user_avatar_common.dart';
+import 'package:moodle_mobile/view/quiz/teacher_quiz/review_quiz.dart';
 
 class ParticipantQuiz extends StatefulWidget {
   final int quizInstanceId;
@@ -65,16 +66,13 @@ class _ParticipantQuizState extends State<ParticipantQuiz> {
     try {
       List<UserQuizz> getUserQuizz = [];
       List<int?> ids = [];
-      print("======" + getUserQuizz.toString());
-
       for (int i = 0; i < widget.attemps.length; i++) {
         ids.add(widget.attemps[i].userid);
-        UserQuizz userQuizz = UserQuizz(
-            attempId: widget.attemps[i].id,
-            grade: widget.attemps[i].sumgrades ?? 0);
+        UserQuizz userQuizz = UserQuizz();
+        userQuizz.grade = widget.attemps[i].sumgrades ?? 0;
+        userQuizz.attempId = widget.attemps[i].id;
         getUserQuizz.add(userQuizz);
       }
-      print("======" + getUserQuizz.toString());
       List<UserOverview> getUsers = await UserApi(getIt<DioClient>())
           .getUserByIds(_userStore.user.token, ids);
       for (int i = 0; i < getUsers.length; i++) {
@@ -82,7 +80,6 @@ class _ParticipantQuizState extends State<ParticipantQuiz> {
         getUserQuizz[i].fullname = getUsers[i].fullname;
         getUserQuizz[i].profileimageurl = getUsers[i].profileimageurl;
       }
-      print("======" + getUserQuizz.toString());
       setState(() {
         usersSubmitedQuizz = getUserQuizz;
       });
@@ -117,6 +114,15 @@ class _ParticipantQuizState extends State<ParticipantQuiz> {
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 10.0),
                   child: ListTile(
+                    onTap: () {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (_) {
+                        return QuizReviewScreen(
+                          title: widget.quizName,
+                          attemptId: 200,
+                        );
+                      }));
+                    },
                     leading: UserAvatarCommon(
                         imageURL: usersSubmitedQuizz[index].profileimageurl!),
                     title: Padding(

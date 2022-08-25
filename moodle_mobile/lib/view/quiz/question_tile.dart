@@ -38,7 +38,7 @@ class QuestionTile extends StatelessWidget {
         ),
         content,
         const SizedBox(
-          height: 40,
+          height: 10,
         ),
       ],
     );
