@@ -498,5 +498,68 @@ class local_modulews_external extends external_api
         );
     }
 
+    public static function quiz_set_grades_parameters()
+    {
+        return new external_function_parameters(
+            array(
+                'attemptid' => new external_value(PARAM_INT, 'Attempt id'),
+                'slotid' => new external_value(PARAM_INT, 'Slot id of question'),
+                'mark' => new external_value(PARAM_FLOAT, 'Mark for questions'),
+                'comment' => new external_value(PARAM_TEXT, 'Comment for questions')
+            )
+        );
+    }
+
+    public static function quiz_set_grades($attemptid, $slot, $mark, $comment)
+    {
+        global $CFG, $DB;
+        require_once($CFG->dirroot . "/mod/quiz/lib.php");
+        require_once($CFG->dirroot . "/mod/quiz/locallib.php");
+        require_once($CFG->dirroot . "/mod/quiz/attemptlib.php");
+        require_once($CFG->dirroot . "/question/engine/questionattempt.php");
+
+        // Get attempt obj
+        $attempt = quiz_create_attempt_handling_errors($attemptid);
+        //$attempt->preload_all_attempt_step_users();
+
+        // Can only grade finished attempts.
+        if (!$attempt->is_finished()) {
+            throw new \moodle_exception('attemptclosed', 'quiz');
+        }
+
+        // Check login and permissions
+        $attempt->require_capability('mod/quiz:grade');
+
+        // grading
+        $uniqueid = $attempt->get_uniqueid();
+        $qid = $attempt->get_question_attempt($slot);
+
+        $transaction = $DB->start_delegated_transaction();
+        $qid->manual_grade($comment, $mark, null, time());
+        $attempt->process_submitted_actions(time());
+        $transaction->allow_commit();
+
+        // trigger event
+        $params = array(
+            'objectid' => $qid->get_question_id(),
+            'courseid' => $attempt->get_courseid(),
+            'context' => context_module::instance($attempt->get_cmid()),
+            'other' => array(
+                'quizid' => $attempt->get_quizid(),
+                'attemptid' => $attempt->get_attemptid(),
+                'slot' => $slot,
+            )
+        );
+        $event = \mod_quiz\event\question_manually_graded::create($params);
+        $event->trigger();
+
+        //rebuild_course_cache($attempt->get_courseid(), true);
+    }
+
+    public static function quiz_set_grades_returns()
+    {
+        return null;
+    } 
+
     # endregion
 }

@@ -86,6 +86,14 @@ $functions = array(
                 'description' => 'Review latest attempt of a quiz',
                 'type'        => 'write',
 		'services' => array('moodle_mobile_app'),
+        ),
+	'local_modulews_quiz_set_grades' => array(
+                'classname'   => 'local_modulews_external',
+                'methodname'  => 'quiz_set_grades',
+                'classpath'   => 'local/modulews/externallib.php',
+                'description' => 'Update quiz grade',
+                'type'        => 'write',
+		'services' => array('moodle_mobile_app'),
         )
 
 );
