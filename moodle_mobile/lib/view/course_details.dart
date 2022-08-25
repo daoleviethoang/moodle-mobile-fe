@@ -42,6 +42,8 @@ import 'package:moodle_mobile/view/common/custom_text_field.dart';
 import 'package:moodle_mobile/view/common/data_card.dart';
 import 'package:moodle_mobile/view/common/tab_item.dart';
 import 'package:moodle_mobile/view/enrol/enrol.dart';
+import 'package:moodle_mobile/view/forum/add_post/add_assignment_screen.dart';
+import 'package:moodle_mobile/view/forum/add_post/add_label_screen.dart';
 import 'package:moodle_mobile/view/forum/add_post/add_poll_screen.dart';
 import 'package:moodle_mobile/view/forum/forum_announcement_scren.dart';
 import 'package:moodle_mobile/view/forum/forum_discussion_screen.dart';
@@ -161,7 +163,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
         false;
   }
 
-  bool get hasAddUrlAPI {
+  bool get hasAddModuleAPI {
     return _siteInfo?.functions?.any(
           (element) => element.name == Wsfunction.LOCAL_ADD_MODULES,
         ) ??
@@ -848,6 +850,12 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     }
   }
 
+  // dialogAddLabel() async {
+  //   var check = await showDialog<bool>(context: context,builder: (BuildContext (context) {
+  //     return AlertDialog()
+  //   }));
+  // }
+
   dialogAddUrl() async {
     if (_content.length - 1 < 0) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -1225,7 +1233,9 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
       Icons.add,
       Icons.link,
       Icons.poll,
-      Icons.file_upload_outlined
+      Icons.file_upload_outlined,
+      Icons.text_format_outlined,
+      Icons.task,
     ];
     _fab = FabWithIcons(
       icons: icons,
@@ -1240,7 +1250,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
           }
         }
         if (index == 1) {
-          if (hasAddUrlAPI) {
+          if (hasAddModuleAPI) {
             await dialogAddUrl();
           } else {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -1256,8 +1266,46 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                       AddPollScreen(courseId: widget.courseId)));
         }
         if (index == 3) {
-          if (hasAddUrlAPI) {
+          if (hasAddModuleAPI) {
             await dialogAddFile();
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(AppLocalizations.of(context)!.api_unsupported),
+                backgroundColor: Colors.red));
+          }
+        }
+        if (index == 4) {
+          if (hasAddModuleAPI) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (builder) => AddLabelScreen(
+                  courseId: widget.courseId,
+                  sectionList: _content,
+                ),
+              ),
+            ).then((_) async {
+              await reGetCourseContent();
+            });
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(AppLocalizations.of(context)!.api_unsupported),
+                backgroundColor: Colors.red));
+          }
+        }
+        if (index == 5) {
+          if (hasAddModuleAPI) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (builder) => AddAssignmentScreen(
+                  courseId: widget.courseId,
+                  sectionList: _content,
+                ),
+              ),
+            ).then((_) async {
+              await reGetCourseContent();
+            });
           } else {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 content: Text(AppLocalizations.of(context)!.api_unsupported),
@@ -1331,6 +1379,18 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
         rethrow;
       }
     }
+  }
+
+  Future reGetCourseContent() async {
+    try {
+      var contentResponse = await CourseContentService().getCourseContent(
+        token,
+        _courseId,
+      );
+      setState(() {
+        _content = contentResponse;
+      });
+    } catch (e) {}
   }
 
   Future reGetContentForActivityTab(bool isSetState) async {
