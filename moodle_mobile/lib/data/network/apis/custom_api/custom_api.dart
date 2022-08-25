@@ -314,4 +314,28 @@ class CustomApi {
       throw "Can't add new url to course";
     }
   }
+
+  Future<void> setGradeQuizQuestion(String token, int attemptid, int slotid,
+      double mark, String comment) async {
+    try {
+      Dio dio = Http().client;
+      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': Wsfunction.LOCAL_QUIZ_SET_GRADE,
+        'moodlewsrestformat': 'json',
+        'attemptid': attemptid,
+        'slotid': slotid,
+        'mark': mark,
+        'comment': comment,
+      });
+      if (res.data is Map<String, dynamic> && res.data["exception"] != null) {
+        throw res.data["exception"];
+      }
+    } catch (e) {
+      if (e.toString() == "dml_missing_record_exception") {
+        throw e.toString();
+      }
+      throw "Can't update grade question in quiz";
+    }
+  }
 }
