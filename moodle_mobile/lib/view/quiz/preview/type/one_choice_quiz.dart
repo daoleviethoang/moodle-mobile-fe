@@ -27,10 +27,12 @@ class OneChoiceQuiz extends StatefulWidget {
 class _OneChoiceQuizState extends State<OneChoiceQuiz> {
   List<dom.Element> answers = [];
   String question = "";
+  dom.Element? rightAnswer;
   dom.Element? image;
   parseHtml() {
     var document = parse(widget.html);
     var questions = document.getElementsByClassName("qtext");
+    var rightAnswerElement = document.getElementsByClassName("rightanswer");
     List<dom.Element> elementMain = document.getElementsByClassName("answer");
     List<dom.Element> elements = elementMain.first.children;
     setState(() {
@@ -38,6 +40,8 @@ class _OneChoiceQuizState extends State<OneChoiceQuiz> {
           ? questions.first.innerHtml.replaceAll("\n", "").replaceAll("\r", "")
           : "";
       answers = elements;
+      rightAnswer =
+          rightAnswerElement.isNotEmpty ? rightAnswerElement.first : null;
     });
   }
 
@@ -96,6 +100,15 @@ class _OneChoiceQuizState extends State<OneChoiceQuiz> {
                           )))
                       .toList(),
                 )),
+            const SizedBox(
+              height: 7,
+            ),
+            rightAnswer == null
+                ? Container()
+                : Text(
+                    rightAnswer!.text,
+                    style: const TextStyle(color: Colors.redAccent),
+                  ),
             const Divider(),
           ],
         ));

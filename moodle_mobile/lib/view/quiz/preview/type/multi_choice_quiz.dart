@@ -27,9 +27,11 @@ class MultiChoiceQuiz extends StatefulWidget {
 class _MultiChoiceQuizState extends State<MultiChoiceQuiz> {
   List<dom.Element> answers = [];
   String question = "";
+  dom.Element? rightAnswer;
   parseHtml() {
     var document = parse(widget.html);
     var questions = document.getElementsByClassName("qtext");
+    var rightAnswerElement = document.getElementsByClassName("rightanswer");
     List<dom.Element> elementMain = document.getElementsByClassName("answer");
     List<dom.Element> elements = elementMain.first.children;
     setState(() {
@@ -37,6 +39,8 @@ class _MultiChoiceQuizState extends State<MultiChoiceQuiz> {
           ? questions.first.innerHtml.replaceAll("\n", "").replaceAll("\r", "")
           : "";
       answers = elements;
+      rightAnswer =
+          rightAnswerElement.isNotEmpty ? rightAnswerElement.first : null;
     });
   }
 
@@ -95,6 +99,15 @@ class _MultiChoiceQuizState extends State<MultiChoiceQuiz> {
                           )))
                       .toList(),
                 )),
+            const SizedBox(
+              height: 7,
+            ),
+            rightAnswer == null
+                ? Container()
+                : Text(
+                    rightAnswer!.text,
+                    style: const TextStyle(color: Colors.redAccent),
+                  ),
             const Divider(),
           ],
         ));
