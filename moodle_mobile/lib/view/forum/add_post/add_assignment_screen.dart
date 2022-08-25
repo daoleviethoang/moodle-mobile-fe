@@ -1,16 +1,12 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:get_it/get_it.dart';
-import 'package:intl/intl.dart';
 import 'package:moodle_mobile/constants/colors.dart';
-import 'package:moodle_mobile/data/firebase/firestore/polls_service.dart';
 import 'package:moodle_mobile/data/network/apis/custom_api/custom_api.dart';
 import 'package:moodle_mobile/models/course/course_content.dart';
 import 'package:moodle_mobile/models/forum/forum_course.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
-import 'package:moodle_mobile/view/common/custom_button.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 
@@ -279,8 +275,9 @@ class _AddAssignmentScreenState extends State<AddAssignmentScreen> {
                                     timeOpen = dateTime;
                                   });
                                 },
-                                child: const Text(
-                                  "Open Time",
+                                child: Text(
+                                  AppLocalizations.of(context)!
+                                      .choose_open_time,
                                   style: TextStyle(
                                       color: MoodleColors.white, fontSize: 14),
                                 ),
@@ -320,8 +317,9 @@ class _AddAssignmentScreenState extends State<AddAssignmentScreen> {
                                     timeClose = dateTime;
                                   });
                                 },
-                                child: const Text(
-                                  "Close Time",
+                                child: Text(
+                                  AppLocalizations.of(context)!
+                                      .choose_close_time,
                                   style: TextStyle(
                                       color: MoodleColors.white, fontSize: 14),
                                 ),
@@ -335,35 +333,42 @@ class _AddAssignmentScreenState extends State<AddAssignmentScreen> {
                 ),
               ),
       ),
-      floatingActionButton: timeOpen == null
-          ? null
-          : FloatingActionButton(
-              onPressed: () async {
-                //print(timeOpen!.millisecondsSinceEpoch * 1000);
-                // timeOpen = dateTimeList![0];
-                // timeClose = dateTimeList![1];
-                int timeStampOpen =
-                    (timeOpen!.millisecondsSinceEpoch / 1000) as int;
-                int timeStampEnd =
-                    (timeClose!.millisecondsSinceEpoch / 1000) as int;
-                int sectionId = widget.sectionList
-                    .indexWhere((element) => element.name == sectionName);
-                await CustomApi().addAssignment(
-                    _userStore.user.token,
-                    widget.courseId,
-                    nameController.text,
-                    sectionId,
-                    contentController.text,
-                    timeStampOpen,
-                    timeStampEnd);
-                Navigator.pop(context, true);
+      floatingActionButton: FloatingActionButton(
+        onPressed: (timeOpen == null ||
+                timeClose == null ||
+                nameController.text == "")
+            ? () {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(AppLocalizations.of(context)!.missing_field),
+                    backgroundColor: Colors.red));
+              }
+            : () async {
+                try {
+                  int timeStampOpen = timeOpen!.millisecondsSinceEpoch ~/ 1000;
+                  int timeStampEnd = timeClose!.millisecondsSinceEpoch ~/ 1000;
+                  int sectionId = widget.sectionList
+                      .indexWhere((element) => element.name == sectionName);
+                  await CustomApi().addAssignment(
+                      _userStore.user.token,
+                      widget.courseId,
+                      nameController.text,
+                      sectionId,
+                      contentController.text,
+                      timeStampOpen,
+                      timeStampEnd);
+                  Navigator.pop(context, true);
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(e.toString()),
+                      backgroundColor: Colors.red));
+                }
               },
-              backgroundColor: Theme.of(context).primaryColor,
-              child: const Icon(
-                Icons.check,
-                color: Colors.white,
-              ),
-            ),
+        backgroundColor: Theme.of(context).primaryColor,
+        child: const Icon(
+          Icons.check,
+          color: Colors.white,
+        ),
+      ),
     );
   }
 }
