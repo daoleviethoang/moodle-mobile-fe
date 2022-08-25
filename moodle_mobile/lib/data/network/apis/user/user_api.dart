@@ -118,4 +118,34 @@ class UserApi {
       return false;
     }
   }
+
+  // Write a future return user info by id
+  Future<List<UserOverview>> getUserByIds(String token, List<int?> ids) async {
+    try {
+      Map<String, dynamic> queryParameters = {
+        'wstoken': token,
+        'wsfunction': Wsfunction.CORE_USER_GET_USERS_BY_FIELD,
+        'moodlewsrestformat': 'json',
+        'field': 'id',
+      };
+      for (int i = 0; i < ids.length; i++) {
+        String values = 'values[' + i.toString() + ']';
+        queryParameters[values] = ids[i];
+      }
+      Dio dio = Http().client;
+      var res = await dio.get(Endpoints.webserviceServer,
+          queryParameters: queryParameters);
+
+      var list = res.data as List;
+      if (list.isEmpty) {
+        throw Exception('Cannot find this user !');
+      }
+      return list.map((e) => UserOverview.fromJson(e)).toList();
+    } catch (e) {
+      if (kDebugMode) {
+        print('$e');
+      }
+      rethrow;
+    }
+  }
 }

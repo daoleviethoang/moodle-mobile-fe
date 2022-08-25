@@ -51,8 +51,9 @@ class _EssayDoQuizState extends State<EssayDoQuiz> {
       question = questions.isNotEmpty ? questions.first.innerHtml : "";
       answers = elements;
     });
-    if (answers[1].text != "") {
-      print(answers[1]);
+    if (answers.length > 1 &&
+        answers[1].text != null &&
+        answers[1].text != "") {
       widget.setComplete(widget.index, true);
       setState(() {
         controller = TextEditingController(text: answers[1].text);

@@ -17,6 +17,7 @@ import 'package:moodle_mobile/data/network/apis/course/course_content_service.da
 import 'package:moodle_mobile/data/network/apis/course/course_detail_service.dart';
 import 'package:moodle_mobile/data/network/apis/course/course_service.dart';
 import 'package:moodle_mobile/data/network/apis/custom_api/custom_api.dart';
+import 'package:moodle_mobile/data/network/apis/file/file_api.dart';
 import 'package:moodle_mobile/data/network/apis/lti/lti_service.dart';
 import 'package:moodle_mobile/data/network/apis/module/module_service.dart';
 import 'package:moodle_mobile/data/network/apis/notes/notes_service.dart';
@@ -34,6 +35,7 @@ import 'package:moodle_mobile/models/note/note.dart';
 import 'package:moodle_mobile/models/note/notes.dart';
 import 'package:moodle_mobile/models/site_info/site_info.dart';
 import 'package:moodle_mobile/view/activity/activity_screen.dart';
+import 'package:moodle_mobile/view/assignment/file_assignment_tile.dart';
 import 'package:moodle_mobile/view/common/content_item.dart';
 import 'package:moodle_mobile/view/common/course/expandable_fab.dart';
 import 'package:moodle_mobile/view/common/custom_text_field.dart';
@@ -1039,8 +1041,9 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
         return AlertDialog(
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(12.0))),
-          contentPadding: EdgeInsets.only(top: 0.0),
-          content: StatefulBuilder(builder: (context, sBSetState) {
+          contentPadding: EdgeInsets.all(0),
+          content:
+              StatefulBuilder(builder: (context, StateSetter setInnerState) {
             return Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -1055,7 +1058,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                       color: MoodleColors.blue,
                     ),
                     child: Text(
-                      AppLocalizations.of(context)!.add_url_title,
+                      AppLocalizations.of(context)!.add_file_title,
                       //textScaleFactor: 0.8,
                       style: const TextStyle(
                         color: Colors.white,
@@ -1075,29 +1078,31 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                    child: NumberPicker(
-                      axis: Axis.horizontal,
-                      value: _sectionChoose,
-                      minValue: 0,
-                      maxValue: max,
-                      haptics: true,
-                      zeroPad: true,
-                      selectedTextStyle: TextStyle(
-                        color: MoodleColors.blue,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 24,
-                      ),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border:
-                            Border.all(width: 1.5, color: MoodleColors.blue),
-                      ),
-                      onChanged: (value) =>
-                          sBSetState(() => _sectionChoose = value),
-                    ),
-                  ),
+                  Container(
+                      width: MediaQuery.of(context).size.width,
+                      padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                      child: Center(
+                        child: NumberPicker(
+                          axis: Axis.horizontal,
+                          value: _sectionChoose,
+                          minValue: 0,
+                          maxValue: max,
+                          haptics: true,
+                          zeroPad: true,
+                          selectedTextStyle: TextStyle(
+                            color: MoodleColors.blue,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 24,
+                          ),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                                width: 1.5, color: MoodleColors.blue),
+                          ),
+                          onChanged: (value) =>
+                              setInnerState(() => _sectionChoose = value),
+                        ),
+                      )),
                   Text(
                     _content[_sectionChoose].name,
                     textAlign: TextAlign.center,
@@ -1105,8 +1110,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                       fontSize: 18,
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(8, 10, 8, 8),
+                  Container(
+                    margin: EdgeInsets.fromLTRB(8, 10, 8, 8),
                     child: CustomTextFieldWidget(
                       controller: nameController,
                       hintText: AppLocalizations.of(context)!.name_module,
@@ -1114,7 +1119,26 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                       borderRadius: Dimens.default_border_radius,
                     ),
                   ),
-                  //buildSelectFile(),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(8, 10, 8, 0),
+                    child: files.isNotEmpty
+                        ? FileAssignmentTile(
+                            file: files.first,
+                            rename: rename,
+                            canEdit: true,
+                            delete: (i) {
+                              setInnerState(() => files.removeAt(0));
+                            },
+                            index: 0,
+                          )
+                        : const Center(
+                            child: Icon(
+                              Icons.space_bar_rounded,
+                              size: 30,
+                            ),
+                          ),
+                  ),
+                  files.isEmpty ? buildSelectFile(setInnerState) : Container(),
                 ]);
           }),
           actions: [
@@ -1122,6 +1146,9 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
               Expanded(
                 child: TextButton(
                   onPressed: () {
+                    if (files.isNotEmpty) {
+                      files.removeAt(0);
+                    }
                     Navigator.pop(context);
                   },
                   child: Text(AppLocalizations.of(context)!.cancel,
@@ -1145,7 +1172,14 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
               Expanded(
                 child: TextButton(
                   onPressed: () async {
-                    Navigator.pop(context, true);
+                    if (files.isNotEmpty) {
+                      Navigator.pop(context, true);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(AppLocalizations.of(context)!
+                              .message_missing_file_add),
+                          backgroundColor: Colors.red));
+                    }
                   },
                   child: Text(AppLocalizations.of(context)!.ok,
                       style: const TextStyle(
@@ -1154,12 +1188,14 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                         fontSize: 16,
                       )),
                   style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all(MoodleColors.blue),
-                      shape: MaterialStateProperty.all(
-                          const RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8.0))))),
+                    backgroundColor:
+                        MaterialStateProperty.all(MoodleColors.blue),
+                    shape: MaterialStateProperty.all(
+                      const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ]),
@@ -1169,8 +1205,11 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     );
     if (check == true) {
       try {
-        await CustomApi().addModuleUrl(_userStore.user.token, widget.courseId,
-            nameController.text, _sectionChoose, urlController.text);
+        int fileId = await FileApi().uploadFile(
+            token, files.first.filepath, files.first.filename, null);
+
+        await CustomApi().addFile(_userStore.user.token, widget.courseId,
+            nameController.text, _sectionChoose, fileId);
         setState(() {
           _content[_sectionChoose].modules.add(Module(
               id: 100,
@@ -1185,6 +1224,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(e.toString()), backgroundColor: Colors.red));
       }
+      files.removeAt(0);
     }
   }
 
@@ -1227,7 +1267,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
         }
         if (index == 3) {
           if (hasAddModuleAPI) {
-            await dialogAddUrl();
+            await dialogAddFile();
           } else {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 content: Text(AppLocalizations.of(context)!.api_unsupported),
@@ -1540,132 +1580,143 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
     );
   }
 
-  // Widget buildSelectFile() {
-  //   return Container(
-  //     width: double.infinity,
-  //     margin: const EdgeInsets.only(bottom: 8),
-  //     decoration: const BoxDecoration(
-  //       color: MoodleColors.white,
-  //       borderRadius: BorderRadius.all(Radius.circular(10)),
-  //     ),
-  //     child: Padding(
-  //       padding: const EdgeInsets.only(left: 30, bottom: 5, top: 5, right: 30),
-  //       child: TextButton.icon(
-  //         onPressed: () async {
-  //           await getFileFromStorage();
-  //           Navigator.pop(context);
-  //         },
-  //         icon: const Icon(
-  //           Icons.library_add,
-  //           color: MoodleColors.black,
-  //           size: 30,
-  //         ),
-  //         label: Padding(
-  //           padding: const EdgeInsets.only(left: 20),
-  //           child: Text(
-  //             AppLocalizations.of(context)!.get_file_from_storage,
-  //             style: const TextStyle(color: MoodleColors.black, fontSize: 16),
-  //           ),
-  //         ),
-  //         style: TextButton.styleFrom(
-  //           alignment: Alignment.centerLeft,
-  //           primary: MoodleColors.white,
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
+  Widget buildSelectFile(StateSetter setInnerState) {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(bottom: 8),
+      decoration: const BoxDecoration(
+        color: MoodleColors.white,
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.only(left: 30, bottom: 5, top: 5, right: 30),
+        child: TextButton.icon(
+          onPressed: () async {
+            await getFileFromStorage(setInnerState);
+            //Navigator.pop(context);
+          },
+          icon: const Icon(
+            Icons.library_add,
+            color: MoodleColors.black,
+            size: 30,
+          ),
+          label: Padding(
+            padding: const EdgeInsets.only(left: 20),
+            child: Text(
+              AppLocalizations.of(context)!.get_file_from_storage,
+              style: const TextStyle(color: MoodleColors.black, fontSize: 16),
+            ),
+          ),
+          style: TextButton.styleFrom(
+            alignment: Alignment.centerLeft,
+            primary: MoodleColors.white,
+          ),
+        ),
+      ),
+    );
+  }
 
-  // getFileFromStorage() async {
-  //   try {
-  //     FilePickerResult? result = await FilePicker.platform.pickFiles();
-  //     if (result != null) {
-  //       PlatformFile file = result.files.first;
-  //       // check size more than condition
-  //       if (file.size + caculateByteSize() > 5242880) {
-  //         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-  //             content: Text(AppLocalizations.of(context)!.file_size_bigger),
-  //             backgroundColor: Colors.red));
-  //         return;
-  //       }
-  //       // check number file more than condition
-  //       if (files.length == 5) {
-  //         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-  //             content: Text(AppLocalizations.of(context)!.number_file_full),
-  //             backgroundColor: Colors.red));
-  //         return;
-  //       }
-  //       // check file same name
-  //       bool check = checkOverwrite(file);
-  //       if (check == true) return;
-  //       // add file
-  //       files.add(FileUpload(
-  //           filename: file.name,
-  //           filepath: file.path ?? "",
-  //           timeModified: DateTime.now(),
-  //           filesize: file.size));
-  //       setState(() {
-  //         files.sort(((a, b) => a.filename.compareTo(b.filename)));
-  //         if (sortASC == false) {
-  //           files.reversed;
-  //         }
-  //       });
-  //     }
-  //   } catch (error) {
-  //     print(error.toString());
-  //   }
-  // }
+  getFileFromStorage(setInnerState) async {
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles();
+      if (result != null) {
+        PlatformFile file = result.files.first;
+        // check size more than condition
+        if (file.size + caculateByteSize() > 5242880) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(AppLocalizations.of(context)!.file_size_bigger),
+              backgroundColor: Colors.red));
+          return;
+        }
+        // check number file more than condition
+        if (files.length == 1) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(AppLocalizations.of(context)!.number_file_full),
+              backgroundColor: Colors.red));
+          return;
+        }
+        // check file same name
+        bool check = checkOverwrite(file);
+        if (check == true) return;
+        // add file
+        setInnerState(
+          () => files.add(
+            FileUpload(
+                filename: file.name,
+                filepath: file.path ?? "",
+                timeModified: DateTime.now(),
+                filesize: file.size),
+          ),
+        );
 
-  // int caculateByteSize() {
-  //   int sum = 0;
-  //   for (var item in files) {
-  //     sum += item.filesize;
-  //   }
-  //   return sum;
-  // }
+        // setState(() {
+        //   files.sort(((a, b) => a.filename.compareTo(b.filename)));
+        //   if (sortASC == false) {
+        //     files.reversed;
+        //   }
+        // });
+      }
+    } catch (error) {
+      print(error.toString());
+    }
+  }
 
-  // bool checkOverwrite(PlatformFile file) {
-  //   int index = -1;
-  //   for (var i = 0; i < files.length; i++) {
-  //     if (files[i].filename == file.name) {
-  //       index = i;
-  //       break;
-  //     }
-  //   }
-  //   if (index != -1) {
-  //     showDialog(
-  //       context: context,
-  //       builder: (BuildContext context) {
-  //         return AlertDialog(
-  //           title: Text(AppLocalizations.of(context)!.override_file),
-  //           actions: [
-  //             TextButton(
-  //               onPressed: () {
-  //                 Navigator.pop(context);
-  //               },
-  //               child: Text(AppLocalizations.of(context)!.cancel),
-  //             ),
-  //             TextButton(
-  //               onPressed: () {
-  //                 setState(() {
-  //                   files[index] = FileUpload(
-  //                       filename: file.name,
-  //                       filepath: file.path ?? "",
-  //                       timeModified: DateTime.now(),
-  //                       filesize: file.size);
-  //                 });
+  int caculateByteSize() {
+    int sum = 0;
+    for (var item in files) {
+      sum += item.filesize;
+    }
+    return sum;
+  }
 
-  //                 // break dialog
-  //                 Navigator.pop(context);
-  //               },
-  //               child: Text(AppLocalizations.of(context)!.ok),
-  //             ),
-  //           ],
-  //         );
-  //       },
-  //     );
-  //     return true;
-  //   }
-  //   return false;
-  // }
+  bool checkOverwrite(PlatformFile file) {
+    int index = -1;
+    for (var i = 0; i < files.length; i++) {
+      if (files[i].filename == file.name) {
+        index = i;
+        break;
+      }
+    }
+    if (index != -1) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(AppLocalizations.of(context)!.override_file),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text(AppLocalizations.of(context)!.cancel),
+              ),
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    files[index] = FileUpload(
+                        filename: file.name,
+                        filepath: file.path ?? "",
+                        timeModified: DateTime.now(),
+                        filesize: file.size);
+                  });
+
+                  // break dialog
+                  Navigator.pop(context);
+                },
+                child: Text(AppLocalizations.of(context)!.ok),
+              ),
+            ],
+          );
+        },
+      );
+      return true;
+    }
+    return false;
+  }
+
+  void rename(int index, String newName) {
+    setState(() {
+      files[0].filename = newName;
+    });
+  }
 }

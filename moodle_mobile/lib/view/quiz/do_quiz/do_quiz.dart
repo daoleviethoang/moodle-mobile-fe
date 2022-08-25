@@ -46,6 +46,7 @@ class _QuizDoScreenState extends State<QuizDoScreen> {
   List<bool> complete = [];
   QuizData? quizData;
   bool error = false;
+  bool finish = false;
 
   Future<bool> saveQuiz(int index) async {
     if (list[index].answers.isNotEmpty) {
@@ -66,11 +67,21 @@ class _QuizDoScreenState extends State<QuizDoScreen> {
 
   endQuiz() async {
     try {
+      setState(() {
+        finish = true;
+      });
       await QuizApi().endQuiz(
         _userStore.user.token,
         widget.attemptId,
       );
     } catch (e) {
+      setState(() {
+        finish = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(AppLocalizations.of(context)!.error),
+        backgroundColor: Colors.red,
+      ));
       if (kDebugMode) {
         print("Can't end quiz");
       }
@@ -403,7 +414,8 @@ class _QuizDoScreenState extends State<QuizDoScreen> {
                                       onPressed: () {
                                         itemScrollController.scrollTo(
                                           index: index,
-                                          duration: const Duration(milliseconds: 1),
+                                          duration:
+                                              const Duration(milliseconds: 1),
                                         );
                                       },
                                       child: Text(
@@ -465,15 +477,18 @@ class _QuizDoScreenState extends State<QuizDoScreen> {
                   children: [
                     const Icon(
                       Icons.alarm_outlined,
-                      size: 40,
+                      size: 35,
                     ),
                     const SizedBox(
                       height: 5,
                     ),
-                    widget.endTime == 0
-                        ? Container()
+                    widget.endTime == 0 || finish == true
+                        ? const Text(
+                            "                ",
+                            style: TextStyle(fontSize: 16),
+                          )
                         : CountdownTimer(
-                            textStyle: const TextStyle(fontSize: 18),
+                            textStyle: const TextStyle(fontSize: 16),
                             endTime: widget.endTime,
                             onEnd: () async {
                               await endQuiz();

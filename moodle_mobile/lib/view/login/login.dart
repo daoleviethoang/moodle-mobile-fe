@@ -118,6 +118,9 @@ class _LoginScreenState extends State<LoginScreen> {
       }).toList(),
     );
     if (value == null) {
+      setState(() {
+        programDropdownIcon = Icons.arrow_right;
+      });
       return;
     }
     if (suggestionsData.indexOf(value) == 3) {

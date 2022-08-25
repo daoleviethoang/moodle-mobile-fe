@@ -29,7 +29,8 @@ class QuizApi {
     }
   }
 
-  Future<List<Attempt>> getAttempts(String token, int quizId) async {
+  Future<List<Attempt>> getAttempts(
+      String token, int quizId, int? userId) async {
     try {
       Dio dio = Http().client;
       final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
@@ -39,6 +40,8 @@ class QuizApi {
         'quizid': quizId,
         'status': "all",
         'includepreviews': 1,
+        'userid': userId ??
+            0, // null return attempt of owner else return attempt of user id
       });
       if (res.data["exception"] != null) {
         throw res.data["exception"];
