@@ -400,8 +400,10 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                     return SubmissionItem(
                       completed: m.isCompleted,
                       onCompletionChange: (val) async {
-                        return await ModuleService()
-                            .markModule(token, m.id!, val);
+                        try {
+                          return await ModuleService()
+                              .markModule(token, m.id!, val);
+                        } catch (e) {}
                       },
                       title: title,
                       submissionId: m.instance ?? 0,
@@ -413,8 +415,10 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                     return ChatItem(
                       completed: m.isCompleted,
                       onCompletionChange: (val) async {
-                        return await ModuleService()
-                            .markModule(token, m.id!, val);
+                        try {
+                          return await ModuleService()
+                              .markModule(token, m.id!, val);
+                        } catch (e) {}
                       },
                       title: title,
                       onPressed: () {},
@@ -440,7 +444,10 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                       return ForumItem(
                         completed: m.isCompleted,
                         onCompletionChange: (val) async {
-                          ModuleService().markModule(token, m.id!, val);
+                          try {
+                            return await ModuleService()
+                                .markModule(token, m.id!, val);
+                          } catch (e) {}
                         },
                         title: newTitle,
                         onPressed: () {
@@ -468,7 +475,10 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                     return LabelItem(
                         completed: m.isCompleted,
                         onCompletionChange: (val) async {
-                          ModuleService().markModule(token, m.id!, val);
+                          try {
+                            return await ModuleService()
+                                .markModule(token, m.id!, val);
+                          } catch (e) {}
                         },
                         text: m.description ?? '');
                   case ModuleName.lti:
@@ -497,8 +507,10 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                     return PageItem(
                       completed: m.isCompleted,
                       onCompletionChange: (val) async {
-                        return await ModuleService()
-                            .markModule(token, m.id!, val);
+                        try {
+                          return await ModuleService()
+                              .markModule(token, m.id!, val);
+                        } catch (e) {}
                       },
                       title: title,
                       onPressed: () {},
@@ -507,8 +519,10 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                     return QuizItem(
                       completed: m.isCompleted,
                       onCompletionChange: (val) async {
-                        return await ModuleService()
-                            .markModule(token, m.id!, val);
+                        try {
+                          return await ModuleService()
+                              .markModule(token, m.id!, val);
+                        } catch (e) {}
                       },
                       title: title,
                       quizInstanceId: m.instance ?? 0,
@@ -524,8 +538,10 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                     return DocumentItem(
                       completed: m.isCompleted,
                       onCompletionChange: (val) async {
-                        return await ModuleService()
-                            .markModule(token, m.id!, val);
+                        try {
+                          return await ModuleService()
+                              .markModule(token, m.id!, val);
+                        } catch (e) {}
                       },
                       title: title,
                       documentUrl: url,
@@ -534,8 +550,10 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                     return UrlItem(
                       completed: m.isCompleted,
                       onCompletionChange: (val) async {
-                        return await ModuleService()
-                            .markModule(token, m.id!, val);
+                        try {
+                          return await ModuleService()
+                              .markModule(token, m.id!, val);
+                        } catch (e) {}
                       },
                       title: title,
                       url: m.contents?[0].fileurl ?? '',
