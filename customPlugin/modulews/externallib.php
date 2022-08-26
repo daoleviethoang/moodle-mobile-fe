@@ -561,5 +561,31 @@ class local_modulews_external extends external_api
         return null;
     } 
 
+    public static function delete_module_parameters()
+    {
+        return new external_function_parameters(
+            array(
+                'cmid' => new external_value(PARAM_INT, 'Course module id'),
+		'courseid' => new external_value(PARAM_INT, 'Course id'),
+            )
+        );
+    }
+
+    public static function delete_module($cmid, $courseid)
+    {
+        global $CFG, $DB;
+        require_once($CFG->dirroot . "/course/lib.php");
+
+        $courseContext = context_course::instance($courseid);
+        require_capability('moodle/course:manageactivities', $courseContext);
+
+	course_delete_module($cmid);
+    }
+
+    public static function delete_module_returns()
+    {
+        return null;
+    } 
+
     # endregion
 }
