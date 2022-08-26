@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/styles.dart';
+import 'package:moodle_mobile/data/network/apis/custom_api/custom_api.dart';
 import 'package:moodle_mobile/data/network/apis/quiz/quiz_api.dart';
 import 'package:moodle_mobile/models/quiz/quizData.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
@@ -16,11 +17,11 @@ import 'package:moodle_mobile/view/quiz/teacher_quiz/grade_quiz.dart';
 
 class QuizReviewScreen extends StatefulWidget {
   final int attemptId;
-  final String title;
+  final String studentName;
   const QuizReviewScreen({
     Key? key,
     required this.attemptId,
-    required this.title,
+    required this.studentName,
   }) : super(key: key);
 
   @override
@@ -29,11 +30,13 @@ class QuizReviewScreen extends StatefulWidget {
 
 class _QuizReviewScreenState extends State<QuizReviewScreen> {
   bool isLoading = false;
+  bool isUpdateMark = false;
   late UserStore _userStore;
   int page = 0;
   QuizData? quizData;
   bool error = false;
   CategoryType categoryType = CategoryType.quiz;
+  QuizData? quizDataChanged;
 
   @override
   void initState() {
@@ -63,13 +66,55 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
     });
   }
 
+  updateMarkOfAttempt() {
+    for (var e in quizData!.questions!) {
+      if (e.type == "essay") {
+        CustomApi().setGradeQuizQuestion(
+            _userStore.user.token,
+            quizData!.attempt!.id!,
+            e.slot!,
+            e.mark == "" ? 0 : double.parse(e.mark!),
+            "");
+      }
+    }
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(AppLocalizations.of(context)!.update_success_message),
+        backgroundColor: Colors.green));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title,
+        title: Text(widget.studentName,
             textAlign: TextAlign.left, style: MoodleStyles.appBarTitleStyle),
         centerTitle: false,
+        actions: <Widget>[
+          isUpdateMark
+              ? IconButton(
+                  iconSize: 35,
+                  icon: Container(
+                    width: 24,
+                    height: 24,
+                    padding: const EdgeInsets.all(2.0),
+                    child: const CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 3,
+                    ),
+                  ),
+                  onPressed: () {},
+                )
+              : IconButton(
+                  iconSize: 35,
+                  icon: const Icon(
+                    Icons.check,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    updateMarkOfAttempt();
+                  },
+                )
+        ],
         automaticallyImplyLeading: true,
       ),
       body: SafeArea(
@@ -243,11 +288,12 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
   }
 
   Widget getScreenTabUI(CategoryType categoryTypeData) {
-    print(categoryTypeData);
     if (CategoryType.quiz == categoryTypeData) {
       return getReviewQuiz();
     } else if (CategoryType.grade == categoryTypeData) {
-      return const GradeQuiz();
+      return GradeQuiz(
+        quizData: quizData,
+      );
     }
     return getReviewQuiz();
   }

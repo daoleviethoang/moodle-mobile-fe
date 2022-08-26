@@ -10,6 +10,7 @@ class Question {
   int? number;
   String? status;
   bool? blockedbyprevious;
+  String? mark;
   int? maxmark;
   String? settings;
 
@@ -26,6 +27,7 @@ class Question {
       this.status,
       this.blockedbyprevious,
       this.maxmark,
+      this.mark,
       this.settings});
 
   Question.fromJson(Map<String, dynamic> json) {
@@ -41,6 +43,7 @@ class Question {
     status = json['status'];
     blockedbyprevious = json['blockedbyprevious'];
     maxmark = json['maxmark'];
+    mark = json['mark'] == "0.00" ? "0" : json['mark'];
     settings = json['settings'];
   }
 
@@ -58,6 +61,7 @@ class Question {
     data['status'] = status;
     data['blockedbyprevious'] = blockedbyprevious;
     data['maxmark'] = maxmark;
+    data['mark'] = mark;
     data['settings'] = settings;
     return data;
   }

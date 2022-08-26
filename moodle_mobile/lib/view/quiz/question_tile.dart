@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/models/quiz/question.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class QuestionTile extends StatelessWidget {
   final Widget content;
@@ -20,7 +21,10 @@ class QuestionTile extends StatelessWidget {
         ListTile(
           visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
           title: Text(
-            "Question " + index.toString() + ":",
+            AppLocalizations.of(context)!.question +
+                " " +
+                index.toString() +
+                ":",
             textScaleFactor: 1.2,
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
@@ -30,7 +34,9 @@ class QuestionTile extends StatelessWidget {
             color: MoodleColors.grade_quiz_foreground,
             onPressed: () {},
             child: Text(
-              (question.maxmark ?? 1).toString() + " points",
+              (question.maxmark ?? 1).toString() +
+                  " " +
+                  AppLocalizations.of(context)!.points,
               textScaleFactor: 1.1,
               style: const TextStyle(color: MoodleColors.grade_quiz_text),
             ),
