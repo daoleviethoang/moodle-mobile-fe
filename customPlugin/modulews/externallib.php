@@ -588,4 +588,64 @@ class local_modulews_external extends external_api
     } 
 
     # endregion
+
+    # region quiz_set_grades
+
+    public static function quiz_attempts_overview_parameters()
+    {
+        return new external_function_parameters(
+            array(
+                'quizid' => new external_value(PARAM_INT, 'Quiz id'),
+            )
+        );
+    }
+
+    public static function quiz_attempts_overview($quizid)
+    {
+        try {
+            global $CFG, $DB;
+            require_once($CFG->dirroot . "/user/lib.php");
+
+            // Get attempts
+            $attempts = $DB->get_records('quiz_attempts', array('quiz' => $quizid, 'state' => 'finished'),
+                'attempt', 'id, userid, sumgrades, state, timestart, timefinish');
+            $attempts = json_decode(json_encode($attempts), true);
+
+            // Split array based on userid, filter only latest attempts
+            $attempts_by_users = array();
+            foreach ($attempts as $attempt) {
+                if (!isset($attempts_by_users[$attempt['userid']])) {
+                    $attempts_by_users[$attempt['userid']] = $attempt;
+                } else {
+                    if ($attempts_by_users[$attempt['userid']]->id < $attempt['id']) {
+                        $attempts_by_users[$attempt['userid']] = $attempt;
+                    }
+                }
+            }
+            $attempts_filtered = array_values($attempts_by_users);
+
+            return $attempts_filtered;
+        } catch (Exception $e) {
+            return array('error' => $e->getMessage());
+        }
+    }
+
+    public static function quiz_attempts_overview_returns()
+    {
+//        return new external_value(PARAM_RAW, 'Array of quiz attempts');
+        return new external_multiple_structure(
+            new external_single_structure(
+                array(
+                    'id' => new external_value(PARAM_INT, 'Attempt id'),
+                    'userid' => new external_value(PARAM_INT, 'User id'),
+                    'sumgrades' => new external_value(PARAM_FLOAT, 'Attempt sum grades'),
+                    'state' => new external_value(PARAM_TEXT, 'Attempt state'),
+                    'timestart' => new external_value(PARAM_INT, 'Attempt start time'),
+                    'timefinish' => new external_value(PARAM_INT, 'Attempt finish time'),
+                )
+            )
+        );
+    }
+
+    # endregion
 }

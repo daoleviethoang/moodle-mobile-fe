@@ -102,6 +102,13 @@ $functions = array(
                 'description' => 'Delete module',
                 'type'        => 'write',
 		'services' => array('moodle_mobile_app'),
-        )
-
+        ),
+    'local_modulews_quiz_attempts_overview' => array(
+        'classname'   => 'local_modulews_external',
+        'methodname'  => 'quiz_attempts_overview',
+        'classpath'   => 'local/modulews/externallib.php',
+        'description' => 'See a list of attempts by students',
+        'type'        => 'write',
+        'services' => array('moodle_mobile_app'),
+    )
 );
