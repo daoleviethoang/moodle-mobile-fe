@@ -157,4 +157,6 @@ class Wsfunction {
       "local_modulews_edit_assign";
   static const String LOCAL_QUIZ_SET_GRADE =
       "local_modulews_quiz_set_grades";
+  static const String LOCAL_DELETE_MODULE =
+      "local_modulews_delete_module";
 }

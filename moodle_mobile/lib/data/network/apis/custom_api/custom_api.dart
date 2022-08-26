@@ -338,4 +338,25 @@ class CustomApi {
       throw "Can't update grade question in quiz";
     }
   }
+
+  Future<void> deleteModule(String token, int cmid, int courseid) async {
+    try {
+      Dio dio = Http().client;
+      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': Wsfunction.LOCAL_DELETE_MODULE,
+        'moodlewsrestformat': 'json',
+        'cmid': cmid,
+        'courseid': courseid,
+      });
+      if (res.data is Map<String, dynamic> && res.data["exception"] != null) {
+        throw res.data["exception"];
+      }
+    } catch (e) {
+      if (e.toString() == "dml_missing_record_exception") {
+        throw e.toString();
+      }
+      throw "Can't update grade question in quiz";
+    }
+  }
 }

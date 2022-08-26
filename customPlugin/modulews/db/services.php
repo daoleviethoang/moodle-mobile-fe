@@ -94,6 +94,14 @@ $functions = array(
                 'description' => 'Update quiz grade',
                 'type'        => 'write',
 		'services' => array('moodle_mobile_app'),
+        ),
+	'local_modulews_delete_module' => array(
+                'classname'   => 'local_modulews_external',
+                'methodname'  => 'delete_module',
+                'classpath'   => 'local/modulews/externallib.php',
+                'description' => 'Delete module',
+                'type'        => 'write',
+		'services' => array('moodle_mobile_app'),
         )
 
 );
