@@ -50,31 +50,34 @@ class _ModuleWrapperState extends State<_ModuleWrapper> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        widget.child,
-        if (widget.completed != null)
-          Padding(
-            padding: const EdgeInsets.only(left: 32),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                primary: _completed! ? MoodleColors.blue : Colors.white,
-              ),
-              onPressed: widget.onCompletionChange == null
-                  ? () {}
-                  : () async {
-                      final c = await widget.onCompletionChange!(_completed);
-                      setState(() => _completed = c);
-                    },
-              child: Text("Mark done",
-                  style: TextStyle(
-                    color: _completed! ? Colors.white : MoodleColors.blue,
-                  )),
-            ),
-          ),
-      ],
-    );
+    return _completed == null
+        ? Container()
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              widget.child,
+              if (widget.completed != null)
+                Padding(
+                  padding: const EdgeInsets.only(left: 32),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: _completed! ? MoodleColors.blue : Colors.white,
+                    ),
+                    onPressed: widget.onCompletionChange == null
+                        ? () {}
+                        : () async {
+                            final c =
+                                await widget.onCompletionChange!(_completed);
+                            setState(() => _completed = c);
+                          },
+                    child: Text(AppLocalizations.of(context)!.mark_done,
+                        style: TextStyle(
+                          color: _completed! ? Colors.white : MoodleColors.blue,
+                        )),
+                  ),
+                ),
+            ],
+          );
   }
 }
 

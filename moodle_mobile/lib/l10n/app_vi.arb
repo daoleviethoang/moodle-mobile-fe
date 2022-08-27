@@ -134,6 +134,7 @@
   "login_invalid": "Mật khẩu không chính xác, thử lại sau",
   "logout": "Đăng xuất",
   "mail_subject": "[Moodle%20Mobile%20App%20-%20Báo%20cáo%20sự%20cố]",
+  "mark_done": "Hoàn thành",
   "mark_done_delete": "Đánh dấu hoàn thành và xóa",
   "mark_done_delete_confirm": "Bạn có chắc chắn muốn đánh dấu hoàn thành và xóa sự kiện này?",
   "max_file_size": "Kích cỡ tối đa:",

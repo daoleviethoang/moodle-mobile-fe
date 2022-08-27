@@ -110,7 +110,7 @@ class _GradeQuizState extends State<GradeQuiz> {
                             ":",
                         textAlign: TextAlign.start,
                         style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16),
+                            fontWeight: FontWeight.bold, fontSize: 15),
                       ),
                     ),
                     title: Row(

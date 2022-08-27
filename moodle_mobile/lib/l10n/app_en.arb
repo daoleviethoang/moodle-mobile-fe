@@ -165,6 +165,7 @@
   "login_invalid": "Invalid login, please try again",
   "logout": "Logout",
   "mail_subject": "[Moodle%20Mobile%20App%20-%20Report%20a%20problem]",
+  "mark_done": "Mark done",
   "mark_done_delete": "Mark done and delete",
   "mark_done_delete_confirm": "Are you sure to mark done and delete this event?",
   "max_file_size": "Maximum files size :",

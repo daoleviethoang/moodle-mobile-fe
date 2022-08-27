@@ -403,7 +403,13 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                         try {
                           return await ModuleService()
                               .markModule(token, m.id!, val);
-                        } catch (e) {}
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content:
+                                  Text(AppLocalizations.of(context)!.error),
+                              backgroundColor: Colors.red));
+                          return val;
+                        }
                       },
                       title: title,
                       submissionId: m.instance ?? 0,
@@ -418,7 +424,13 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                         try {
                           return await ModuleService()
                               .markModule(token, m.id!, val);
-                        } catch (e) {}
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content:
+                                  Text(AppLocalizations.of(context)!.error),
+                              backgroundColor: Colors.red));
+                          return val;
+                        }
                       },
                       title: title,
                       onPressed: () {},
@@ -447,7 +459,13 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                           try {
                             return await ModuleService()
                                 .markModule(token, m.id!, val);
-                          } catch (e) {}
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content:
+                                  Text(AppLocalizations.of(context)!.error),
+                              backgroundColor: Colors.red));
+                            return val;
+                          }
                         },
                         title: newTitle,
                         onPressed: () {
@@ -478,7 +496,13 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                           try {
                             return await ModuleService()
                                 .markModule(token, m.id!, val);
-                          } catch (e) {}
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content:
+                                  Text(AppLocalizations.of(context)!.error),
+                              backgroundColor: Colors.red));
+                            return val;
+                          }
                         },
                         text: m.description ?? '');
                   case ModuleName.lti:
@@ -510,7 +534,13 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                         try {
                           return await ModuleService()
                               .markModule(token, m.id!, val);
-                        } catch (e) {}
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content:
+                                  Text(AppLocalizations.of(context)!.error),
+                              backgroundColor: Colors.red));
+                          return val;
+                        }
                       },
                       title: title,
                       onPressed: () {},
@@ -522,7 +552,13 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                         try {
                           return await ModuleService()
                               .markModule(token, m.id!, val);
-                        } catch (e) {}
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content:
+                                  Text(AppLocalizations.of(context)!.error),
+                              backgroundColor: Colors.red));
+                          return val;
+                        }
                       },
                       title: title,
                       quizInstanceId: m.instance ?? 0,
@@ -541,7 +577,13 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                         try {
                           return await ModuleService()
                               .markModule(token, m.id!, val);
-                        } catch (e) {}
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content:
+                                  Text(AppLocalizations.of(context)!.error),
+                              backgroundColor: Colors.red));
+                          return val;
+                        }
                       },
                       title: title,
                       documentUrl: url,
@@ -553,7 +595,13 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                         try {
                           return await ModuleService()
                               .markModule(token, m.id!, val);
-                        } catch (e) {}
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content:
+                                  Text(AppLocalizations.of(context)!.error),
+                              backgroundColor: Colors.red));
+                          return val;
+                        }
                       },
                       title: title,
                       url: m.contents?[0].fileurl ?? '',
