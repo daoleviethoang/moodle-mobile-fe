@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:moodle_mobile/data/network/constants/endpoints.dart';
 import 'package:moodle_mobile/data/network/constants/wsfunction_constants.dart';
 import 'package:moodle_mobile/data/network/dio_http.dart';
+import 'package:moodle_mobile/models/quiz/attempt_user.dart';
 
 class CustomApi {
   Future<void> changeNameModule(String token, int moduleId, String name) async {
@@ -357,6 +358,23 @@ class CustomApi {
         throw e.toString();
       }
       throw "Can't update grade question in quiz";
+    }
+  }
+
+  Future<List<AttemptUser>> getListAttemptInQuiz(
+      String token, int quizId) async {
+    try {
+      Dio dio = Http().client;
+      final res = await dio.get(Endpoints.webserviceServer, queryParameters: {
+        'wstoken': token,
+        'wsfunction': Wsfunction.LOCAL_QUIZ_ATTEMPTS_OVERVIEW,
+        'moodlewsrestformat': 'json',
+        'quizid': quizId,
+      });
+      var list = res.data as List;
+      return list.map((e) => AttemptUser.fromJson(e)).toList();
+    } catch (e) {
+      throw "Can't get list attempt of quiz $quizId";
     }
   }
 }

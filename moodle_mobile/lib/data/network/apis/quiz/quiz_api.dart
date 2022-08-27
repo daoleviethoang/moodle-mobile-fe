@@ -5,6 +5,7 @@ import 'package:moodle_mobile/data/network/constants/endpoints.dart';
 import 'package:moodle_mobile/data/network/constants/wsfunction_constants.dart';
 import 'package:moodle_mobile/data/network/dio_http.dart';
 import 'package:moodle_mobile/models/quiz/attempt.dart';
+import 'package:moodle_mobile/models/quiz/attempt_user.dart';
 import 'package:moodle_mobile/models/quiz/quiz.dart';
 import 'package:moodle_mobile/models/quiz/quizData.dart';
 
