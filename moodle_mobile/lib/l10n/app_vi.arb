@@ -63,6 +63,8 @@
   "deleete_album": "Xóa album?",
   "delete": "Xóa",
   "delete_album_description": "Khi xoá bạn không thể hoàn tác",
+  "delete_confirm_message": "Bạn có chắc chắn muốn xóa mô-đun này không?",
+  "delete_module_success_message": "Bạn đã xóa thành công mô-đun",
   "description": "Mô tả",
   "disable_noti": "Tắt thông báo",
   "discussion": "Diễn đàn thảo luận",

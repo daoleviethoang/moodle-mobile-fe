@@ -416,10 +416,22 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                       courseId: widget.courseId,
                       dueDate: dueDate,
                       isTeacher: isTeacher,
+                      onLongPress: () async {
+                        isTeacher
+                            ? await dialogDeleteModule(m.id!, widget.courseId)
+                            : await null;
+                        await reGetCourseContent();
+                      },
                     );
                   case ModuleName.chat:
                     return ChatItem(
                       completed: m.isCompleted,
+                      onLongPress: () async {
+                        isTeacher
+                            ? await dialogDeleteModule(m.id!, widget.courseId)
+                            : await null;
+                        await reGetCourseContent();
+                      },
                       onCompletionChange: (val) async {
                         try {
                           return await ModuleService()
@@ -454,6 +466,12 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                       }
 
                       return ForumItem(
+                        onLongPress: () async {
+                          isTeacher
+                              ? await dialogDeleteModule(m.id!, widget.courseId)
+                              : await null;
+                          await reGetCourseContent();
+                        },
                         completed: m.isCompleted,
                         onCompletionChange: (val) async {
                           try {
@@ -517,6 +535,13 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                         }
                         Lti d = data.data as Lti;
                         return UrlItem(
+                          onLongPress: () async {
+                            isTeacher
+                                ? await dialogDeleteModule(
+                                    m.id!, widget.courseId)
+                                : await null;
+                            await reGetCourseContent();
+                          },
                           completed: m.isCompleted,
                           onCompletionChange: (val) async {
                             ModuleService().markModule(token, m.id!, val);
@@ -529,6 +554,12 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                     );
                   case ModuleName.page:
                     return PageItem(
+                      onLongPress: () async {
+                        isTeacher
+                            ? await dialogDeleteModule(m.id!, widget.courseId)
+                            : await null;
+                        await reGetCourseContent();
+                      },
                       completed: m.isCompleted,
                       onCompletionChange: (val) async {
                         try {
@@ -547,6 +578,12 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                     );
                   case ModuleName.quiz:
                     return QuizItem(
+                      onLongPress: () async {
+                        isTeacher
+                            ? await dialogDeleteModule(m.id!, widget.courseId)
+                            : await null;
+                        await reGetCourseContent();
+                      },
                       completed: m.isCompleted,
                       onCompletionChange: (val) async {
                         try {
@@ -572,6 +609,12 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                       url += '?token=' + token;
                     }
                     return DocumentItem(
+                      onLongPress: () async {
+                        isTeacher
+                            ? await dialogDeleteModule(m.id!, widget.courseId)
+                            : await null;
+                        await reGetCourseContent();
+                      },
                       completed: m.isCompleted,
                       onCompletionChange: (val) async {
                         try {
@@ -590,6 +633,14 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                     );
                   case ModuleName.url:
                     return UrlItem(
+                      onLongPress: () async {
+                        print(m.id!);
+                        print(c.id);
+                        isTeacher
+                            ? await dialogDeleteModule(m.id!, widget.courseId)
+                            : await null;
+                        await reGetCourseContent();
+                      },
                       completed: m.isCompleted,
                       onCompletionChange: (val) async {
                         try {
@@ -624,6 +675,101 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
         }).toList(),
       ],
     );
+  }
+
+  dialogDeleteModule(int moduleId, int courseId) async {
+    var check = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(12.0))),
+          contentPadding: EdgeInsets.only(top: 0.0),
+          content: StatefulBuilder(builder: (context, sBSetState) {
+            return Padding(
+                padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                child: Row(
+                  children: <Widget>[
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                      child: Icon(
+                        Icons.warning_rounded,
+                        size: 50,
+                        color: MoodleColors.yellow_icon,
+                      ),
+                    ),
+                    Flexible(
+                      child: Text(
+                        AppLocalizations.of(context)!.delete_confirm_message,
+                        style: const TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
+                ));
+          }),
+          actions: [
+            Row(children: [
+              Expanded(
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text(AppLocalizations.of(context)!.cancel,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 16,
+                      )),
+                  style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all(MoodleColors.grey),
+                      shape: MaterialStateProperty.all(
+                          const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(8.0))))),
+                ),
+              ),
+              const SizedBox(
+                width: 15,
+              ),
+              Expanded(
+                child: TextButton(
+                  onPressed: () async {
+                    Navigator.pop(context, true);
+                  },
+                  child: Text(AppLocalizations.of(context)!.ok,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 16,
+                      )),
+                  style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all(MoodleColors.blue),
+                      shape: MaterialStateProperty.all(
+                          const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(8.0))))),
+                ),
+              ),
+            ]),
+          ],
+        );
+      },
+    );
+    if (check == true) {
+      try {
+        CustomApi().deleteModule(_userStore.user.token, moduleId, courseId);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(
+                AppLocalizations.of(context)!.delete_module_success_message),
+            backgroundColor: Colors.green));
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(e.toString()), backgroundColor: Colors.red));
+      }
+    }
   }
 
   void _initNotesTab() {

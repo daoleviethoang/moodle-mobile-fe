@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/constants/dimens.dart';
 import 'package:moodle_mobile/constants/styles.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:moodle_mobile/data/network/apis/custom_api/custom_api.dart';
+import 'package:moodle_mobile/store/user/user_store.dart';
 
 /// Create a menu with icon on the left, and text on the right
 ///
@@ -23,6 +27,8 @@ class MenuItem extends StatelessWidget {
   final String? subtitle;
   final bool? fullWidth;
   final VoidCallback? onPressed;
+  final BuildContext context;
+  final VoidCallback? onLongPress;
 
   const MenuItem({
     Key? key,
@@ -32,7 +38,9 @@ class MenuItem extends StatelessWidget {
     required this.title,
     this.subtitle,
     this.fullWidth,
+    required this.context,
     required this.onPressed,
+    this.onLongPress,
   }) : super(key: key);
 
   @override
@@ -68,6 +76,8 @@ class MenuItem extends StatelessWidget {
             child: circleWidget,
           ),
         ),
+
+        onLongPress: onLongPress,
 
         // 1-2 rows of text on the right
         label: Column(

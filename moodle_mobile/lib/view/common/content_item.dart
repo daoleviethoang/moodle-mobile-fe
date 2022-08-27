@@ -67,10 +67,12 @@ class _ModuleWrapperState extends State<_ModuleWrapper> {
                       final c = await widget.onCompletionChange!(_completed);
                       setState(() => _completed = c);
                     },
-              child: Text(AppLocalizations.of(context)!.mark_done,
-                  style: TextStyle(
-                    color: _completed! ? Colors.white : MoodleColors.blue,
-                  )),
+              child: Text(
+                AppLocalizations.of(context)!.mark_done,
+                style: TextStyle(
+                  color: _completed! ? Colors.white : MoodleColors.blue,
+                ),
+              ),
             ),
           ),
       ],
@@ -89,6 +91,8 @@ class ModuleItem extends StatelessWidget {
   final String? subtitle;
   final bool? fullWidth;
   final VoidCallback? onPressed;
+  final BuildContext context;
+  final VoidCallback? onLongPress;
 
   const ModuleItem({
     Key? key,
@@ -101,6 +105,8 @@ class ModuleItem extends StatelessWidget {
     this.subtitle,
     this.fullWidth,
     required this.onPressed,
+    required this.context,
+    this.onLongPress,
   }) : super(key: key);
 
   @override
@@ -116,6 +122,8 @@ class ModuleItem extends StatelessWidget {
         subtitle: subtitle,
         fullWidth: fullWidth,
         onPressed: onPressed,
+        context: context,
+        onLongPress: onLongPress,
       ),
     );
   }
@@ -129,6 +137,7 @@ class ForumItem extends StatelessWidget {
 
   final String title;
   final VoidCallback? onPressed;
+  final VoidCallback? onLongPress;
 
   const ForumItem({
     Key? key,
@@ -136,6 +145,7 @@ class ForumItem extends StatelessWidget {
     this.onCompletionChange,
     required this.title,
     required this.onPressed,
+    this.onLongPress,
   }) : super(key: key);
 
   @override
@@ -148,6 +158,8 @@ class ForumItem extends StatelessWidget {
       title: title,
       fullWidth: true,
       onPressed: onPressed,
+      context: context,
+      onLongPress: onLongPress,
     );
   }
 }
@@ -158,6 +170,7 @@ class ChatItem extends StatelessWidget {
 
   final String title;
   final VoidCallback? onPressed;
+  final VoidCallback? onLongPress;
 
   const ChatItem({
     Key? key,
@@ -165,6 +178,7 @@ class ChatItem extends StatelessWidget {
     this.onCompletionChange,
     required this.title,
     required this.onPressed,
+    this.onLongPress,
   }) : super(key: key);
 
   @override
@@ -177,6 +191,8 @@ class ChatItem extends StatelessWidget {
       title: title,
       fullWidth: true,
       onPressed: onPressed,
+      context: context,
+      onLongPress: onLongPress,
     );
   }
 }
@@ -187,6 +203,7 @@ class DocumentItem extends StatelessWidget {
 
   final String title;
   final String documentUrl;
+  final VoidCallback? onLongPress;
 
   const DocumentItem({
     Key? key,
@@ -194,17 +211,20 @@ class DocumentItem extends StatelessWidget {
     this.onCompletionChange,
     required this.title,
     required this.documentUrl,
+    this.onLongPress,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ModuleItem(
+      onLongPress: onLongPress,
       completed: completed,
       onCompletionChange: onCompletionChange,
       icon: const Icon(CupertinoIcons.book),
       color: Colors.pink,
       title: title,
       fullWidth: true,
+      context: context,
       onPressed: () async {
         // Download this document from link
         final uri = Uri.parse(documentUrl);
@@ -248,6 +268,7 @@ class VideoItem extends StatelessWidget {
       color: Colors.green,
       title: title,
       fullWidth: true,
+      context: context,
       onPressed: () {
         // Watch this video in a fullscreen view
         Navigator.of(context).push(MaterialPageRoute(
@@ -267,6 +288,7 @@ class UrlItem extends StatelessWidget {
   final String title;
   final String url;
   final int? id;
+  final VoidCallback? onLongPress;
 
   const UrlItem({
     Key? key,
@@ -275,6 +297,7 @@ class UrlItem extends StatelessWidget {
     required this.title,
     required this.url,
     this.id,
+    this.onLongPress,
   }) : super(key: key);
 
   @override
@@ -287,6 +310,8 @@ class UrlItem extends StatelessWidget {
       title: title,
       subtitle: url,
       fullWidth: true,
+      context: context,
+      onLongPress: onLongPress,
       onPressed: () async {
         if (id != null && AlphaAPI.isAlphaModule(url)) {
           final user = GetIt.instance<UserStore>();
@@ -328,6 +353,7 @@ class SubmissionItem extends StatelessWidget {
   final bool? isTeacher;
   final DateTime? dueDate;
   final int courseId;
+  final VoidCallback? onLongPress;
 
   const SubmissionItem({
     Key? key,
@@ -338,6 +364,7 @@ class SubmissionItem extends StatelessWidget {
     this.dueDate,
     required this.courseId,
     required this.isTeacher,
+    this.onLongPress,
   }) : super(key: key);
 
   @override
@@ -354,6 +381,7 @@ class SubmissionItem extends StatelessWidget {
       title: title,
       subtitle: (dueDate == null) ? null : dueString,
       fullWidth: true,
+      context: context,
       onPressed: () {
         Navigator.push(
             context,
@@ -365,6 +393,7 @@ class SubmissionItem extends StatelessWidget {
                       isTeacher: isTeacher,
                     )));
       },
+      onLongPress: onLongPress,
     );
   }
 }
@@ -378,6 +407,7 @@ class QuizItem extends StatelessWidget {
   final int quizInstanceId;
   final bool? isTeacher;
   final DateTime? openDate;
+  final VoidCallback? onLongPress;
 
   const QuizItem({
     Key? key,
@@ -388,6 +418,7 @@ class QuizItem extends StatelessWidget {
     required this.quizInstanceId,
     required this.courseId,
     this.openDate,
+    this.onLongPress,
   }) : super(key: key);
 
   @override
@@ -398,12 +429,14 @@ class QuizItem extends StatelessWidget {
     ).format(openDate ?? DateTime.now());
     return ModuleItem(
       completed: completed,
+      onLongPress: onLongPress,
       onCompletionChange: onCompletionChange,
       icon: const Icon(CupertinoIcons.question_square),
       color: MoodleColors.blue,
       title: title,
       subtitle: (openDate == null) ? null : dueString,
       fullWidth: true,
+      context: context,
       onPressed: () {
         Navigator.push(
           context,
@@ -446,6 +479,7 @@ class AttachmentItem extends StatelessWidget {
             icon: const Icon(CupertinoIcons.doc),
             color: Colors.grey,
             title: title!,
+            context: context,
             onPressed: () {
               // TODO: Download this document from link
             },
@@ -459,6 +493,7 @@ class PageItem extends StatelessWidget {
 
   final String title;
   final VoidCallback? onPressed;
+  final VoidCallback? onLongPress;
 
   const PageItem({
     Key? key,
@@ -466,6 +501,7 @@ class PageItem extends StatelessWidget {
     this.onCompletionChange,
     required this.title,
     required this.onPressed,
+    this.onLongPress,
   }) : super(key: key);
 
   @override
@@ -478,6 +514,8 @@ class PageItem extends StatelessWidget {
       title: title,
       fullWidth: true,
       onPressed: onPressed,
+      context: context,
+      onLongPress: onLongPress,
     );
   }
 }
@@ -505,6 +543,7 @@ class FolderItem extends StatelessWidget {
       icon: const Icon(CupertinoIcons.folder),
       color: Colors.grey,
       title: title,
+      context: context,
       onPressed: () {
         // TODO: Open folder in a new screen
       },
@@ -539,6 +578,7 @@ class ZoomItem extends StatelessWidget {
       ),
       color: Colors.grey,
       title: title,
+      context: context,
       onPressed: () {
         // TODO: Open zoom
       },
@@ -599,6 +639,7 @@ class _EventItemState extends State<EventItem> {
         title: widget.title,
         subtitle: getDueString(context),
         fullWidth: true,
+        context: context,
         onPressed: () => _onPressed(context),
       ),
     );

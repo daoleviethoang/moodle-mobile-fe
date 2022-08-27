@@ -357,7 +357,7 @@ class CustomApi {
       if (e.toString() == "dml_missing_record_exception") {
         throw e.toString();
       }
-      throw "Can't update grade question in quiz";
+      throw "Can't remove module";
     }
   }
 

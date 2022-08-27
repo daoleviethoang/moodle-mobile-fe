@@ -94,6 +94,8 @@
   "deleete_album": "Delete album?",
   "delete": "Delete...",
   "delete_album_description": "You can't revert after delete",
+  "delete_confirm_message": "Are you sure you want to delete this module?",
+  "delete_module_success_message": "You have successfully deleted the module",
   "description": "Description",
   "disable_noti": "Disable notifications",
   "discussion": "Discussion Forums",

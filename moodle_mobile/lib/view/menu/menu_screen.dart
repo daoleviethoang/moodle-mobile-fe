@@ -220,6 +220,7 @@ class _MenuScreenState extends State<MenuScreen> {
                           color: Colors.amber,
                           icon: const Icon(Icons.notifications_rounded),
                           fullWidth: true,
+                          context: context,
                           onPressed: () {
                             Navigator.of(context)
                                 .push(MaterialPageRoute(builder: (_) {
@@ -241,6 +242,7 @@ class _MenuScreenState extends State<MenuScreen> {
                           color: Colors.purple.shade200,
                           icon: const Icon(Icons.lightbulb_rounded),
                           fullWidth: true,
+                          context: context,
                           onPressed: () async {
                             await _showChangeLanguageDialog();
                           },
@@ -251,6 +253,7 @@ class _MenuScreenState extends State<MenuScreen> {
                           color: Colors.green,
                           icon: const Icon(Icons.lock_rounded),
                           fullWidth: true,
+                          context: context,
                           onPressed: () async {
                             await AppSettings.openAppSettings();
                           },
@@ -290,6 +293,7 @@ class _MenuScreenState extends State<MenuScreen> {
                           color: Colors.amber,
                           icon: const Icon(Icons.grade),
                           fullWidth: true,
+                          context: context,
                           onPressed: () {
                             Navigator.of(context)
                                 .push(MaterialPageRoute(builder: (_) {
@@ -302,6 +306,7 @@ class _MenuScreenState extends State<MenuScreen> {
                           color: Colors.red,
                           icon: const Icon(Icons.campaign_rounded),
                           fullWidth: true,
+                          context: context,
                           onPressed: () => launchUrl(Uri.parse(
                               'mailto:prj.covid@fit.hcmus.edu.vn'
                               '?cc=18127044@student.hcmus.edu.vn,'
@@ -317,6 +322,7 @@ class _MenuScreenState extends State<MenuScreen> {
                           color: Colors.grey,
                           icon: const Icon(Icons.logout_rounded),
                           fullWidth: true,
+                          context: context,
                           onPressed: () async {
                             _userStore.logout();
                             Navigator.of(context).pushReplacement(
