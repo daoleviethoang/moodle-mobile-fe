@@ -36,6 +36,7 @@
   "add_account": "Add another account",
   "add_event": "Add a new event",
   "add_file": "Add file",
+  "add_file_success_message": "File added successfully",
   "add_file_title": "Add file",
   "add_new_assignment": "Add new assignment",
   "add_new_discussion": "Add new discussion",

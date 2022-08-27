@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:moodle_mobile/constants/styles.dart';
+import 'package:moodle_mobile/data/network/apis/custom_api/custom_api.dart';
 import 'package:moodle_mobile/data/network/apis/user/user_api.dart';
 import 'package:moodle_mobile/data/network/dio_client.dart';
 import 'package:moodle_mobile/di/service_locator.dart';
 import 'package:moodle_mobile/models/quiz/attempt.dart';
+import 'package:moodle_mobile/models/quiz/attempt_user.dart';
 import 'package:moodle_mobile/models/quiz/user_quiz.dart';
 import 'package:moodle_mobile/models/user/user_overview.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
@@ -44,20 +46,27 @@ class _ParticipantQuizState extends State<ParticipantQuiz> {
     });
     try {
       List<UserQuizz> getUserQuizz = [];
+      List<AttemptUser> attemptUsers = await CustomApi()
+          .getListAttemptInQuiz(_userStore.user.token, widget.quizInstanceId);
       List<int?> ids = [];
-      for (int i = 0; i < widget.attemps.length; i++) {
-        ids.add(widget.attemps[i].userid);
+      for (int i = 0; i < attemptUsers.length; i++) {
+        if (attemptUsers[i].userid == _userStore.user.id) continue;
+        ids.add(attemptUsers[i].userid);
         UserQuizz userQuizz = UserQuizz();
-        userQuizz.grade = widget.attemps[i].sumgrades ?? 0;
-        userQuizz.attempId = widget.attemps[i].id;
+        userQuizz.id = attemptUsers[i].userid;
+        userQuizz.grade = attemptUsers[i].sumgrades ?? 0;
+        userQuizz.attempId = attemptUsers[i].id;
         getUserQuizz.add(userQuizz);
       }
       List<UserOverview> getUsers = await UserApi(getIt<DioClient>())
           .getUserByIds(_userStore.user.token, ids);
       for (int i = 0; i < getUsers.length; i++) {
-        getUserQuizz[i].id = getUsers[i].id;
-        getUserQuizz[i].fullname = getUsers[i].fullname;
-        getUserQuizz[i].profileimageurl = getUsers[i].profileimageurl;
+        for (int j = 0; j < getUserQuizz.length; j++) {
+          if (getUsers[i].id == getUserQuizz[j].id) {
+            getUserQuizz[j].fullname = getUsers[i].fullname;
+            getUserQuizz[j].profileimageurl = getUsers[i].profileimageurl;
+          }
+        }
       }
       setState(() {
         usersSubmitedQuizz = getUserQuizz;
@@ -98,7 +107,7 @@ class _ParticipantQuizState extends State<ParticipantQuiz> {
                           .push(MaterialPageRoute(builder: (_) {
                         return QuizReviewScreen(
                           studentName: usersSubmitedQuizz[index].fullname!,
-                          attemptId: 200,
+                          attemptId: usersSubmitedQuizz[index].attempId!,
                         );
                       }));
                     },

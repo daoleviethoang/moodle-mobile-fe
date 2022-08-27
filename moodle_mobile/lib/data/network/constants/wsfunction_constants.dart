@@ -153,10 +153,9 @@ class Wsfunction {
   static const String LOCAL_ADD_MODULES = "local_modulews_add_modules";
   static const String LOCAL_REMOVE_FOLDER_MODULE =
       "local_modulews_remove_folder_module_course";
-  static const String LOCAL_EDIT_ASSIGN =
-      "local_modulews_edit_assign";
-  static const String LOCAL_QUIZ_SET_GRADE =
-      "local_modulews_quiz_set_grades";
-  static const String LOCAL_DELETE_MODULE =
-      "local_modulews_delete_module";
+  static const String LOCAL_EDIT_ASSIGN = "local_modulews_edit_assign";
+  static const String LOCAL_QUIZ_SET_GRADE = "local_modulews_quiz_set_grades";
+  static const String LOCAL_DELETE_MODULE = "local_modulews_delete_module";
+  static const String LOCAL_QUIZ_ATTEMPTS_OVERVIEW =
+      "local_modulews_quiz_attempts_overview";
 }
