@@ -109,7 +109,9 @@ class _ParticipantQuizState extends State<ParticipantQuiz> {
                           studentName: usersSubmitedQuizz[index].fullname!,
                           attemptId: usersSubmitedQuizz[index].attempId!,
                         );
-                      }));
+                      })).then((value) async {
+                        await loadUserSubmitedQuizz();
+                      });
                     },
                     leading: UserAvatarCommon(
                         imageURL: usersSubmitedQuizz[index].profileimageurl!),

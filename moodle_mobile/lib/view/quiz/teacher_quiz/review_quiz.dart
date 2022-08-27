@@ -66,10 +66,10 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
     });
   }
 
-  updateMarkOfAttempt() {
+  updateMarkOfAttempt() async {
     for (var e in quizData!.questions!) {
       if (e.type == "essay") {
-        CustomApi().setGradeQuizQuestion(
+        await CustomApi().setGradeQuizQuestion(
             _userStore.user.token,
             quizData!.attempt!.id!,
             e.slot!,
@@ -110,8 +110,8 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
                     Icons.check,
                     color: Colors.white,
                   ),
-                  onPressed: () {
-                    updateMarkOfAttempt();
+                  onPressed: () async {
+                    await updateMarkOfAttempt();
                   },
                 )
         ],
