@@ -54,8 +54,8 @@ android {
         applicationId "vn.edu.hcmus.moodle_mobile"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 17
-        versionName "1.0.17"
+        versionCode 18
+        versionName "1.0.18"
         multiDexEnabled true
     }
 
