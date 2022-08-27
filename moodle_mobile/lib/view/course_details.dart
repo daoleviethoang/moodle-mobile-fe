@@ -461,9 +461,9 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                                 .markModule(token, m.id!, val);
                           } catch (e) {
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content:
-                                  Text(AppLocalizations.of(context)!.error),
-                              backgroundColor: Colors.red));
+                                content:
+                                    Text(AppLocalizations.of(context)!.error),
+                                backgroundColor: Colors.red));
                             return val;
                           }
                         },
@@ -498,9 +498,9 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
                                 .markModule(token, m.id!, val);
                           } catch (e) {
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content:
-                                  Text(AppLocalizations.of(context)!.error),
-                              backgroundColor: Colors.red));
+                                content:
+                                    Text(AppLocalizations.of(context)!.error),
+                                backgroundColor: Colors.red));
                             return val;
                           }
                         },
@@ -1278,7 +1278,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
             nameController.text, _sectionChoose, fileId);
 
         await reGetCourseContent();
-        
+
         setState(() {
           nameController.clear();
           urlController.clear();
@@ -1288,7 +1288,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(e.toString()), backgroundColor: Colors.red));
       }
-      
+
       files.removeAt(0);
     }
   }
