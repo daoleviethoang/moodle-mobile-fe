@@ -67,19 +67,24 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
   }
 
   updateMarkOfAttempt() async {
-    for (var e in quizData!.questions!) {
-      if (e.type == "essay") {
-        await CustomApi().setGradeQuizQuestion(
-            _userStore.user.token,
-            quizData!.attempt!.id!,
-            e.slot!,
-            e.mark == "" ? 0 : double.parse(e.mark!),
-            "");
+    try {
+      for (var e in quizData!.questions!) {
+        if (e.type == "essay") {
+          await CustomApi().setGradeQuizQuestion(
+              _userStore.user.token,
+              quizData!.attempt!.id!,
+              e.slot!,
+              e.mark == "" ? 0 : double.parse(e.mark!),
+              "");
+        }
       }
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(AppLocalizations.of(context)!.update_success_message),
+          backgroundColor: Colors.green));
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString()), backgroundColor: Colors.red));
     }
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(AppLocalizations.of(context)!.update_success_message),
-        backgroundColor: Colors.green));
   }
 
   @override

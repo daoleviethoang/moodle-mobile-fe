@@ -1086,6 +1086,10 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
           urlController.clear();
           _sectionChoose = 0;
         });
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content:
+                Text(AppLocalizations.of(context)!.add_url_success_message),
+            backgroundColor: Colors.green));
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(e.toString()), backgroundColor: Colors.red));

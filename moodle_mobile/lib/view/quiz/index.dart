@@ -5,10 +5,12 @@ import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:moodle_mobile/constants/colors.dart';
 import 'package:moodle_mobile/data/network/apis/contact/contact_service.dart';
+import 'package:moodle_mobile/data/network/apis/custom_api/custom_api.dart';
 import 'package:moodle_mobile/data/network/apis/quiz/quiz_api.dart';
 import 'package:moodle_mobile/models/assignment/user_submited.dart';
 import 'package:moodle_mobile/models/contact/contact.dart';
 import 'package:moodle_mobile/models/quiz/attempt.dart';
+import 'package:moodle_mobile/models/quiz/attempt_user.dart';
 import 'package:moodle_mobile/models/quiz/quiz.dart';
 import 'package:moodle_mobile/store/user/user_store.dart';
 import 'package:moodle_mobile/view/assignment/date_assignment_tile.dart';
@@ -90,8 +92,16 @@ class _QuizScreenState extends State<QuizScreen> {
           .getAttempts(_userStore.user.token, widget.quizInstanceId, null);
       setState(() {
         attemps = attemps;
-        numAttempt = attemps.length;
       });
+      if (isTeacher) {
+        List<AttemptUser> attemptUsers = await CustomApi()
+            .getListAttemptInQuiz(_userStore.user.token, widget.quizInstanceId);
+        attemptUsers
+            .removeWhere((element) => element.userid == _userStore.user.id);
+        setState(() {
+          numAttempt = attemptUsers.length;
+        });
+      }
 
       if (attemps.isNotEmpty) {
         Attempt temp = attemps.first;
