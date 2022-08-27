@@ -1276,12 +1276,10 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
 
         await CustomApi().addFile(_userStore.user.token, widget.courseId,
             nameController.text, _sectionChoose, fileId);
+
+        await reGetCourseContent();
+        
         setState(() {
-          _content[_sectionChoose].modules.add(Module(
-              id: 100,
-              name: nameController.text,
-              modname: ModuleName.url,
-              contents: [ModuleContent(fileurl: urlController.text)]));
           nameController.clear();
           urlController.clear();
           _sectionChoose = 0;
@@ -1290,6 +1288,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen>
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(e.toString()), backgroundColor: Colors.red));
       }
+      
       files.removeAt(0);
     }
   }
